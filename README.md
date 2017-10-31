@@ -70,3 +70,9 @@ Steps to add a module to Skylib:
    ```
 
 1. Add unit tests for your module in the `tests` directory.
+
+## `skylark_library`
+
+The `skylark_library.bzl` rule allows aggregation of Skylark
+rules for use in Python-interpreter-based unit tests and documentation
+generation.
