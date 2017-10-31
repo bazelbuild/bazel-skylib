@@ -50,9 +50,9 @@ skylark_library = rule(
             allow_files=[".bzl"],
         ),
         "deps": attr.label_list(
+            allow_files=[".bzl"],
             providers=[
                 [SkylarkLibraryInfo],
-                ["files"],
             ],
         )
     }
