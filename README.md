@@ -24,13 +24,13 @@ s = shell.quote(p)
 
 ## List of modules
 
-* [collections](blob/master/lib/collections.bzl)
-* [dicts](blob/master/lib/dicts.bzl)
-* [paths](blob/master/lib/paths.bzl)
-* [selects](blob/master/lib/selects.bzl)
-* [sets](blob/master/lib/sets.bzl)
-* [shell](blob/master/lib/shell.bzl)
-* [unittest](blob/master/lib/unittest.bzl)
+* [collections](lib/collections.bzl)
+* [dicts](lib/dicts.bzl)
+* [paths](lib/paths.bzl)
+* [selects](lib/selects.bzl)
+* [sets](lib/sets.bzl)
+* [shell](lib/shell.bzl)
+* [unittest](lib/unittest.bzl)
 
 ## Writing a new module
 
