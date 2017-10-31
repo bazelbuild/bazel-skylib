@@ -12,8 +12,23 @@ Each of the `.bzl` files in the `lib` directory defines a "module"&mdash;a
 be loaded as a single unit, for convenience. The top-level file `lib.bzl` acts
 as an index from which the other modules can be imported.
 
-To use the functionality here, import the modules you need from `lib.bzl` and
-access the symbols by dotting into those structs:
+## Getting Started
+
+Add the following to your `WORKSPACE` file to import the Skylib repository into
+your workspace. Replace the version number in the `tag` attribute with the
+version you wish to depend on:
+
+```python
+git_repository(
+    name = "bazel_skylib",
+    remote = "https://github.com/bazelbuild/bazel-skylib.git",
+    tag = "0.1.0",  # change this to use a different release
+)
+```
+
+Then, in the `BUILD` and/or `*.bzl` files in your own workspace, you can load
+the modules (listed [below](#list-of-modules)) from `lib.bzl` and access the
+symbols by dotting into those structs:
 
 ```python
 load("@bazel_skylib//:lib.bzl", "paths", "shell")
