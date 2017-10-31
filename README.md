@@ -73,6 +73,6 @@ Steps to add a module to Skylib:
 
 ## `skylark_library`
 
-The `skylark_library.bzl` rule allows aggregation of Skylark
-rules for use in Python-interpreter-based unit tests and documentation
-generation.
+The `skylark_library.bzl` rule can be used to aggregate a set of
+Skylark files and its dependencies for use in test targets and
+documentation generation.

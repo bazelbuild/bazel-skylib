@@ -1,6 +1,6 @@
 licenses(["notice"])
 
-package(default_visibility = ["//visibility:public"])
+package(default_visibility = ["//:__pkg__"])
 
 load("//:skylark_library.bzl", "skylark_library")
 

@@ -14,7 +14,14 @@
 
 """Skylib module containing a library rule for aggregating rules files."""
 
-SkylarkLibraryInfo = provider()
+SkylarkLibraryInfo = provider(
+    'Information on contained Skylark rules.',
+    fields={
+      'srcs': 'Top level rules files.',
+      'transitive_srcs': 'Transitive closure of rules files required for ' +
+          'interpretation of the srcs',
+    },
+)
 
 def _skylark_library_impl(ctx):
   all_files = depset(ctx.files.srcs, order="postorder")
@@ -22,17 +29,17 @@ def _skylark_library_impl(ctx):
     all_files += dep.files
   return [
       # All dependent files should be listed in both `files` and in `runfiles`;
-      # this ensures that a `library()` can be referenced as `data` from a
-      # separate program, or from `tools` of a genrule().
+      # this ensures that a `skylark_library` can be referenced as `data` from
+      # a separate program, or from `tools` of a genrule().
       DefaultInfo(
-          files = all_files,
-          runfiles = ctx.runfiles(files=list(all_files)),
+          files=all_files,
+          runfiles=ctx.runfiles(files=list(all_files)),
       ),
 
       # We also define our own provider struct, for aggregation and testing.
       SkylarkLibraryInfo(
-          srcs = ctx.files.srcs,
-          transitive_srcs = all_files,
+          srcs=ctx.files.srcs,
+          transitive_srcs=all_files,
       ),
   ]
 
@@ -54,8 +61,8 @@ skylark_library = rule(
 
 Args:
   srcs: List of `.bzl` files that are processed to create this target.
-  deps: List of other `library` targets that are required by the Skylark files
-    listed in `srcs`.
+  deps: List of other `skylark_library` targets that are required by the
+    Skylark files listed in `srcs`.
 
 Example:
   Suppose your project has the following structure:
