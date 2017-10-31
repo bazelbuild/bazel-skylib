@@ -11,6 +11,6 @@ filegroup(
         "BUILD",
         "//lib:test_deps",
     ] + glob(["*.bzl"]),
-    test_only = True,
+    testonly = True,
     visibility = ["//visibility:public"],
 )
