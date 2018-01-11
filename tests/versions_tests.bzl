@@ -28,7 +28,7 @@ def _parse_test(ctx):
   unittest.end(env)
 
 def _version_comparison_test(ctx):
-  """Unit tests for versions.parse"""
+  """Unit tests for versions.is_at_least and is_at_most"""
   env = unittest.begin(ctx)
 
   asserts.false(env, versions.is_at_least("0.11.0 123abcd", "0.10.0rc1 abcd123"))
@@ -44,7 +44,7 @@ def _version_comparison_test(ctx):
   unittest.end(env)
 
 def _check_test(ctx):
-  """Unit tests for versions.parse"""
+  """Unit tests for versions.check"""
   env = unittest.begin(ctx)
 
   asserts.equals(env, None, versions.check("0.4.5 abcdef", bazel_version = "0.10.0rc1 abcd123"))
