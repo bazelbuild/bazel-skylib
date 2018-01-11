@@ -32,11 +32,11 @@ def _parse_bazel_version(bazel_version):
   version = _extract_version_number(bazel_version)  
   return tuple([int(n) for n in version.split(".")])
 
-def _is_lower_than(threshold, version):
-  return _parse_bazel_version(version) < _parse_bazel_version(threshold)
+def _is_at_most(threshold, version):
+  return _parse_bazel_version(version) <= _parse_bazel_version(threshold)
 
-def _is_higher_than(threshold, version):
-  return _parse_bazel_version(threshold) < _parse_bazel_version(version)
+def _is_at_least(threshold, version):
+  return _parse_bazel_version(threshold) <= _parse_bazel_version(version)
 
 def _check_bazel_version(minimum_bazel_version, maximum_bazel_version=None, bazel_version=None):
   """Check that a specific bazel version is being used.
@@ -54,7 +54,7 @@ def _check_bazel_version(minimum_bazel_version, maximum_bazel_version=None, baze
     else:
       bazel_version = native.bazel_version
 
-  if _is_lower_than(
+  if _is_at_most(
       threshold = minimum_bazel_version, 
       version = bazel_version):
     fail("\nCurrent Bazel version is {}, expected at least {}\n".format(
@@ -62,7 +62,7 @@ def _check_bazel_version(minimum_bazel_version, maximum_bazel_version=None, baze
 
   if maximum_bazel_version:
     max_bazel_version = _parse_bazel_version(maximum_bazel_version)
-    if _is_higher_than(
+    if _is_at_least(
         threshold = maximum_bazel_version,
         version = bazel_version):
       fail("\nCurrent Bazel version is {}, expected at most {}\n".format(
@@ -74,6 +74,6 @@ versions = struct(
     get = _get_bazel_version,
     parse = _parse_bazel_version,
     check = _check_bazel_version,
-    is_lower_than = _is_lower_than,
-    is_higher_than = _is_higher_than,
+    is_at_most = _is_at_most,
+    is_at_least = _is_at_least,
 )
