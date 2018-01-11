@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for structs.bzl."""
+"""Unit tests for versions.bzl."""
 
 load("//:lib.bzl", "versions", "asserts", "unittest")
 
