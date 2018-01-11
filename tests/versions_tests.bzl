@@ -59,7 +59,7 @@ version_comparison_test = unittest.make(_version_comparison_test)
 check_test = unittest.make(_check_test)
 
 def versions_test_suite():
-  """Creates the test targets and test suite for structs.bzl tests."""
+  """Creates the test targets and test suite for versions.bzl tests."""
   unittest.suite(
       "versions_tests",
       parse_test,

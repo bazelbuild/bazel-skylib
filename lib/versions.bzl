@@ -36,7 +36,7 @@ def _is_at_most(threshold, version):
   return _parse_bazel_version(version) <= _parse_bazel_version(threshold)
 
 def _is_at_least(threshold, version):
-  return _parse_bazel_version(threshold) <= _parse_bazel_version(version)
+  return _parse_bazel_version(version) >= _parse_bazel_version(threshold)
 
 def _check_bazel_version(minimum_bazel_version, maximum_bazel_version=None, bazel_version=None):
   """Check that a specific bazel version is being used.
