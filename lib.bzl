@@ -21,6 +21,7 @@ load("//lib:selects.bzl", "selects")
 load("//lib:sets.bzl", "sets")
 load("//lib:shell.bzl", "shell")
 load("//lib:structs.bzl", "structs")
+load("//lib:versions.bzl", "versions")
 
 # The unittest module is treated differently to give more convenient names to
 # the assert functions, while keeping them in the same .bzl file.
