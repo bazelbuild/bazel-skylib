@@ -54,7 +54,7 @@ def _check_bazel_version(minimum_bazel_version, maximum_bazel_version=None, baze
     else:
       bazel_version = native.bazel_version
 
-  if _is_at_most(
+  if not _is_at_least(
       threshold = minimum_bazel_version, 
       version = bazel_version):
     fail("\nCurrent Bazel version is {}, expected at least {}\n".format(
@@ -62,7 +62,7 @@ def _check_bazel_version(minimum_bazel_version, maximum_bazel_version=None, baze
 
   if maximum_bazel_version:
     max_bazel_version = _parse_bazel_version(maximum_bazel_version)
-    if _is_at_least(
+    if not _is_at_most(
         threshold = maximum_bazel_version,
         version = bazel_version):
       fail("\nCurrent Bazel version is {}, expected at most {}\n".format(
