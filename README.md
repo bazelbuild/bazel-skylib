@@ -31,6 +31,7 @@ s = shell.quote(p)
 * [sets](lib/sets.bzl)
 * [shell](lib/shell.bzl)
 * [unittest](lib/unittest.bzl)
+* [versions](lib/versions.bzl)
 
 ## Writing a new module
 
