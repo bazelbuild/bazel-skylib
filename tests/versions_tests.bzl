@@ -47,10 +47,10 @@ def _check_test(ctx):
   """Unit tests for versions.check"""
   env = unittest.begin(ctx)
 
-  asserts.equals(env, None, versions.check("0.4.5 abcdef", bazel_version = "0.10.0rc1 abcd123"))
-  asserts.equals(env, None, versions.check("0.4.5", bazel_version = "0.4.5"))
-  asserts.equals(env, None, versions.check("0.4.5", bazel_version = "0.10.0rc1 abcd123"))
-  asserts.equals(env, None, versions.check("0.4.5", maximum_bazel_version = "1.0.0", bazel_version = "0.10.0rc1 abcd123"))
+  asserts.equals(env, None, versions.check("0.4.5 abcdef", bazel_version="0.10.0rc1 abcd123"))
+  asserts.equals(env, None, versions.check("0.4.5", bazel_version="0.4.5"))
+  asserts.equals(env, None, versions.check("0.4.5", bazel_version="0.10.0rc1 abcd123"))
+  asserts.equals(env, None, versions.check("0.4.5", maximum_bazel_version="1.0.0", bazel_version="0.10.0rc1 abcd123"))
 
   unittest.end(env)
 
