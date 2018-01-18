@@ -65,7 +65,7 @@ def _is_absolute(path):
   Returns:
     `True` if `path` is an absolute path.
   """
-  return path.startswith("/")
+  return path.startswith("/") or (len(path)>2 and path[1] == ":")
 
 
 def _join(path, *others):
