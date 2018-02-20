@@ -51,3 +51,8 @@ skylark_library(
     srcs = ["unittest.bzl"],
     deps = [":sets"],
 )
+
+skylark_library(
+    name = "versions",
+    srcs = ["versions.bzl"],
+)
