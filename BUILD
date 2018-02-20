@@ -11,11 +11,11 @@ exports_files([
 
 filegroup(
     name = "test_deps",
+    testonly = True,
     srcs = [
         "BUILD",
         "//lib:test_deps",
     ] + glob(["*.bzl"]),
-    testonly = True,
 )
 
 skylark_library(

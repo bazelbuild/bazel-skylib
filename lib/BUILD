@@ -6,8 +6,8 @@ load("//:skylark_library.bzl", "skylark_library")
 
 filegroup(
     name = "test_deps",
-    srcs = ["BUILD"] + glob(["*.bzl"]),
     testonly = True,
+    srcs = ["BUILD"] + glob(["*.bzl"]),
     visibility = ["//visibility:public"],
 )
 
