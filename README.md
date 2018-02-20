@@ -1,5 +1,7 @@
 # Skylib
 
+[![Build Status](https://travis-ci.org/bazelbuild/bazel-skylib.svg?branch=master)](https://travis-ci.org/bazelbuild/bazel-skylib)
+
 Skylib is a standard library that provides functions useful for manipulating
 collections, file paths, and other features that are useful when writing custom
 build rules in Bazel.
