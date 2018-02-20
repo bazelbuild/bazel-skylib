@@ -1,0 +1,51 @@
+# Not really c++, but stops travis from listing a language.
+language: c++
+
+matrix:
+  include:
+    # -----------------------------------------------------------------
+    # Linux hosted tests
+
+    - os: linux
+      dist: trusty
+      sudo: false
+      env: BAZEL_VERSION=0.10.1
+    - os: linux
+      dist: trusty
+      sudo: false
+      env: BAZEL_VERSION=HEAD
+
+    # -----------------------------------------------------------------
+    # macOS hosted tests
+
+    - os: osx
+      osx_image: xcode9.2
+      env: BAZEL_VERSION=0.10.1
+    - os: osx
+      osx_image: xcode9.2
+      env: BAZEL_VERSION=HEAD
+
+before_install:
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      OS=darwin
+    else
+      OS=linux
+    fi
+    # macOS and trusty images have jdk8
+    if [[ "${BAZEL_VERSION}" == "HEAD" ]]; then
+      URL="https://ci.bazel.build/view/Bazel%20bootstrap%20and%20maintenance/job/bazel/job/nightly/lastSuccessfulBuild/artifact/node=${OS}-x86_64/bazel--without-jdk-installer-${OS}-x86_64.sh"
+    else
+      URL="https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-without-jdk-installer-${OS}-x86_64.sh"
+    fi
+    wget -O install.sh "${URL}"
+    chmod +x install.sh
+    ./install.sh --user
+    rm -f install.sh
+    bazel version
+
+script:
+  - bazel --bazelrc=/dev/null test --show_progress_rate_limit=30.0 //...
+
+notifications:
+  email: false
