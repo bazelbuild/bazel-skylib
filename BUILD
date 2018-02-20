@@ -30,6 +30,7 @@ skylark_library(
         "//lib:shell",
         "//lib:structs",
         "//lib:unittest",
+        "//lib:versions",
     ],
 )
 
