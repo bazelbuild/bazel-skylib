@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# Copyright 2018 The Bazel Authors. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 set -eux
 
 if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
@@ -30,9 +44,12 @@ function install_bazel() {
     VERSION="$(github_latest_release_tag bazelbuild/bazel)"
   fi
 
-  # macOS and trusty images have jdk8
+  # macOS and trusty images have jdk8, so install bazel without jdk.
   if [[ "${VERSION}" == "HEAD" ]]; then
-    URL="https://ci.bazel.build/view/Bazel%20bootstrap%20and%20maintenance/job/bazel/job/nightly/lastSuccessfulBuild/artifact/node=${OS}-x86_64/bazel--without-jdk-installer-${OS}-x86_64.sh"
+    # Still need a way to pull green build from buildkite.
+    # https://github.com/bazelbuild/continuous-integration/issues/95
+    echo "ERROR: Building of HEAD not currently supported."
+    exit 1
   else
     URL="https://github.com/bazelbuild/bazel/releases/download/${VERSION}/bazel-${VERSION}-without-jdk-installer-${OS}-x86_64.sh"
   fi
