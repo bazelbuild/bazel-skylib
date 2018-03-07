@@ -162,7 +162,8 @@ def _relativize(path, start):
   will fail if `path` is not beneath `start` (rather than use parent segments to
   walk up to the common file system root).
 
-  Relativizing paths that start with parent directory references is not allowed.
+  Relativizing paths that start with parent directory references only works if
+  the path both start with the same initial parent references.
 
   Args:
     path: The path to relativize.
@@ -175,9 +176,6 @@ def _relativize(path, start):
   if start_segments == ["."]:
     start_segments = []
   start_length = len(start_segments)
-
-  if (path.startswith("..") or start.startswith("..")):
-    fail("Cannot relativize paths above the current (unknown) directory")
 
   if (path.startswith("/") != start.startswith("/") or
       len(segments) < start_length):
