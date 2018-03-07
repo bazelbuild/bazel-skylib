@@ -195,6 +195,10 @@ def _relativize_test(ctx):
   # Try a case where a parent directory is normalized away.
   asserts.equals(env, "baz", paths.relativize("foo/bar/../baz", "foo"))
 
+  # Relative paths work, as long as they share a common start.
+  asserts.equals(env, "file", paths.relativize("../foo/bar/baz/file", "../foo/bar/baz"))
+  asserts.equals(env, "baz/file", paths.relativize("../foo/bar/baz/file", "../foo/bar"))
+
   # TODO(allevato): Test failure cases, once that is possible.
 
   unittest.end(env)
