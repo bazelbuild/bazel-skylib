@@ -52,7 +52,7 @@ def _is_equal(a, b):
     True if `a` is equal to `b`, False otherwise.
   """
   _precondition_only_sets_or_lists(a, b)
-  return sorted(depset(a)) == sorted(depset(b))
+  return {e: None for e in a} == {e: None for e in b}
 
 
 def _is_subset(a, b):
@@ -66,8 +66,9 @@ def _is_subset(a, b):
     True if `a` is a subset of `b`, False otherwise.
   """
   _precondition_only_sets_or_lists(a, b)
+  bset = {e: None for e in b}
   for e in a:
-    if e not in b:
+    if e not in bset:
       return False
   return True
 
@@ -85,8 +86,9 @@ def _disjoint(a, b):
     True if `a` and `b` are disjoint, False otherwise.
   """
   _precondition_only_sets_or_lists(a, b)
+  bset = {e: None for e in b}
   for e in a:
-    if e in b:
+    if e in bset:
       return False
   return True
 
@@ -102,7 +104,8 @@ def _intersection(a, b):
     A set containing the elements that are in both `a` and `b`.
   """
   _precondition_only_sets_or_lists(a, b)
-  return depset([e for e in a if e in b])
+  bset = {e: None for e in b}
+  return depset([e for e in a if e in bset])
 
 
 def _union(*args):
@@ -132,7 +135,8 @@ def _difference(a, b):
     A set containing the elements that are in `a` but not in `b`.
   """
   _precondition_only_sets_or_lists(a, b)
-  return depset([e for e in a if e not in b])
+  bset = {e: None for e in b}
+  return depset([e for e in a if e not in bset])
 
 
 sets = struct(
