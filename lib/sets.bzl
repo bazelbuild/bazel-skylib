@@ -42,6 +42,20 @@ def _precondition_only_sets_or_lists(*args):
            (t, a))
 
 
+def _get_shorter_and_longer(a, b):
+  """Returns two sets in the order of shortest and longest.
+  
+  Args:
+    a: A depset or list.
+    b: A depset or list.
+   Returns:
+    a, b if a is shorter than b - or b, a if b is shorter than a.
+  """
+  if len(a) < len(b):
+    return a, b
+  return b, a
+
+
 def _is_equal(a, b):
   """Returns whether two sets are equal.
 
@@ -66,9 +80,10 @@ def _is_subset(a, b):
     True if `a` is a subset of `b`, False otherwise.
   """
   _precondition_only_sets_or_lists(a, b)
-  bset = {e: None for e in b}
-  for e in a:
-    if e not in bset:
+  shorter, longer = _get_shorter_and_longer(a, b)
+  shortset = {e: None for e in shorter}
+  for e in longer:
+    if e not in shortset:
       return False
   return True
 
@@ -86,9 +101,10 @@ def _disjoint(a, b):
     True if `a` and `b` are disjoint, False otherwise.
   """
   _precondition_only_sets_or_lists(a, b)
-  bset = {e: None for e in b}
-  for e in a:
-    if e in bset:
+  shorter, longer = _get_shorter_and_longer(a, b)
+  shortset = {e: None for e in shorter}
+  for e in longer:
+    if e in shortset:
       return False
   return True
 
@@ -104,8 +120,9 @@ def _intersection(a, b):
     A set containing the elements that are in both `a` and `b`.
   """
   _precondition_only_sets_or_lists(a, b)
-  bset = {e: None for e in b}
-  return depset([e for e in a if e in bset])
+  shorter, longer = _get_shorter_and_longer(a, b)
+  shortset = {e: None for e in shorter}
+  return depset([e for e in longer if e in shortset])
 
 
 def _union(*args):
@@ -135,8 +152,9 @@ def _difference(a, b):
     A set containing the elements that are in `a` but not in `b`.
   """
   _precondition_only_sets_or_lists(a, b)
-  bset = {e: None for e in b}
-  return depset([e for e in a if e not in bset])
+  shorter, longer = _get_shorter_and_longer(a, b)
+  shortset = {e: None for e in shorter}
+  return depset([e for e in longer if e not in shortset])
 
 
 sets = struct(
