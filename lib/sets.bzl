@@ -151,7 +151,7 @@ def _difference(a, b):
     A set containing the elements that are in `a` but not in `b`.
   """
   _precondition_only_sets_or_lists(a, b)
-  bset = {e: None for e in shorter}
+  bset = {e: None for e in b}
   return depset([e for e in a if e not in bset])
 
 
