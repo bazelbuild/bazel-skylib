@@ -14,6 +14,7 @@
 
 """Index from which multiple modules can be loaded."""
 
+load("//lib:actions.bzl", "actions")
 load("//lib:collections.bzl", "collections")
 load("//lib:dicts.bzl", "dicts")
 load("//lib:paths.bzl", "paths")
