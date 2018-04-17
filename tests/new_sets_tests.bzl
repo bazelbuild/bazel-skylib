@@ -174,6 +174,7 @@ set_test = unittest.make(_set_test)
 
 
 def _copy_test(ctx):
+  """Unit tests for new_sets.copy."""
   env = unittest.begin(ctx)
 
   asserts.new_set_equals(env, new_sets.copy(new_sets.set()), new_sets.set())
@@ -190,6 +191,7 @@ copy_test = unittest.make(_copy_test)
 
 
 def _insert_test(ctx):
+  """Unit tests for new_sets.insert."""
   env = unittest.begin(ctx)
 
   asserts.new_set_equals(env, new_sets.set([1, 2, 3]), new_sets.insert(new_sets.set([1, 2]), 3))
@@ -203,6 +205,7 @@ insert_test = unittest.make(_insert_test)
 
 
 def _contains_test(ctx):
+  """Unit tests for new_sets.contains."""
   env = unittest.begin(ctx)
 
   asserts.false(env, new_sets.contains(new_sets.set(), 1))
