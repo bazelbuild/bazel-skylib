@@ -20,6 +20,7 @@ assertions used to within tests.
 """
 
 load(":sets.bzl", "sets")
+load(":new_sets.bzl", "new_sets")
 
 
 def _make(impl, attrs=None):
@@ -253,11 +254,29 @@ def _assert_set_equals(env, expected, actual, msg=None):
       full_msg = expectation_msg
     _fail(env, full_msg)
 
+def _assert_new_set_equals(env, expected, actual, msg=None):
+  """Asserts that the given `expected` and `actual` sets are equal.
+
+  Args:
+    env: The test environment returned by `unittest.begin`.
+    expected: The expected set resulting from some computation.
+    actual: The actual set returned by some computation.
+    msg: An optional message that will be printed that describes the failure.
+        If omitted, a default will be used.
+  """
+  if not new_sets.is_equal(expected, actual):
+    expectation_msg = "Expected %r, but got %r" % (expected, actual)
+    if msg:
+      full_msg = "%s (%s)" % (msg, expectation_msg)
+    else:
+      full_msg = expectation_msg
+    _fail(env, full_msg)
 
 asserts = struct(
     equals=_assert_equals,
     false=_assert_false,
     set_equals=_assert_set_equals,
+    new_set_equals = _assert_new_set_equals,
     true=_assert_true,
 )
 

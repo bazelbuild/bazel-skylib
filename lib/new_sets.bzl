@@ -54,18 +54,19 @@ def _to_list(a):
 
 
 def _insert(a, e):
-  """Inserts an element into a copy of the set.
+  """Inserts an element into the set.
 
-  Element must be hashable.
+  Element must be hashable.  This mutates the orginal set.
 
   Args:
     a: A set.
     e: The element to be insterted.
 
   Returns:
-    A new set with the same elements as `a` with `e` included.
+     The set `a` with `e` included.
   """
-  return dicts.add(a._values, {e: None})
+  a._values[e] = None
+  return a
 
 
 def _contains(a, e):
