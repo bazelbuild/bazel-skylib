@@ -41,7 +41,7 @@ def _copy(s):
   Returns:
     A new set containing the same elements as `s`.
   """
-  return struct(_values=dict(s._values))
+  return struct(_values = dict(s._values))
 
 
 def _to_list(a):
