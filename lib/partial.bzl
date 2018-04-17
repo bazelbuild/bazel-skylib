@@ -104,7 +104,7 @@ def _make(func, *args, **kwargs):
   Returns:
     A new `partial` that can be called using `call`
   """
-  return struct (function=func, args=args, kwargs=kwargs)
+  return struct(function=func, args=args, kwargs=kwargs)
 
 partial = struct(
     make=_make,
