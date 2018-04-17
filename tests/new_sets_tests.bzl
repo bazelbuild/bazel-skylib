@@ -217,7 +217,7 @@ contains_test = unittest.make(_contains_test)
 
 
 
-def sets_test_suite():
+def new_sets_test_suite():
   """Creates the test targets and test suite for new_sets.bzl tests."""
   unittest.suite(
       "new_sets_tests",
