@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Skylark module for working with function objects where some parameters are
-   bound before the call.
+"""Skylark module for working with partial function objects.
+
+Partial function objects allow some parameters are bound before the call.
 
 Similar to https://docs.python.org/3/library/functools.html#functools.partial.
 """
@@ -63,7 +64,7 @@ def _make(func, *args, **kwargs):
 
     # function demonstrating 1 arg at make site, and 1 arg at call site
     def _foo(make_arg1, func_arg1):
-	  print(make_arg1 + " " + func_arg1 + "!")
+    print(make_arg1 + " " + func_arg1 + "!")
 
   For example:
 
@@ -75,7 +76,7 @@ def _make(func, *args, **kwargs):
     partial.call(bye_func, "Dave")
 
   prints:
-  
+
     "Hello, Jennifer!"
     "Hello, Dave!"
     "Goodbye, Jennifer!"
@@ -88,7 +89,7 @@ def _make(func, *args, **kwargs):
 
   Example with a make site arg, a call site arg, a make site kwarg and a
   call site kwarg:
-  
+
     def _foo(make_arg1, call_arg1, make_location, call_location):
       print(make_arg1 + " is from " + make_location + " and " +
             call_arg1 + " is from " + call_location + "!")
@@ -100,18 +101,17 @@ def _make(func, *args, **kwargs):
 
     partial.call(func, "Jennifer", make_location="LA", call_location="Denver")
 
-  Prints "Ben is from LA and Jennifer is from Denver!". 
-  
+  Prints "Ben is from LA and Jennifer is from Denver!".
+
   Note that keyword args may not overlap with positional args, regardless of
   whether they are given during the make or call step. For instance, you can't
   do:
 
-	def foo(x):
-	  pass
+  def foo(x):
+    pass
 
-	func = partial.make(foo, 1)
-	partial.call(func, x=2)
-
+  func = partial.make(foo, 1)
+  partial.call(func, x=2)
 
   Args:
     func: The function to be called.
