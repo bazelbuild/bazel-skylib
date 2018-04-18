@@ -22,6 +22,11 @@ skylark_library(
 )
 
 skylark_library(
+    name = "partial",
+    srcs = ["partial.bzl"],
+)
+
+skylark_library(
     name = "paths",
     srcs = ["paths.bzl"],
 )

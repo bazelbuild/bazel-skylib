@@ -25,6 +25,7 @@ skylark_library(
         "//lib:collections",
         "//lib:dicts",
         "//lib:new_sets",
+        "//lib:partial",
         "//lib:paths",
         "//lib:selects",
         "//lib:sets",
