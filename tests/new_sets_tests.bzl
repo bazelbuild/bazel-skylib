@@ -164,9 +164,9 @@ def _set_test(ctx):
   """Unit tests for new_sets.set."""
   env = unittest.begin(ctx)
 
-  asserts.equals(env, {}, new_sets.sets()._values)
-  asserts.equals(env, {x: None for x in [1, 2, 3]}, new_sets.sets([1, 1, 2, 2, 3, 3])._values)
-  asserts.equals(env, {1: None, 2: None}, new_sets.sets(depset(1, 2))._values)
+  asserts.equals(env, {}, new_sets.set()._values)
+  asserts.equals(env, {x: None for x in [1, 2, 3]}, new_sets.set([1, 1, 2, 2, 3, 3])._values)
+  asserts.equals(env, {1: None, 2: None}, new_sets.set(depset(1, 2))._values)
 
   unittest.end(env)
 
