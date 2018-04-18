@@ -197,7 +197,7 @@ def _insert_test(ctx):
   asserts.new_set_equals(env, new_sets.set([1, 2, 3]), new_sets.insert(new_sets.set([1, 2]), 3))
   # Ensure mutating the inserted set does mutate the original set.
   original = new_sets.set([1, 2, 3])
-  asserts.new_set_equals(env, new_sets.is_equal(original, new_sets.insert(original, 6)))
+  asserts.new_set_equals(env, original, new_sets.insert(original, 6))
 
   unittest.end(env)
 
