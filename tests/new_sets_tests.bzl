@@ -197,7 +197,9 @@ def _insert_test(ctx):
   asserts.new_set_equals(env, new_sets.set([1, 2, 3]), new_sets.insert(new_sets.set([1, 2]), 3))
   # Ensure mutating the inserted set does mutate the original set.
   original = new_sets.set([1, 2, 3])
-  asserts.new_set_equals(env, original, new_sets.insert(original, 6))
+  after_insert = new_sets.insert(original, 4)
+  asserts.new_set_equals(env, original, after_insert,
+    message="Insert creates a new set which is an O(n) operation, insert should be O(1).")
 
   unittest.end(env)
 

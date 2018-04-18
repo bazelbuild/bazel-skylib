@@ -53,20 +53,20 @@ def _to_list(a):
   return a._values.keys()
 
 
-def _insert(a, e):
+def _insert(s, e):
   """Inserts an element into the set.
 
   Element must be hashable.  This mutates the orginal set.
 
   Args:
-    a: A set.
+    s: A set.
     e: The element to be insterted.
 
   Returns:
-     The set `a` with `e` included.
+     The set `s` with `e` included.
   """
-  a._values[e] = None
-  return a
+  s._values[e] = None
+  return s
 
 
 def _contains(a, e):
