@@ -157,7 +157,7 @@ def _to_list_test(ctx):
 
   unittest.end(env)
 
-to_list_test = unttest.make(_to_list_test)
+to_list_test = unittest.make(_to_list_test)
 
 
 def _set_test(ctx):
