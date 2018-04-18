@@ -37,6 +37,11 @@ skylark_library(
 )
 
 skylark_library(
+    name = "new_sets",
+    srcs = ["new_sets.bzl"],
+)
+
+skylark_library(
     name = "shell",
     srcs = ["shell.bzl"],
 )
