@@ -17,7 +17,7 @@
 load(":dicts.bzl", "dicts")
 
 
-def _set(elements):
+def _set(elements=None):
   """Creates a new set.
 
   All elements must be hashable.
