@@ -136,9 +136,6 @@ def _disjoint(a, b):
   Returns:
     True if `a` and `b` are disjoint, False otherwise.
   """
-  if not a._values or not b._values:
-    return True
-
   shorter, longer = _get_shorter_and_longer(a, b)
   for e in shorter._values.keys():
     if e in longer._values:
