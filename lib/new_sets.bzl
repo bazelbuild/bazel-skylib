@@ -186,15 +186,15 @@ def _difference(a, b):
 
 
 sets = struct(
-  set = _set
-  copy = _copy
-  to_list = _to_list
-  insert = _insert
-  contains = _contains
-  is_equal = _is_equal
-  is_subset = _is_subset
-  disjoint = _disjoint
-  intersection = _intersection
-  union = _union
-  difference = _difference
+  set = _set,
+  copy = _copy,
+  to_list = _to_list,
+  insert = _insert,
+  contains = _contains,
+  is_equal = _is_equal,
+  is_subset = _is_subset,
+  disjoint = _disjoint,
+  intersection = _intersection,
+  union = _union,
+  difference = _difference,
 )
