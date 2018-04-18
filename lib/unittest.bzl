@@ -20,7 +20,7 @@ assertions used to within tests.
 """
 
 load(":sets.bzl", "sets")
-load(":new_sets.bzl", "new_sets")
+load(":new_sets.bzl", new_sets="sets")
 
 
 def _make(impl, attrs=None):
