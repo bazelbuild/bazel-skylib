@@ -16,6 +16,7 @@
 
 load("//lib:collections.bzl", "collections")
 load("//lib:dicts.bzl", "dicts")
+load("//lib:sets.bzl", "new_sets")
 load("//lib:paths.bzl", "paths")
 load("//lib:selects.bzl", "selects")
 load("//lib:sets.bzl", "sets")
