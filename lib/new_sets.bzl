@@ -118,7 +118,7 @@ def _is_subset(a, b):
   Returns:
     True if `a` is a subset of `b`, False otherwise.
   """
-  for e in _to_list(a):
+  for e in  a._values.keys():
     if e not in b._values:
       return False
   return True
@@ -136,11 +136,11 @@ def _disjoint(a, b):
   Returns:
     True if `a` and `b` are disjoint, False otherwise.
   """
-  if _is_equal(a, b):
-    return False
+  if not a._values or not b._values:
+    return True
 
   shorter, longer = _get_shorter_and_longer(a, b)
-  for e in _to_list(shorter):
+  for e in shorter._values.keys():
     if e in longer._values:
       return False
   return True
@@ -157,7 +157,7 @@ def _intersection(a, b):
     A set containing the elements that are in both `a` and `b`.
   """
   shorter, longer = _get_shorter_and_longer(a, b)
-  return struct(_values = {e: None for e in _to_list(shorter) if e in longer._values})
+  return struct(_values = {e: None for e in shorter._values.keys() if e in longer._values})
 
 
 def _union(*args):
@@ -182,7 +182,7 @@ def _difference(a, b):
   Returns:
     A set containing the elements that are in `a` but not in `b`.
   """
-  return struct(_values = {e: None for e in _to_list(a) if e not in b._values})
+  return struct(_values = {e: None for e in a._values.keys() if e not in b._values})
 
 
 sets = struct(
