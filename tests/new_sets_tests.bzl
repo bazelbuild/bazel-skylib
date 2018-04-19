@@ -170,7 +170,7 @@ def _make_test(ctx):
 
   unittest.end(env)
 
-make_test = unittest.make(_set_test)
+make_test = unittest.make(_make_test)
 
 
 def _copy_test(ctx):
