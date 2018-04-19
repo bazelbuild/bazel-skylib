@@ -224,9 +224,9 @@ def _length_test(ctx):
   """Unit test for new_sets.length."""
   env = unittest.begin(ctx)
 
-  asserts.equal(env, 0, new_sets.length(new_sets.make()))
-  asserts.equal(env, 1, new_sets.length(new_sets.make([1])))
-  asserts.equal(env, 2, new_sets.length(new_sets.make([1, 2])))
+  asserts.equals(env, 0, new_sets.length(new_sets.make()))
+  asserts.equals(env, 1, new_sets.length(new_sets.make([1])))
+  asserts.equals(env, 2, new_sets.length(new_sets.make([1, 2])))
 
   unittest.end(env)
 
