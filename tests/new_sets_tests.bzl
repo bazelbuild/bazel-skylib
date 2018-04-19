@@ -230,7 +230,7 @@ def _length_test(ctx):
 
   unittest.end(env)
 
-length_test = unittest.make(_len_test)
+length_test = unittest.make(_length_test)
 
 
 def new_sets_test_suite():
