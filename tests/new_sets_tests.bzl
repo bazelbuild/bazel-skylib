@@ -220,7 +220,7 @@ def _contains_test(ctx):
 contains_test = unittest.make(_contains_test)
 
 
-def _len_test(ctx):
+def _length_test(ctx):
   """Unit test for new_sets.length."""
   env = unittest.begin(ctx)
 
@@ -230,7 +230,7 @@ def _len_test(ctx):
 
   unittest.end(env)
 
-len_test = unittest.make(_len_test)
+length_test = unittest.make(_len_test)
 
 
 def new_sets_test_suite():
@@ -248,5 +248,5 @@ def new_sets_test_suite():
       copy_test,
       insert_test,
       contains_test,
-      len_test,
+      length_test,
   )
