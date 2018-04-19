@@ -1,4 +1,4 @@
-# Copyright 2017 The Bazel Authors. All rights reserved.
+# Copyright 2018 The Bazel Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,12 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Skylib module containing common hash-set algorithms."""
+"""Skylib module containing common hash-set algorithms.
+
+  An empty set can be created using: `sets.make()`, or it can be created with some starting values
+  if you pass it an enum: `sets.make([1, 2, 3])`. This returns a struct containing all of the values
+  as keys in a dictionary - this means that all passed in values must be hashable.  The values in
+  the set can be retrieved using `sets.to_list(my_set)`.
+
+  These functions are focused primarily t
+
+"""
 
 load(":dicts.bzl", "dicts")
 
 
-def _set(elements=None):
+def _make(elements=None):
   """Creates a new set.
 
   All elements must be hashable.
@@ -36,7 +45,7 @@ def _copy(s):
   """Creates a new set from another set.
 
   Args:
-    s: A set.
+    s: A set, as returned by `sets.make()`.
 
   Returns:
     A new set containing the same elements as `s`.
@@ -59,7 +68,7 @@ def _insert(s, e):
   Element must be hashable.  This mutates the orginal set.
 
   Args:
-    s: A set.
+    s: A set, as returned by `sets.make()`.
     e: The element to be insterted.
 
   Returns:
@@ -73,7 +82,7 @@ def _contains(a, e):
   """Checks for the existence of an element in a set.
 
   Args:
-    a: A set.
+    a: A set, as returned by `sets.make()`.
     e: The element to look for.
 
   Returns:
@@ -86,12 +95,12 @@ def _get_shorter_and_longer(a, b):
   """Returns two sets in the order of shortest and longest.
   
   Args:
-    a: A set.
-    b: A set.
+    a: A set, as returned by `sets.make()`.
+    b: A set, as returned by `sets.make()`.
    Returns:
     `a`, `b` if `a` is shorter than `b` - or `b`, `a` if `b` is shorter than `a`.
   """
-  if len(a._values) < len(b._values):
+  if _length(a) < _length(b):
     return a, b
   return b, a
 
@@ -100,8 +109,8 @@ def _is_equal(a, b):
   """Returns whether two sets are equal.
 
   Args:
-    a: A set.
-    b: A set.
+    a: A set, as returned by `sets.make()`.
+    b: A set, as returned by `sets.make()`.
   Returns:
     True if `a` is equal to `b`, False otherwise.
   """
@@ -112,8 +121,8 @@ def _is_subset(a, b):
   """Returns whether `a` is a subset of `b`.
 
   Args:
-    a: A set.
-    b: A set.
+    a: A set, as returned by `sets.make()`.
+    b: A set, as returned by `sets.make()`.
 
   Returns:
     True if `a` is a subset of `b`, False otherwise.
@@ -130,8 +139,8 @@ def _disjoint(a, b):
   Two sets are disjoint if they have no elements in common.
 
   Args:
-    a: A set.
-    b: A set.
+    a: A set, as returned by `sets.make()`.
+    b: A set, as returned by `sets.make()`.
 
   Returns:
     True if `a` and `b` are disjoint, False otherwise.
@@ -147,8 +156,8 @@ def _intersection(a, b):
   """Returns the intersection of two sets.
 
   Args:
-    a: A set.
-    b: A set.
+    a: A set, as returned by `sets.make()`.
+    b: A set, as returned by `sets.make()`.
 
   Returns:
     A set containing the elements that are in both `a` and `b`.
@@ -173,8 +182,8 @@ def _difference(a, b):
   """Returns the elements in `a` that are not in `b`.
 
   Args:
-    a: A set.
-    b: A set.
+    a: A set, as returned by `sets.make()`.
+    b: A set, as returned by `sets.make()`.
 
   Returns:
     A set containing the elements that are in `a` but not in `b`.
@@ -182,8 +191,20 @@ def _difference(a, b):
   return struct(_values = {e: None for e in a._values.keys() if e not in b._values})
 
 
+def _length(s):
+  """Returns the number of elements in a set.
+
+    Args:
+      s: A set, as returned by `sets.make()`.
+
+    Returns:
+      An integer representing the number of elements in the set.
+  """
+  return len(s._values)
+
+
 sets = struct(
-  set = _set,
+  make = _make,
   copy = _copy,
   to_list = _to_list,
   insert = _insert,
@@ -194,4 +215,5 @@ sets = struct(
   intersection = _intersection,
   union = _union,
   difference = _difference,
+  length = _length,
 )
