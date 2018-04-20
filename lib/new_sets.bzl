@@ -15,12 +15,9 @@
 """Skylib module containing common hash-set algorithms.
 
   An empty set can be created using: `sets.make()`, or it can be created with some starting values
-  if you pass it an enum: `sets.make([1, 2, 3])`. This returns a struct containing all of the values
-  as keys in a dictionary - this means that all passed in values must be hashable.  The values in
-  the set can be retrieved using `sets.to_list(my_set)`.
-
-  These functions are focused primarily t
-
+  if you pass it an sequence: `sets.make([1, 2, 3])`. This returns a struct containing all of the
+  values as keys in a dictionary - this means that all passed in values must be hashable.  The
+  values in the set can be retrieved using `sets.to_list(my_set)`.
 """
 
 load(":dicts.bzl", "dicts")
@@ -32,7 +29,7 @@ def _make(elements=None):
   All elements must be hashable.
 
   Args:
-    elements: Optional enum to construct the set out of.
+    elements: Optional sequence to construct the set out of.
 
   Returns:
     A set containing the passed in values.
@@ -77,6 +74,35 @@ def _insert(s, e):
   s._values[e] = None
   return s
 
+def _insert(s, e):
+  """Inserts an element into the set.
+
+  Element must be hashable.  This mutates the orginal set.
+
+  Args:
+    s: A set, as returned by `sets.make()`.
+    e: The element to be inserted.
+
+  Returns:
+     The set `s` with `e` included.
+  """
+  s._values[e] = None
+  return s
+
+def _remove(s, e):
+  """Removes an element from the set.
+
+  Element must be hashable.  This mutates the orginal set.
+
+  Args:
+    s: A set, as returned by `sets.make()`.
+    e: The element to be removed.
+
+  Returns:
+     The set `s` with `e` removed.
+  """
+  s._values.pop(e)
+  return s
 
 def _contains(a, e):
   """Checks for the existence of an element in a set.
@@ -216,4 +242,5 @@ sets = struct(
   union = _union,
   difference = _difference,
   length = _length,
+  remove = _remove,
 )

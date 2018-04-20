@@ -233,6 +233,20 @@ def _length_test(ctx):
 length_test = unittest.make(_length_test)
 
 
+def _remove_test(ctx):
+  """Unit test for new_sets.remove."""
+  env = unittest.begin(ctx)
+
+  asserts.new_set_equals(env, new_sets.make([1, 2]), new_sets.remove(new_sets.make([1, 2, 3]), 3))
+  # Ensure mutating the inserted set does mutate the original set.
+  original = new_sets.make([1, 2, 3])
+  after_removal = new_sets.remove(original, 3)
+  asserts.new_set_equals(env, original, after_removal)
+
+  unittest.end(env)
+
+remove_test = unittest.make(_remove_test)
+
 def new_sets_test_suite():
   """Creates the test targets and test suite for new_sets.bzl tests."""
   unittest.suite(
@@ -249,4 +263,5 @@ def new_sets_test_suite():
       insert_test,
       contains_test,
       length_test,
+      remove_test,
   )
