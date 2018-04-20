@@ -74,20 +74,6 @@ def _insert(s, e):
   s._values[e] = None
   return s
 
-def _insert(s, e):
-  """Inserts an element into the set.
-
-  Element must be hashable.  This mutates the orginal set.
-
-  Args:
-    s: A set, as returned by `sets.make()`.
-    e: The element to be inserted.
-
-  Returns:
-     The set `s` with `e` included.
-  """
-  s._values[e] = None
-  return s
 
 def _remove(s, e):
   """Removes an element from the set.
@@ -103,6 +89,7 @@ def _remove(s, e):
   """
   s._values.pop(e)
   return s
+
 
 def _contains(a, e):
   """Checks for the existence of an element in a set.
