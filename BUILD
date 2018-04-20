@@ -24,6 +24,7 @@ skylark_library(
     deps = [
         "//lib:collections",
         "//lib:dicts",
+        "//lib:new_sets",
         "//lib:partial",
         "//lib:paths",
         "//lib:selects",

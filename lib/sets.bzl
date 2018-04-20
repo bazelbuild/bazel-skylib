@@ -48,6 +48,7 @@ def _is_equal(a, b):
   Args:
     a: A depset or a list.
     b: A depset or a list.
+
   Returns:
     True if `a` is equal to `b`, False otherwise.
   """
