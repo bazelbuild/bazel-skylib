@@ -66,7 +66,7 @@ def _insert(s, e):
 
   Args:
     s: A set, as returned by `sets.make()`.
-    e: The element to be insterted.
+    e: The element to be inserted.
 
   Returns:
      The set `s` with `e` included.
