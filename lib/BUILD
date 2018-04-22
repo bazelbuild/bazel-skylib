@@ -12,6 +12,11 @@ filegroup(
 )
 
 skylark_library(
+    name = "actions",
+    srcs = ["actions.bzl"],
+)
+
+skylark_library(
     name = "collections",
     srcs = ["collections.bzl"],
 )
