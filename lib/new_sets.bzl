@@ -50,13 +50,16 @@ def _copy(s):
   return struct(_values = dict(s._values))
 
 
-def _to_list(a):
+def _to_list(s):
   """Creates a list from the values in the set.
+
+  Args:
+    s: A set, as returned by `sets.make()`.
 
   Returns:
     A list of values inserted into the set.
   """
-  return a._values.keys()
+  return s._values.keys()
 
 
 def _insert(s, e):
@@ -106,11 +109,12 @@ def _contains(a, e):
 
 def _get_shorter_and_longer(a, b):
   """Returns two sets in the order of shortest and longest.
-  
+
   Args:
     a: A set, as returned by `sets.make()`.
     b: A set, as returned by `sets.make()`.
-   Returns:
+
+  Returns:
     `a`, `b` if `a` is shorter than `b` - or `b`, `a` if `b` is shorter than `a`.
   """
   if _length(a) < _length(b):
@@ -124,6 +128,7 @@ def _is_equal(a, b):
   Args:
     a: A set, as returned by `sets.make()`.
     b: A set, as returned by `sets.make()`.
+
   Returns:
     True if `a` is equal to `b`, False otherwise.
   """
@@ -207,11 +212,11 @@ def _difference(a, b):
 def _length(s):
   """Returns the number of elements in a set.
 
-    Args:
-      s: A set, as returned by `sets.make()`.
+  Args:
+    s: A set, as returned by `sets.make()`.
 
-    Returns:
-      An integer representing the number of elements in the set.
+  Returns:
+    An integer representing the number of elements in the set.
   """
   return len(s._values)
 
