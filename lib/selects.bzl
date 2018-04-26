@@ -73,7 +73,7 @@ def _with_or_dict(input_dict):
         output_dict[config_setting] = value
     else:
       if key in output_dict.keys():
-        fail("key %s appears multiple times" % config_setting)
+        fail("key %s appears multiple times" % key)
       output_dict[key] = value
   return output_dict
 

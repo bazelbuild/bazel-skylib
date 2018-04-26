@@ -30,6 +30,7 @@ def _basename(p):
 
   Args:
     p: The path whose basename should be returned.
+
   Returns:
     The basename of the path, which includes the extension.
   """
@@ -45,6 +46,7 @@ def _dirname(p):
 
   Args:
     p: The path whose dirname should be returned.
+
   Returns:
     The dirname of the path.
   """
@@ -62,6 +64,7 @@ def _is_absolute(path):
 
   Args:
     path: A path (which is a string).
+
   Returns:
     `True` if `path` is an absolute path.
   """
@@ -82,6 +85,7 @@ def _join(path, *others):
   Args:
     path: A path segment.
     *others: Additional path segments.
+
   Returns:
     A string containing the joined paths.
   """
@@ -117,6 +121,7 @@ def _normalize(path):
 
   Args:
     path: A path.
+
   Returns:
     The normalized path.
   """
@@ -168,6 +173,7 @@ def _relativize(path, start):
   Args:
     path: The path to relativize.
     start: The ancestor path against which to relativize.
+
   Returns:
     The portion of `path` that is relative to `start`.
   """
@@ -199,6 +205,7 @@ def _replace_extension(p, new_extension):
     p: The path whose extension should be replaced.
     new_extension: The new extension for the file. The new extension should
         begin with a dot if you want the new filename to have one.
+
   Returns:
     The path with the extension replaced (or added, if it did not have one).
   """
@@ -213,6 +220,7 @@ def _split_extension(p):
 
   Args:
     p: The path whose root and extension should be split.
+
   Returns:
     A tuple `(root, ext)` such that the root is the path without the file
     extension, and `ext` is the file extension (which, if non-empty, contains

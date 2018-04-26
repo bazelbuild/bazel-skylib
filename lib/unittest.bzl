@@ -53,6 +53,7 @@ def _make(impl, attrs=None):
     impl: The implementation function of the unit test.
     attrs: An optional dictionary to supplement the attrs passed to the
         unit test's `rule()` constructor.
+
   Returns:
     A rule definition that should be stored in a global whose name ends in
     `_test`.
@@ -145,6 +146,7 @@ def _begin(ctx):
   Args:
     ctx: The Skylark context. Pass the implementation function's `ctx` argument
         in verbatim.
+
   Returns:
     A test environment struct that must be passed to assertions and finally to
     `unittest.end`. Do not rely on internal details about the fields in this

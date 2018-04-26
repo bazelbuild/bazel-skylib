@@ -14,17 +14,32 @@
 
 """Index from which multiple modules can be loaded."""
 
-load("//lib:collections.bzl", "collections")
-load("//lib:dicts.bzl", "dicts")
-load("//lib:new_sets.bzl", new_sets="sets")
-load("//lib:partial.bzl", "partial")
-load("//lib:paths.bzl", "paths")
-load("//lib:selects.bzl", "selects")
-load("//lib:sets.bzl", "sets")
-load("//lib:shell.bzl", "shell")
-load("//lib:structs.bzl", "structs")
-load("//lib:versions.bzl", "versions")
+load("//lib:collections.bzl", _collections="collections")
+load("//lib:dicts.bzl", _dicts="dicts")
+load("//lib:new_sets.bzl", _new_sets="sets")
+load("//lib:partial.bzl", _partial="partial")
+load("//lib:paths.bzl", _paths="paths")
+load("//lib:selects.bzl", _selects="selects")
+load("//lib:sets.bzl", _sets="sets")
+load("//lib:shell.bzl", _shell="shell")
+load("//lib:structs.bzl", _structs="structs")
+load("//lib:versions.bzl", _versions="versions")
 
 # The unittest module is treated differently to give more convenient names to
 # the assert functions, while keeping them in the same .bzl file.
-load("//lib:unittest.bzl", "asserts", "unittest")
+load("//lib:unittest.bzl", _asserts="asserts", _unittest="unittest")
+
+
+collections = _collections
+dicts = _dicts
+new_sets = _new_sets
+partial = _partial
+paths = _paths
+selects = _selects
+sets = _sets
+shell = _shell
+structs = _structs
+versions = _versions
+
+asserts = _asserts
+unittest = _unittest
