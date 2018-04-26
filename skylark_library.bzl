@@ -24,9 +24,8 @@ SkylarkLibraryInfo = provider(
 )
 
 def _skylark_library_impl(ctx):
-  all_files = depset(ctx.files.srcs, order="postorder")
-  for dep in ctx.attr.deps:
-    all_files += dep.files
+  deps_files = [depset(x.files, order="postorder") for x in ctx.attr.deps]
+  all_files = depset(ctx.files.srcs, order="postorder", transitive=deps_files)
   return [
       # All dependent files should be listed in both `files` and in `runfiles`;
       # this ensures that a `skylark_library` can be referenced as `data` from
