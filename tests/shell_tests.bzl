@@ -85,12 +85,15 @@ def _shell_spawn_e2e_test_impl(ctx):
       "line tab\tcharacter $foo qu\"o\"te it'\\''s foo\\bar back`echo q`uote'",
       '[[ "${output}" == "${expected}" ]]',
   ])
+  script_file = ctx.actions.declare_file("%s.sh" % (ctx.label.name))
   ctx.actions.write(
-      output = ctx.outputs.executable,
+      output = script_file,
       content = script_content,
       is_executable = True,
   )
-  return []
+  return [
+      DefaultInfo(executable=script_file),
+  ]
 
 shell_spawn_e2e_test = rule(
     test = True,
