@@ -18,12 +18,11 @@ load("//:lib.bzl", "sets", "asserts", "unittest")
 
 
 def _is_equal_test(ctx):
-  """Unit tests for sets.is_equal.
+  """Unit tests for sets.is_equal."""
 
-  Note that if this test fails, the results for the other `sets` tests will be
-  inconclusive because they use `asserts.set_equals`, which in turn calls
-  `sets.is_equal`.
-  """
+  # Note that if this test fails, the results for the other `sets` tests will
+  # be inconclusive because they use `asserts.set_equals`, which in turn calls
+  # `sets.is_equal`.
   env = unittest.begin(ctx)
 
   asserts.true(env, sets.is_equal([], []))
