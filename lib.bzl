@@ -22,6 +22,7 @@ load("//lib:paths.bzl", _paths="paths")
 load("//lib:selects.bzl", _selects="selects")
 load("//lib:sets.bzl", _sets="sets")
 load("//lib:shell.bzl", _shell="shell")
+load("//lib:strings.bzl", _strings="strings")
 load("//lib:structs.bzl", _structs="structs")
 load("//lib:versions.bzl", _versions="versions")
 
@@ -38,6 +39,7 @@ paths = _paths
 selects = _selects
 sets = _sets
 shell = _shell
+strings = _strings
 structs = _structs
 versions = _versions
 

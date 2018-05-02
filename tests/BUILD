@@ -7,6 +7,7 @@ load(":sets_tests.bzl", "sets_test_suite")
 load(":new_sets_tests.bzl", "new_sets_test_suite")
 load(":shell_tests.bzl", "shell_test_suite")
 load(":structs_tests.bzl", "structs_test_suite")
+load(":strings_tests.bzl", "strings_test_suite")
 load(":versions_tests.bzl", "versions_test_suite")
 
 licenses(["notice"])
@@ -28,5 +29,7 @@ new_sets_test_suite()
 shell_test_suite()
 
 structs_test_suite()
+
+strings_test_suite()
 
 versions_test_suite()
