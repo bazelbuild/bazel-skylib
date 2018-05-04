@@ -246,6 +246,24 @@ def _remove_test(ctx):
 
 remove_test = unittest.make(_remove_test)
 
+
+def _repr_str_test(ctx):
+  """Unit test for new_sets.repr and new_sets.str."""
+  env = unittest.begin(ctx)
+
+  asserts.equals(env, "[]", new_sets.repr(new_sets.make()))
+  asserts.equals(env, "[1]", new_sets.repr(new_sets.make([1])))
+  asserts.equals(env, "[1, 2]", new_sets.repr(new_sets.make([1, 2])))
+
+  asserts.equals(env, "[]", new_sets.str(new_sets.make()))
+  asserts.equals(env, "[1]", new_sets.str(new_sets.make([1])))
+  asserts.equals(env, "[1, 2]", new_sets.str(new_sets.make([1, 2])))
+
+  unittest.end(env)
+
+repr_str_test = unittest.make(_repr_str_test)
+
+
 def new_sets_test_suite():
   """Creates the test targets and test suite for new_sets.bzl tests."""
   unittest.suite(
@@ -263,4 +281,5 @@ def new_sets_test_suite():
       contains_test,
       length_test,
       remove_test,
+      repr_str_test,
   )
