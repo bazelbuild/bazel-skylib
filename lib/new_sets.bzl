@@ -227,7 +227,7 @@ def _repr(s):
     s: A set, as returned by `sets.make()`.
 
   Returns:
-    An string representing the set.
+    A string representing the set.
   """
   return repr(s._values.keys())
 
