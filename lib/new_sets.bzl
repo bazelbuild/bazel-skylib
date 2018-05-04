@@ -220,6 +220,17 @@ def _length(s):
   """
   return len(s._values)
 
+def _repr(s):
+  """Returns a string value representing the set.
+
+  Args:
+    s: A set, as returned by `sets.make()`.
+
+  Returns:
+    A string representing the set.
+  """
+  return repr(s._values.keys())
+
 
 sets = struct(
   make = _make,
@@ -235,4 +246,6 @@ sets = struct(
   difference = _difference,
   length = _length,
   remove = _remove,
+  repr = _repr,
+  str = _repr,
 )
