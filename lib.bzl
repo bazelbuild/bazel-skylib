@@ -23,6 +23,7 @@ load("//lib:selects.bzl", _selects="selects")
 load("//lib:sets.bzl", _sets="sets")
 load("//lib:shell.bzl", _shell="shell")
 load("//lib:structs.bzl", _structs="structs")
+load("//lib:types.bzl", _types="types")
 load("//lib:versions.bzl", _versions="versions")
 
 # The unittest module is treated differently to give more convenient names to
@@ -39,6 +40,7 @@ selects = _selects
 sets = _sets
 shell = _shell
 structs = _structs
+types = _types
 versions = _versions
 
 asserts = _asserts
