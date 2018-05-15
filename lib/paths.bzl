@@ -195,6 +195,30 @@ def _relativize(path, start):
   result_segments = segments[-length:]
   return "/".join(result_segments)
 
+def _relative_path(target, start):
+  """Returns a relative path to `target` from `start`.
+
+  Args:
+    target: path that we want to get relative path to.
+    start: path to directory from which we are starting.
+
+  Returns:
+    string: relative path to `target`.
+  """
+  t_pieces = target.split('/')
+  s_pieces = start.split('/')
+  common_part_len = 0
+
+  for tp, rp in zip(t_pieces, s_pieces):
+    if tp == rp:
+      common_part_len += 1
+    else:
+      break
+
+  result = [".."] * (len(s_pieces) - common_part_len)
+  result += t_pieces[common_part_len:]
+
+  return "/".join(result) if len(result) > 0 else "."
 
 def _replace_extension(p, new_extension):
   """Replaces the extension of the file at the end of a path.
@@ -246,6 +270,7 @@ paths = struct(
     join=_join,
     normalize=_normalize,
     relativize=_relativize,
+    relative_path=_relative_path,
     replace_extension=_replace_extension,
     split_extension=_split_extension,
 )

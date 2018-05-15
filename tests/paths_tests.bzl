@@ -205,6 +205,28 @@ def _relativize_test(ctx):
 
 relativize_test = unittest.make(_relativize_test)
 
+def _relative_path_test(ctx):
+  """Unit tests for paths."""
+  env = unittest.begin(ctx)
+
+  # Some interesting cases.
+  asserts.equals(env, ".", paths.relative_path("", ""))
+  asserts.equals(env, "", paths.relative_path("/", "")) # not sure about this
+  asserts.equals(env, "..", paths.relative_path("", "/"))
+  asserts.equals(env, ".", paths.relative_path("/", "/"))
+
+  # When paths match.
+  asserts.equals(env, ".", paths.relative_path("foo/bar", "foo/bar"))
+
+  # Normal functioning.
+  asserts.equals(env, "../baz", paths.relative_path("/foo/bar/baz", "/foo/bar/quux"))
+  asserts.equals(env, "../../ba0/baz", paths.relative_path("/foo/ba0/baz", "/foo/ba1/quux"))
+  asserts.equals(env, "../../foo", paths.relative_path("foo", "bar/baz"))
+  asserts.equals(env, "../../foo", paths.relative_path("/foo", "/bar/baz"))
+
+  unittest.end(env)
+
+relative_path_test = unittest.make(_relative_path_test)
 
 def _replace_extension_test(ctx):
   """Unit tests for paths.replace_extension."""
@@ -279,6 +301,7 @@ def paths_test_suite():
       join_test,
       normalize_test,
       relativize_test,
+      relative_path_test,
       replace_extension_test,
       split_extension_test,
   )
