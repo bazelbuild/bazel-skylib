@@ -13,13 +13,11 @@
 # limitations under the License.
 """Unit tests for types.bzl."""
 
-load("//:lib.bzl", "types", "asserts", "unittest")
-
+load("//:lib.bzl", "asserts", "types", "unittest")
 
 def _a_function():
     """A dummy function for testing."""
     pass
-
 
 def _is_string_test(ctx):
     """Unit tests for types.is_string."""
@@ -39,9 +37,7 @@ def _is_string_test(ctx):
 
     unittest.end(env)
 
-
 is_string_test = unittest.make(_is_string_test)
-
 
 def _is_bool_test(ctx):
     """Unit tests for types.is_bool."""
@@ -61,9 +57,7 @@ def _is_bool_test(ctx):
 
     unittest.end(env)
 
-
 is_bool_test = unittest.make(_is_bool_test)
-
 
 def _is_list_test(ctx):
     """Unit tests for types.is_list."""
@@ -83,9 +77,7 @@ def _is_list_test(ctx):
 
     unittest.end(env)
 
-
 is_list_test = unittest.make(_is_list_test)
-
 
 def _is_none_test(ctx):
     """Unit tests for types.is_none."""
@@ -105,9 +97,7 @@ def _is_none_test(ctx):
 
     unittest.end(env)
 
-
 is_none_test = unittest.make(_is_none_test)
-
 
 def _is_int_test(ctx):
     """Unit tests for types.is_int."""
@@ -128,9 +118,7 @@ def _is_int_test(ctx):
 
     unittest.end(env)
 
-
 is_int_test = unittest.make(_is_int_test)
-
 
 def _is_tuple_test(ctx):
     """Unit tests for types.is_tuple."""
@@ -138,7 +126,7 @@ def _is_tuple_test(ctx):
     env = unittest.begin(ctx)
 
     asserts.true(env, types.is_tuple(()))
-    asserts.true(env, types.is_tuple((1, )))
+    asserts.true(env, types.is_tuple((1,)))
 
     asserts.false(env, types.is_tuple(1))
     asserts.false(env, types.is_tuple("s"))
@@ -151,9 +139,7 @@ def _is_tuple_test(ctx):
 
     unittest.end(env)
 
-
 is_tuple_test = unittest.make(_is_tuple_test)
-
 
 def _is_dict_test(ctx):
     """Unit tests for types.is_dict."""
@@ -161,7 +147,7 @@ def _is_dict_test(ctx):
     env = unittest.begin(ctx)
 
     asserts.true(env, types.is_dict({}))
-    asserts.true(env, types.is_dict({'key': 'value'}))
+    asserts.true(env, types.is_dict({"key": "value"}))
 
     asserts.false(env, types.is_dict(1))
     asserts.false(env, types.is_dict("s"))
@@ -174,9 +160,7 @@ def _is_dict_test(ctx):
 
     unittest.end(env)
 
-
 is_dict_test = unittest.make(_is_dict_test)
-
 
 def _is_function_test(ctx):
     """Unit tests for types.is_dict."""
@@ -196,9 +180,7 @@ def _is_function_test(ctx):
 
     unittest.end(env)
 
-
 is_function_test = unittest.make(_is_function_test)
-
 
 def types_test_suite():
     """Creates the test targets and test suite for types.bzl tests."""
