@@ -31,6 +31,7 @@ skylark_library(
         "//lib:sets",
         "//lib:shell",
         "//lib:structs",
+        "//lib:types",
         "//lib:unittest",
         "//lib:versions",
     ],
