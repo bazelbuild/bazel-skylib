@@ -27,89 +27,89 @@ def _a_function():
 def _is_list(v):
     """Returns True if v is an instance of a list.
 
-  Args:
-    v: The value whose type should be checked.
+    Args:
+      v: The value whose type should be checked.
 
-  Returns:
-    True if v is an instance of a list, False otherwise.
-  """
+    Returns:
+      True if v is an instance of a list, False otherwise.
+    """
     return type(v) == type(_a_list)
 
 def _is_string(v):
     """Returns True if v is an instance of a string.
 
-  Args:
-    v: The value whose type should be checked.
+    Args:
+      v: The value whose type should be checked.
 
-  Returns:
-    True if v is an instance of a string, False otherwise.
-  """
+    Returns:
+      True if v is an instance of a string, False otherwise.
+    """
     return type(v) == type(_a_string)
 
 def _is_bool(v):
     """Returns True if v is an instance of a bool.
 
-  Args:
-    v: The value whose type should be checked.
+    Args:
+      v: The value whose type should be checked.
 
-  Returns:
-    True if v is an instance of a bool, False otherwise.
-  """
+    Returns:
+      True if v is an instance of a bool, False otherwise.
+    """
     return type(v) == type(_a_bool)
 
 def _is_none(v):
     """Returns True if v has the type of None.
 
-  Args:
-    v: The value whose type should be checked.
+    Args:
+      v: The value whose type should be checked.
 
-  Returns:
-    True if v is None, False otherwise.
-  """
+    Returns:
+      True if v is None, False otherwise.
+    """
     return type(v) == type(None)
 
 def _is_int(v):
     """Returns True if v is an instance of a signed integer.
 
-  Args:
-    v: The value whose type should be checked.
+    Args:
+      v: The value whose type should be checked.
 
-  Returns:
-    True if v is an instance of a signed integer, False otherwise.
-  """
+    Returns:
+      True if v is an instance of a signed integer, False otherwise.
+    """
     return type(v) == type(_an_int)
 
 def _is_tuple(v):
     """Returns True if v is an instance of a tuple.
 
-  Args:
-    v: The value whose type should be checked.
+    Args:
+      v: The value whose type should be checked.
 
-  Returns:
-    True if v is an instance of a tuple, False otherwise.
-  """
+    Returns:
+      True if v is an instance of a tuple, False otherwise.
+    """
     return type(v) == type(_a_tuple)
 
 def _is_dict(v):
     """Returns True if v is an instance of a dict.
 
-  Args:
-    v: The value whose type should be checked.
+    Args:
+      v: The value whose type should be checked.
 
-  Returns:
-    True if v is an instance of a dict, False otherwise.
-  """
+    Returns:
+      True if v is an instance of a dict, False otherwise.
+    """
     return type(v) == type(_a_dict)
 
 def _is_function(v):
     """Returns True if v is an instance of a function.
 
-  Args:
-    v: The value whose type should be checked.
+    Args:
+      v: The value whose type should be checked.
 
-  Returns:
-    True if v is an instance of a function, False otherwise.
-  """
+    Returns:
+      True if v is an instance of a function, False otherwise.
+    """
     return type(v) == type(_a_function)
 
 types = struct(
