@@ -27,8 +27,13 @@ fi
 if [[ -n "${BUILDIFER:-}" ]]; then
   # bazelbuild/buildtools/issues/220 - diff doesn't include the file that needs updating
   if ! find . -name BUILD -print | xargs buildifier -d > /dev/null 2>&1 ; then
-    echo "ERROR: BUILD file formatting issue(s)"
+    echo "ERROR: BUILD file formatting issue(s):"
+    echo ""
     find . -name BUILD -print -exec buildifier -v -d {} \;
+    echo ""
+    echo "Please download the latest buildifier"
+    echo "   https://github.com/bazelbuild/buildtools/releases"
+    echo "and run it over the changed BUILD files."
     exit 1
   fi
 fi
