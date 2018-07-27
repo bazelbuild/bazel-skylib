@@ -8,7 +8,6 @@ filegroup(
     name = "test_deps",
     testonly = True,
     srcs = ["BUILD"] + glob(["*.bzl"]),
-    visibility = ["//visibility:public"],
 )
 
 skylark_library(
