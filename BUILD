@@ -3,6 +3,7 @@ licenses(["notice"])  # Apache 2.0
 package(default_visibility = ["//visibility:public"])
 
 load("//:skylark_library.bzl", "skylark_library")
+load("//:skydoc.bzl", "skydoc")
 
 exports_files([
     "LICENSE",
@@ -41,3 +42,12 @@ skylark_library(
     name = "skylark_library",
     srcs = ["skylark_library.bzl"],
 )
+
+skydoc(
+    name = "skydoc_doc",
+    target_file = ":skydoc.bzl",
+    deps = [":skylark_library"],
+    rule_names = ["skydoc"],
+    out = "skydoc_doc.txt",
+)
+
