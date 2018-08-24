@@ -44,7 +44,7 @@ def _convert_to_list(a):
     """If the given value is a depset, convert it to a list. Otherwise do nothing.
 
     Args:
-      *args: The value to be converted
+      a: The value to be converted
     """
     if type(a) == "depset":
         a = a.to_list()
@@ -115,7 +115,6 @@ def _union(*args):
 
     Args:
       *args: An arbitrary number of sets or lists.
-      *
     Returns:
       The set union of all sets or lists in `*args`.
     """
