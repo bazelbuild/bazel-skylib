@@ -14,7 +14,8 @@
 
 """Unit tests for partial.bzl."""
 
-load("//:lib.bzl", "asserts", "partial", "unittest")
+load("//lib:partial.bzl", "partial")
+load("//lib:unittest.bzl", "asserts", "unittest")
 
 def _make_noargs_nokwargs():
     """Test utility for no args no kwargs case"""

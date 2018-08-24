@@ -14,7 +14,8 @@
 
 """Unit tests for selects.bzl."""
 
-load("//:lib.bzl", "asserts", "selects", "unittest")
+load("//lib:selects.bzl", "selects")
+load("//lib:unittest.bzl", "asserts", "unittest")
 
 def _with_or_test(ctx):
     """Unit tests for with_or."""
