@@ -32,9 +32,8 @@ def _skylark_library_impl(ctx):
         # a separate program, or from `tools` of a genrule().
         DefaultInfo(
             files = all_files,
-            runfiles = ctx.runfiles(files = list(all_files)),
+            runfiles = ctx.runfiles(files = all_files.to_list()),
         ),
-
         # We also define our own provider struct, for aggregation and testing.
         SkylarkLibraryInfo(
             srcs = ctx.files.srcs,
