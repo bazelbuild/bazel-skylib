@@ -44,10 +44,14 @@ s = shell.quote(p)
 
 * [collections](lib/collections.bzl)
 * [dicts](lib/dicts.bzl)
+* [partial](lib/partial.bzl)
 * [paths](lib/paths.bzl)
 * [selects](lib/selects.bzl)
-* [sets](lib/sets.bzl)
+* [sets](lib/sets.bzl) - _deprecated_, use `new_sets`
+* [new_sets](lib/new_sets.bzl)
 * [shell](lib/shell.bzl)
+* [structs](lib/structs.bzl)
+* [types](lib/types.bzl)
 * [unittest](lib/unittest.bzl)
 * [versions](lib/versions.bzl)
 
