@@ -14,181 +14,182 @@
 
 """Unit tests for new_sets.bzl."""
 
-load("//:lib.bzl", "asserts", "new_sets", "unittest")
+load("//lib:new_sets.bzl", "sets")
+load("//lib:unittest.bzl", "asserts", "unittest")
 
 def _is_equal_test(ctx):
-    """Unit tests for new_sets.is_equal."""
+    """Unit tests for sets.is_equal."""
 
     # Note that if this test fails, the results for the other `sets` tests will
     # be inconclusive because they use `asserts.new_set_equals`, which in turn
-    # calls `new_sets.is_equal`.
+    # calls `sets.is_equal`.
     env = unittest.begin(ctx)
 
-    asserts.true(env, new_sets.is_equal(new_sets.make(), new_sets.make()))
-    asserts.false(env, new_sets.is_equal(new_sets.make(), new_sets.make([1])))
-    asserts.false(env, new_sets.is_equal(new_sets.make([1]), new_sets.make()))
-    asserts.true(env, new_sets.is_equal(new_sets.make([1]), new_sets.make([1])))
-    asserts.false(env, new_sets.is_equal(new_sets.make([1]), new_sets.make([1, 2])))
-    asserts.false(env, new_sets.is_equal(new_sets.make([1]), new_sets.make([2])))
-    asserts.false(env, new_sets.is_equal(new_sets.make([1]), new_sets.make([1, 2])))
+    asserts.true(env, sets.is_equal(sets.make(), sets.make()))
+    asserts.false(env, sets.is_equal(sets.make(), sets.make([1])))
+    asserts.false(env, sets.is_equal(sets.make([1]), sets.make()))
+    asserts.true(env, sets.is_equal(sets.make([1]), sets.make([1])))
+    asserts.false(env, sets.is_equal(sets.make([1]), sets.make([1, 2])))
+    asserts.false(env, sets.is_equal(sets.make([1]), sets.make([2])))
+    asserts.false(env, sets.is_equal(sets.make([1]), sets.make([1, 2])))
 
     # Verify that the implementation is not using == on the sets directly.
-    asserts.true(env, new_sets.is_equal(new_sets.make(depset([1])), new_sets.make(depset([1]))))
+    asserts.true(env, sets.is_equal(sets.make(depset([1])), sets.make(depset([1]))))
 
     # If passing a list, verify that duplicate elements are ignored.
-    asserts.true(env, new_sets.is_equal(new_sets.make([1, 1]), new_sets.make([1])))
+    asserts.true(env, sets.is_equal(sets.make([1, 1]), sets.make([1])))
 
     unittest.end(env)
 
 is_equal_test = unittest.make(_is_equal_test)
 
 def _is_subset_test(ctx):
-    """Unit tests for new_sets.is_subset."""
+    """Unit tests for sets.is_subset."""
     env = unittest.begin(ctx)
 
-    asserts.true(env, new_sets.is_subset(new_sets.make(), new_sets.make()))
-    asserts.true(env, new_sets.is_subset(new_sets.make(), new_sets.make([1])))
-    asserts.false(env, new_sets.is_subset(new_sets.make([1]), new_sets.make()))
-    asserts.true(env, new_sets.is_subset(new_sets.make([1]), new_sets.make([1])))
-    asserts.true(env, new_sets.is_subset(new_sets.make([1]), new_sets.make([1, 2])))
-    asserts.false(env, new_sets.is_subset(new_sets.make([1]), new_sets.make([2])))
-    asserts.true(env, new_sets.is_subset(new_sets.make([1]), new_sets.make(depset([1, 2]))))
+    asserts.true(env, sets.is_subset(sets.make(), sets.make()))
+    asserts.true(env, sets.is_subset(sets.make(), sets.make([1])))
+    asserts.false(env, sets.is_subset(sets.make([1]), sets.make()))
+    asserts.true(env, sets.is_subset(sets.make([1]), sets.make([1])))
+    asserts.true(env, sets.is_subset(sets.make([1]), sets.make([1, 2])))
+    asserts.false(env, sets.is_subset(sets.make([1]), sets.make([2])))
+    asserts.true(env, sets.is_subset(sets.make([1]), sets.make(depset([1, 2]))))
 
     # If passing a list, verify that duplicate elements are ignored.
-    asserts.true(env, new_sets.is_subset(new_sets.make([1, 1]), new_sets.make([1, 2])))
+    asserts.true(env, sets.is_subset(sets.make([1, 1]), sets.make([1, 2])))
 
     unittest.end(env)
 
 is_subset_test = unittest.make(_is_subset_test)
 
 def _disjoint_test(ctx):
-    """Unit tests for new_sets.disjoint."""
+    """Unit tests for sets.disjoint."""
     env = unittest.begin(ctx)
 
-    asserts.true(env, new_sets.disjoint(new_sets.make(), new_sets.make()))
-    asserts.true(env, new_sets.disjoint(new_sets.make(), new_sets.make([1])))
-    asserts.true(env, new_sets.disjoint(new_sets.make([1]), new_sets.make()))
-    asserts.false(env, new_sets.disjoint(new_sets.make([1]), new_sets.make([1])))
-    asserts.false(env, new_sets.disjoint(new_sets.make([1]), new_sets.make([1, 2])))
-    asserts.true(env, new_sets.disjoint(new_sets.make([1]), new_sets.make([2])))
-    asserts.true(env, new_sets.disjoint(new_sets.make([1]), new_sets.make(depset([2]))))
+    asserts.true(env, sets.disjoint(sets.make(), sets.make()))
+    asserts.true(env, sets.disjoint(sets.make(), sets.make([1])))
+    asserts.true(env, sets.disjoint(sets.make([1]), sets.make()))
+    asserts.false(env, sets.disjoint(sets.make([1]), sets.make([1])))
+    asserts.false(env, sets.disjoint(sets.make([1]), sets.make([1, 2])))
+    asserts.true(env, sets.disjoint(sets.make([1]), sets.make([2])))
+    asserts.true(env, sets.disjoint(sets.make([1]), sets.make(depset([2]))))
 
     # If passing a list, verify that duplicate elements are ignored.
-    asserts.false(env, new_sets.disjoint(new_sets.make([1, 1]), new_sets.make([1, 2])))
+    asserts.false(env, sets.disjoint(sets.make([1, 1]), sets.make([1, 2])))
 
     unittest.end(env)
 
 disjoint_test = unittest.make(_disjoint_test)
 
 def _intersection_test(ctx):
-    """Unit tests for new_sets.intersection."""
+    """Unit tests for sets.intersection."""
     env = unittest.begin(ctx)
 
-    asserts.new_set_equals(env, new_sets.make(), new_sets.intersection(new_sets.make(), new_sets.make()))
-    asserts.new_set_equals(env, new_sets.make(), new_sets.intersection(new_sets.make(), new_sets.make([1])))
-    asserts.new_set_equals(env, new_sets.make(), new_sets.intersection(new_sets.make([1]), new_sets.make()))
-    asserts.new_set_equals(env, new_sets.make([1]), new_sets.intersection(new_sets.make([1]), new_sets.make([1])))
-    asserts.new_set_equals(env, new_sets.make([1]), new_sets.intersection(new_sets.make([1]), new_sets.make([1, 2])))
-    asserts.new_set_equals(env, new_sets.make(), new_sets.intersection(new_sets.make([1]), new_sets.make([2])))
-    asserts.new_set_equals(env, new_sets.make([1]), new_sets.intersection(new_sets.make([1]), new_sets.make(depset([1]))))
+    asserts.new_set_equals(env, sets.make(), sets.intersection(sets.make(), sets.make()))
+    asserts.new_set_equals(env, sets.make(), sets.intersection(sets.make(), sets.make([1])))
+    asserts.new_set_equals(env, sets.make(), sets.intersection(sets.make([1]), sets.make()))
+    asserts.new_set_equals(env, sets.make([1]), sets.intersection(sets.make([1]), sets.make([1])))
+    asserts.new_set_equals(env, sets.make([1]), sets.intersection(sets.make([1]), sets.make([1, 2])))
+    asserts.new_set_equals(env, sets.make(), sets.intersection(sets.make([1]), sets.make([2])))
+    asserts.new_set_equals(env, sets.make([1]), sets.intersection(sets.make([1]), sets.make(depset([1]))))
 
     # If passing a list, verify that duplicate elements are ignored.
-    asserts.new_set_equals(env, new_sets.make([1]), new_sets.intersection(new_sets.make([1, 1]), new_sets.make([1, 2])))
+    asserts.new_set_equals(env, sets.make([1]), sets.intersection(sets.make([1, 1]), sets.make([1, 2])))
 
     unittest.end(env)
 
 intersection_test = unittest.make(_intersection_test)
 
 def _union_test(ctx):
-    """Unit tests for new_sets.union."""
+    """Unit tests for sets.union."""
     env = unittest.begin(ctx)
 
-    asserts.new_set_equals(env, new_sets.make(), new_sets.union())
-    asserts.new_set_equals(env, new_sets.make([1]), new_sets.union(new_sets.make([1])))
-    asserts.new_set_equals(env, new_sets.make(), new_sets.union(new_sets.make(), new_sets.make()))
-    asserts.new_set_equals(env, new_sets.make([1]), new_sets.union(new_sets.make(), new_sets.make([1])))
-    asserts.new_set_equals(env, new_sets.make([1]), new_sets.union(new_sets.make([1]), new_sets.make()))
-    asserts.new_set_equals(env, new_sets.make([1]), new_sets.union(new_sets.make([1]), new_sets.make([1])))
-    asserts.new_set_equals(env, new_sets.make([1, 2]), new_sets.union(new_sets.make([1]), new_sets.make([1, 2])))
-    asserts.new_set_equals(env, new_sets.make([1, 2]), new_sets.union(new_sets.make([1]), new_sets.make([2])))
-    asserts.new_set_equals(env, new_sets.make([1]), new_sets.union(new_sets.make([1]), new_sets.make(depset([1]))))
+    asserts.new_set_equals(env, sets.make(), sets.union())
+    asserts.new_set_equals(env, sets.make([1]), sets.union(sets.make([1])))
+    asserts.new_set_equals(env, sets.make(), sets.union(sets.make(), sets.make()))
+    asserts.new_set_equals(env, sets.make([1]), sets.union(sets.make(), sets.make([1])))
+    asserts.new_set_equals(env, sets.make([1]), sets.union(sets.make([1]), sets.make()))
+    asserts.new_set_equals(env, sets.make([1]), sets.union(sets.make([1]), sets.make([1])))
+    asserts.new_set_equals(env, sets.make([1, 2]), sets.union(sets.make([1]), sets.make([1, 2])))
+    asserts.new_set_equals(env, sets.make([1, 2]), sets.union(sets.make([1]), sets.make([2])))
+    asserts.new_set_equals(env, sets.make([1]), sets.union(sets.make([1]), sets.make(depset([1]))))
 
     # If passing a list, verify that duplicate elements are ignored.
-    asserts.new_set_equals(env, new_sets.make([1, 2]), new_sets.union(new_sets.make([1, 1]), new_sets.make([1, 2])))
+    asserts.new_set_equals(env, sets.make([1, 2]), sets.union(sets.make([1, 1]), sets.make([1, 2])))
 
     unittest.end(env)
 
 union_test = unittest.make(_union_test)
 
 def _difference_test(ctx):
-    """Unit tests for new_sets.difference."""
+    """Unit tests for sets.difference."""
     env = unittest.begin(ctx)
 
-    asserts.new_set_equals(env, new_sets.make(), new_sets.difference(new_sets.make(), new_sets.make()))
-    asserts.new_set_equals(env, new_sets.make(), new_sets.difference(new_sets.make(), new_sets.make([1])))
-    asserts.new_set_equals(env, new_sets.make([1]), new_sets.difference(new_sets.make([1]), new_sets.make()))
-    asserts.new_set_equals(env, new_sets.make(), new_sets.difference(new_sets.make([1]), new_sets.make([1])))
-    asserts.new_set_equals(env, new_sets.make(), new_sets.difference(new_sets.make([1]), new_sets.make([1, 2])))
-    asserts.new_set_equals(env, new_sets.make([1]), new_sets.difference(new_sets.make([1]), new_sets.make([2])))
-    asserts.new_set_equals(env, new_sets.make(), new_sets.difference(new_sets.make([1]), new_sets.make(depset([1]))))
+    asserts.new_set_equals(env, sets.make(), sets.difference(sets.make(), sets.make()))
+    asserts.new_set_equals(env, sets.make(), sets.difference(sets.make(), sets.make([1])))
+    asserts.new_set_equals(env, sets.make([1]), sets.difference(sets.make([1]), sets.make()))
+    asserts.new_set_equals(env, sets.make(), sets.difference(sets.make([1]), sets.make([1])))
+    asserts.new_set_equals(env, sets.make(), sets.difference(sets.make([1]), sets.make([1, 2])))
+    asserts.new_set_equals(env, sets.make([1]), sets.difference(sets.make([1]), sets.make([2])))
+    asserts.new_set_equals(env, sets.make(), sets.difference(sets.make([1]), sets.make(depset([1]))))
 
     # If passing a list, verify that duplicate elements are ignored.
-    asserts.new_set_equals(env, new_sets.make([2]), new_sets.difference(new_sets.make([1, 2]), new_sets.make([1, 1])))
+    asserts.new_set_equals(env, sets.make([2]), sets.difference(sets.make([1, 2]), sets.make([1, 1])))
 
     unittest.end(env)
 
 difference_test = unittest.make(_difference_test)
 
 def _to_list_test(ctx):
-    """Unit tests for new_sets.to_list."""
+    """Unit tests for sets.to_list."""
     env = unittest.begin(ctx)
 
-    asserts.equals(env, [], new_sets.to_list(new_sets.make()))
-    asserts.equals(env, [1], new_sets.to_list(new_sets.make([1, 1, 1])))
-    asserts.equals(env, [1, 2, 3], new_sets.to_list(new_sets.make([1, 2, 3])))
+    asserts.equals(env, [], sets.to_list(sets.make()))
+    asserts.equals(env, [1], sets.to_list(sets.make([1, 1, 1])))
+    asserts.equals(env, [1, 2, 3], sets.to_list(sets.make([1, 2, 3])))
 
     unittest.end(env)
 
 to_list_test = unittest.make(_to_list_test)
 
 def _make_test(ctx):
-    """Unit tests for new_sets.make."""
+    """Unit tests for sets.make."""
     env = unittest.begin(ctx)
 
-    asserts.equals(env, {}, new_sets.make()._values)
-    asserts.equals(env, {x: None for x in [1, 2, 3]}, new_sets.make([1, 1, 2, 2, 3, 3])._values)
-    asserts.equals(env, {1: None, 2: None}, new_sets.make(depset([1, 2]))._values)
+    asserts.equals(env, {}, sets.make()._values)
+    asserts.equals(env, {x: None for x in [1, 2, 3]}, sets.make([1, 1, 2, 2, 3, 3])._values)
+    asserts.equals(env, {1: None, 2: None}, sets.make(depset([1, 2]))._values)
 
     unittest.end(env)
 
 make_test = unittest.make(_make_test)
 
 def _copy_test(ctx):
-    """Unit tests for new_sets.copy."""
+    """Unit tests for sets.copy."""
     env = unittest.begin(ctx)
 
-    asserts.new_set_equals(env, new_sets.copy(new_sets.make()), new_sets.make())
-    asserts.new_set_equals(env, new_sets.copy(new_sets.make([1, 2, 3])), new_sets.make([1, 2, 3]))
+    asserts.new_set_equals(env, sets.copy(sets.make()), sets.make())
+    asserts.new_set_equals(env, sets.copy(sets.make([1, 2, 3])), sets.make([1, 2, 3]))
 
     # Ensure mutating the copy does not mutate the original
-    original = new_sets.make([1, 2, 3])
-    copy = new_sets.copy(original)
+    original = sets.make([1, 2, 3])
+    copy = sets.copy(original)
     copy._values[5] = None
-    asserts.false(env, new_sets.is_equal(original, copy))
+    asserts.false(env, sets.is_equal(original, copy))
 
     unittest.end(env)
 
 copy_test = unittest.make(_copy_test)
 
 def _insert_test(ctx):
-    """Unit tests for new_sets.insert."""
+    """Unit tests for sets.insert."""
     env = unittest.begin(ctx)
 
-    asserts.new_set_equals(env, new_sets.make([1, 2, 3]), new_sets.insert(new_sets.make([1, 2]), 3))
+    asserts.new_set_equals(env, sets.make([1, 2, 3]), sets.insert(sets.make([1, 2]), 3))
 
     # Ensure mutating the inserted set does mutate the original set.
-    original = new_sets.make([1, 2, 3])
-    after_insert = new_sets.insert(original, 4)
+    original = sets.make([1, 2, 3])
+    after_insert = sets.insert(original, 4)
     asserts.new_set_equals(
         env,
         original,
@@ -201,39 +202,39 @@ def _insert_test(ctx):
 insert_test = unittest.make(_insert_test)
 
 def _contains_test(ctx):
-    """Unit tests for new_sets.contains."""
+    """Unit tests for sets.contains."""
     env = unittest.begin(ctx)
 
-    asserts.false(env, new_sets.contains(new_sets.make(), 1))
-    asserts.true(env, new_sets.contains(new_sets.make([1]), 1))
-    asserts.true(env, new_sets.contains(new_sets.make([1, 2]), 1))
-    asserts.false(env, new_sets.contains(new_sets.make([2, 3]), 1))
+    asserts.false(env, sets.contains(sets.make(), 1))
+    asserts.true(env, sets.contains(sets.make([1]), 1))
+    asserts.true(env, sets.contains(sets.make([1, 2]), 1))
+    asserts.false(env, sets.contains(sets.make([2, 3]), 1))
 
     unittest.end(env)
 
 contains_test = unittest.make(_contains_test)
 
 def _length_test(ctx):
-    """Unit test for new_sets.length."""
+    """Unit test for sets.length."""
     env = unittest.begin(ctx)
 
-    asserts.equals(env, 0, new_sets.length(new_sets.make()))
-    asserts.equals(env, 1, new_sets.length(new_sets.make([1])))
-    asserts.equals(env, 2, new_sets.length(new_sets.make([1, 2])))
+    asserts.equals(env, 0, sets.length(sets.make()))
+    asserts.equals(env, 1, sets.length(sets.make([1])))
+    asserts.equals(env, 2, sets.length(sets.make([1, 2])))
 
     unittest.end(env)
 
 length_test = unittest.make(_length_test)
 
 def _remove_test(ctx):
-    """Unit test for new_sets.remove."""
+    """Unit test for sets.remove."""
     env = unittest.begin(ctx)
 
-    asserts.new_set_equals(env, new_sets.make([1, 2]), new_sets.remove(new_sets.make([1, 2, 3]), 3))
+    asserts.new_set_equals(env, sets.make([1, 2]), sets.remove(sets.make([1, 2, 3]), 3))
 
     # Ensure mutating the inserted set does mutate the original set.
-    original = new_sets.make([1, 2, 3])
-    after_removal = new_sets.remove(original, 3)
+    original = sets.make([1, 2, 3])
+    after_removal = sets.remove(original, 3)
     asserts.new_set_equals(env, original, after_removal)
 
     unittest.end(env)
@@ -241,16 +242,16 @@ def _remove_test(ctx):
 remove_test = unittest.make(_remove_test)
 
 def _repr_str_test(ctx):
-    """Unit test for new_sets.repr and new_sets.str."""
+    """Unit test for sets.repr and sets.str."""
     env = unittest.begin(ctx)
 
-    asserts.equals(env, "[]", new_sets.repr(new_sets.make()))
-    asserts.equals(env, "[1]", new_sets.repr(new_sets.make([1])))
-    asserts.equals(env, "[1, 2]", new_sets.repr(new_sets.make([1, 2])))
+    asserts.equals(env, "[]", sets.repr(sets.make()))
+    asserts.equals(env, "[1]", sets.repr(sets.make([1])))
+    asserts.equals(env, "[1, 2]", sets.repr(sets.make([1, 2])))
 
-    asserts.equals(env, "[]", new_sets.str(new_sets.make()))
-    asserts.equals(env, "[1]", new_sets.str(new_sets.make([1])))
-    asserts.equals(env, "[1, 2]", new_sets.str(new_sets.make([1, 2])))
+    asserts.equals(env, "[]", sets.str(sets.make()))
+    asserts.equals(env, "[1]", sets.str(sets.make([1])))
+    asserts.equals(env, "[1, 2]", sets.str(sets.make([1, 2])))
 
     unittest.end(env)
 
