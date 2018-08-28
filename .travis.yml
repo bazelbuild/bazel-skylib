@@ -19,7 +19,7 @@ matrix:
     # macOS hosted tests
 
     - os: osx
-      osx_image: xcode9.3
+      osx_image: xcode9.4
       env: BAZEL=HEAD
     # No need for a BUILDIFER run on mac, the results will be the same.
     # And linux boxes test faster on travis, so just use the one.
