@@ -14,6 +14,12 @@
 
 """Index from which multiple modules can be loaded."""
 
+print(
+    "WARNING: lib.bzl is deprecated and will go away in the future, please" +
+    " directly load the bzl file(s) of the module(s) needed as it is more" +
+    " efficient.",
+)
+
 load("//lib:collections.bzl", _collections = "collections")
 load("//lib:dicts.bzl", _dicts = "dicts")
 load("//lib:new_sets.bzl", _new_sets = "sets")
@@ -25,9 +31,6 @@ load("//lib:shell.bzl", _shell = "shell")
 load("//lib:structs.bzl", _structs = "structs")
 load("//lib:types.bzl", _types = "types")
 load("//lib:versions.bzl", _versions = "versions")
-
-# The unittest module is treated differently to give more convenient names to
-# the assert functions, while keeping them in the same .bzl file.
 load("//lib:unittest.bzl", _asserts = "asserts", _unittest = "unittest")
 
 collections = _collections

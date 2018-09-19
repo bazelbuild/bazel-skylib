@@ -21,6 +21,10 @@ filegroup(
 skylark_library(
     name = "lib",
     srcs = ["lib.bzl"],
+    deprecation = (
+        "lib.bzl will go away in the future, please directly depend on the" +
+        " module(s) needed as it is more efficient."
+    ),
     deps = [
         "//lib:collections",
         "//lib:dicts",
