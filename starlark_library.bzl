@@ -14,8 +14,8 @@
 
 """Skylib module containing a library rule for aggregating rules files."""
 
-SkylarkLibraryInfo = provider(
-    "Information on contained Skylark rules.",
+StarlarkLibraryInfo = provider(
+    "Information on contained Starlark rules.",
     fields = {
         "srcs": "Top level rules files.",
         "transitive_srcs": "Transitive closure of rules files required for " +
@@ -23,12 +23,12 @@ SkylarkLibraryInfo = provider(
     },
 )
 
-def _skylark_library_impl(ctx):
+def _starlark_library_impl(ctx):
     deps_files = [depset(x.files, order = "postorder") for x in ctx.attr.deps]
     all_files = depset(ctx.files.srcs, order = "postorder", transitive = deps_files)
     return [
         # All dependent files should be listed in both `files` and in `runfiles`;
-        # this ensures that a `skylark_library` can be referenced as `data` from
+        # this ensures that a `starlark_library` can be referenced as `data` from
         # a separate program, or from `tools` of a genrule().
         DefaultInfo(
             files = all_files,
@@ -36,14 +36,14 @@ def _skylark_library_impl(ctx):
         ),
 
         # We also define our own provider struct, for aggregation and testing.
-        SkylarkLibraryInfo(
+        StarlarkLibraryInfo(
             srcs = ctx.files.srcs,
             transitive_srcs = all_files,
         ),
     ]
 
-skylark_library = rule(
-    implementation = _skylark_library_impl,
+starlark_library = rule(
+    implementation = _starlark_library_impl,
     attrs = {
         "srcs": attr.label_list(
             allow_files = [".bzl"],
@@ -51,17 +51,17 @@ skylark_library = rule(
         "deps": attr.label_list(
             allow_files = [".bzl"],
             providers = [
-                [SkylarkLibraryInfo],
+                [StarlarkLibraryInfo],
             ],
         ),
     },
 )
-"""Creates a logical collection of Skylark .bzl files.
+"""Creates a logical collection of Starlark .bzl files.
 
 Args:
   srcs: List of `.bzl` files that are processed to create this target.
-  deps: List of other `skylark_library` targets that are required by the
-    Skylark files listed in `srcs`.
+  deps: List of other `starlark_library` targets that are required by the
+    Starlark files listed in `srcs`.
 
 Example:
   Suppose your project has the following structure:
@@ -79,15 +79,15 @@ Example:
           luarocks.bzl
   ```
 
-  In this case, you can have `skylark_library` targets in `checkstyle/BUILD` and
+  In this case, you can have `starlark_library` targets in `checkstyle/BUILD` and
   `lua/BUILD`:
 
   `checkstyle/BUILD`:
 
   ```python
-  load("@bazel_skylib//:skylark_library.bzl", "skylark_library")
+  load("@bazel_skylib//:starlark_library.bzl", "starlark_library")
 
-  skylark_library(
+  starlark_library(
       name = "checkstyle-rules",
       srcs = ["checkstyle.bzl"],
   )
@@ -96,9 +96,9 @@ Example:
   `lua/BUILD`:
 
   ```python
-  load("@bazel_skylib//:skylark_library.bzl", "skylark_library")
+  load("@bazel_skylib//:starlark_library.bzl", "starlark_library")
 
-  skylark_library(
+  starlark_library(
       name = "lua-rules",
       srcs = [
           "lua.bzl",

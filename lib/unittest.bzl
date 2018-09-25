@@ -59,7 +59,7 @@ def _make(impl, attrs = None):
     """
 
     # Derive the name of the implementation function for better test feedback.
-    # Skylark currently stringifies a function as "<function NAME>", so we use
+    # Starlark currently stringifies a function as "<function NAME>", so we use
     # that knowledge to parse the "NAME" portion out. If this behavior ever
     # changes, we'll need to update this.
     # TODO(bazel-team): Expose a ._name field on functions to avoid this.

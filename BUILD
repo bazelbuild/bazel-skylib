@@ -2,7 +2,7 @@ licenses(["notice"])  # Apache 2.0
 
 package(default_visibility = ["//visibility:public"])
 
-load("//:skylark_library.bzl", "skylark_library")
+load("//:starlark_library.bzl", "starlark_library")
 
 exports_files([
     "LICENSE",
@@ -18,7 +18,7 @@ filegroup(
     ] + glob(["*.bzl"]),
 )
 
-skylark_library(
+starlark_library(
     name = "lib",
     srcs = ["lib.bzl"],
     deprecation = (
@@ -41,7 +41,7 @@ skylark_library(
     ],
 )
 
-skylark_library(
-    name = "skylark_library",
-    srcs = ["skylark_library.bzl"],
+starlark_library(
+    name = "starlark_library",
+    srcs = ["starlark_library.bzl"],
 )
