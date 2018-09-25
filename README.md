@@ -80,8 +80,8 @@ Steps to add a module to Skylib:
 
 1. Add unit tests for your module in the `tests` directory.
 
-## `starlark_library`
+## `bzl_library`
 
-The `starlark_library.bzl` rule can be used to aggregate a set of
+The `bzl_library.bzl` rule can be used to aggregate a set of
 Starlark files and its dependencies for use in test targets and
 documentation generation.
