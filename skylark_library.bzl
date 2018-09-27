@@ -10,4 +10,3 @@ load("//:bzl_library.bzl", "StarlarkLibraryInfo", "bzl_library")
 SkylarkLibraryInfo = StarlarkLibraryInfo
 
 skylark_library = bzl_library
-
