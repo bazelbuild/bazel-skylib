@@ -21,7 +21,7 @@ def _with_or_test(ctx):
     """Unit tests for with_or."""
     env = unittest.begin(ctx)
 
-    # We actually test on with_or_dict because Skylark can't get the
+    # We actually test on with_or_dict because Starlark can't get the
     # dictionary from a select().
 
     # Test select()-compatible input syntax.
