@@ -21,7 +21,7 @@ def _dummy_function(name):
     """Used to validate the maybe function is/isn't called."""
     _existing_rules[name] = (_existing_rules[name] or 0) + 1
 
-def _calls_rule_function(ctx):
+def _calls_rule_function_test(ctx):
     """Unit tests for repository.maybe."""
 
     env = unittest.begin(ctx)
@@ -37,11 +37,11 @@ def _calls_rule_function(ctx):
 
     unittest.end(env)
 
-calls_rule_function = unittest.make(_calls_rule_function)
+calls_rule_function_test = unittest.make(_calls_rule_function_test)
 
 def repository_test_suite():
     """Creates the test targets and test suite for repository.bzl tests."""
     unittest.suite(
         "repository_tests",
-        calls_rule_function,
+        calls_rule_function_test,
     )
