@@ -16,31 +16,32 @@
 load("//lib:repository.bzl", "repository")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
-def _calles_rule_function(ctx):
+_existing_rules = {}
+def _dummy_function(name):
+    """Used to validate the maybe function is/isn't called."""
+    _existing_rules[name] = (_existing_rules[name] or 0) + 1
+
+def _calls_rule_function(ctx):
     """Unit tests for repository.maybe."""
 
     env = unittest.begin(ctx)
     
-    existing_rules = {}
-    def _dummy_function(name):
-        """Used to validate the maybe function is/isn't called."""
-        existing_rules[name] = (existing_rules[name] or 0) + 1
 
     # It should insert the first time.
     repository.maybe(_dummy_function, "foo")
-    asserts.equals(env, existing_rules, {"foo": 1})
+    asserts.equals(env, _existing_rules, {"foo": 1})
 
     # And find a preexisting entry the second and not change it.
     repository.maybe(_dummy_function, "foo")
-    asserts.equals(env, existing_rules, {"foo": 1})
+    asserts.equals(env, _existing_rules, {"foo": 1})
 
     unittest.end(env)
 
-calles_rule_function = unittest.make(_calles_rule_function)
+calls_rule_function = unittest.make(_calls_rule_function)
 
 def repository_test_suite():
     """Creates the test targets and test suite for repository.bzl tests."""
     unittest.suite(
         "repository_tests",
-        calles_rule_function,
+        calls_rule_function,
     )
