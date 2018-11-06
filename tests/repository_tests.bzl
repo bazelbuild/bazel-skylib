@@ -27,12 +27,12 @@ def _calls_rule_function_test(ctx):
     env = unittest.begin(ctx)
     
     # It should insert the first time.
-    repository.maybe(_dummy_function, "foo")
-    asserts.equals(env, _existing_rules, {"foo": 1}, existing_rules = _existing_rules)
+    repository.maybe(_dummy_function, "foo", existing_rules = _existing_rules)
+    asserts.equals(env, _existing_rules, {"foo": 1})
 
     # And find a preexisting entry the second and not change it.
-    repository.maybe(_dummy_function, "foo")
-    asserts.equals(env, _existing_rules, {"foo": 1}, existing_rules = _existing_rules)
+    repository.maybe(_dummy_function, "foo", existing_rules = _existing_rules)
+    asserts.equals(env, _existing_rules, {"foo": 1})
 
     unittest.end(env)
 
