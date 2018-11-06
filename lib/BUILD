@@ -46,6 +46,11 @@ bzl_library(
 )
 
 bzl_library(
+    name = "repository",
+    srcs = ["repository.bzl"],
+)
+
+bzl_library(
     name = "shell",
     srcs = ["shell.bzl"],
 )
