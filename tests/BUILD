@@ -2,6 +2,7 @@ load(":collections_tests.bzl", "collections_test_suite")
 load(":dicts_tests.bzl", "dicts_test_suite")
 load(":partial_tests.bzl", "partial_test_suite")
 load(":paths_tests.bzl", "paths_test_suite")
+load(":repository_tests.bzl", "repository_test_suite")
 load(":selects_tests.bzl", "selects_test_suite")
 load(":sets_tests.bzl", "sets_test_suite")
 load(":new_sets_tests.bzl", "new_sets_test_suite")
@@ -25,6 +26,8 @@ selects_test_suite()
 sets_test_suite()
 
 new_sets_test_suite()
+
+repository_test_suite()
 
 shell_test_suite()
 
