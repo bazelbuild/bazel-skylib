@@ -34,6 +34,7 @@ def _make(elements = None):
       A set containing the passed in values.
     """
     elements = elements if elements else []
+    elements = elements.to_list() if type(elements) == "depset" else elements
     return struct(_values = {e: None for e in elements})
 
 def _copy(s):

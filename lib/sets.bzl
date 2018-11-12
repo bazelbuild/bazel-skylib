@@ -43,6 +43,34 @@ def _precondition_only_sets_or_lists(*args):
             fail("Expected arguments to be depset or list, but found type %s: %r" %
                  (t, a))
 
+def _to_set(a):
+    """Converts `a` into a set.
+
+    Args:
+      a: A depset or a list.
+
+    Returns:
+      A dict of keys created from elements of `a`.
+    """
+    t = type(a)
+    if t == "depset":
+        a = a.to_list()
+    return {e: None for e in a}
+
+def _to_list(a):
+    """Converts `a` into a list.
+
+    Args:
+      a: A depset, list, or an output of `_to_set()`
+
+    Returns:
+      A list of unique elements of `a`.
+    """
+    t = type(a)
+    if t in ("depset", "list"):
+        a = _to_set(a)
+    return a.keys()
+
 def _is_equal(a, b):
     """Returns whether two sets are equal.
 
@@ -54,7 +82,7 @@ def _is_equal(a, b):
       True if `a` is equal to `b`, False otherwise.
     """
     _precondition_only_sets_or_lists(a, b)
-    return sorted(depset(a)) == sorted(depset(b))
+    return sorted(_to_list(a)) == sorted(_to_list(b))
 
 def _is_subset(a, b):
     """Returns whether `a` is a subset of `b`.
@@ -67,6 +95,7 @@ def _is_subset(a, b):
       True if `a` is a subset of `b`, False otherwise.
     """
     _precondition_only_sets_or_lists(a, b)
+    a, b = _to_set(a), _to_set(b)
     for e in a:
         if e not in b:
             return False
@@ -85,6 +114,7 @@ def _disjoint(a, b):
       True if `a` and `b` are disjoint, False otherwise.
     """
     _precondition_only_sets_or_lists(a, b)
+    a, b = _to_set(a), _to_set(b)
     for e in a:
         if e in b:
             return False
@@ -101,6 +131,7 @@ def _intersection(a, b):
       A set containing the elements that are in both `a` and `b`.
     """
     _precondition_only_sets_or_lists(a, b)
+    a, b = _to_set(a), _to_set(b)
     return depset([e for e in a if e in b])
 
 def _union(*args):
@@ -127,6 +158,7 @@ def _difference(a, b):
       A set containing the elements that are in `a` but not in `b`.
     """
     _precondition_only_sets_or_lists(a, b)
+    a, b = _to_set(a), _to_set(b)
     return depset([e for e in a if e not in b])
 
 sets = struct(

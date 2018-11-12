@@ -32,7 +32,7 @@ def _bzl_library_impl(ctx):
         # a separate program, or from `tools` of a genrule().
         DefaultInfo(
             files = all_files,
-            runfiles = ctx.runfiles(files = list(all_files)),
+            runfiles = ctx.runfiles(transitive_files = all_files),
         ),
 
         # We also define our own provider struct, for aggregation and testing.
