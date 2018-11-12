@@ -14,15 +14,17 @@
 """Skylib module containing functions checking types."""
 
 # create instance singletons to avoid unnecessary allocations
-_a_bool = True
-_a_dict = {}
-_a_list = []
-_a_string = ""
-_a_tuple = ()
-_an_int = 1
+_a_bool_type = type(True)
+_a_dict_type = type({})
+_a_list_type = type([])
+_a_string_type = type("")
+_a_tuple_type = type(())
+_an_int_type = type(1)
 
 def _a_function():
     pass
+
+_a_function_type = type(_a_function)
 
 def _is_list(v):
     """Returns True if v is an instance of a list.
@@ -33,7 +35,7 @@ def _is_list(v):
     Returns:
       True if v is an instance of a list, False otherwise.
     """
-    return type(v) == type(_a_list)
+    return type(v) == _a_list_type
 
 def _is_string(v):
     """Returns True if v is an instance of a string.
@@ -44,7 +46,7 @@ def _is_string(v):
     Returns:
       True if v is an instance of a string, False otherwise.
     """
-    return type(v) == type(_a_string)
+    return type(v) == _a_string_type
 
 def _is_bool(v):
     """Returns True if v is an instance of a bool.
@@ -55,7 +57,7 @@ def _is_bool(v):
     Returns:
       True if v is an instance of a bool, False otherwise.
     """
-    return type(v) == type(_a_bool)
+    return type(v) == _a_bool_type
 
 def _is_none(v):
     """Returns True if v has the type of None.
@@ -77,7 +79,7 @@ def _is_int(v):
     Returns:
       True if v is an instance of a signed integer, False otherwise.
     """
-    return type(v) == type(_an_int)
+    return type(v) == _an_int_type
 
 def _is_tuple(v):
     """Returns True if v is an instance of a tuple.
@@ -88,7 +90,7 @@ def _is_tuple(v):
     Returns:
       True if v is an instance of a tuple, False otherwise.
     """
-    return type(v) == type(_a_tuple)
+    return type(v) == _a_tuple_type
 
 def _is_dict(v):
     """Returns True if v is an instance of a dict.
@@ -99,7 +101,7 @@ def _is_dict(v):
     Returns:
       True if v is an instance of a dict, False otherwise.
     """
-    return type(v) == type(_a_dict)
+    return type(v) == _a_dict_type
 
 def _is_function(v):
     """Returns True if v is an instance of a function.
@@ -110,7 +112,7 @@ def _is_function(v):
     Returns:
       True if v is an instance of a function, False otherwise.
     """
-    return type(v) == type(_a_function)
+    return type(v) == _a_function_type
 
 types = struct(
     is_list = _is_list,
