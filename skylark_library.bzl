@@ -1,4 +1,4 @@
-# Copyright 2017 The Bazel Authors. All rights reserved.
+# Copyright 2018 The Bazel Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,8 @@
 
 """Skylib module containing a library rule for aggregating rules files.
 
-DEPRECATED: Use bzl_library.bzl instead.
+Deprecated:
+  Use bzl_library in bzl_library.bzl instead.
 """
 
 load("//:bzl_library.bzl", "StarlarkLibraryInfo", "bzl_library")
