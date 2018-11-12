@@ -26,6 +26,9 @@ duplicate elements are ignored). Functions that return new sets always return
 them as the `set` type, regardless of the types of the inputs.
 """
 
+_depset_type = type(depset())
+_list_type = type([])
+
 def _precondition_only_sets_or_lists(*args):
     """Verifies that all arguments are either sets or lists.
 
@@ -36,7 +39,7 @@ def _precondition_only_sets_or_lists(*args):
     """
     for a in args:
         t = type(a)
-        if t not in ("depset", "list"):
+        if t not in (_depset_type, _list_type):
             fail("Expected arguments to be depset or list, but found type %s: %r" %
                  (t, a))
 
@@ -110,7 +113,7 @@ def _union(*args):
       The set union of all sets or lists in `*args`.
     """
     _precondition_only_sets_or_lists(*args)
-    args_deps = [depset(x) if type(x) == type([]) else x for x in args]
+    args_deps = [depset(x) if type(x) == _list_type else x for x in args]
     return depset(transitive = args_deps)
 
 def _difference(a, b):
