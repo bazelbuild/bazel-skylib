@@ -33,9 +33,6 @@ def _is_equal_test(ctx):
     asserts.false(env, sets.is_equal(sets.make([1]), sets.make([2])))
     asserts.false(env, sets.is_equal(sets.make([1]), sets.make([1, 2])))
 
-    # Verify that the implementation is not using == on the sets directly.
-    asserts.true(env, sets.is_equal(sets.make(depset([1])), sets.make(depset([1]))))
-
     # If passing a list, verify that duplicate elements are ignored.
     asserts.true(env, sets.is_equal(sets.make([1, 1]), sets.make([1])))
 
@@ -53,7 +50,6 @@ def _is_subset_test(ctx):
     asserts.true(env, sets.is_subset(sets.make([1]), sets.make([1])))
     asserts.true(env, sets.is_subset(sets.make([1]), sets.make([1, 2])))
     asserts.false(env, sets.is_subset(sets.make([1]), sets.make([2])))
-    asserts.true(env, sets.is_subset(sets.make([1]), sets.make(depset([1, 2]))))
 
     # If passing a list, verify that duplicate elements are ignored.
     asserts.true(env, sets.is_subset(sets.make([1, 1]), sets.make([1, 2])))
@@ -72,7 +68,6 @@ def _disjoint_test(ctx):
     asserts.false(env, sets.disjoint(sets.make([1]), sets.make([1])))
     asserts.false(env, sets.disjoint(sets.make([1]), sets.make([1, 2])))
     asserts.true(env, sets.disjoint(sets.make([1]), sets.make([2])))
-    asserts.true(env, sets.disjoint(sets.make([1]), sets.make(depset([2]))))
 
     # If passing a list, verify that duplicate elements are ignored.
     asserts.false(env, sets.disjoint(sets.make([1, 1]), sets.make([1, 2])))
@@ -91,7 +86,6 @@ def _intersection_test(ctx):
     asserts.new_set_equals(env, sets.make([1]), sets.intersection(sets.make([1]), sets.make([1])))
     asserts.new_set_equals(env, sets.make([1]), sets.intersection(sets.make([1]), sets.make([1, 2])))
     asserts.new_set_equals(env, sets.make(), sets.intersection(sets.make([1]), sets.make([2])))
-    asserts.new_set_equals(env, sets.make([1]), sets.intersection(sets.make([1]), sets.make(depset([1]))))
 
     # If passing a list, verify that duplicate elements are ignored.
     asserts.new_set_equals(env, sets.make([1]), sets.intersection(sets.make([1, 1]), sets.make([1, 2])))
@@ -112,7 +106,6 @@ def _union_test(ctx):
     asserts.new_set_equals(env, sets.make([1]), sets.union(sets.make([1]), sets.make([1])))
     asserts.new_set_equals(env, sets.make([1, 2]), sets.union(sets.make([1]), sets.make([1, 2])))
     asserts.new_set_equals(env, sets.make([1, 2]), sets.union(sets.make([1]), sets.make([2])))
-    asserts.new_set_equals(env, sets.make([1]), sets.union(sets.make([1]), sets.make(depset([1]))))
 
     # If passing a list, verify that duplicate elements are ignored.
     asserts.new_set_equals(env, sets.make([1, 2]), sets.union(sets.make([1, 1]), sets.make([1, 2])))
@@ -131,7 +124,6 @@ def _difference_test(ctx):
     asserts.new_set_equals(env, sets.make(), sets.difference(sets.make([1]), sets.make([1])))
     asserts.new_set_equals(env, sets.make(), sets.difference(sets.make([1]), sets.make([1, 2])))
     asserts.new_set_equals(env, sets.make([1]), sets.difference(sets.make([1]), sets.make([2])))
-    asserts.new_set_equals(env, sets.make(), sets.difference(sets.make([1]), sets.make(depset([1]))))
 
     # If passing a list, verify that duplicate elements are ignored.
     asserts.new_set_equals(env, sets.make([2]), sets.difference(sets.make([1, 2]), sets.make([1, 1])))
@@ -158,7 +150,6 @@ def _make_test(ctx):
 
     asserts.equals(env, {}, sets.make()._values)
     asserts.equals(env, {x: None for x in [1, 2, 3]}, sets.make([1, 1, 2, 2, 3, 3])._values)
-    asserts.equals(env, {1: None, 2: None}, sets.make(depset([1, 2]))._values)
 
     unittest.end(env)
 
