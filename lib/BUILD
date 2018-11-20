@@ -37,7 +37,10 @@ bzl_library(
 
 bzl_library(
     name = "sets",
-    srcs = ["sets.bzl"],
+    srcs = [
+        "old_sets.bzl",
+        "sets.bzl",
+    ],
 )
 
 bzl_library(
