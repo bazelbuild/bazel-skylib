@@ -68,8 +68,8 @@ def _is_equal(a, b):
       True if `a` is equal to `b`, False otherwise.
     """
     _precondition_only_sets_or_lists(a, b)
-    # Convert both values to a depset then back to a list to
-    # remove duplicates.
+
+    # Convert both values to a depset then back to a list to remove duplicates.
     a = _depset_to_list(depset(a))
     b = _depset_to_list(depset(b))
     return sorted(a) == sorted(b)
