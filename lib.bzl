@@ -14,12 +14,6 @@
 
 """Index from which multiple modules can be loaded."""
 
-print(
-    "WARNING: lib.bzl is deprecated and will go away in the future, please" +
-    " directly load the bzl file(s) of the module(s) needed as it is more" +
-    " efficient.",
-)
-
 load("//lib:collections.bzl", _collections = "collections")
 load("//lib:dicts.bzl", _dicts = "dicts")
 load("//lib:new_sets.bzl", _new_sets = "sets")
@@ -32,6 +26,12 @@ load("//lib:structs.bzl", _structs = "structs")
 load("//lib:types.bzl", _types = "types")
 load("//lib:versions.bzl", _versions = "versions")
 load("//lib:unittest.bzl", _asserts = "asserts", _unittest = "unittest")
+
+print(
+    "WARNING: lib.bzl is deprecated and will go away in the future, please" +
+    " directly load the bzl file(s) of the module(s) needed as it is more" +
+    " efficient.",
+)
 
 collections = _collections
 dicts = _dicts
