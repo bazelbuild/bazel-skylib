@@ -67,7 +67,10 @@ bzl_library(
 bzl_library(
     name = "unittest",
     srcs = ["unittest.bzl"],
-    deps = [":sets"],
+    deps = [
+        ":new_sets",
+        ":sets",
+    ],
 )
 
 bzl_library(
