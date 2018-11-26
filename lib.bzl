@@ -24,8 +24,8 @@ load("//lib:sets.bzl", _sets = "sets")
 load("//lib:shell.bzl", _shell = "shell")
 load("//lib:structs.bzl", _structs = "structs")
 load("//lib:types.bzl", _types = "types")
-load("//lib:versions.bzl", _versions = "versions")
 load("//lib:unittest.bzl", _asserts = "asserts", _unittest = "unittest")
+load("//lib:versions.bzl", _versions = "versions")
 
 print(
     "WARNING: lib.bzl is deprecated and will go away in the future, please" +

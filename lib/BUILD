@@ -1,8 +1,8 @@
+load("//:bzl_library.bzl", "bzl_library")
+
 licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
-
-load("//:bzl_library.bzl", "bzl_library")
 
 filegroup(
     name = "test_deps",
