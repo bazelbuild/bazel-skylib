@@ -51,6 +51,9 @@ def _depset_to_list(val):
 
     Args:
       val: The value to be optionally converted and returned.
+
+    Returns:
+      The converted value.
     """
     if type(val) == _depset_type:
         return val.to_list()
