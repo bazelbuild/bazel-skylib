@@ -33,8 +33,8 @@ the modules (listed [below](#list-of-modules)) and access the symbols by
 dotting into those structs:
 
 ```python
-load("@bazel_skylib//lib/paths.bzl", "paths")
-load("@bazel_skylib//lib/shell.bzl", "shell")
+load("@bazel_skylib//lib:paths.bzl", "paths")
+load("@bazel_skylib//lib:shell.bzl", "shell")
 
 p = paths.basename("foo.bar")
 s = shell.quote(p)
