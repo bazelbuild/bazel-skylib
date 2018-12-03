@@ -22,6 +22,8 @@ assertions used to within tests.
 load(":new_sets.bzl", new_sets = "sets")
 load(":sets.bzl", "sets")
 
+_TOOLCHAIN_TYPE = "//toolchains:toolchain_type"
+
 def _make(impl, attrs = None):
     """Creates a unit test rule from its implementation function.
 
@@ -81,7 +83,7 @@ def _make(impl, attrs = None):
         # On Windows this allows the output file to be executable. On all other platforms the file's
         # extension is irrelevant because it's shebang line defines the interpreter.
         outputs = {"testbin": "%{name}.bat"},
-        toolchains = ["//toolchains:toolchain_type"],
+        toolchains = [_TOOLCHAIN_TYPE],
     )
 
 def _suite(name, *test_rules):
@@ -168,7 +170,7 @@ def _end(env):
       env: The test environment returned by `unittest.begin`.
     """
 
-    if env.ctx.toolchains["//toolchains:toolchain_type"].bazel_skylib_toolchain_info.is_exec_windows:
+    if env.ctx.toolchains[_TOOLCHAIN_TYPE].bazel_skylib_toolchain_info.is_exec_windows:
         if env.failures:
             cmd = "\n".join([
                 "@echo off",
