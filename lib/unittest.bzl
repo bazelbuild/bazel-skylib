@@ -22,7 +22,7 @@ assertions used to within tests.
 load(":new_sets.bzl", new_sets = "sets")
 load(":sets.bzl", "sets")
 
-_TOOLCHAIN_TYPE = "//toolchains:toolchain_type"
+_TOOLCHAIN_TYPE = "@bazel_skylib//toolchains:toolchain_type"
 
 def _make(impl, attrs = None):
     """Creates a unit test rule from its implementation function.
