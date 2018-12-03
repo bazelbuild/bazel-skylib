@@ -53,7 +53,7 @@ def _with_or_test(ctx):
         selects.with_or_dict(mixed_dict),
     )
 
-    unittest.end(env)
+    return unittest.end(env)
 
 with_or_test = unittest.make(_with_or_test)
 

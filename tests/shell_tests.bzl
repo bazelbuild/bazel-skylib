@@ -27,7 +27,7 @@ def _shell_array_literal_test(ctx):
     asserts.equals(env, "('$foo')", shell.array_literal(["$foo"]))
     asserts.equals(env, "('qu\"o\"te')", shell.array_literal(['qu"o"te']))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 shell_array_literal_test = unittest.make(_shell_array_literal_test)
 
@@ -48,7 +48,7 @@ def _shell_quote_test(ctx):
     asserts.equals(env, "'foo\\bar'", shell.quote("foo\\bar"))
     asserts.equals(env, "'back`echo q`uote'", shell.quote("back`echo q`uote"))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 shell_quote_test = unittest.make(_shell_quote_test)
 
@@ -96,6 +96,9 @@ def _shell_spawn_e2e_test_impl(ctx):
 shell_spawn_e2e_test = rule(
     test = True,
     implementation = _shell_spawn_e2e_test_impl,
+
+    # All unittest.suite expects the rule to have an "is_host_windows" bool attribute.
+    attrs = {"is_host_windows": attr.bool()},
 )
 
 def shell_test_suite():

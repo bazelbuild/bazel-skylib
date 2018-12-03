@@ -63,7 +63,7 @@ def _add_test(ctx):
     result["a"] = 2
     asserts.equals(env, 1, original["a"])
 
-    unittest.end(env)
+    return unittest.end(env)
 
 add_test = unittest.make(_add_test)
 

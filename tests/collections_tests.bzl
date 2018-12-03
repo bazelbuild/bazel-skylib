@@ -37,7 +37,7 @@ def _after_each_test(ctx):
         collections.after_each(None, ["a", "b"]),
     )
 
-    unittest.end(env)
+    return unittest.end(env)
 
 after_each_test = unittest.make(_after_each_test)
 
@@ -61,7 +61,7 @@ def _before_each_test(ctx):
         collections.before_each(None, ["a", "b"]),
     )
 
-    unittest.end(env)
+    return unittest.end(env)
 
 before_each_test = unittest.make(_before_each_test)
 
@@ -99,7 +99,7 @@ def _uniq_test(ctx):
         ],
     )
 
-    unittest.end(env)
+    return unittest.end(env)
 
 uniq_test = unittest.make(_uniq_test)
 

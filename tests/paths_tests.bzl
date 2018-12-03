@@ -37,7 +37,7 @@ def _basename_test(ctx):
     asserts.equals(env, "", paths.basename("foo/"))
     asserts.equals(env, "", paths.basename("/foo/"))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 basename_test = unittest.make(_basename_test)
 
@@ -62,7 +62,7 @@ def _dirname_test(ctx):
     asserts.equals(env, "foo", paths.dirname("foo/"))
     asserts.equals(env, "/foo", paths.dirname("/foo/"))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 dirname_test = unittest.make(_dirname_test)
 
@@ -84,7 +84,7 @@ def _is_absolute_test(ctx):
     asserts.true(env, paths.is_absolute("/foo/"))
     asserts.true(env, paths.is_absolute("/foo/bar"))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 is_absolute_test = unittest.make(_is_absolute_test)
 
@@ -128,7 +128,7 @@ def _join_test(ctx):
     asserts.equals(env, "foo", paths.join("", "", "foo"))
     asserts.equals(env, "foo/bar", paths.join("foo", "", "", "bar"))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 join_test = unittest.make(_join_test)
 
@@ -170,7 +170,7 @@ def _normalize_test(ctx):
     asserts.equals(env, "foo", paths.normalize("foo/"))
     asserts.equals(env, "foo/bar", paths.normalize("foo/bar/"))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 normalize_test = unittest.make(_normalize_test)
 
@@ -196,7 +196,7 @@ def _relativize_test(ctx):
 
     # TODO(allevato): Test failure cases, once that is possible.
 
-    unittest.end(env)
+    return unittest.end(env)
 
 relativize_test = unittest.make(_relativize_test)
 
@@ -227,7 +227,7 @@ def _replace_extension_test(ctx):
     # Verify that we don't insert a period on the extension if none is provided.
     asserts.equals(env, "foobaz", paths.replace_extension("foo.bar", "baz"))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 replace_extension_test = unittest.make(_replace_extension_test)
 
@@ -266,7 +266,7 @@ def _split_extension_test(ctx):
     asserts.equals(env, (".a/b", ".c"), paths.split_extension(".a/b.c"))
     asserts.equals(env, (".a", ".b"), paths.split_extension(".a.b"))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 split_extension_test = unittest.make(_split_extension_test)
 
