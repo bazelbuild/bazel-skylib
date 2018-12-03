@@ -77,12 +77,6 @@ def _make(impl, attrs = None):
         attrs = attrs,
         _skylark_testable = True,
         test = True,
-        # is_host_windows uses a select(), therefore we cannot pass an output function that would
-        # compute the output file's name based on this attribute (to return "%{name}.bat" or
-        # "%{name}), so we use "%{name}.bat" on all platforms.
-        # On Windows this allows the output file to be executable. On all other platforms the file's
-        # extension is irrelevant because it's shebang line defines the interpreter.
-        outputs = {"testbin": "%{name}.bat"},
         toolchains = [_TOOLCHAIN_TYPE],
     )
 
@@ -171,6 +165,7 @@ def _end(env):
     """
 
     if env.ctx.toolchains[_TOOLCHAIN_TYPE].bazel_skylib_toolchain_info.is_exec_windows:
+        testbin = env.ctx.actions.declare_file(env.ctx.label.name + ".bat")
         if env.failures:
             cmd = "\n".join([
                 "@echo off",
@@ -179,26 +174,28 @@ def _end(env):
             ])
         else:
             cmd = "@exit /b 0"
-    elif env.failures:
-        cmd = "\n".join([
-            "#!/bin/sh",
-            "cat << EOF",
-            "\n".join(env.failures),
-            "EOF",
-            "exit 1",
-        ])
     else:
-        cmd = "\n".join([
-            "#!/bin/sh",
-            "exit 0",
-        ])
+        testbin = env.ctx.actions.declare_file(env.ctx.label.name + ".sh")
+        if env.failures:
+            cmd = "\n".join([
+                "#!/bin/sh",
+                "cat << EOF",
+                "\n".join(env.failures),
+                "EOF",
+                "exit 1",
+            ])
+        else:
+            cmd = "\n".join([
+                "#!/bin/sh",
+                "exit 0",
+            ])
 
     env.ctx.actions.write(
-        output = env.ctx.outputs.testbin,
+        output = testbin,
         content = cmd,
         is_executable = True,
     )
-    return [DefaultInfo(executable = env.ctx.outputs.testbin)]
+    return [DefaultInfo(executable = testbin)]
 
 def _fail(env, msg):
     """Unconditionally causes the current test to fail.

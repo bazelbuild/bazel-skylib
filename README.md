@@ -16,6 +16,8 @@ be loaded as a single unit, for convenience.
 
 ## Getting Started
 
+### `WORKSPACE` file
+
 Add the following to your `WORKSPACE` file to import the Skylib repository into
 your workspace. Replace the version number in the `tag` attribute with the
 version you wish to depend on:
@@ -27,6 +29,17 @@ git_repository(
     tag = "0.1.0",  # change this to use a different release
 )
 ```
+
+If you want to use `lib/unittest.bzl` from Skylib versions released in or after
+December 2018, then you also should add to the `WORKSPACE` file:
+
+```python
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+
+bazel_skylib_workspace()
+```
+
+### `BUILD` and `*.bzl` files
 
 Then, in the `BUILD` and/or `*.bzl` files in your own workspace, you can load
 the modules (listed [below](#list-of-modules)) and access the symbols by
@@ -85,3 +98,15 @@ Steps to add a module to Skylib:
 The `bzl_library.bzl` rule can be used to aggregate a set of
 Starlark files and its dependencies for use in test targets and
 documentation generation.
+
+## Troubleshooting
+
+If you try to use `unittest` and you get the following error:
+
+```
+ERROR: While resolving toolchains for target //foo:bar: no matching toolchains found for types @bazel_skylib//toolchains:toolchain_type
+ERROR: Analysis of target '//foo:bar' failed; build aborted: no matching toolchains found for types @bazel_skylib//toolchains:toolchain_type
+```
+
+then you probably forgot to load and call `bazel_skylib_workspace()` in your
+`WORKSPACE` file.
