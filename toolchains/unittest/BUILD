@@ -2,23 +2,24 @@ load("//lib:unittest.bzl", "TOOLCHAIN_TYPE", "unittest_toolchain")
 
 toolchain_type(
     name = "toolchain_type",
+    visibility = ["//visibility:public"],
 )
 
 unittest_toolchain(
-    name = "exec_batch",
+    name = "cmd",
     failure_templ = "\n".join([
         "@echo off",
         "echo %s",
         "exit /b 1",
     ]),
     file_ext = ".bat",
-    join_on = "\necho",
+    join_on = "\necho ",
     success_templ = "@exit /b 0",
     visibility = ["//visibility:public"],
 )
 
 unittest_toolchain(
-    name = "exec_bash",
+    name = "bash",
     failure_templ = "\n".join([
         "#!/bin/sh",
         "cat <<'EOF'",
@@ -36,16 +37,16 @@ unittest_toolchain(
 )
 
 toolchain(
-    name = "starlark_batch_toolchain",
+    name = "cmd_toolchain",
     exec_compatible_with = [
         "@bazel_tools//platforms:windows",
     ],
-    toolchain = ":exec_batch",
+    toolchain = ":cmd",
     toolchain_type = TOOLCHAIN_TYPE,
 )
 
 toolchain(
-    name = "starlark_bash_toolchain",
-    toolchain = ":exec_bash",
+    name = "bash_toolchain",
+    toolchain = ":bash",
     toolchain_type = TOOLCHAIN_TYPE,
 )

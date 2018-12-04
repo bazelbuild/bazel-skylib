@@ -22,7 +22,7 @@ assertions used to within tests.
 load(":new_sets.bzl", new_sets = "sets")
 load(":sets.bzl", "sets")
 
-TOOLCHAIN_TYPE = "@bazel_skylib//lib/unittest:toolchain_type"
+TOOLCHAIN_TYPE = "@bazel_skylib//toolchains/unittest:toolchain_type"
 
 _UnittestToolchain = provider(
     doc = "Execution platform information for rules in the bazel_skylib repository.",
@@ -53,8 +53,8 @@ unittest_toolchain = rule(
 
 def register_unittest_toolchains():
     native.register_toolchains(
-        "@bazel_skylib//toolchains/unittest:starlark_batch_toolchain",
-        "@bazel_skylib//toolchains/unittest:starlark_bash_toolchain",
+        "@bazel_skylib//toolchains/unittest:cmd_toolchain",
+        "@bazel_skylib//toolchains/unittest:bash_toolchain",
     )
 
 def _make(impl, attrs = None):
