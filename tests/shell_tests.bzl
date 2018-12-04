@@ -96,9 +96,6 @@ def _shell_spawn_e2e_test_impl(ctx):
 shell_spawn_e2e_test = rule(
     test = True,
     implementation = _shell_spawn_e2e_test_impl,
-
-    # All unittest.suite expects the rule to have an "is_host_windows" bool attribute.
-    attrs = {"is_host_windows": attr.bool()},
 )
 
 def shell_test_suite():
