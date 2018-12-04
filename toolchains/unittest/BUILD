@@ -7,11 +7,10 @@ toolchain_type(
 
 unittest_toolchain(
     name = "cmd",
-    failure_templ = "\n".join([
-        "@echo off",
-        "echo %s",
-        "exit /b 1",
-    ]),
+    failure_templ = """@echo off
+echo %s
+exit /b 1
+""",
     file_ext = ".bat",
     join_on = "\necho ",
     success_templ = "@exit /b 0",
@@ -20,19 +19,15 @@ unittest_toolchain(
 
 unittest_toolchain(
     name = "bash",
-    failure_templ = "\n".join([
-        "#!/bin/sh",
-        "cat <<'EOF'",
-        "%s",
-        "EOF",
-        "exit 1",
-    ]),
+    failure_templ = """#!/bin/sh
+cat <<'EOF'
+%s
+EOF
+exit 1
+""",
     file_ext = ".sh",
     join_on = "\n",
-    success_templ = "\n".join([
-        "#!/bin/sh",
-        "exit 0",
-    ]),
+    success_templ = "#!/bin/sh\nexit 0",
     visibility = ["//visibility:public"],
 )
 

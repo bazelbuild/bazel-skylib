@@ -22,6 +22,14 @@ assertions used to within tests.
 load(":new_sets.bzl", new_sets = "sets")
 load(":sets.bzl", "sets")
 
+# The following function should only be called from WORKSPACE files and workspace macros.
+def register_unittest_toolchains():
+    """Registers the toolchains for unittest users."""
+    native.register_toolchains(
+        "@bazel_skylib//toolchains/unittest:cmd_toolchain",
+        "@bazel_skylib//toolchains/unittest:bash_toolchain",
+    )
+
 TOOLCHAIN_TYPE = "@bazel_skylib//toolchains/unittest:toolchain_type"
 
 _UnittestToolchain = provider(
@@ -50,12 +58,6 @@ unittest_toolchain = rule(
         "join_on": attr.string(mandatory = True),
     },
 )
-
-def register_unittest_toolchains():
-    native.register_toolchains(
-        "@bazel_skylib//toolchains/unittest:cmd_toolchain",
-        "@bazel_skylib//toolchains/unittest:bash_toolchain",
-    )
 
 def _make(impl, attrs = None):
     """Creates a unit test rule from its implementation function.
