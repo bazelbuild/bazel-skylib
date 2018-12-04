@@ -39,7 +39,7 @@ def _is_equal_test(ctx):
     # If passing a list, verify that duplicate elements are ignored.
     asserts.true(env, sets.is_equal([1, 1], [1]))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 is_equal_test = unittest.make(_is_equal_test)
 
@@ -58,7 +58,7 @@ def _is_subset_test(ctx):
     # If passing a list, verify that duplicate elements are ignored.
     asserts.true(env, sets.is_subset([1, 1], [1, 2]))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 is_subset_test = unittest.make(_is_subset_test)
 
@@ -77,7 +77,7 @@ def _disjoint_test(ctx):
     # If passing a list, verify that duplicate elements are ignored.
     asserts.false(env, sets.disjoint([1, 1], [1, 2]))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 disjoint_test = unittest.make(_disjoint_test)
 
@@ -96,7 +96,7 @@ def _intersection_test(ctx):
     # If passing a list, verify that duplicate elements are ignored.
     asserts.set_equals(env, [1], sets.intersection([1, 1], [1, 2]))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 intersection_test = unittest.make(_intersection_test)
 
@@ -117,7 +117,7 @@ def _union_test(ctx):
     # If passing a list, verify that duplicate elements are ignored.
     asserts.set_equals(env, [1, 2], sets.union([1, 1], [1, 2]))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 union_test = unittest.make(_union_test)
 
@@ -136,7 +136,7 @@ def _difference_test(ctx):
     # If passing a list, verify that duplicate elements are ignored.
     asserts.set_equals(env, [2], sets.difference([1, 2], [1, 1]))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 difference_test = unittest.make(_difference_test)
 

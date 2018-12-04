@@ -72,7 +72,7 @@ def _make_call_test(ctx):
     foo = partial.make(_call_args_kwargs, 100, func_mult = 10)
     asserts.equals(env, 1120, partial.call(foo, 12, func_mult = 5, call_mult = 2))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 make_call_test = unittest.make(_make_call_test)
 

@@ -36,7 +36,7 @@ def _is_equal_test(ctx):
     # If passing a list, verify that duplicate elements are ignored.
     asserts.true(env, sets.is_equal(sets.make([1, 1]), sets.make([1])))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 is_equal_test = unittest.make(_is_equal_test)
 
@@ -54,7 +54,7 @@ def _is_subset_test(ctx):
     # If passing a list, verify that duplicate elements are ignored.
     asserts.true(env, sets.is_subset(sets.make([1, 1]), sets.make([1, 2])))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 is_subset_test = unittest.make(_is_subset_test)
 
@@ -72,7 +72,7 @@ def _disjoint_test(ctx):
     # If passing a list, verify that duplicate elements are ignored.
     asserts.false(env, sets.disjoint(sets.make([1, 1]), sets.make([1, 2])))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 disjoint_test = unittest.make(_disjoint_test)
 
@@ -90,7 +90,7 @@ def _intersection_test(ctx):
     # If passing a list, verify that duplicate elements are ignored.
     asserts.new_set_equals(env, sets.make([1]), sets.intersection(sets.make([1, 1]), sets.make([1, 2])))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 intersection_test = unittest.make(_intersection_test)
 
@@ -110,7 +110,7 @@ def _union_test(ctx):
     # If passing a list, verify that duplicate elements are ignored.
     asserts.new_set_equals(env, sets.make([1, 2]), sets.union(sets.make([1, 1]), sets.make([1, 2])))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 union_test = unittest.make(_union_test)
 
@@ -128,7 +128,7 @@ def _difference_test(ctx):
     # If passing a list, verify that duplicate elements are ignored.
     asserts.new_set_equals(env, sets.make([2]), sets.difference(sets.make([1, 2]), sets.make([1, 1])))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 difference_test = unittest.make(_difference_test)
 
@@ -140,7 +140,7 @@ def _to_list_test(ctx):
     asserts.equals(env, [1], sets.to_list(sets.make([1, 1, 1])))
     asserts.equals(env, [1, 2, 3], sets.to_list(sets.make([1, 2, 3])))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 to_list_test = unittest.make(_to_list_test)
 
@@ -151,7 +151,7 @@ def _make_test(ctx):
     asserts.equals(env, {}, sets.make()._values)
     asserts.equals(env, {x: None for x in [1, 2, 3]}, sets.make([1, 1, 2, 2, 3, 3])._values)
 
-    unittest.end(env)
+    return unittest.end(env)
 
 make_test = unittest.make(_make_test)
 
@@ -168,7 +168,7 @@ def _copy_test(ctx):
     copy._values[5] = None
     asserts.false(env, sets.is_equal(original, copy))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 copy_test = unittest.make(_copy_test)
 
@@ -188,7 +188,7 @@ def _insert_test(ctx):
         msg = "Insert creates a new set which is an O(n) operation, insert should be O(1).",
     )
 
-    unittest.end(env)
+    return unittest.end(env)
 
 insert_test = unittest.make(_insert_test)
 
@@ -201,7 +201,7 @@ def _contains_test(ctx):
     asserts.true(env, sets.contains(sets.make([1, 2]), 1))
     asserts.false(env, sets.contains(sets.make([2, 3]), 1))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 contains_test = unittest.make(_contains_test)
 
@@ -213,7 +213,7 @@ def _length_test(ctx):
     asserts.equals(env, 1, sets.length(sets.make([1])))
     asserts.equals(env, 2, sets.length(sets.make([1, 2])))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 length_test = unittest.make(_length_test)
 
@@ -228,7 +228,7 @@ def _remove_test(ctx):
     after_removal = sets.remove(original, 3)
     asserts.new_set_equals(env, original, after_removal)
 
-    unittest.end(env)
+    return unittest.end(env)
 
 remove_test = unittest.make(_remove_test)
 
@@ -244,7 +244,7 @@ def _repr_str_test(ctx):
     asserts.equals(env, "[1]", sets.str(sets.make([1])))
     asserts.equals(env, "[1, 2]", sets.str(sets.make([1, 2])))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 repr_str_test = unittest.make(_repr_str_test)
 

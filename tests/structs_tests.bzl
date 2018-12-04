@@ -42,7 +42,7 @@ def _add_test(ctx):
         structs.to_dict(struct(a = 1, b = struct(bb = 1))),
     )
 
-    unittest.end(env)
+    return unittest.end(env)
 
 add_test = unittest.make(_add_test)
 

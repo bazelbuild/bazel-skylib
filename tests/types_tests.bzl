@@ -36,7 +36,7 @@ def _is_string_test(ctx):
     asserts.false(env, types.is_string(None))
     asserts.false(env, types.is_string(_a_function))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 is_string_test = unittest.make(_is_string_test)
 
@@ -56,7 +56,7 @@ def _is_bool_test(ctx):
     asserts.false(env, types.is_bool(None))
     asserts.false(env, types.is_bool(_a_function))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 is_bool_test = unittest.make(_is_bool_test)
 
@@ -76,7 +76,7 @@ def _is_list_test(ctx):
     asserts.false(env, types.is_list(None))
     asserts.false(env, types.is_list(_a_function))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 is_list_test = unittest.make(_is_list_test)
 
@@ -96,7 +96,7 @@ def _is_none_test(ctx):
     asserts.false(env, types.is_none([1]))
     asserts.false(env, types.is_none(_a_function))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 is_none_test = unittest.make(_is_none_test)
 
@@ -117,7 +117,7 @@ def _is_int_test(ctx):
     asserts.false(env, types.is_int(None))
     asserts.false(env, types.is_int(_a_function))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 is_int_test = unittest.make(_is_int_test)
 
@@ -138,7 +138,7 @@ def _is_tuple_test(ctx):
     asserts.false(env, types.is_tuple(None))
     asserts.false(env, types.is_tuple(_a_function))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 is_tuple_test = unittest.make(_is_tuple_test)
 
@@ -159,7 +159,7 @@ def _is_dict_test(ctx):
     asserts.false(env, types.is_dict(None))
     asserts.false(env, types.is_dict(_a_function))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 is_dict_test = unittest.make(_is_dict_test)
 
@@ -179,7 +179,7 @@ def _is_function_test(ctx):
     asserts.false(env, types.is_function([1]))
     asserts.false(env, types.is_function(None))
 
-    unittest.end(env)
+    return unittest.end(env)
 
 is_function_test = unittest.make(_is_function_test)
 
