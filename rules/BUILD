@@ -8,5 +8,8 @@ bzl_library(
     name = "maprule",
     srcs = ["maprule.bzl"],
     visibility = ["//visibility:public"],
-    deps = ["//lib:paths"],
+    deps = [
+        "//lib:dicts",
+        "//lib:paths",
+    ],
 )
