@@ -130,6 +130,7 @@ that put this rule in their "srcs" and get all the .tags and .md5 files.
        action, and the output paths are already available as envvars for the action.
 """
 
+load("//lib:dicts.bzl", "dicts")
 load("//lib:paths.bzl", "paths")
 
 def _is_relative_path(p):
@@ -316,16 +317,20 @@ def _resolve_locations(ctx, strategy, ctx_attr_add_env, ctx_attr_tools):
         return inputs_from_tools, manifests_from_tools, resolved_add_env, None
 
 def _custom_envmap(ctx, strategy, src_placeholders, outs_dict, add_env):
-    return {
-        "MAPRULE_" + k.upper(): strategy.as_path(v)
-        for k, v in src_placeholders.items()
-    } + {
-        "MAPRULE_" + k.upper(): strategy.as_path(v.path)
-        for k, v in outs_dict.items()
-    } + {
-        "MAPRULE_" + k.upper(): strategy.as_path(ctx.expand_location(v)).format(**src_placeholders)
-        for k, v in add_env.items()
-    }
+    return dicts.add(
+        {
+            "MAPRULE_" + k.upper(): strategy.as_path(v)
+            for k, v in src_placeholders.items()
+        },
+        {
+            "MAPRULE_" + k.upper(): strategy.as_path(v.path)
+            for k, v in outs_dict.items()
+        },
+        {
+            "MAPRULE_" + k.upper(): strategy.as_path(ctx.expand_location(v)).format(**src_placeholders)
+            for k, v in add_env.items()
+        },
+    )
 
 def _fail_if_errors(errors):
     if errors:
@@ -338,6 +343,7 @@ def _maprule_main(ctx, strategy):
 
     # From "srcs": merge the depsets in the DefaultInfo.files of the targets.
     common_srcs = depset(transitive = [t[DefaultInfo].files for t in ctx.attr.srcs])
+    common_srcs_list = common_srcs.to_list()
 
     # From "foreach_srcs": by accessing the attribute's value through ctx.files (a list, not a
     # depset), we flatten the depsets of DefaultInfo.files of the targets and merge them to a single
@@ -357,8 +363,10 @@ def _maprule_main(ctx, strategy):
     progress_message = (ctx.attr.message or "Executing maprule") + " for %s" % ctx.label
 
     # Create the part of the environment variables map that all actions will share.
-    common_envmap = (ctx.configuration.default_shell_env +
-                     {"MAPRULE_SRCS": " ".join([strategy.as_path(p.path) for p in common_srcs])})
+    common_envmap = dicts.add(
+        ctx.configuration.default_shell_env,
+        {"MAPRULE_SRCS": " ".join([strategy.as_path(p.path) for p in common_srcs_list])},
+    )
 
     # Resolve $(location) references in "cmd" and in "add_env".
     inputs_from_tools, manifests_from_tools, add_env, errors = _resolve_locations(
