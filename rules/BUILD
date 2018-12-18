@@ -19,5 +19,8 @@ stardoc(
     name = "maprule-docs",
     out = "maprule_doc.md",
     input = "maprule.bzl",
-    symbol_names = ["cmd_maprule", "bash_maprule"],
+    symbol_names = [
+        "cmd_maprule",
+        "bash_maprule",
+    ],
 )
