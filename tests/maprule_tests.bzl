@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for new_sets.bzl."""
+"""Unit tests for maprule.bzl."""
 
 load("//lib:unittest.bzl", "asserts", "unittest")
 load("//rules:maprule.bzl", "maprule_testing")
@@ -86,7 +86,7 @@ def _src_placeholders_test(ctx):
             )
             _assert_ends_with(
                 env,
-                strategy.as_path(language + "/foo"),
+                strategy.as_path(language + "/foo/"),
                 actual["src_dir"],
                 "assertion #3 (language: %s, basename: %s)" % (language, basename),
             )
