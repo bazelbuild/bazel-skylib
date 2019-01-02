@@ -52,10 +52,10 @@ def _unittest_toolchain_impl(ctx):
 unittest_toolchain = rule(
     implementation = _unittest_toolchain_impl,
     attrs = {
-        "file_ext": attr.string(mandatory = True),
-        "success_templ": attr.string(mandatory = True),
         "failure_templ": attr.string(mandatory = True),
+        "file_ext": attr.string(mandatory = True),
         "join_on": attr.string(mandatory = True),
+        "success_templ": attr.string(mandatory = True),
     },
 )
 
