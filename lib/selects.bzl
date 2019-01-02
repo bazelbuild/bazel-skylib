@@ -24,7 +24,7 @@ def _with_or(input_dict, no_match_error = ""):
           `//foo:config1` OR `//foo:config2` OR `...`.
       no_match_error: Optional custom error to report if no condition matches.
 
-          Example:
+    Example:
 
           ```build
           deps = selects.with_or({
@@ -76,7 +76,198 @@ def _with_or_dict(input_dict):
             output_dict[key] = value
     return output_dict
 
+def _config_setting_group(name, match_any = [], match_all = []):
+    """Matches if all or any of its member `config_setting`s match.
+
+    Args:
+      name: The group's name. This is how `select()`s reference it.
+      match_any: A list of `config_settings`. This group matches if *any* member
+          in the list matches. If this is set, `match_all` must not be set.
+      match_all: A list of `config_settings`. This group matches if *every*
+          member in the list matches. If this is set, `match_any` must be not
+          set.
+
+    Example:
+
+      ```build
+      config_setting(name = "one", define_values = {"foo": "true"})
+      config_setting(name = "two", define_values = {"bar": "false"})
+      config_setting(name = "three", define_values = {"baz": "more_false"})
+
+      config_setting_group(
+          name = "one_two_three",
+          match_all = [":one", ":two", ":three"]
+      )
+
+      cc_binary(
+          name = "myapp",
+          srcs = ["myapp.cc"],
+          deps = select({
+              ":one_two_three": [":special_deps"],
+              "//conditions:default": [":default_deps"]
+          })
+      ```
+    """
+    empty1 = not bool(len(match_any))
+    empty2 = not bool(len(match_all))
+    if (empty1 and empty2) or (not empty1 and not empty2):
+        fail('Either "match_any" or "match_all" must be set, but not both.')
+    _check_duplicates(match_any)
+    _check_duplicates(match_all)
+
+    if ((len(match_any) == 1 and match_any[0] == "//conditions:default") or
+        (len(match_all) == 1 and match_all[0] == "//conditions:default")):
+        # If the only entry is "//conditions:default", the condition is
+        # automatically true.
+        _config_setting_always_true(name)
+    elif not empty1:
+        _config_setting_or_group(name, match_any)
+    else:
+        _config_setting_and_group(name, match_all)
+
+def _check_duplicates(settings):
+    """ Fails if any entry in settings appears more than once.
+    """
+    seen = {}
+    for setting in settings:
+        if setting in seen:
+            fail(setting + " appears more than once. Duplicates not allowed.")
+        seen[setting] = True
+
+def _remove_default_condition(settings):
+    """ Returns settings with "//conditions:default" entries filtered out.
+    """
+    new_settings = []
+    for setting in settings:
+        if settings != "//conditions:default":
+            new_settings.append(setting)
+    return new_settings
+
+def _config_setting_or_group(name, settings):
+    """ ORs multiple config_settings together (inclusively).
+
+    The core idea is to create a sequential chain of alias targets where each is
+    select-resolved as follows: If alias n matches config_setting n, the chain
+    is true so it resolves to config_setting n. Else  it resolves to alias n+1
+    (which checks config_setting n+1, and so on). If none of the config_settings
+    match, the final alias resolves to one of them arbitrarily, which by
+    definition doesn't match.
+    """
+
+    # "//conditions:default" is present, the whole chain is automatically true.
+    if len(_remove_default_condition(settings)) < len(settings):
+        _config_setting_always_true(name)
+        return
+
+    # One entry? Just alias directly to it.
+    elif len(settings) == 1:
+        native.alias(
+            name = name,
+            actual = settings[0],
+        )
+        return
+
+    # First alias adopts the core name so user references start here.
+    native.alias(
+        name = name,
+        actual = select({
+            settings[0]: settings[0],
+            "//conditions:default": name + "_2",
+        }),
+    )
+
+    # Second through (n-2)nd aliases:
+    for i in range(2, len(settings) - 1):
+        cur_setting = settings[i - 1]
+        native.alias(
+            name = name + "_" + str(i),
+            actual = select({
+                cur_setting: cur_setting,
+                "//conditions:default": name + "_" + str(i + 1),
+            }),
+        )
+
+    # (n-1)st alias: if true it can resolve directly to the final config_setting
+    # (which doesn't need an equivalent alias).
+    native.alias(
+        name = name + "_" + str(len(settings) - 1),
+        actual = select({
+            settings[-2]: settings[-2],
+            "//conditions:default": settings[-1],
+        }),
+    )
+
+def _config_setting_and_group(name, settings):
+    """ ANDs multiple config_settings together.
+
+    The core idea is to create a sequential chain of alias targets where each is
+    select-resolved as follows: If alias n matches config_setting n, it resolves to
+    alias n+1 (which evaluates config_setting n+1, and so on). Else it resolves to
+    config_setting n, which doesn't match by definition. The only way to get a
+    matching final result is if all config_settings match.
+    """
+
+    # "//conditions:default" is automatically true so doesn't need checking.
+    settings = _remove_default_condition(settings)
+
+    # One config_setting input? Just alias directly to it.
+    if len(settings) == 1:
+        native.alias(
+            name = name,
+            actual = settings[0],
+        )
+        return
+
+    # First alias adopts the core name so user references start here.
+    native.alias(
+        name = name,
+        actual = select({
+            settings[0]: name + "_2",
+            "//conditions:default": settings[0],
+        }),
+    )
+
+    # Second through (n-2)nd aliases:
+    for i in range(2, len(settings) - 1):
+        cur_setting = settings[i - 1]
+        native.alias(
+            name = name + "_" + str(i),
+            actual = select({
+                cur_setting: name + "_" + str(i + 1),
+                "//conditions:default": cur_setting,
+            }),
+        )
+
+    # (n-1)st alias: if true it can resolve directly to the final config_setting
+    # (which doesn't need an equivalent alias).
+    native.alias(
+        name = name + "_" + str(len(settings) - 1),
+        actual = select({
+            settings[-2]: settings[-1],
+            "//conditions:default": settings[-2],
+        }),
+    )
+
+def _config_setting_always_true(name):
+    """ Returns a config_setting with the given name that's always true.
+
+    This is achieved by constructing a two-entry OR chain where each
+    config_setting takes opposite values of a boolean flag.
+    """
+    name_on = name + "_stamp_binary_on_check"
+    name_off = name + "_stamp_binary_off_check"
+    native.config_setting(
+        name = name_on,
+        values = {"stamp": True},
+    )
+    native.config_setting(
+        name = name_off,
+        values = {"stamp": False},
+    )
+    return _config_setting_or_group(name, [":" + name_on, ":" + name_off])
+
 selects = struct(
     with_or = _with_or,
     with_or_dict = _with_or_dict,
+    config_setting_group = _config_setting_group
 )
