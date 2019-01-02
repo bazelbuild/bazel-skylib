@@ -13,7 +13,7 @@ matrix:
     - os: linux
       dist: trusty
       sudo: false
-      env: BUILDIFER=RELEASE
+      env: BUILDIFIER=RELEASE
 
     # -----------------------------------------------------------------
     # macOS hosted tests
@@ -21,7 +21,7 @@ matrix:
     - os: osx
       osx_image: xcode10.1
       env: BAZEL=HEAD
-    # No need for a BUILDIFER run on mac, the results will be the same.
+    # No need for a BUILDIFIER run on mac, the results will be the same.
     # And linux boxes test faster on travis, so just use the one.
 
 before_install:

@@ -24,7 +24,7 @@ fi
 
 # -------------------------------------------------------------------------------------------------
 # Asked to do a buildifier run.
-if [[ -n "${BUILDIFER:-}" ]]; then
+if [[ -n "${BUILDIFIER:-}" ]]; then
   FOUND_ISSUES="no"
 
   # buildifier supports BUILD/WORKSPACE/*.bzl files, this provides the args
@@ -61,14 +61,18 @@ if [[ -n "${BUILDIFER:-}" ]]; then
 
   # Check for lint issues?
   if [[ "${LINT:-yes}" == "yes" ]] ; then
-    LINT_ISSUES=$(find . "${FIND_ARGS[@]}" -print | xargs buildifier --lint=warn 2>&1)
-    if [[ -n "${LINT_ISSUES}" ]] ; then
+    # NOTE: buildifier defaults to --mode=fix, so these lint runs also
+    # reformat the files. But since this is on travis, that is fine.
+    # https://github.com/bazelbuild/buildtools/issues/453
+    if ! find . "${FIND_ARGS[@]}" -print | xargs buildifier --lint=warn > /dev/null 2>&1 ; then
       if [[ "${FOUND_ISSUES}" != "no" ]] ; then
         echo ""
       fi
       echo "ERROR: BUILD/.bzl lint issue(s):"
       echo ""
-      echo "${LINT_ISSUES}"
+      # buildifier now exits with error if there are issues, so use `|| true`
+      # to keep the script running.
+      find . "${FIND_ARGS[@]}" -print | xargs buildifier --lint=warn || true
       echo ""
       echo "Please download the latest buildifier"
       echo "   https://github.com/bazelbuild/buildtools/releases"
