@@ -264,38 +264,8 @@ Because `add_env` is meant to be used for passing extra "$(location)" informatio
 the output paths are already available as envvars for the action.
 """
 
-# TODO(laszlocsomor): after https://github.com/bazelbuild/skydoc/issues/137 is
-# resolved: remove _dicts_add, load "lib/dicts.bzl", and use that "dicts"
-# instead.
-def _dicts_add(*dictionaries):
-    result = {}
-    for d in dictionaries:
-        result.update(d)
-    return result
-
-# TODO(laszlocsomor): after https://github.com/bazelbuild/skydoc/issues/137 is
-# resolved: remove _paths_dirname, load "lib/paths.bzl", and use that "paths"
-# instead.
-def _paths_dirname(p):
-    prefix, sep, _ = p.rpartition("/")
-    if not prefix:
-        return sep
-    else:
-        return prefix.rstrip("/")
-
-# TODO(laszlocsomor): after https://github.com/bazelbuild/skydoc/issues/137 is
-# resolved: remove this struct, load "lib/dicts.bzl", and use that "dicts"
-# instead.
-dicts = struct(
-    add = _dicts_add,
-)
-
-# TODO(laszlocsomor): after https://github.com/bazelbuild/skydoc/issues/137 is
-# resolved: remove this struct, load "lib/paths.bzl", and use that "paths"
-# instead.
-paths = struct(
-    dirname = _paths_dirname,
-)
+load("//lib:dicts.bzl", "dicts")
+load("//lib:paths.bzl", "paths")
 
 def _is_relative_path(p):
     """Returns True if `p` is a relative path (considering Unix and Windows semantics)."""
