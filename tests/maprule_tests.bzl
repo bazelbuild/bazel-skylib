@@ -177,7 +177,7 @@ def _validate_attributes_test(ctx):
     )
     _assert_error(
         env,
-        maprule_testing.validate_attributes({"FOO": "foo", "BAR": "foo"}, {}),
+        maprule_testing.validate_attributes({"BAR": "foo", "FOO": "foo"}, {}),
         "output path is already used for \"FOO\"",
         "assertion #12",
     )
@@ -297,11 +297,11 @@ def _custom_envmap_test(ctx):
     asserts.equals(
         env,
         {
-            "MAPRULE_SRC_PH1": "Src\\Ph1-value",
-            "MAPRULE_SRC_PH2": "Src\\Ph2-value",
+            "MAPRULE_ENV1": "Env1",
             "MAPRULE_OUT1": "Foo\\Out1",
             "MAPRULE_OUT2": "Foo\\Out2",
-            "MAPRULE_ENV1": "Env1",
+            "MAPRULE_SRC_PH1": "Src\\Ph1-value",
+            "MAPRULE_SRC_PH2": "Src\\Ph2-value",
         },
         actual["cmd"],
         msg = "assertion #2",
@@ -310,11 +310,11 @@ def _custom_envmap_test(ctx):
     asserts.equals(
         env,
         {
-            "MAPRULE_SRC_PH1": "Src/Ph1-value",
-            "MAPRULE_SRC_PH2": "Src/Ph2-value",
+            "MAPRULE_ENV1": "Env1",
             "MAPRULE_OUT1": "Foo/Out1",
             "MAPRULE_OUT2": "Foo/Out2",
-            "MAPRULE_ENV1": "Env1",
+            "MAPRULE_SRC_PH1": "Src/Ph1-value",
+            "MAPRULE_SRC_PH2": "Src/Ph2-value",
         },
         actual["bash"],
         msg = "assertion #3",

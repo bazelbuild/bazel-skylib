@@ -20,7 +20,7 @@ They are the same except for the interpreter they use (cmd.exe and Bash respecti
 the expected language of their `cmd` attribute. We will refer to them collectively as `maprule`.
 """
 
-load(":maprule_private.bzl", _cmd_maprule = "cmd_maprule", _bash_maprule = "bash_maprule")
+load(":maprule_private.bzl", _bash_maprule = "bash_maprule", _cmd_maprule = "cmd_maprule")
 
 cmd_maprule = _cmd_maprule
 bash_maprule = _bash_maprule

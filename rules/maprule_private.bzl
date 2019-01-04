@@ -585,6 +585,23 @@ _ATTRS = {
         allow_files = True,
         doc = "The set of source files common to all actions of this rule.",
     ),
+    "add_env": attr.string_dict(
+        doc = "Extra environment variables to define for the actions. Every variable's name " +
+              "must be uppercase. Bazel will automatically prepend \"MAPRULE_\" to the name " +
+              "when exporting the variable for the action. The values may use \"$(location)\" " +
+              "expressions for labels declared in the `srcs` and `tools` attribute, and " +
+              "may reference the same placeholders as the values of the `outs_templates` " +
+              "attribute.",
+    ),
+    "cmd": attr.string(
+        mandatory = True,
+        doc = "The command to execute. It must be in the syntax corresponding to this maprule " +
+              "type, e.g. for `bash_maprule` this must be a Bash command, and for `cmd_maprule` " +
+              "a Windows Command Prompt (cmd.exe) command. Several environment variables are " +
+              "available for this command, storing values like the paths of the input and output " +
+              "files of the action. See the \"Environment Variables\" section for the complete " +
+              "list of environment variables available to this command.",
+    ),
     "foreach_srcs": attr.label_list(
         allow_files = True,
         mandatory = True,
@@ -592,12 +609,8 @@ _ATTRS = {
               "the templated outputs. Each of these source files will will be processed " +
               "individually by its own action.",
     ),
-    "tools": attr.label_list(
-        cfg = "host",
-        allow_files = True,
-        doc = "Tools used by the command. The `cmd` attribute, and the values of the " +
-              "`add_env` attribute may reference these tools in \"$(location)\" expressions, " +
-              "similar to the genrule rule.",
+    "message": attr.string(
+        doc = "A custom progress message to display as the actions are executed.",
     ),
     "outs_templates": attr.string_dict(
         allow_empty = False,
@@ -621,25 +634,12 @@ _ATTRS = {
               "input file in `foreach_srcs`. Every output file is generated under " +
               "&lt;bazel_bin&gt;/path/to/maprule/&lt;maprule_name&gt; + \"_outs/\".</p>",
     ),
-    "cmd": attr.string(
-        mandatory = True,
-        doc = "The command to execute. It must be in the syntax corresponding to this maprule " +
-              "type, e.g. for `bash_maprule` this must be a Bash command, and for `cmd_maprule` " +
-              "a Windows Command Prompt (cmd.exe) command. Several environment variables are " +
-              "available for this command, storing values like the paths of the input and output " +
-              "files of the action. See the \"Environment Variables\" section for the complete " +
-              "list of environment variables available to this command.",
-    ),
-    "add_env": attr.string_dict(
-        doc = "Extra environment variables to define for the actions. Every variable's name " +
-              "must be uppercase. Bazel will automatically prepend \"MAPRULE_\" to the name " +
-              "when exporting the variable for the action. The values may use \"$(location)\" " +
-              "expressions for labels declared in the `srcs` and `tools` attribute, and " +
-              "may reference the same placeholders as the values of the `outs_templates` " +
-              "attribute.",
-    ),
-    "message": attr.string(
-        doc = "A custom progress message to display as the actions are executed.",
+    "tools": attr.label_list(
+        cfg = "host",
+        allow_files = True,
+        doc = "Tools used by the command. The `cmd` attribute, and the values of the " +
+              "`add_env` attribute may reference these tools in \"$(location)\" expressions, " +
+              "similar to the genrule rule.",
     ),
 }
 
@@ -673,4 +673,3 @@ maprule_testing = struct(
     custom_envmap = _custom_envmap,
     create_outputs = _create_outputs,
 )
-
