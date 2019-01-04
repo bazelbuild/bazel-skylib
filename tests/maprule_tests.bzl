@@ -15,7 +15,7 @@
 """Unit tests for maprule.bzl."""
 
 load("//lib:unittest.bzl", "asserts", "unittest")
-load("//rules:maprule.bzl", "maprule_testing")
+load("//rules:maprule_testing.bzl", "maprule_testing")
 
 def _dummy_generating_action(ctx, path):
     ctx.actions.write(path, "hello")
@@ -45,7 +45,7 @@ def _assert_error(env, errors, expected_fragment, msg):
             return
     unittest.fail(env, msg + ": did not find \"%s\" in: [%s]" % (expected_fragment, "\n".join(errors)))
 
-def _contains_substrings(env, s, substrings):
+def _contains_substrings_in_order(env, s, substrings):
     index = 0
     for ss in substrings:
         index = s.find(ss, index)
@@ -56,7 +56,7 @@ def _contains_substrings(env, s, substrings):
 
 def _assert_error_fragments(env, errors, expected_fragments, msg):
     for e in errors:
-        if _contains_substrings(env, e, expected_fragments):
+        if _contains_substrings_in_order(env, e, expected_fragments):
             return
     unittest.fail(env, msg + ": did not find expected fragments in \"%s\" in order" % "\n".join(errors))
 
