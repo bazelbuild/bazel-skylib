@@ -2,6 +2,11 @@ load("//:bzl_library.bzl", "bzl_library")
 
 licenses(["notice"])
 
+exports_files(
+    ["maprule_testing.bzl"],
+    visibility = ["//tests:__pkg__"],
+)
+
 bzl_library(
     name = "maprule",
     srcs = ["maprule.bzl"],
