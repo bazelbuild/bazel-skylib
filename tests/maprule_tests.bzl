@@ -178,7 +178,7 @@ def _validate_attributes_test(ctx):
     _assert_error(
         env,
         maprule_testing.validate_attributes({"BAR": "foo", "FOO": "foo"}, {}),
-        "output path is already used for \"FOO\"",
+        "output path is already used for \"BAR\"",
         "assertion #12",
     )
 
