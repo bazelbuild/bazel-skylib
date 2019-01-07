@@ -17,8 +17,8 @@
 This module exports:
 
 - The cmd_maprule() and bash_maprule() build rules.
-  They are the same except for the interpreter they use (cmd.exe and Bash respectively) and thus
-  the expected language of their `cmd` attribute. We will refer to them collectively as `maprule`.
+  They are the same except for the interpreter they use (cmd.exe and Bash respectively) and for the
+  expected language of their `cmd` attribute. We will refer to them collectively as `maprule`.
 
 - The maprule_testing struct. This should only be used by maprule's own unittests.
 """

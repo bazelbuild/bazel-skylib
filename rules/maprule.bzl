@@ -16,8 +16,10 @@
 
 This module exports the cmd_maprule() and bash_maprule() build rules.
 
-They are the same except for the interpreter they use (cmd.exe and Bash respectively) and thus
-the expected language of their `cmd` attribute. We will refer to them collectively as `maprule`.
+They are the same except for the interpreter they use (cmd.exe and Bash respectively) and for the
+expected language of their `cmd` attribute.
+
+You can read more about these rules in "maprule_private.bzl".
 """
 
 load(":maprule_private.bzl", _bash_maprule = "bash_maprule", _cmd_maprule = "cmd_maprule")
