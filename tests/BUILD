@@ -1,5 +1,6 @@
 load(":collections_tests.bzl", "collections_test_suite")
 load(":dicts_tests.bzl", "dicts_test_suite")
+load(":maprule_tests.bzl", "maprule_test_suite")
 load(":new_sets_tests.bzl", "new_sets_test_suite")
 load(":partial_tests.bzl", "partial_test_suite")
 load(":paths_tests.bzl", "paths_test_suite")
@@ -15,6 +16,8 @@ licenses(["notice"])
 collections_test_suite()
 
 dicts_test_suite()
+
+maprule_test_suite()
 
 partial_test_suite()
 

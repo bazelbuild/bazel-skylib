@@ -14,6 +14,8 @@ Each of the `.bzl` files in the `lib` directory defines a "module"&mdash;a
 `struct` that contains a set of related functions and/or other symbols that can
 be loaded as a single unit, for convenience.
 
+Skylib also provides build rules under the `rules` directory.
+
 ## Getting Started
 
 ### `WORKSPACE` file
@@ -67,6 +69,10 @@ s = shell.quote(p)
 * [types](lib/types.bzl)
 * [unittest](lib/unittest.bzl)
 * [versions](lib/versions.bzl)
+
+## List of rules (in rules/)
+
+* [`cmd_maprule` and `bash_maprule`](lib/maprule.bzl)
 
 ## Writing a new module
 
