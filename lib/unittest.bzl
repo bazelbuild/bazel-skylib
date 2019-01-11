@@ -32,7 +32,7 @@ def register_unittest_toolchains():
 
 TOOLCHAIN_TYPE = "@bazel_skylib//toolchains/unittest:toolchain_type"
 
-_UnittestToolchain = provider(
+_UnittestToolchainInfo = provider(
     doc = "Execution platform information for rules in the bazel_skylib repository.",
     fields = ["file_ext", "success_templ", "failure_templ", "join_on"],
 )
@@ -40,7 +40,7 @@ _UnittestToolchain = provider(
 def _unittest_toolchain_impl(ctx):
     return [
         platform_common.ToolchainInfo(
-            unittest_toolchain_info = _UnittestToolchain(
+            unittest_toolchain_info = _UnittestToolchainInfo(
                 file_ext = ctx.attr.file_ext,
                 success_templ = ctx.attr.success_templ,
                 failure_templ = ctx.attr.failure_templ,
