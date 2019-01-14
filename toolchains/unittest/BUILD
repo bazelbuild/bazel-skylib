@@ -1,5 +1,7 @@
 load("//lib:unittest.bzl", "TOOLCHAIN_TYPE", "unittest_toolchain")
 
+licenses(["notice"])
+
 toolchain_type(
     name = "toolchain_type",
     visibility = ["//visibility:public"],
