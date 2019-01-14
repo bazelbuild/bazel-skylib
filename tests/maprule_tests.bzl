@@ -45,7 +45,7 @@ def _assert_error(env, errors, expected_fragment, msg):
             return
     unittest.fail(env, msg + ": did not find \"%s\" in: [%s]" % (expected_fragment, "\n".join(errors)))
 
-def _contains_substrings_in_order(env, s, substrings):
+def _contains_substrings_in_order(s, substrings):
     index = 0
     for ss in substrings:
         index = s.find(ss, index)
@@ -56,7 +56,7 @@ def _contains_substrings_in_order(env, s, substrings):
 
 def _assert_error_fragments(env, errors, expected_fragments, msg):
     for e in errors:
-        if _contains_substrings_in_order(env, e, expected_fragments):
+        if _contains_substrings_in_order(e, expected_fragments):
             return
     unittest.fail(env, msg + ": did not find expected fragments in \"%s\" in order" % "\n".join(errors))
 
@@ -337,7 +337,7 @@ def _create_outputs_test(ctx):
         src3 = _mock_file(ctx, language + "/bar/src1.txt")
         foreach_srcs = [src1, src2, src3]
 
-        outs_dicts, all_output_files, src_placeholders_dicts, errors = (
+        outs_dicts, all_output_files, _, errors = (
             maprule_testing.create_outputs(
                 ctx,
                 "my_maprule",
