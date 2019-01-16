@@ -47,3 +47,12 @@ toolchain(
     toolchain = ":bash",
     toolchain_type = TOOLCHAIN_TYPE,
 )
+
+filegroup(
+    name = "test_deps",
+    testonly = True,
+    srcs = [
+        "BUILD",
+    ],
+    visibility = ["//:__pkg__"],    
+)
