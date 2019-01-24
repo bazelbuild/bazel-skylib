@@ -12,14 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""A test make sure other targets build as part of a `bazel test`"""
+"""A test verifying other targets build as part of a `bazel test`"""
 
 load("//lib:new_sets.bzl", "sets")
 
 def build_test(name, targets, **kwargs):
     """Test rule checking that other targets build.
 
+    This works no by an instance of this test failing, but instead by
+    the targets it depends on failing to build, and hence failing
+    the attempt to run this test.
+
+    NOTE: At the moment, this won't work on Windows; but someone adding
+    support would be welcomed.
+
     Typical usage:
+
       load("@bazel_skylib//rules:build_test.bzl", "build_test")
       build_test(
           name = "my_build_test",
@@ -45,14 +53,14 @@ def build_test(name, targets, **kwargs):
     # the outputs of the other rules on as data for the genrule)
 
     # Split into batches to hopefully avoid things becoming so large they are
-    # to much for a remote execution set up.
+    # too much for a remote execution set up.
     batch_size = max(1, len(targets) // 100)
 
     # Pull a few args over from the test to the genrule.
     args_to_reuse = ["compatible_with", "restricted_to", "tags"]
     genrule_args = {k: kwargs.get(k) for k in args_to_reuse if k in kwargs}
 
-    # Pass a output from the genrules as data to a shell test to bundle
+    # Pass an output from the genrules as data to a shell test to bundle
     # it all up in a test.
     test_data = []
 
