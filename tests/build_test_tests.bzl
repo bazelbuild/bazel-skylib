@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Unit tests for build_test.bzl."""
+
 load("//rules:build_test.bzl", "build_test")
 
 def build_test_test_suite():
