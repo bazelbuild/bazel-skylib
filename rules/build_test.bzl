@@ -19,7 +19,7 @@ load("//lib:new_sets.bzl", "sets")
 def build_test(name, targets, **kwargs):
     """Test rule checking that other targets build.
 
-    This works no by an instance of this test failing, but instead by
+    This works not by an instance of this test failing, but instead by
     the targets it depends on failing to build, and hence failing
     the attempt to run this test.
 
