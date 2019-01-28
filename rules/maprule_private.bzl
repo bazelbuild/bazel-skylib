@@ -44,7 +44,7 @@ the build machine.
 _cmd_maprule_example = """
     # This file is //projects/game:BUILD
 
-    load("//tools/build_rules:maprule.bzl", "cmd_maprule")
+    load("@bazel_skylib//rules:maprule.bzl", "cmd_maprule")
 
     cmd_maprule(
         name = "process_assets",
@@ -77,7 +77,7 @@ _cmd_maprule_example = """
 _bash_maprule_example = """
     # This file is //projects/game:BUILD
 
-    load("//tools/build_rules:maprule.bzl", "bash_maprule")
+    load("@bazel_skylib//rules:maprule.bzl", "bash_maprule")
 
     bash_maprule(
         name = "process_assets",
