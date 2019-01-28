@@ -2,16 +2,16 @@ load("//:bzl_library.bzl", "bzl_library")
 
 licenses(["notice"])
 
+package(default_visibility = ["//visibility:public"])
+
 bzl_library(
     name = "build_test",
     srcs = ["build_test.bzl"],
-    visibility = ["//visibility:public"],
 )
 
 bzl_library(
     name = "maprule",
     srcs = ["maprule.bzl"],
-    visibility = ["//visibility:public"],
     deps = [":maprule_private"],
 )
 
