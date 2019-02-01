@@ -20,6 +20,7 @@ _a_list_type = type([])
 _a_string_type = type("")
 _a_tuple_type = type(())
 _an_int_type = type(1)
+_a_depset_type = type(depset())
 
 def _a_function():
     pass
@@ -114,6 +115,17 @@ def _is_function(v):
     """
     return type(v) == _a_function_type
 
+def _is_depset(v):
+    """Returns True if v is an instance of a `depset`.
+
+    Args:
+      v: The value whose type should be checked.
+
+    Returns:
+      True if v is an instance of a `depset`, False otherwise.
+    """
+    return type(v) == _a_depset_type
+
 types = struct(
     is_list = _is_list,
     is_string = _is_string,
@@ -123,4 +135,5 @@ types = struct(
     is_tuple = _is_tuple,
     is_dict = _is_dict,
     is_function = _is_function,
+    is_depset = _is_depset,
 )
