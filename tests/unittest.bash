@@ -47,12 +47,12 @@
 # via other assertions such as expect_log().  run_suite must be called
 # at the very end.
 #
-# A test suite may redefine functions "set_up" and/or "tear_down";
+# A test function may redefine functions "set_up" and/or "tear_down";
 # these functions are executed before and after each test function,
 # respectively.  Similarly, "cleanup" and "timeout" may be redefined,
 # and these function are called upon exit (of any kind) or a timeout.
 #
-# The user can pass --test_arg to blaze test to select specific tests
+# The user can pass --test_arg to bazel test to select specific tests
 # to run. Specifying --test_arg multiple times allows to select several
 # tests to be run in the given order. Additionally the user may define
 # TESTS=(test_foo test_bar ...) to specify a subset of test functions to
@@ -80,8 +80,6 @@
 [ -n "$BASH_VERSION" ] ||
   { echo "unittest.bash only works with bash!" >&2; exit 1; }
 
-export BAZEL_SHELL_TEST=1
-
 DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 #### Configuration variables (may be overridden by testenv.sh or the suite):
@@ -100,9 +98,148 @@ function disable_errexit() {
   trap - ERR
 }
 
-# This is the correct way to source googletest.sh; see
-# <http://docs.google.com/a/google.com/Doc?id=cd5qzdfv_16gqjv72>.
-source googletest.sh || { echo "googletest.sh not found!" >&2; exit 1; }
+#### Set up the test environment, branched from the old shell/testenv.sh
+
+# Enable errexit with pretty stack traces.
+enable_errexit
+
+# Print message in "$1" then exit with status "$2"
+die () {
+    # second argument is optional, defaulting to 1
+    local status_code=${2:-1}
+    # Stop capturing stdout/stderr, and dump captured output
+    if [ "$CAPTURED_STD_ERR" -ne 0 -o "$CAPTURED_STD_OUT" -ne 0 ]; then
+        restore_outputs
+        if [ "$CAPTURED_STD_OUT" -ne 0 ]; then
+            cat "${TEST_TMPDIR}/captured.out"
+            CAPTURED_STD_OUT=0
+        fi
+        if [ "$CAPTURED_STD_ERR" -ne 0 ]; then
+            cat "${TEST_TMPDIR}/captured.err" 1>&2
+            CAPTURED_STD_ERR=0
+        fi
+    fi
+
+    if [ -n "${1-}" ] ; then
+        echo "$1" 1>&2
+    fi
+    if [ -n "${BASH-}" ]; then
+      local caller_n=0
+      while [ $caller_n -lt 4 ] && caller_out=$(caller $caller_n 2>/dev/null); do
+        test $caller_n -eq 0 && echo "CALLER stack (max 4):"
+        echo "  $caller_out"
+        let caller_n=caller_n+1
+      done 1>&2
+    fi
+    if [ x"$status_code" != x -a x"$status_code" != x"0" ]; then
+        exit "$status_code"
+    else
+        exit 1
+    fi
+}
+
+# Print message in "$1" then record that a non-fatal error occurred in ERROR_COUNT
+ERROR_COUNT="${ERROR_COUNT:-0}"
+error () {
+    if [ -n "$1" ] ; then
+        echo "$1" 1>&2
+    fi
+    ERROR_COUNT=$(($ERROR_COUNT + 1))
+}
+
+# Die if "$1" != "$2", print $3 as death reason
+check_eq () {
+    [ "$1" = "$2" ] || die "Check failed: '$1' == '$2' ${3:+ ($3)}"
+}
+
+# Die if "$1" == "$2", print $3 as death reason
+check_ne () {
+    [ "$1" != "$2" ] || die "Check failed: '$1' != '$2' ${3:+ ($3)}"
+}
+
+# The structure of the following if statements is such that if '[' fails
+# (e.g., a non-number was passed in) then the check will fail.
+
+# Die if "$1" > "$2", print $3 as death reason
+check_le () {
+  [ "$1" -gt "$2" ] || die "Check failed: '$1' <= '$2' ${3:+ ($3)}"
+}
+
+# Die if "$1" >= "$2", print $3 as death reason
+check_lt () {
+    [ "$1" -lt "$2" ] || die "Check failed: '$1' < '$2' ${3:+ ($3)}"
+}
+
+# Die if "$1" < "$2", print $3 as death reason
+check_ge () {
+    [ "$1" -ge "$2" ] || die "Check failed: '$1' >= '$2' ${3:+ ($3)}"
+}
+
+# Die if "$1" <= "$2", print $3 as death reason
+check_gt () {
+    [ "$1" -gt "$2" ] || die "Check failed: '$1' > '$2' ${3:+ ($3)}"
+}
+
+# Die if $2 !~ $1; print $3 as death reason
+check_match ()
+{
+  expr match "$2" "$1" >/dev/null || \
+    die "Check failed: '$2' does not match regex '$1' ${3:+ ($3)}"
+}
+
+# Run command "$1" at exit. Like "trap" but multiple atexits don't
+# overwrite each other. Will break if someone does call trap
+# directly. So, don't do that.
+ATEXIT="${ATEXIT-}"
+atexit () {
+    if [ -z "$ATEXIT" ]; then
+        ATEXIT="$1"
+    else
+        ATEXIT="$1 ; $ATEXIT"
+    fi
+    trap "$ATEXIT" EXIT
+}
+
+## TEST_TMPDIR
+if [ -z "${TEST_TMPDIR:-}" ]; then
+  export TEST_TMPDIR="$(mktemp -d ${TMPDIR:-/tmp}/bazel-test.XXXXXXXX)"
+fi
+if [ ! -e "${TEST_TMPDIR}" ]; then
+  mkdir -p -m 0700 "${TEST_TMPDIR}"
+  # Clean TEST_TMPDIR on exit
+  atexit "rm -fr ${TEST_TMPDIR}"
+fi
+
+# Functions to compare the actual output of a test to the expected
+# (golden) output.
+#
+# Usage:
+#   capture_test_stdout
+#   ... do something ...
+#   diff_test_stdout "$TEST_SRCDIR/path/to/golden.out"
+
+# Redirect a file descriptor to a file.
+CAPTURED_STD_OUT="${CAPTURED_STD_OUT:-0}"
+CAPTURED_STD_ERR="${CAPTURED_STD_ERR:-0}"
+
+capture_test_stdout () {
+    exec 3>&1 # Save stdout as fd 3
+    exec 4>"${TEST_TMPDIR}/captured.out"
+    exec 1>&4
+    CAPTURED_STD_OUT=1
+}
+
+capture_test_stderr () {
+    exec 6>&2 # Save stderr as fd 6
+    exec 7>"${TEST_TMPDIR}/captured.err"
+    exec 2>&7
+    CAPTURED_STD_ERR=1
+}
+
+# Force XML_OUTPUT_FILE to an existing path
+if [ -z "${XML_OUTPUT_FILE:-}" ]; then
+  XML_OUTPUT_FILE=${TEST_TMPDIR}/ouput.xml
+fi
 
 #### Global variables:
 
@@ -133,23 +270,12 @@ if [ $# -gt 0 ]; then
     echo "WARNING: Arguments do not specifies tests!" >&2
   fi
 fi
-# TESTBRIDGE_TEST_ONLY contains the value of --test_filter, if any. We want to
-# preferentially use that instead of $@ to determine which tests to run.
-if [[ ${TESTBRIDGE_TEST_ONLY:-} != "" ]]; then
-  # Split TESTBRIDGE_TEST_ONLY on comma and put the results into an array.
-  IFS=',' read -r -a TESTS <<< "$TESTBRIDGE_TEST_ONLY"
-fi
 
 TEST_verbose="true"             # Whether or not to be verbose.  A
                                 # command; "true" or "false" are
                                 # acceptable.  The default is: true.
 
-TEST_script="$0"                # Full path to test script
-# Check if the script path is absolute, if not prefix the PWD.
-if [[ ! "$TEST_script" = /* ]]; then
-  TEST_script="$(pwd)/$0"
-fi
-
+TEST_script="$(pwd)/$0"         # Full path to test script
 
 #### Internal functions
 
@@ -202,18 +328,6 @@ function cleanup() {
 # Usage: timeout
 # Called upon early exit from a test due to timeout.
 function timeout() {
-    :
-}
-
-# Usage: testenv_set_up
-# Called prior to set_up. For use by testenv.sh.
-function testenv_set_up() {
-    :
-}
-
-# Usage: testenv_tear_down
-# Called after tear_down. For use by testenv.sh.
-function testenv_tear_down() {
     :
 }
 
@@ -337,18 +451,6 @@ function expect_not_log() {
     return 1
 }
 
-# Usage: expect_query_targets <arguments>
-# Checks that log file contains exactly the targets in the argument list.
-function expect_query_targets() {
-  for arg in $@; do
-    expect_log_once "^$arg$"
-  done
-
-# Checks that the number of lines started with '//' equals to the number of
-# arguments provided.
-  expect_log_n "^//[^ ]*$" $#
-}
-
 # Usage: expect_log_with_timeout <regexp> <timeout> [error-message]
 # Waits for the given regexp in the $TEST_log for up to timeout seconds.
 # Prints the contents of $TEST_log and the specified (optional)
@@ -449,13 +551,7 @@ function assert_not_contains() {
     local pattern=$1
     local file=$2
     local message=${3:-Expected regexp "$pattern" found in "$file"}
-
-    if [[ -f "$file" ]]; then
-      grep -sq -- "$pattern" "$file" || return 0
-    else
-      fail "$file is not a file: $message"
-      return 1
-    fi
+    grep -sq -- "$pattern" "$file" || return 0
 
     cat "$file" >&2
     fail "$message"
@@ -555,19 +651,16 @@ close FILE" "$block"
 # Usage: <total> <passed>
 # Adds the test summaries to the xml nodes.
 function __finish_test_report() {
-    local suite_name="$1"
-    local total="$2"
-    local passed="$3"
+    local total=$1
+    local passed=$2
     local failed=$((total - passed))
 
-    # Update the xml output with the suite name and total number of
-    # passed/failed tests.
     cat $XML_OUTPUT_FILE | \
       sed \
         "s/<testsuites>/<testsuites tests=\"$total\" failures=\"0\" errors=\"$failed\">/" | \
       sed \
-        "s/<testsuite>/<testsuite name=\"${suite_name}\" tests=\"$total\" failures=\"0\" errors=\"$failed\">/" \
-        > $XML_OUTPUT_FILE.bak
+        "s/<testsuite>/<testsuite tests=\"$total\" failures=\"0\" errors=\"$failed\">/" \
+         > $XML_OUTPUT_FILE.bak
 
     rm -f $XML_OUTPUT_FILE
     mv $XML_OUTPUT_FILE.bak $XML_OUTPUT_FILE
@@ -597,13 +690,8 @@ function get_run_time() {
 # Must be called from the end of the user's test suite.
 # Calls exit with zero on success, non-zero otherwise.
 function run_suite() {
-    local message="$1"
-    # The name of the suite should be the script being run, under Blaze that
-    # will be the filename with the ".sh" extension removed.
-    local suite_name="$(basename $0)"
-
     echo >&2
-    echo "$message" >&2
+    echo "$1" >&2
     echo >&2
 
     __log_to_test_report "<\/testsuites>" "<testsuite></testsuite>"
@@ -619,7 +707,7 @@ function run_suite() {
       TESTS=$(declare -F | awk '{print $3}' | grep ^test_)
     elif [ -n "${TEST_WARNINGS_OUTPUT_FILE:-}" ]; then
       if grep -q "TESTS=" "$TEST_script" ; then
-        echo "TESTS variable overridden in Blaze sh_test. Please remove before submitting" \
+        echo "TESTS variable overridden in Bazel sh_test. Please remove before submitting" \
           >> "$TEST_WARNINGS_OUTPUT_FILE"
       fi
     fi
@@ -648,11 +736,9 @@ function run_suite() {
         __trap_with_arg __test_terminated INT KILL PIPE TERM ABRT FPE ILL QUIT SEGV
         (
           timestamp >$TEST_TMPDIR/__ts_start
-          testenv_set_up
           set_up
           eval $TEST_name
           tear_down
-          testenv_tear_down
           timestamp >$TEST_TMPDIR/__ts_end
           test $TEST_passed == "true"
         ) 2>&1 | tee $TEST_TMPDIR/__log
@@ -695,9 +781,7 @@ function run_suite() {
         # end marker in CDATA cannot be escaped, we need to split the CDATA sections
         log=$(cat $TEST_TMPDIR/__log | sed 's/]]>/]]>]]&gt;<![CDATA[/g')
         fail_msg=$(cat $TEST_TMPDIR/__fail 2> /dev/null || echo "No failure message")
-        # Replacing '&' with '&amp;', '<' with '&lt;', '>' with '&gt;', and '"' with '&quot;'
-        escaped_fail_msg=$(echo $fail_msg | sed 's/&/\&amp;/g' | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/"/\&quot;/g')
-        testcase_tag="<testcase name=\"$TEST_name\" status=\"run\" time=\"$run_time\" classname=\"\"><error message=\"$escaped_fail_msg\"><![CDATA[$log]]></error></testcase>"
+        testcase_tag="<testcase name=\"$TEST_name\" status=\"run\" time=\"$run_time\" classname=\"\"><error message=\"$fail_msg\"><![CDATA[$log]]></error></testcase>"
       fi
 
       if [[ "$TEST_verbose" == "true" ]]; then
@@ -706,7 +790,7 @@ function run_suite() {
       __log_to_test_report "<\/testsuite>" "$testcase_tag"
     done
 
-    __finish_test_report "$suite_name" $total $passed
+    __finish_test_report $total $passed
     __pad "$passed / $total tests passed." '*' >&2
     [ $total = $passed ] || {
       __pad "There were errors." '*'
