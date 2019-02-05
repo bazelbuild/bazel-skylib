@@ -54,5 +54,5 @@ filegroup(
     srcs = [
         "BUILD",
     ],
-    visibility = ["//:__pkg__"],
+    visibility = ["//:__subpackages__"],
 )

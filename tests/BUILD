@@ -10,6 +10,7 @@ load(":shell_tests.bzl", "shell_test_suite")
 load(":structs_tests.bzl", "structs_test_suite")
 load(":types_tests.bzl", "types_test_suite")
 load(":versions_tests.bzl", "versions_test_suite")
+load("//:bzl_library.bzl", "bzl_library")
 
 licenses(["notice"])
 
@@ -36,3 +37,20 @@ structs_test_suite()
 types_test_suite()
 
 versions_test_suite()
+
+bzl_library(
+    name = "unittest_tests",
+    srcs = [ "unittest_tests.bzl" ],
+    deps = [ "//lib:unittest" ],
+)
+
+sh_test(
+    name = "unittest_e2e_test",
+    srcs = ["unittest_test.sh"],
+    data = [
+        ":unittest.bash",
+        ":unittest_tests",
+        "//toolchains/unittest:test_deps",
+        "@bazel_tools//tools/bash/runfiles",
+    ],
+)
