@@ -6,6 +6,7 @@ platforms:
     test_targets:
     - "..."
     test_flags:
+    - "--action_env=PATH"
     - "--test_env=PATH"
   ubuntu1604:
     build_targets:
@@ -13,6 +14,7 @@ platforms:
     test_targets:
     - "..."
     test_flags:
+    - "--action_env=PATH"
     - "--test_env=PATH"
   macos:
     build_targets:
@@ -20,6 +22,7 @@ platforms:
     test_targets:
     - "..."
     test_flags:
+    - "--action_env=PATH"
     - "--test_env=PATH"
   windows:
     build_targets:
@@ -27,4 +30,5 @@ platforms:
     test_targets:
     - "..."
     test_flags:
+    - "--action_env=PATH"
     - "--test_env=PATH"
