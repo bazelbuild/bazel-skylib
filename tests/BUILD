@@ -1,3 +1,4 @@
+load("//:bzl_library.bzl", "bzl_library")
 load(":build_test_tests.bzl", "build_test_test_suite")
 load(":collections_tests.bzl", "collections_test_suite")
 load(":dicts_tests.bzl", "dicts_test_suite")
@@ -39,3 +40,21 @@ structs_test_suite()
 types_test_suite()
 
 versions_test_suite()
+
+bzl_library(
+    name = "unittest_tests",
+    srcs = ["unittest_tests.bzl"],
+    deps = ["//lib:unittest"],
+)
+
+sh_test(
+    name = "unittest_e2e_test",
+    srcs = ["unittest_test.sh"],
+    data = [
+        ":unittest.bash",
+        ":unittest_tests",
+        "//toolchains/unittest:test_deps",
+        "@bazel_tools//tools/bash/runfiles",
+    ],
+    tags = ["local"],
+)

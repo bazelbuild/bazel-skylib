@@ -5,18 +5,27 @@ platforms:
     - "..."
     test_targets:
     - "..."
+    test_flags:
+    - "--test_env=PATH"
   ubuntu1604:
     build_targets:
     - "..."
     test_targets:
     - "..."
+    test_flags:
+    - "--test_env=PATH"
   macos:
     build_targets:
     - "..."
     test_targets:
     - "..."
+    test_flags:
+    - "--test_env=PATH"
   windows:
     build_targets:
     - "..."
     test_targets:
+    - "--"
     - "..."
+    # Shell test doesn't run on windows.
+    - "-//tests:unittest_e2e_test"
