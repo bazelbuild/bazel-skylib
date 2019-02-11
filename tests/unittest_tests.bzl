@@ -10,7 +10,6 @@ def _basic_passing_test(ctx):
 
 basic_passing_test = unittest.make(_basic_passing_test)
 
-
 def _basic_failing_test(ctx):
     """Unit tests for a basic library verification test that fails."""
     env = unittest.begin(ctx)
