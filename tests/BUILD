@@ -1,4 +1,5 @@
 load("//:bzl_library.bzl", "bzl_library")
+load(":build_test_tests.bzl", "build_test_test_suite")
 load(":collections_tests.bzl", "collections_test_suite")
 load(":dicts_tests.bzl", "dicts_test_suite")
 load(":maprule_tests.bzl", "maprule_test_suite")
@@ -13,6 +14,8 @@ load(":types_tests.bzl", "types_test_suite")
 load(":versions_tests.bzl", "versions_test_suite")
 
 licenses(["notice"])
+
+build_test_test_suite()
 
 collections_test_suite()
 

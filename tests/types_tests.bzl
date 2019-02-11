@@ -35,6 +35,7 @@ def _is_string_test(ctx):
     asserts.false(env, types.is_string(True))
     asserts.false(env, types.is_string(None))
     asserts.false(env, types.is_string(_a_function))
+    asserts.false(env, types.is_string(depset()))
 
     return unittest.end(env)
 
@@ -55,6 +56,7 @@ def _is_bool_test(ctx):
     asserts.false(env, types.is_bool(""))
     asserts.false(env, types.is_bool(None))
     asserts.false(env, types.is_bool(_a_function))
+    asserts.false(env, types.is_bool(depset()))
 
     return unittest.end(env)
 
@@ -75,6 +77,7 @@ def _is_list_test(ctx):
     asserts.false(env, types.is_list(True))
     asserts.false(env, types.is_list(None))
     asserts.false(env, types.is_list(_a_function))
+    asserts.false(env, types.is_list(depset()))
 
     return unittest.end(env)
 
@@ -95,6 +98,7 @@ def _is_none_test(ctx):
     asserts.false(env, types.is_none([]))
     asserts.false(env, types.is_none([1]))
     asserts.false(env, types.is_none(_a_function))
+    asserts.false(env, types.is_none(depset()))
 
     return unittest.end(env)
 
@@ -116,6 +120,7 @@ def _is_int_test(ctx):
     asserts.false(env, types.is_int([1]))
     asserts.false(env, types.is_int(None))
     asserts.false(env, types.is_int(_a_function))
+    asserts.false(env, types.is_int(depset()))
 
     return unittest.end(env)
 
@@ -137,6 +142,7 @@ def _is_tuple_test(ctx):
     asserts.false(env, types.is_tuple([1]))
     asserts.false(env, types.is_tuple(None))
     asserts.false(env, types.is_tuple(_a_function))
+    asserts.false(env, types.is_tuple(depset()))
 
     return unittest.end(env)
 
@@ -158,13 +164,14 @@ def _is_dict_test(ctx):
     asserts.false(env, types.is_dict([1]))
     asserts.false(env, types.is_dict(None))
     asserts.false(env, types.is_dict(_a_function))
+    asserts.false(env, types.is_dict(depset()))
 
     return unittest.end(env)
 
 is_dict_test = unittest.make(_is_dict_test)
 
 def _is_function_test(ctx):
-    """Unit tests for types.is_dict."""
+    """Unit tests for types.is_function."""
 
     env = unittest.begin(ctx)
 
@@ -178,10 +185,35 @@ def _is_function_test(ctx):
     asserts.false(env, types.is_function([]))
     asserts.false(env, types.is_function([1]))
     asserts.false(env, types.is_function(None))
+    asserts.false(env, types.is_function(depset()))
 
     return unittest.end(env)
 
 is_function_test = unittest.make(_is_function_test)
+
+def _is_depset_test(ctx):
+    """Unit tests for types.is_depset."""
+
+    env = unittest.begin(ctx)
+
+    asserts.true(env, types.is_depset(depset()))
+    asserts.true(env, types.is_depset(depset(["foo"])))
+    asserts.true(env, types.is_depset(
+        depset(["foo"], transitive = [depset(["bar", "baz"])]),
+    ))
+
+    asserts.false(env, types.is_depset({}))
+    asserts.false(env, types.is_depset(1))
+    asserts.false(env, types.is_depset("s"))
+    asserts.false(env, types.is_depset(()))
+    asserts.false(env, types.is_depset(True))
+    asserts.false(env, types.is_depset([]))
+    asserts.false(env, types.is_depset([1]))
+    asserts.false(env, types.is_depset(None))
+
+    return unittest.end(env)
+
+is_depset_test = unittest.make(_is_depset_test)
 
 def types_test_suite():
     """Creates the test targets and test suite for types.bzl tests."""
@@ -195,4 +227,5 @@ def types_test_suite():
         is_tuple_test,
         is_dict_test,
         is_function_test,
+        is_depset_test,
     )
