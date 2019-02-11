@@ -4,6 +4,7 @@ platforms:
     build_targets:
     - "..."
     test_targets:
+    - "--"
     - "..."
     # This test is currently failing on ubuntu on CI (but 
     # passes when manually run on ubuntu.
@@ -13,6 +14,7 @@ platforms:
     build_targets:
     - "..."
     test_targets:
+    - "--"
     - "..."
     # This test is currently failing on ubuntu on CI (but 
     # passes when manually run on ubuntu.
@@ -29,6 +31,7 @@ platforms:
     build_targets:
     - "..."
     test_targets:
+    - "--"
     - "..."
     # Shell test doesn't run on windows.
     - "-//tests:unittest_e2e_test"
