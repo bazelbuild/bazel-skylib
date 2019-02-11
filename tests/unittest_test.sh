@@ -13,6 +13,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# End to end tests for unittest.bzl.
+# 
+# Specifically, end to end tests of unittest.bzl cover verification that
+# analysis-phase tests written with unittest.bzl appropriately
+# cause test failures in cases where violated assertions are made.
 
 # --- begin runfiles.bash initialization ---
 set -euo pipefail
@@ -38,8 +44,6 @@ fi
 
 source "$(rlocation bazel_skylib/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
-
-# Integration tests for bundling simple iOS applications.
 
 function set_up() {
   touch WORKSPACE
@@ -84,7 +88,8 @@ function test_basic_passing_test() {
 }
 
 function test_basic_failing_test() {
-  ! bazel test //testdir:basic_failing_test --test_output=all --verbose_failures >"$TEST_log" 2>&1 || fail "Expected test to fail"
+  ! bazel test //testdir:basic_failing_test --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 || fail "Expected test to fail"
 
   expect_log "In test _basic_failing_test from //tests:unittest_tests.bzl: Expected \"1\", but got \"2\""
 }
