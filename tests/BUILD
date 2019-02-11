@@ -40,8 +40,8 @@ versions_test_suite()
 
 bzl_library(
     name = "unittest_tests",
-    srcs = [ "unittest_tests.bzl" ],
-    deps = [ "//lib:unittest" ],
+    srcs = ["unittest_tests.bzl"],
+    deps = ["//lib:unittest"],
 )
 
 sh_test(
@@ -53,4 +53,5 @@ sh_test(
         "//toolchains/unittest:test_deps",
         "@bazel_tools//tools/bash/runfiles",
     ],
+    tags = ["local"],
 )

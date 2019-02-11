@@ -4,22 +4,16 @@ platforms:
     build_targets:
     - "..."
     test_targets:
-    - "--"
     - "..."
-    # This test is currently failing on ubuntu on CI (but 
-    # passes when manually run on ubuntu.
-    # TODO(cparsons): Fix and enable.
-    - "-//tests:unittest_e2e_test"
+    test_flags:
+    - "--test_env=PATH"
   ubuntu1604:
     build_targets:
     - "..."
     test_targets:
-    - "--"
     - "..."
-    # This test is currently failing on ubuntu on CI (but 
-    # passes when manually run on ubuntu.
-    # TODO(cparsons): Fix and enable.
-    - "-//tests:unittest_e2e_test"
+    test_flags:
+    - "--test_env=PATH"
   macos:
     build_targets:
     - "..."
