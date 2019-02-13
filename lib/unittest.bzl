@@ -32,6 +32,15 @@ def register_unittest_toolchains():
 
 TOOLCHAIN_TYPE = "@bazel_skylib//toolchains/unittest:toolchain_type"
 
+# A private attribute used to denote a test rule is an analysis test.
+# For backwards compatibility, "unit tests" are not analysis tests, as being
+# an analysis test enforces the following test restrictions:
+#
+# 1. Test implementation functions may not register their own adhoc actions.
+# 2. There is a hard limit on the number of allowed transitive dependencies of
+#    analysis-test targets.
+_IS_ANALYSIS_TEST_ATTR_NAME = "_is_analysis_test"
+
 _UnittestToolchainInfo = provider(
     doc = "Execution platform information for rules in the bazel_skylib repository.",
     fields = ["file_ext", "success_templ", "failure_templ", "join_on"],
@@ -58,6 +67,18 @@ unittest_toolchain = rule(
         "success_templ": attr.string(mandatory = True),
     },
 )
+
+def _impl_function_name(impl):
+    """Derives the name of the given rule implementation function.
+
+    This can be used for better test feedback."""
+    # Starlark currently stringifies a function as "<function NAME>", so we use
+    # that knowledge to parse the "NAME" portion out. If this behavior ever
+    # changes, we'll need to update this.
+    # TODO(bazel-team): Expose a ._name field on functions to avoid this.
+    impl_name = str(impl)
+    impl_name = impl_name.partition("<function ")[-1]
+    return impl_name.rpartition(">")[0]
 
 def _make(impl, attrs = None):
     """Creates a unit test rule from its implementation function.
@@ -94,18 +115,8 @@ def _make(impl, attrs = None):
       A rule definition that should be stored in a global whose name ends in
       `_test`.
     """
-
-    # Derive the name of the implementation function for better test feedback.
-    # Starlark currently stringifies a function as "<function NAME>", so we use
-    # that knowledge to parse the "NAME" portion out. If this behavior ever
-    # changes, we'll need to update this.
-    # TODO(bazel-team): Expose a ._name field on functions to avoid this.
-    impl_name = str(impl)
-    impl_name = impl_name.partition("<function ")[-1]
-    impl_name = impl_name.rpartition(">")[0]
-
     attrs = dict(attrs) if attrs else {}
-    attrs["_impl_name"] = attr.string(default = impl_name)
+    attrs["_impl_name"] = attr.string(default = _impl_function_name(impl))
 
     return rule(
         impl,
@@ -113,6 +124,71 @@ def _make(impl, attrs = None):
         _skylark_testable = True,
         test = True,
         toolchains = [TOOLCHAIN_TYPE],
+    )
+
+# TODO(cparsons): Provide more full documentation on analysis testing in README.
+def _make_analysis_test(impl, expect_failure = False, config_settings = {}):
+    """Creates an analysis test rule from its implementation function.
+
+    An analysis test verifies the behavior of a "real" rule target by examining
+    and asserting on the providers given by the real target.
+
+    Each analysis test is defined in an implementation function that must then be
+    associated with a rule so that a target can be built. This function handles
+    the boilerplate to create and return a test rule and captures the
+    implementation function's name so that it can be printed in test feedback.
+
+    An example of an analysis test:
+
+    ```
+    def _your_test(ctx):
+      env = analysistest.begin(ctx)
+
+      # Assert statements go here
+
+      return analysistest.end(env)
+
+    your_test = analysistest.make(_your_test)
+    ```
+
+    Recall that names of test rules must end in `_test`.
+
+    Args:
+      impl: The implementation function of the unit test.
+      expect_failure: If true, the analysis test will expect the target_under_test
+          to fail. Assertions can be made on the underlying failure using asserts.expect_failure
+      config_settings: A dictionary of configuration settings to change for the target under
+          test and its dependencies. This may be used to essentially change 'build flags' for
+          the target under test, and may thus be utilized to test multiple targets with different
+          flags in a single build
+
+    Returns:
+      A rule definition that should be stored in a global whose name ends in
+      `_test`.
+    """
+    attrs = {}
+    attrs["_impl_name"] = attr.string(default = _impl_function_name(impl))
+
+    changed_settings = dict(config_settings)
+    if expect_failure:
+        changed_settings["//command_line_option:allow_analysis_failures"] = "True"
+
+    if changed_settings:
+        test_transition = analysis_test_transition(
+            settings = changed_settings
+        )
+        attrs["target_under_test"] = attr.label(cfg = test_transition, mandatory = True)
+    else:
+        attrs["target_under_test"] = attr.label(mandatory = True)
+
+    attrs[_IS_ANALYSIS_TEST_ATTR_NAME] = attr.bool(default = True)
+
+    return rule(
+        impl,
+        attrs = attrs,
+        test = True,
+        toolchains = [TOOLCHAIN_TYPE],
+        analysis_test = True,
     )
 
 def _suite(name, *test_rules):
@@ -196,22 +272,26 @@ def _end(env):
     that the results are reported.
 
     Args:
-      env: The test environment returned by `unittest.begin`.
+      env: The test environment returned by `unittest.begin` or `analysistest.begin`.
     """
-
-    tc = env.ctx.toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
-    testbin = env.ctx.actions.declare_file(env.ctx.label.name + tc.file_ext)
-    if env.failures:
-        cmd = tc.failure_templ % tc.join_on.join(env.failures)
+    if getattr(env.ctx.attr, _IS_ANALYSIS_TEST_ATTR_NAME, False):
+        return [AnalysisTestResultInfo(
+            success = (len(env.failures) == 0),
+            message = "\n".join(env.failures))]
     else:
-        cmd = tc.success_templ
+        tc = env.ctx.toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
+        testbin = env.ctx.actions.declare_file(env.ctx.label.name + tc.file_ext)
+        if env.failures:
+            cmd = tc.failure_templ % tc.join_on.join(env.failures)
+        else:
+            cmd = tc.success_templ
 
-    env.ctx.actions.write(
-        output = testbin,
-        content = cmd,
-        is_executable = True,
-    )
-    return [DefaultInfo(executable = testbin)]
+        env.ctx.actions.write(
+            output = testbin,
+            content = cmd,
+            is_executable = True,
+        )
+        return [DefaultInfo(executable = testbin)]
 
 def _fail(env, msg):
     """Unconditionally causes the current test to fail.
@@ -308,7 +388,22 @@ def _assert_new_set_equals(env, expected, actual, msg = None):
             full_msg = expectation_msg
         _fail(env, full_msg)
 
+def _expect_failure(env, expected_failure_msg = ""):
+    dep = getattr(env.ctx.attr, "target_under_test")[0]
+    if AnalysisFailureInfo in dep:
+        dep_failure = dep[AnalysisFailureInfo]
+        actual_errors = ""
+        for cause in dep[AnalysisFailureInfo].causes.to_list():
+            actual_errors += cause.message + "\n"
+        if actual_errors.find(expected_failure_msg) < 0:
+            expectation_msg = "Expected errors to contain '%s' but did not. " % expected_failure_msg
+            expectation_msg += "Actual error:%s" % actual_errors
+            _fail(env, expectation_msg)
+    else:
+        _fail(env, "Expected failure of target_under_test, but found success")
+
 asserts = struct(
+    expect_failure = _expect_failure,
     equals = _assert_equals,
     false = _assert_false,
     set_equals = _assert_set_equals,
@@ -319,6 +414,13 @@ asserts = struct(
 unittest = struct(
     make = _make,
     suite = _suite,
+    begin = _begin,
+    end = _end,
+    fail = _fail,
+)
+
+analysistest = struct(
+    make = _make_analysis_test,
     begin = _begin,
     end = _end,
     fail = _fail,
