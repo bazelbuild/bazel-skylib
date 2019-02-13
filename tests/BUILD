@@ -11,9 +11,12 @@ load(":sets_tests.bzl", "sets_test_suite")
 load(":shell_tests.bzl", "shell_test_suite")
 load(":structs_tests.bzl", "structs_test_suite")
 load(":types_tests.bzl", "types_test_suite")
-load(":unittest_tests.bzl",
-     "change_setting_fake_rule", "change_setting_test",
-     "unittest_passing_tests_suite")
+load(
+    ":unittest_tests.bzl",
+    "change_setting_fake_rule",
+    "change_setting_test",
+    "unittest_passing_tests_suite",
+)
 load(":versions_tests.bzl", "versions_test_suite")
 
 licenses(["notice"])
@@ -49,8 +52,8 @@ versions_test_suite()
 bzl_library(
     name = "unittest_tests_bzl",
     srcs = ["unittest_tests.bzl"],
+    visibility = ["//visibility:private"],
     deps = ["//lib:unittest"],
-    visibility = [ "//visibility:private" ],
 )
 
 sh_test(

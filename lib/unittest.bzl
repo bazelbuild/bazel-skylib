@@ -72,6 +72,7 @@ def _impl_function_name(impl):
     """Derives the name of the given rule implementation function.
 
     This can be used for better test feedback."""
+
     # Starlark currently stringifies a function as "<function NAME>", so we use
     # that knowledge to parse the "NAME" portion out. If this behavior ever
     # changes, we'll need to update this.
@@ -175,7 +176,7 @@ def _make_analysis_test(impl, expect_failure = False, config_settings = {}):
 
     if changed_settings:
         test_transition = analysis_test_transition(
-            settings = changed_settings
+            settings = changed_settings,
         )
         attrs["target_under_test"] = attr.label(cfg = test_transition, mandatory = True)
     else:
@@ -277,7 +278,8 @@ def _end(env):
     if getattr(env.ctx.attr, _IS_ANALYSIS_TEST_ATTR_NAME, False):
         return [AnalysisTestResultInfo(
             success = (len(env.failures) == 0),
-            message = "\n".join(env.failures))]
+            message = "\n".join(env.failures),
+        )]
     else:
         tc = env.ctx.toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
         testbin = env.ctx.actions.declare_file(env.ctx.label.name + tc.file_ext)

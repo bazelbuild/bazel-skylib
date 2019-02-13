@@ -13,7 +13,6 @@ def _basic_failing_test(ctx):
 
 basic_failing_test = unittest.make(_basic_failing_test)
 
-
 ###################################
 ####### basic_passing_test ########
 ###################################
@@ -26,7 +25,6 @@ def _basic_passing_test(ctx):
     return unittest.end(env)
 
 basic_passing_test = unittest.make(_basic_passing_test)
-
 
 ###################################
 ####### change_setting_test #######
@@ -47,14 +45,15 @@ def _change_setting_fake_rule(ctx):
 
 change_setting_fake_rule = rule(
     implementation = _change_setting_fake_rule,
-    fragments = ["cpp"])
+    fragments = ["cpp"],
+)
 
 change_setting_test = analysistest.make(
     _change_setting_test,
     config_settings = {
-        "//command_line_option:minimum_os_version" : "1234.5678"
-    })
-
+        "//command_line_option:minimum_os_version": "1234.5678",
+    },
+)
 
 ####################################
 ####### failure_testing_test #######
@@ -71,12 +70,13 @@ def _failure_testing_fake_rule(ctx):
     fail("This rule should never work")
 
 failure_testing_fake_rule = rule(
-    implementation = _failure_testing_fake_rule)
+    implementation = _failure_testing_fake_rule,
+)
 
 failure_testing_test = analysistest.make(
     _failure_testing_test,
-    expect_failure = True)
-
+    expect_failure = True,
+)
 
 ############################################
 ####### fail_unexpected_passing_test #######
@@ -93,12 +93,13 @@ def _fail_unexpected_passing_fake_rule(ctx):
     return []
 
 fail_unexpected_passing_fake_rule = rule(
-    implementation = _fail_unexpected_passing_fake_rule)
+    implementation = _fail_unexpected_passing_fake_rule,
+)
 
 fail_unexpected_passing_test = analysistest.make(
     _fail_unexpected_passing_test,
-    expect_failure = True)
-
+    expect_failure = True,
+)
 
 ################################################
 ####### change_setting_with_failure_test #######
@@ -118,15 +119,16 @@ def _change_setting_with_failure_fake_rule(ctx):
 
 change_setting_with_failure_fake_rule = rule(
     implementation = _change_setting_with_failure_fake_rule,
-    fragments = ["cpp"])
+    fragments = ["cpp"],
+)
 
 change_setting_with_failure_test = analysistest.make(
     _change_setting_with_failure_test,
     expect_failure = True,
     config_settings = {
-        "//command_line_option:minimum_os_version" : "error_error"
-    })
-
+        "//command_line_option:minimum_os_version": "error_error",
+    },
+)
 
 #########################################
 
@@ -147,7 +149,8 @@ def unittest_passing_tests_suite():
     )
     change_setting_fake_rule(
         name = "change_setting_fake_target",
-        tags = ["manual"])
+        tags = ["manual"],
+    )
 
     failure_testing_test(
         name = "failure_testing_test",
@@ -155,7 +158,8 @@ def unittest_passing_tests_suite():
     )
     failure_testing_fake_rule(
         name = "failure_testing_fake_target",
-        tags = ["manual"])
+        tags = ["manual"],
+    )
 
     change_setting_with_failure_test(
         name = "change_setting_with_failure_test",
@@ -163,7 +167,5 @@ def unittest_passing_tests_suite():
     )
     change_setting_with_failure_fake_rule(
         name = "change_setting_with_failure_fake_target",
-        tags = ["manual"])
-
-
-
+        tags = ["manual"],
+    )
