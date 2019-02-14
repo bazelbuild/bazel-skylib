@@ -3,7 +3,7 @@
 load("//lib:unittest.bzl", "analysistest", "asserts", "unittest")
 
 ###################################
-####### fail_basic_test ########
+####### fail_basic_test ###########
 ###################################
 def _basic_failing_test(ctx):
     """Unit tests for a basic library verification test that fails."""

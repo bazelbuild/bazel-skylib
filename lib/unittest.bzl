@@ -407,7 +407,7 @@ def _expect_failure(env, expected_failure_msg = ""):
             actual_errors += cause.message + "\n"
         if actual_errors.find(expected_failure_msg) < 0:
             expectation_msg = "Expected errors to contain '%s' but did not. " % expected_failure_msg
-            expectation_msg += "Actual error:%s" % actual_errors
+            expectation_msg += "Actual errors:%s" % actual_errors
             _fail(env, expectation_msg)
     else:
         _fail(env, "Expected failure of target_under_test, but found success")
