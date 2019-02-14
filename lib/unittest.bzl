@@ -32,15 +32,6 @@ def register_unittest_toolchains():
 
 TOOLCHAIN_TYPE = "@bazel_skylib//toolchains/unittest:toolchain_type"
 
-# A private attribute used to denote a test rule is an analysis test.
-# For backwards compatibility, "unit tests" are not analysis tests, as being
-# an analysis test enforces the following test restrictions:
-#
-# 1. Test implementation functions may not register their own adhoc actions.
-# 2. There is a hard limit on the number of allowed transitive dependencies of
-#    analysis-test targets.
-_IS_ANALYSIS_TEST_ATTR_NAME = "_is_analysis_test"
-
 _UnittestToolchainInfo = provider(
     doc = "Execution platform information for rules in the bazel_skylib repository.",
     fields = ["file_ext", "success_templ", "failure_templ", "join_on"],
@@ -71,7 +62,8 @@ unittest_toolchain = rule(
 def _impl_function_name(impl):
     """Derives the name of the given rule implementation function.
 
-    This can be used for better test feedback."""
+    This can be used for better test feedback.
+    """
 
     # Starlark currently stringifies a function as "<function NAME>", so we use
     # that knowledge to parse the "NAME" portion out. If this behavior ever
@@ -182,8 +174,6 @@ def _make_analysis_test(impl, expect_failure = False, config_settings = {}):
     else:
         attrs["target_under_test"] = attr.label(mandatory = True)
 
-    attrs[_IS_ANALYSIS_TEST_ATTR_NAME] = attr.bool(default = True)
-
     return rule(
         impl,
         attrs = attrs,
@@ -266,34 +256,43 @@ def _begin(ctx):
     """
     return struct(ctx = ctx, failures = [])
 
-def _end(env):
-    """Ends a unit test and logs the results.
+def _end_analysis_test(env):
+    """Ends an analysis test and logs the results.
 
-    This must be called before the end of a unit test implementation function so
+    This must be called and returned at the end of an analysis test implementation function so
     that the results are reported.
 
     Args:
-      env: The test environment returned by `unittest.begin` or `analysistest.begin`.
+      env: The test environment returned by `analysistest.begin`.
     """
-    if getattr(env.ctx.attr, _IS_ANALYSIS_TEST_ATTR_NAME, False):
-        return [AnalysisTestResultInfo(
-            success = (len(env.failures) == 0),
-            message = "\n".join(env.failures),
-        )]
-    else:
-        tc = env.ctx.toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
-        testbin = env.ctx.actions.declare_file(env.ctx.label.name + tc.file_ext)
-        if env.failures:
-            cmd = tc.failure_templ % tc.join_on.join(env.failures)
-        else:
-            cmd = tc.success_templ
+    return [AnalysisTestResultInfo(
+        success = (len(env.failures) == 0),
+        message = "\n".join(env.failures),
+    )]
 
-        env.ctx.actions.write(
-            output = testbin,
-            content = cmd,
-            is_executable = True,
-        )
-        return [DefaultInfo(executable = testbin)]
+def _end(env):
+    """Ends a unit test and logs the results.
+
+    This must be called and returned at the end of a unit test implementation function so
+    that the results are reported.
+
+    Args:
+      env: The test environment returned by `unittest.begin`.
+    """
+
+    tc = env.ctx.toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
+    testbin = env.ctx.actions.declare_file(env.ctx.label.name + tc.file_ext)
+    if env.failures:
+        cmd = tc.failure_templ % tc.join_on.join(env.failures)
+    else:
+        cmd = tc.success_templ
+
+    env.ctx.actions.write(
+        output = testbin,
+        content = cmd,
+        is_executable = True,
+    )
+    return [DefaultInfo(executable = testbin)]
 
 def _fail(env, msg):
     """Unconditionally causes the current test to fail.
@@ -391,6 +390,15 @@ def _assert_new_set_equals(env, expected, actual, msg = None):
         _fail(env, full_msg)
 
 def _expect_failure(env, expected_failure_msg = ""):
+    """Asserts that the target under test has failed with a given error message.
+
+    This requires that the analysis test is created with `analysistest.make()` and
+    `expect_failures = True` is specified.
+
+    Args:
+      env: The test environment returned by `unittest.begin`.
+      expected_failure_msg: The error message to expect as a result of analysis failures.
+    """
     dep = getattr(env.ctx.attr, "target_under_test")[0]
     if AnalysisFailureInfo in dep:
         dep_failure = dep[AnalysisFailureInfo]
@@ -424,6 +432,6 @@ unittest = struct(
 analysistest = struct(
     make = _make_analysis_test,
     begin = _begin,
-    end = _end,
+    end = _end_analysis_test,
     fail = _fail,
 )
