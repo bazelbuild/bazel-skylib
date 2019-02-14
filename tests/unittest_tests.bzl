@@ -1,6 +1,6 @@
-load("//lib:unittest.bzl", "analysistest", "asserts", "unittest")
-
 """Unit tests for unittest.bzl."""
+
+load("//lib:unittest.bzl", "analysistest", "asserts", "unittest")
 
 ###################################
 ####### fail_basic_test ########
