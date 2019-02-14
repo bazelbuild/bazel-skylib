@@ -69,11 +69,21 @@ EOF
   cat > testdir/BUILD <<EOF
 load("//tests:unittest_tests.bzl",
     "basic_passing_test",
-    "basic_failing_test")
+    "basic_failing_test",
+    "fail_unexpected_passing_test",
+    "fail_unexpected_passing_fake_rule")
 
 basic_passing_test(name = "basic_passing_test")
 
 basic_failing_test(name = "basic_failing_test")
+
+fail_unexpected_passing_test(
+    name = "fail_unexpected_passing_test",
+    target_under_test = ":fail_unexpected_passing_fake_target",
+)
+fail_unexpected_passing_fake_rule(
+    name = "fail_unexpected_passing_fake_target",
+    tags = ["manual"])
 EOF
 }
 
@@ -92,6 +102,13 @@ function test_basic_failing_test() {
       >"$TEST_log" 2>&1 || fail "Expected test to fail"
 
   expect_log "In test _basic_failing_test from //tests:unittest_tests.bzl: Expected \"1\", but got \"2\""
+}
+
+function test_fail_unexpected_passing_test() {
+  ! bazel test //testdir:fail_unexpected_passing_test --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 || fail "Expected test to fail"
+
+  expect_log "Expected failure of target_under_test, but found success"
 }
 
 run_suite "unittest test suite"
