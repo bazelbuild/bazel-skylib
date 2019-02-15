@@ -62,3 +62,14 @@ sh_test(
     ],
     tags = ["local"],
 )
+
+sh_test(
+    name = "analysis_test_e2e_test",
+    srcs = ["analysis_test_test.sh"],
+    data = [
+        ":unittest.bash",
+        "//rules:analysis_test.bzl",
+        "@bazel_tools//tools/bash/runfiles",
+    ],
+    tags = ["local"],
+)

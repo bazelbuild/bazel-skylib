@@ -27,5 +27,6 @@ platforms:
     test_targets:
     - "--"
     - "..."
-    # Shell test doesn't run on windows.
+    # Shell tests don't run on windows.
+    - "-//tests:analysis_test_e2e_test"
     - "-//tests:unittest_e2e_test"
