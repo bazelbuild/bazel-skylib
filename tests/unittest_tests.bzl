@@ -132,7 +132,6 @@ change_setting_with_failure_test = analysistest.make(
     },
 )
 
-
 ####################################
 ####### inspect_actions_test #######
 ####################################

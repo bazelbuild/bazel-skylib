@@ -119,18 +119,15 @@ def _make(impl, attrs = None):
         toolchains = [TOOLCHAIN_TYPE],
     )
 
-
 _ActionInfo = provider()
 
 def _action_retrieving_aspect_impl(target, ctx):
     return [_ActionInfo(actions = target.actions)]
 
-
 _action_retrieving_aspect = aspect(
     attr_aspects = [],
-    implementation = _action_retrieving_aspect_impl)
-
-
+    implementation = _action_retrieving_aspect_impl,
+)
 
 # TODO(cparsons): Provide more full documentation on analysis testing in README.
 def _make_analysis_test(impl, expect_failure = False, config_settings = {}):
@@ -183,11 +180,16 @@ def _make_analysis_test(impl, expect_failure = False, config_settings = {}):
         test_transition = analysis_test_transition(
             settings = changed_settings,
         )
-        attrs["target_under_test"] = attr.label(aspects = [_action_retrieving_aspect],
-            cfg = test_transition, mandatory = True)
+        attrs["target_under_test"] = attr.label(
+            aspects = [_action_retrieving_aspect],
+            cfg = test_transition,
+            mandatory = True,
+        )
     else:
-        attrs["target_under_test"] = attr.label(aspects = [_action_retrieving_aspect],
-            mandatory = True)
+        attrs["target_under_test"] = attr.label(
+            aspects = [_action_retrieving_aspect],
+            mandatory = True,
+        )
 
     return rule(
         impl,
@@ -433,6 +435,7 @@ def _target_actions(env):
     Args:
       env: The test environment returned by `analysistest.begin`.
     """
+
     # Validate?
     dep = _target_under_test(env)
     return dep[_ActionInfo].actions
@@ -445,10 +448,10 @@ def _target_under_test(env):
     """
     result = getattr(env.ctx.attr, "target_under_test")
     if type(result) == type([]):
-      if result:
-        return result[0]
-      else:
-        fail("test rule does not have a target_under_test")
+        if result:
+            return result[0]
+        else:
+            fail("test rule does not have a target_under_test")
     return result
 
 asserts = struct(
