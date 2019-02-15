@@ -23,7 +23,7 @@ def _analysis_test_impl(ctx):
 
 analysis_test = rule(
     _analysis_test_impl,
-    attrs = { "targets" : attr.label_list(mandatory = True) },
+    attrs = {"targets": attr.label_list(mandatory = True)},
     test = True,
     analysis_test = True,
     doc = """Test rule checking that other targets can be successfully analyzed.
@@ -52,5 +52,5 @@ analysis_test = rule(
     Args:
       name: The name of the test rule.
       targets: A list of targets to ensure build.
-    """
+    """,
 )
