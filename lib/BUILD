@@ -70,6 +70,7 @@ bzl_library(
     deps = [
         ":new_sets",
         ":sets",
+        ":types",
     ],
 )
 

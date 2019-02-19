@@ -21,6 +21,7 @@ assertions used to within tests.
 
 load(":new_sets.bzl", new_sets = "sets")
 load(":sets.bzl", "sets")
+load(":types.bzl", "types")
 
 # The following function should only be called from WORKSPACE files and workspace macros.
 def register_unittest_toolchains():
@@ -119,7 +120,7 @@ def _make(impl, attrs = None):
         toolchains = [TOOLCHAIN_TYPE],
     )
 
-_ActionInfo = provider()
+_ActionInfo = provider(fields = ["actions"])
 
 def _action_retrieving_aspect_impl(target, ctx):
     return [_ActionInfo(actions = target.actions)]
@@ -447,7 +448,7 @@ def _target_under_test(env):
       env: The test environment returned by `analysistest.begin`.
     """
     result = getattr(env.ctx.attr, "target_under_test")
-    if type(result) == type([]):
+    if types.is_list(result):
         if result:
             return result[0]
         else:

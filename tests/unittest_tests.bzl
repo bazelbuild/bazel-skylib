@@ -140,6 +140,7 @@ def _inspect_actions_test(ctx):
     env = analysistest.begin(ctx)
 
     actions = analysistest.target_actions(env)
+    asserts.equals(env, 1, len(actions))
     action_output = actions[0].outputs.to_list()[0]
     asserts.equals(env, "out.txt", action_output.basename)
     return analysistest.end(env)
