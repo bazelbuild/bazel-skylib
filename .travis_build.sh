@@ -41,7 +41,6 @@ if [[ -n "${BUILDIFIER:-}" ]]; then
 
   # Check for format issues?
   if [[ "${FORMAT:-yes}" == "yes" ]] ; then
-    # bazelbuild/buildtools/issues/220 - diff doesn't include the file that needs updating
     if ! find . "${FIND_ARGS[@]}" -print | xargs buildifier -d > /dev/null 2>&1 ; then
       if [[ "${FOUND_ISSUES}" != "no" ]] ; then
         echo ""
@@ -49,7 +48,7 @@ if [[ -n "${BUILDIFIER:-}" ]]; then
       echo "ERROR: BUILD/.bzl file formatting issue(s):"
       echo ""
       # bazelbuild/buildtools/issues/329 - sed out the exit status lines.
-      find . "${FIND_ARGS[@]}" -print -exec buildifier -v -d {} \; \
+      find . "${FIND_ARGS[@]}" -exec buildifier -v -d {} \; \
           2>&1 | sed -E -e '/^exit status 1$/d'
       echo ""
       echo "Please download the latest buildifier"
