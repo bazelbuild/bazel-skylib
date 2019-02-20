@@ -21,6 +21,7 @@ assertions used to within tests.
 
 load(":new_sets.bzl", new_sets = "sets")
 load(":sets.bzl", "sets")
+load(":types.bzl", "types")
 
 # The following function should only be called from WORKSPACE files and workspace macros.
 def register_unittest_toolchains():
@@ -119,6 +120,16 @@ def _make(impl, attrs = None):
         toolchains = [TOOLCHAIN_TYPE],
     )
 
+_ActionInfo = provider(fields = ["actions"])
+
+def _action_retrieving_aspect_impl(target, ctx):
+    return [_ActionInfo(actions = target.actions)]
+
+_action_retrieving_aspect = aspect(
+    attr_aspects = [],
+    implementation = _action_retrieving_aspect_impl,
+)
+
 # TODO(cparsons): Provide more full documentation on analysis testing in README.
 def _make_analysis_test(impl, expect_failure = False, config_settings = {}):
     """Creates an analysis test rule from its implementation function.
@@ -170,9 +181,16 @@ def _make_analysis_test(impl, expect_failure = False, config_settings = {}):
         test_transition = analysis_test_transition(
             settings = changed_settings,
         )
-        attrs["target_under_test"] = attr.label(cfg = test_transition, mandatory = True)
+        attrs["target_under_test"] = attr.label(
+            aspects = [_action_retrieving_aspect],
+            cfg = test_transition,
+            mandatory = True,
+        )
     else:
-        attrs["target_under_test"] = attr.label(mandatory = True)
+        attrs["target_under_test"] = attr.label(
+            aspects = [_action_retrieving_aspect],
+            mandatory = True,
+        )
 
     return rule(
         impl,
@@ -396,10 +414,10 @@ def _expect_failure(env, expected_failure_msg = ""):
     `expect_failures = True` is specified.
 
     Args:
-      env: The test environment returned by `unittest.begin`.
+      env: The test environment returned by `analysistest.begin`.
       expected_failure_msg: The error message to expect as a result of analysis failures.
     """
-    dep = getattr(env.ctx.attr, "target_under_test")[0]
+    dep = _target_under_test(env)
     if AnalysisFailureInfo in dep:
         dep_failure = dep[AnalysisFailureInfo]
         actual_errors = ""
@@ -411,6 +429,31 @@ def _expect_failure(env, expected_failure_msg = ""):
             _fail(env, expectation_msg)
     else:
         _fail(env, "Expected failure of target_under_test, but found success")
+
+def _target_actions(env):
+    """Returns a list of actions registered by the target under test.
+
+    Args:
+      env: The test environment returned by `analysistest.begin`.
+    """
+
+    # Validate?
+    dep = _target_under_test(env)
+    return dep[_ActionInfo].actions
+
+def _target_under_test(env):
+    """Returns the target under test.
+
+    Args:
+      env: The test environment returned by `analysistest.begin`.
+    """
+    result = getattr(env.ctx.attr, "target_under_test")
+    if types.is_list(result):
+        if result:
+            return result[0]
+        else:
+            fail("test rule does not have a target_under_test")
+    return result
 
 asserts = struct(
     expect_failure = _expect_failure,
@@ -434,4 +477,6 @@ analysistest = struct(
     begin = _begin,
     end = _end_analysis_test,
     fail = _fail,
+    target_actions = _target_actions,
+    target_under_test = _target_under_test,
 )
