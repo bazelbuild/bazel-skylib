@@ -16,6 +16,7 @@
 
 def _analysis_test_impl(ctx):
     """Implementation function for analysis_test. """
+    _ignore = [ctx]
     return [AnalysisTestResultInfo(
         success = True,
         message = "All targets succeeded analysis",

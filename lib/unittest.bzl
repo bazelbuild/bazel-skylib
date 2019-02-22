@@ -64,6 +64,12 @@ def _impl_function_name(impl):
     """Derives the name of the given rule implementation function.
 
     This can be used for better test feedback.
+
+    Args:
+      impl: the rule implementation function
+
+    Returns:
+      The name of the given function
     """
 
     # Starlark currently stringifies a function as "<function NAME>", so we use
@@ -123,6 +129,7 @@ def _make(impl, attrs = None):
 _ActionInfo = provider(fields = ["actions"])
 
 def _action_retrieving_aspect_impl(target, ctx):
+    _ignore = [ctx]
     return [_ActionInfo(actions = target.actions)]
 
 _action_retrieving_aspect = aspect(
@@ -282,6 +289,9 @@ def _end_analysis_test(env):
 
     Args:
       env: The test environment returned by `analysistest.begin`.
+
+    Returns:
+      A list of providers needed to automatically register the analysis test result.
     """
     return [AnalysisTestResultInfo(
         success = (len(env.failures) == 0),
@@ -296,6 +306,9 @@ def _end(env):
 
     Args:
       env: The test environment returned by `unittest.begin`.
+
+    Returns:
+      A list of providers needed to automatically register the test result.
     """
 
     tc = env.ctx.toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
@@ -419,7 +432,6 @@ def _expect_failure(env, expected_failure_msg = ""):
     """
     dep = _target_under_test(env)
     if AnalysisFailureInfo in dep:
-        dep_failure = dep[AnalysisFailureInfo]
         actual_errors = ""
         for cause in dep[AnalysisFailureInfo].causes.to_list():
             actual_errors += cause.message + "\n"
@@ -435,6 +447,9 @@ def _target_actions(env):
 
     Args:
       env: The test environment returned by `analysistest.begin`.
+
+    Returns:
+      A list of actions registered by the target under test
     """
 
     # Validate?
@@ -446,6 +461,9 @@ def _target_under_test(env):
 
     Args:
       env: The test environment returned by `analysistest.begin`.
+
+    Returns:
+      The target under test.
     """
     result = getattr(env.ctx.attr, "target_under_test")
     if types.is_list(result):
