@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 # End to end tests for analysis_test.bzl.
-# 
+#
 # End to end tests of analysis_test.bzl cover verification that
 # analysis_test tests fail when their underlying test targets fail analysis.
 

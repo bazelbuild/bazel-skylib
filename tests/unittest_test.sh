@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 # End to end tests for unittest.bzl.
-# 
+#
 # Specifically, end to end tests of unittest.bzl cover verification that
 # analysis-phase tests written with unittest.bzl appropriately
 # cause test failures in cases where violated assertions are made.
