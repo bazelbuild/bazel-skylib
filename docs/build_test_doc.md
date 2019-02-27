@@ -15,6 +15,7 @@ support would be welcomed.
 
 Typical usage:
 
+```
   load("@bazel_skylib//rules:build_test.bzl", "build_test")
   build_test(
       name = "my_build_test",
@@ -22,6 +23,7 @@ Typical usage:
           "//some/package:rule",
       ],
   )
+```
 
 
 ### Parameters
