@@ -6,6 +6,8 @@ tasks:
     bazel: latest
     build_targets:
     - "..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
     test_targets:
     - "..."
     test_flags:
@@ -17,6 +19,8 @@ tasks:
     bazel: latest
     build_targets:
     - "..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
     test_targets:
     - "..."
     test_flags:
@@ -28,6 +32,8 @@ tasks:
     bazel: latest
     build_targets:
     - "..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
     test_targets:
     - "..."
     test_flags:
@@ -52,6 +58,8 @@ tasks:
     bazel: last_green
     build_targets:
     - "..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
     test_targets:
     - "..."
     test_flags:
@@ -63,6 +71,8 @@ tasks:
     bazel: last_green
     build_targets:
     - "..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
     test_targets:
     - "..."
     test_flags:
@@ -74,6 +84,8 @@ tasks:
     bazel: last_green
     build_targets:
     - "..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
     test_targets:
     - "..."
     test_flags:
@@ -85,6 +97,8 @@ tasks:
     bazel: last_green
     build_targets:
     - "..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
     test_targets:
     - "--"
     - "..."
