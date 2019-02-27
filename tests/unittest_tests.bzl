@@ -69,6 +69,7 @@ def _failure_testing_test(ctx):
     return analysistest.end(env)
 
 def _failure_testing_fake_rule(ctx):
+    ignore = [ctx]
     fail("This rule should never work")
 
 failure_testing_fake_rule = rule(
@@ -92,6 +93,7 @@ def _fail_unexpected_passing_test(ctx):
     return analysistest.end(env)
 
 def _fail_unexpected_passing_fake_rule(ctx):
+    _ignore = [ctx]
     return []
 
 fail_unexpected_passing_fake_rule = rule(
@@ -168,7 +170,8 @@ def unittest_passing_tests_suite():
 
     Not all tests are included. Some unittest.bzl tests verify a test fails
     when assertions are not met. Such tests must be run in an e2e shell test.
-    This suite only includes tests which verify success tests."""
+    This suite only includes tests which verify success tests.
+    """
     unittest.suite(
         "unittest_tests",
         basic_passing_test,

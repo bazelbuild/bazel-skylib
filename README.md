@@ -1,6 +1,5 @@
 # Skylib
 
-[![Build Status](https://travis-ci.org/bazelbuild/bazel-skylib.svg?branch=master)](https://travis-ci.org/bazelbuild/bazel-skylib)
 [![Build status](https://badge.buildkite.com/921dc61e2d3a350ec40efb291914360c0bfa9b6196fa357420.svg)](https://buildkite.com/bazel/bazel-skylib)
 
 Skylib is a standard library that provides functions useful for manipulating
