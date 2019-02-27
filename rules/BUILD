@@ -20,9 +20,15 @@ bzl_library(
     srcs = ["maprule_private.bzl"],
     visibility = ["//visibility:private"],
     deps = [
+        ":maprule_util",
         "//lib:dicts",
         "//lib:paths",
     ],
+)
+
+bzl_library(
+    name = "maprule_util",
+    srcs = ["maprule_util.bzl"],
 )
 
 # Exported for build_test.bzl to make sure of, it is an implementation detail

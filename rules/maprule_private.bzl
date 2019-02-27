@@ -25,6 +25,7 @@ This module exports:
 
 load("//lib:dicts.bzl", "dicts")
 load("//lib:paths.bzl", "paths")
+load(":maprule_util.bzl", "resolve_locations")
 
 _cmd_maprule_intro = """
 Maprule that runs a Windows Command Prompt (`cmd.exe`) command.
@@ -390,66 +391,7 @@ def _create_outputs(ctx, ctx_label_name, ctx_attr_outs_templates, strategy, fore
     else:
         return outs_dicts, all_output_files, src_placeholders_dicts, None
 
-def _resolve_locations(ctx, strategy, ctx_attr_add_env, ctx_attr_tools):
-    # ctx.resolve_command returns a Bash command. All we need though is the inputs and runfiles
-    # manifests (we expand $(location) references with ctx.expand_location below), so ignore the
-    # tuple's middle element (the resolved command).
-    inputs_from_tools, _, manifests_from_tools = ctx.resolve_command(
-        # Pretend that the additional envvars are forming a command, so resolve_command will resolve
-        # $(location) references in them (which we ignore here) and add their inputs and manifests
-        # to the results (which we really care about).
-        command = " ".join(ctx_attr_add_env.values()),
-        tools = ctx_attr_tools,
-    )
-
-    errors = []
-    location_expressions = []
-    parts = {}
-    was_anything_to_resolve = False
-    for k, v in ctx_attr_add_env.items():
-        # Look for "$(location ...)" or "$(locations ...)", resolve if found.
-        # _validate_attributes already ensured that there's at most one $(location/s ...) in "v".
-        if "$(location" in v:
-            tokens = v.split("$(location")
-            was_anything_to_resolve = True
-            closing_paren = tokens[1].find(")")
-            location_expressions.append("$(location" + tokens[1][:closing_paren + 1])
-            parts[k] = (tokens[0], tokens[1][closing_paren + 1:])
-        else:
-            location_expressions.append("")
-
-    if errors:
-        return None, None, None, errors
-
-    resolved_add_env = {}
-    if was_anything_to_resolve:
-        # Resolve all $(location) expressions in one go.  Should be faster than resolving them
-        # one-by-one.
-        all_location_expressions = "<split_here>".join(location_expressions)
-        all_resolved_locations = ctx.expand_location(all_location_expressions)
-        resolved_locations = strategy.as_path(all_resolved_locations).split("<split_here>")
-
-        i = 0
-
-        # Starlark dictionaries have a deterministic order of iteration, so the element order in
-        # "resolved_locations" matches the order in "location_expressions", i.e. the previous
-        # iteration order of "ctx_attr_add_env".
-        for k, v in ctx_attr_add_env.items():
-            if location_expressions[i]:
-                head, tail = parts[k]
-                resolved_add_env[k] = head + resolved_locations[i] + tail
-            else:
-                resolved_add_env[k] = v
-            i += 1
-    else:
-        resolved_add_env = ctx_attr_add_env
-
-    if errors:
-        return None, None, None, errors
-    else:
-        return inputs_from_tools, manifests_from_tools, resolved_add_env, None
-
-def _custom_envmap(ctx, strategy, src_placeholders, outs_dict, add_env):
+def _custom_envmap(ctx, strategy, src_placeholders, outs_dict, resolved_add_env):
     return dicts.add(
         {
             "MAPRULE_" + k.upper(): strategy.as_path(v)
@@ -460,8 +402,8 @@ def _custom_envmap(ctx, strategy, src_placeholders, outs_dict, add_env):
             for k, v in outs_dict.items()
         },
         {
-            "MAPRULE_" + k.upper(): strategy.as_path(ctx.expand_location(v)).format(**src_placeholders)
-            for k, v in add_env.items()
+            "MAPRULE_" + k.upper(): v
+            for k, v in resolved_add_env.items()
         },
     )
 
@@ -501,20 +443,15 @@ def _maprule_main(ctx, strategy):
         {"MAPRULE_SRCS": " ".join([strategy.as_path(p.path) for p in common_srcs_list])},
     )
 
-    # Resolve $(location) references in "cmd" and in "add_env".
-    inputs_from_tools, manifests_from_tools, add_env, errors = _resolve_locations(
-        ctx,
-        strategy,
-        ctx.attr.add_env,
-        ctx.attr.tools,
-    )
-    _fail_if_errors(errors)
+    # Resolve "tools" runfiles and $(location) references in "add_env".
+    inputs_from_tools, manifests_from_tools = ctx.resolve_tools(tools = ctx.attr.tools)
+    add_env = resolve_locations(ctx, strategy, ctx.attr.add_env)
 
     # Create actions for each of the "foreach" sources.
     for src in foreach_srcs:
         strategy.create_action(
             ctx,
-            inputs = depset(direct = [src] + inputs_from_tools, transitive = [common_srcs]),
+            inputs = depset(direct = [src], transitive = [common_srcs, inputs_from_tools]),
             outputs = foreach_src_outs_dicts[src].values(),
             # The custom envmap contains envvars specific to the current "src", such as MAPRULE_SRC.
             env = common_envmap + _custom_envmap(

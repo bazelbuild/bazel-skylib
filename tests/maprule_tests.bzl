@@ -283,7 +283,7 @@ def _custom_envmap_test(ctx):
                 "out1": _mock_file(ctx, language + "/Foo/Out1"),
                 "out2": _mock_file(ctx, language + "/Foo/Out2"),
             },
-            add_env = {"ENV1": "Env1"},
+            resolved_add_env = {"ENV1": "Env1"},
         )
         _assert_dict_keys(
             env,
