@@ -1,7 +1,7 @@
 load("@io_bazel_skydoc//stardoc:stardoc.bzl", "stardoc")
 
 # Note that due to a bug in Bazel 0.22.0, these targets cannot be built without
-# the --experimental_remap_main_repo flag.
+# the --incompatible_remap_main_repo flag.
 stardoc(
     name = "build_test_docs",
     input = "//rules:build_test.bzl",
