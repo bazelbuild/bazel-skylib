@@ -92,3 +92,10 @@ stardoc(
     deps = ["//lib:versions"],
 )
 
+stardoc(
+    name = "maprule_docs",
+    input = "//rules:maprule.bzl",
+    out = "maprule_doc_gen.md",
+    deps = ["//rules:maprule"],
+)
+

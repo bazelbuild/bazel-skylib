@@ -72,7 +72,9 @@ s = shell.quote(p)
 
 ## List of rules (in rules/)
 
-* [`cmd_maprule` and `bash_maprule`](docs/maprule.bzl)
+* [analysis_test](docs/analysis_test_doc.md)
+* [build_test](docs/build_test_doc.md)
+* [`cmd_maprule` and `bash_maprule`](docs/maprule_doc.md)
 
 ## Writing a new module
 
