@@ -1,27 +1,42 @@
 ---
-platforms:
-  ubuntu1404:
+tasks:
+  ubuntu1804_latest:
+    name: "Latest Bazel"
+    platform: ubuntu1804
+    bazel: latest
     build_targets:
     - "..."
     test_targets:
     - "..."
     test_flags:
     - "--test_env=PATH"
-  ubuntu1604:
+
+  ubuntu1604_latest:
+    name: "Latest Bazel"
+    platform: ubuntu1604
+    bazel: latest
     build_targets:
     - "..."
     test_targets:
     - "..."
     test_flags:
     - "--test_env=PATH"
-  macos:
+
+  macos_latest:
+    name: "Latest Bazel"
+    platform: macos
+    bazel: latest
     build_targets:
     - "..."
     test_targets:
     - "..."
     test_flags:
     - "--test_env=PATH"
-  windows:
+
+  windows_latest:
+    name: "Latest Bazel"
+    platform: windows
+    bazel: latest
     build_targets:
     - "..."
     test_targets:
@@ -30,3 +45,51 @@ platforms:
     # Shell tests don't run on windows.
     - "-//tests:analysis_test_e2e_test"
     - "-//tests:unittest_e2e_test"
+
+  ubuntu1804_last_green:
+    name: "Last Green Bazel"
+    platform: ubuntu1804
+    bazel: last_green
+    build_targets:
+    - "..."
+    test_targets:
+    - "..."
+    test_flags:
+    - "--test_env=PATH"
+
+  ubuntu1604_last_green:
+    name: "Last Green Bazel"
+    platform: ubuntu1604
+    bazel: last_green
+    build_targets:
+    - "..."
+    test_targets:
+    - "..."
+    test_flags:
+    - "--test_env=PATH"
+
+  macos_last_green:
+    name: "Last Green Bazel"
+    platform: macos
+    bazel: last_green
+    build_targets:
+    - "..."
+    test_targets:
+    - "..."
+    test_flags:
+    - "--test_env=PATH"
+
+  windows_last_green:
+    name: "Last Green Bazel"
+    platform: windows
+    bazel: last_green
+    build_targets:
+    - "..."
+    test_targets:
+    - "--"
+    - "..."
+    # Shell tests don't run on windows.
+    - "-//tests:analysis_test_e2e_test"
+    - "-//tests:unittest_e2e_test"
+
+buildifier: true
