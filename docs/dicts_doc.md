@@ -1,7 +1,7 @@
-## _add
+## dicts.add
 
 <pre>
-_add(<a href="#_add-dictionaries">dictionaries</a>)
+dicts.add(<a href="#dicts.add-dictionaries">dictionaries</a>)
 </pre>
 
 Returns a new `dict` that has all the entries of the given dictionaries.
@@ -23,10 +23,13 @@ dictionary, and the sum of a single dictionary is a copy of itself.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_add-dictionaries>
+    <tr id="dicts.add-dictionaries">
       <td><code>dictionaries</code></td>
       <td>
-        required.
+        optional.
+        <p>
+          Zero or more dictionaries to be added.
+        </p>
       </td>
     </tr>
   </tbody>

@@ -1,7 +1,7 @@
-## _with_or
+## selects.with_or
 
 <pre>
-_with_or(<a href="#_with_or-input_dict">input_dict</a>, <a href="#_with_or-no_match_error">no_match_error</a>)
+selects.with_or(<a href="#selects.with_or-input_dict">input_dict</a>, <a href="#selects.with_or-no_match_error">no_match_error</a>)
 </pre>
 
 Drop-in replacement for `select()` that supports ORed keys.
@@ -14,7 +14,7 @@ Drop-in replacement for `select()` that supports ORed keys.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_with_or-input_dict>
+    <tr id="selects.with_or-input_dict">
       <td><code>input_dict</code></td>
       <td>
         required.
@@ -26,7 +26,7 @@ Drop-in replacement for `select()` that supports ORed keys.
         </p>
       </td>
     </tr>
-    <tr id="_with_or-no_match_error>
+    <tr id="selects.with_or-no_match_error">
       <td><code>no_match_error</code></td>
       <td>
         optional. default is <code>""</code>
@@ -52,10 +52,10 @@ Drop-in replacement for `select()` that supports ORed keys.
 </table>
 
 
-## _with_or_dict
+## selects.with_or_dict
 
 <pre>
-_with_or_dict(<a href="#_with_or_dict-input_dict">input_dict</a>)
+selects.with_or_dict(<a href="#selects.with_or_dict-input_dict">input_dict</a>)
 </pre>
 
 Variation of `with_or` that returns the dict of the `select()`.
@@ -72,7 +72,7 @@ macros.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_with_or_dict-input_dict>
+    <tr id="selects.with_or_dict-input_dict">
       <td><code>input_dict</code></td>
       <td>
         required.

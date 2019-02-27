@@ -1,7 +1,7 @@
-## _array_literal
+## shell.array_literal
 
 <pre>
-_array_literal(<a href="#_array_literal-iterable">iterable</a>)
+shell.array_literal(<a href="#shell.array_literal-iterable">iterable</a>)
 </pre>
 
 Creates a string from a sequence that can be used as a shell array.
@@ -22,7 +22,7 @@ safety, even if they do not need to be.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_array_literal-iterable>
+    <tr id="shell.array_literal-iterable">
       <td><code>iterable</code></td>
       <td>
         required.
@@ -36,10 +36,10 @@ safety, even if they do not need to be.
 </table>
 
 
-## _quote
+## shell.quote
 
 <pre>
-_quote(<a href="#_quote-s">s</a>)
+shell.quote(<a href="#shell.quote-s">s</a>)
 </pre>
 
 Quotes the given string for use in a shell command.
@@ -56,7 +56,7 @@ shell metacharacters.)
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_quote-s>
+    <tr id="shell.quote-s">
       <td><code>s</code></td>
       <td>
         required.

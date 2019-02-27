@@ -60,29 +60,3 @@ Test rule checking that other targets can be successfully analyzed.
 </table>
 
 
-## _analysis_test_impl
-
-<pre>
-_analysis_test_impl(<a href="#_analysis_test_impl-ctx">ctx</a>)
-</pre>
-
-Implementation function for analysis_test. 
-
-### Parameters
-
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="_analysis_test_impl-ctx>
-      <td><code>ctx</code></td>
-      <td>
-        required.
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-

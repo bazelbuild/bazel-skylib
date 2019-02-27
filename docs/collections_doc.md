@@ -1,7 +1,7 @@
-## _after_each
+## collections.after_each
 
 <pre>
-_after_each(<a href="#_after_each-separator">separator</a>, <a href="#_after_each-iterable">iterable</a>)
+collections.after_each(<a href="#collections.after_each-separator">separator</a>, <a href="#collections.after_each-iterable">iterable</a>)
 </pre>
 
 Inserts `separator` after each item in `iterable`.
@@ -14,7 +14,7 @@ Inserts `separator` after each item in `iterable`.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_after_each-separator>
+    <tr id="collections.after_each-separator">
       <td><code>separator</code></td>
       <td>
         required.
@@ -23,7 +23,7 @@ Inserts `separator` after each item in `iterable`.
         </p>
       </td>
     </tr>
-    <tr id="_after_each-iterable>
+    <tr id="collections.after_each-iterable">
       <td><code>iterable</code></td>
       <td>
         required.
@@ -36,10 +36,10 @@ Inserts `separator` after each item in `iterable`.
 </table>
 
 
-## _before_each
+## collections.before_each
 
 <pre>
-_before_each(<a href="#_before_each-separator">separator</a>, <a href="#_before_each-iterable">iterable</a>)
+collections.before_each(<a href="#collections.before_each-separator">separator</a>, <a href="#collections.before_each-iterable">iterable</a>)
 </pre>
 
 Inserts `separator` before each item in `iterable`.
@@ -52,7 +52,7 @@ Inserts `separator` before each item in `iterable`.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_before_each-separator>
+    <tr id="collections.before_each-separator">
       <td><code>separator</code></td>
       <td>
         required.
@@ -61,7 +61,7 @@ Inserts `separator` before each item in `iterable`.
         </p>
       </td>
     </tr>
-    <tr id="_before_each-iterable>
+    <tr id="collections.before_each-iterable">
       <td><code>iterable</code></td>
       <td>
         required.
@@ -74,10 +74,10 @@ Inserts `separator` before each item in `iterable`.
 </table>
 
 
-## _uniq
+## collections.uniq
 
 <pre>
-_uniq(<a href="#_uniq-iterable">iterable</a>)
+collections.uniq(<a href="#collections.uniq-iterable">iterable</a>)
 </pre>
 
 Returns a list of unique elements in `iterable`.
@@ -93,7 +93,7 @@ Requires all the elements to be hashable.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_uniq-iterable>
+    <tr id="collections.uniq-iterable">
       <td><code>iterable</code></td>
       <td>
         required.

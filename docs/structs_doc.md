@@ -1,7 +1,7 @@
-## _to_dict
+## structs.to_dict
 
 <pre>
-_to_dict(<a href="#_to_dict-s">s</a>)
+structs.to_dict(<a href="#structs.to_dict-s">s</a>)
 </pre>
 
 Converts a `struct` to a `dict`.
@@ -14,7 +14,7 @@ Converts a `struct` to a `dict`.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_to_dict-s>
+    <tr id="structs.to_dict-s">
       <td><code>s</code></td>
       <td>
         required.

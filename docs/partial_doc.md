@@ -1,48 +1,7 @@
-## _call
+## partial.make
 
 <pre>
-_call(<a href="#_call-partial">partial</a>, <a href="#_call-args">args</a>, <a href="#_call-kwargs">kwargs</a>)
-</pre>
-
-Calls a partial created using `make`.
-
-### Parameters
-
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="_call-partial>
-      <td><code>partial</code></td>
-      <td>
-        required.
-        <p>
-          The partial to be called.
-        </p>
-      </td>
-    </tr>
-    <tr id="_call-args>
-      <td><code>args</code></td>
-      <td>
-        required.
-      </td>
-    </tr>
-    <tr id="_call-kwargs>
-      <td><code>kwargs</code></td>
-      <td>
-        required.
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-
-## _make
-
-<pre>
-_make(<a href="#_make-func">func</a>, <a href="#_make-args">args</a>, <a href="#_make-kwargs">kwargs</a>)
+partial.make(<a href="#partial.make-func">func</a>, <a href="#partial.make-args">args</a>, <a href="#partial.make-kwargs">kwargs</a>)
 </pre>
 
 Creates a partial that can be called using `call`.
@@ -129,7 +88,7 @@ partial.call(func, x=2)
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_make-func>
+    <tr id="partial.make-func">
       <td><code>func</code></td>
       <td>
         required.
@@ -138,16 +97,72 @@ partial.call(func, x=2)
         </p>
       </td>
     </tr>
-    <tr id="_make-args>
+    <tr id="partial.make-args">
       <td><code>args</code></td>
       <td>
-        required.
+        optional.
+        <p>
+          Positional arguments to be passed to function.
+        </p>
       </td>
     </tr>
-    <tr id="_make-kwargs>
+    <tr id="partial.make-kwargs">
       <td><code>kwargs</code></td>
       <td>
+        optional.
+        <p>
+          Keyword arguments to be passed to function. Note that these can
+          be overridden at the call sites.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+## partial.call
+
+<pre>
+partial.call(<a href="#partial.call-partial">partial</a>, <a href="#partial.call-args">args</a>, <a href="#partial.call-kwargs">kwargs</a>)
+</pre>
+
+Calls a partial created using `make`.
+
+### Parameters
+
+<table class="params-table">
+  <colgroup>
+    <col class="col-param" />
+    <col class="col-description" />
+  </colgroup>
+  <tbody>
+    <tr id="partial.call-partial">
+      <td><code>partial</code></td>
+      <td>
         required.
+        <p>
+          The partial to be called.
+        </p>
+      </td>
+    </tr>
+    <tr id="partial.call-args">
+      <td><code>args</code></td>
+      <td>
+        optional.
+        <p>
+          Additional positional arguments to be appended to the ones given to
+       make.
+        </p>
+      </td>
+    </tr>
+    <tr id="partial.call-kwargs">
+      <td><code>kwargs</code></td>
+      <td>
+        optional.
+        <p>
+          Additional keyword arguments to augment and override the ones
+          given to make.
+        </p>
       </td>
     </tr>
   </tbody>

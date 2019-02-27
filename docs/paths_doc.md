@@ -1,7 +1,7 @@
-## _basename
+## paths.basename
 
 <pre>
-_basename(<a href="#_basename-p">p</a>)
+paths.basename(<a href="#paths.basename-p">p</a>)
 </pre>
 
 Returns the basename (i.e., the file portion) of a path.
@@ -20,7 +20,7 @@ the final slash).
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_basename-p>
+    <tr id="paths.basename-p">
       <td><code>p</code></td>
       <td>
         required.
@@ -33,10 +33,10 @@ the final slash).
 </table>
 
 
-## _dirname
+## paths.dirname
 
 <pre>
-_dirname(<a href="#_dirname-p">p</a>)
+paths.dirname(<a href="#paths.dirname-p">p</a>)
 </pre>
 
 Returns the dirname of a path.
@@ -54,7 +54,7 @@ included, unless omitting them would make the dirname empty.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_dirname-p>
+    <tr id="paths.dirname-p">
       <td><code>p</code></td>
       <td>
         required.
@@ -67,10 +67,10 @@ included, unless omitting them would make the dirname empty.
 </table>
 
 
-## _is_absolute
+## paths.is_absolute
 
 <pre>
-_is_absolute(<a href="#_is_absolute-path">path</a>)
+paths.is_absolute(<a href="#paths.is_absolute-path">path</a>)
 </pre>
 
 Returns `True` if `path` is an absolute path.
@@ -83,7 +83,7 @@ Returns `True` if `path` is an absolute path.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_is_absolute-path>
+    <tr id="paths.is_absolute-path">
       <td><code>path</code></td>
       <td>
         required.
@@ -96,10 +96,10 @@ Returns `True` if `path` is an absolute path.
 </table>
 
 
-## _join
+## paths.join
 
 <pre>
-_join(<a href="#_join-path">path</a>, <a href="#_join-others">others</a>)
+paths.join(<a href="#paths.join-path">path</a>, <a href="#paths.join-others">others</a>)
 </pre>
 
 Joins one or more path components intelligently.
@@ -121,7 +121,7 @@ If any component is an absolute path, all previous components are discarded.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_join-path>
+    <tr id="paths.join-path">
       <td><code>path</code></td>
       <td>
         required.
@@ -130,20 +130,23 @@ If any component is an absolute path, all previous components are discarded.
         </p>
       </td>
     </tr>
-    <tr id="_join-others>
+    <tr id="paths.join-others">
       <td><code>others</code></td>
       <td>
-        required.
+        optional.
+        <p>
+          Additional path segments.
+        </p>
       </td>
     </tr>
   </tbody>
 </table>
 
 
-## _normalize
+## paths.normalize
 
 <pre>
-_normalize(<a href="#_normalize-path">path</a>)
+paths.normalize(<a href="#paths.normalize-path">path</a>)
 </pre>
 
 Normalizes a path, eliminating double slashes and other redundant segments.
@@ -171,7 +174,7 @@ POSIX platforms; specifically:
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_normalize-path>
+    <tr id="paths.normalize-path">
       <td><code>path</code></td>
       <td>
         required.
@@ -184,10 +187,10 @@ POSIX platforms; specifically:
 </table>
 
 
-## _relativize
+## paths.relativize
 
 <pre>
-_relativize(<a href="#_relativize-path">path</a>, <a href="#_relativize-start">start</a>)
+paths.relativize(<a href="#paths.relativize-path">path</a>, <a href="#paths.relativize-start">start</a>)
 </pre>
 
 Returns the portion of `path` that is relative to `start`.
@@ -209,7 +212,7 @@ the path both start with the same initial parent references.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_relativize-path>
+    <tr id="paths.relativize-path">
       <td><code>path</code></td>
       <td>
         required.
@@ -218,7 +221,7 @@ the path both start with the same initial parent references.
         </p>
       </td>
     </tr>
-    <tr id="_relativize-start>
+    <tr id="paths.relativize-start">
       <td><code>start</code></td>
       <td>
         required.
@@ -231,10 +234,10 @@ the path both start with the same initial parent references.
 </table>
 
 
-## _replace_extension
+## paths.replace_extension
 
 <pre>
-_replace_extension(<a href="#_replace_extension-p">p</a>, <a href="#_replace_extension-new_extension">new_extension</a>)
+paths.replace_extension(<a href="#paths.replace_extension-p">p</a>, <a href="#paths.replace_extension-new_extension">new_extension</a>)
 </pre>
 
 Replaces the extension of the file at the end of a path.
@@ -250,7 +253,7 @@ If the path has no extension, the new extension is added to it.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_replace_extension-p>
+    <tr id="paths.replace_extension-p">
       <td><code>p</code></td>
       <td>
         required.
@@ -259,7 +262,7 @@ If the path has no extension, the new extension is added to it.
         </p>
       </td>
     </tr>
-    <tr id="_replace_extension-new_extension>
+    <tr id="paths.replace_extension-new_extension">
       <td><code>new_extension</code></td>
       <td>
         required.
@@ -273,10 +276,10 @@ If the path has no extension, the new extension is added to it.
 </table>
 
 
-## _split_extension
+## paths.split_extension
 
 <pre>
-_split_extension(<a href="#_split_extension-p">p</a>)
+paths.split_extension(<a href="#paths.split_extension-p">p</a>)
 </pre>
 
 Splits the path `p` into a tuple containing the root and extension.
@@ -293,7 +296,7 @@ Leading periods on the basename are ignored, so
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_split_extension-p>
+    <tr id="paths.split_extension-p">
       <td><code>p</code></td>
       <td>
         required.

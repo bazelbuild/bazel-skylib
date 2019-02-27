@@ -1,162 +1,7 @@
-## _a_function
+## types.is_list
 
 <pre>
-_a_function()
-</pre>
-
-
-
-
-
-## _is_bool
-
-<pre>
-_is_bool(<a href="#_is_bool-v">v</a>)
-</pre>
-
-Returns True if v is an instance of a bool.
-
-### Parameters
-
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="_is_bool-v>
-      <td><code>v</code></td>
-      <td>
-        required.
-        <p>
-          The value whose type should be checked.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-
-## _is_depset
-
-<pre>
-_is_depset(<a href="#_is_depset-v">v</a>)
-</pre>
-
-Returns True if v is an instance of a `depset`.
-
-### Parameters
-
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="_is_depset-v>
-      <td><code>v</code></td>
-      <td>
-        required.
-        <p>
-          The value whose type should be checked.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-
-## _is_dict
-
-<pre>
-_is_dict(<a href="#_is_dict-v">v</a>)
-</pre>
-
-Returns True if v is an instance of a dict.
-
-### Parameters
-
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="_is_dict-v>
-      <td><code>v</code></td>
-      <td>
-        required.
-        <p>
-          The value whose type should be checked.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-
-## _is_function
-
-<pre>
-_is_function(<a href="#_is_function-v">v</a>)
-</pre>
-
-Returns True if v is an instance of a function.
-
-### Parameters
-
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="_is_function-v>
-      <td><code>v</code></td>
-      <td>
-        required.
-        <p>
-          The value whose type should be checked.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-
-## _is_int
-
-<pre>
-_is_int(<a href="#_is_int-v">v</a>)
-</pre>
-
-Returns True if v is an instance of a signed integer.
-
-### Parameters
-
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="_is_int-v>
-      <td><code>v</code></td>
-      <td>
-        required.
-        <p>
-          The value whose type should be checked.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-
-## _is_list
-
-<pre>
-_is_list(<a href="#_is_list-v">v</a>)
+types.is_list(<a href="#types.is_list-v">v</a>)
 </pre>
 
 Returns True if v is an instance of a list.
@@ -169,7 +14,7 @@ Returns True if v is an instance of a list.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_is_list-v>
+    <tr id="types.is_list-v">
       <td><code>v</code></td>
       <td>
         required.
@@ -182,39 +27,10 @@ Returns True if v is an instance of a list.
 </table>
 
 
-## _is_none
+## types.is_string
 
 <pre>
-_is_none(<a href="#_is_none-v">v</a>)
-</pre>
-
-Returns True if v has the type of None.
-
-### Parameters
-
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="_is_none-v>
-      <td><code>v</code></td>
-      <td>
-        required.
-        <p>
-          The value whose type should be checked.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-
-## _is_string
-
-<pre>
-_is_string(<a href="#_is_string-v">v</a>)
+types.is_string(<a href="#types.is_string-v">v</a>)
 </pre>
 
 Returns True if v is an instance of a string.
@@ -227,7 +43,7 @@ Returns True if v is an instance of a string.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_is_string-v>
+    <tr id="types.is_string-v">
       <td><code>v</code></td>
       <td>
         required.
@@ -240,10 +56,97 @@ Returns True if v is an instance of a string.
 </table>
 
 
-## _is_tuple
+## types.is_bool
 
 <pre>
-_is_tuple(<a href="#_is_tuple-v">v</a>)
+types.is_bool(<a href="#types.is_bool-v">v</a>)
+</pre>
+
+Returns True if v is an instance of a bool.
+
+### Parameters
+
+<table class="params-table">
+  <colgroup>
+    <col class="col-param" />
+    <col class="col-description" />
+  </colgroup>
+  <tbody>
+    <tr id="types.is_bool-v">
+      <td><code>v</code></td>
+      <td>
+        required.
+        <p>
+          The value whose type should be checked.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+## types.is_none
+
+<pre>
+types.is_none(<a href="#types.is_none-v">v</a>)
+</pre>
+
+Returns True if v has the type of None.
+
+### Parameters
+
+<table class="params-table">
+  <colgroup>
+    <col class="col-param" />
+    <col class="col-description" />
+  </colgroup>
+  <tbody>
+    <tr id="types.is_none-v">
+      <td><code>v</code></td>
+      <td>
+        required.
+        <p>
+          The value whose type should be checked.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+## types.is_int
+
+<pre>
+types.is_int(<a href="#types.is_int-v">v</a>)
+</pre>
+
+Returns True if v is an instance of a signed integer.
+
+### Parameters
+
+<table class="params-table">
+  <colgroup>
+    <col class="col-param" />
+    <col class="col-description" />
+  </colgroup>
+  <tbody>
+    <tr id="types.is_int-v">
+      <td><code>v</code></td>
+      <td>
+        required.
+        <p>
+          The value whose type should be checked.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+## types.is_tuple
+
+<pre>
+types.is_tuple(<a href="#types.is_tuple-v">v</a>)
 </pre>
 
 Returns True if v is an instance of a tuple.
@@ -256,7 +159,94 @@ Returns True if v is an instance of a tuple.
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="_is_tuple-v>
+    <tr id="types.is_tuple-v">
+      <td><code>v</code></td>
+      <td>
+        required.
+        <p>
+          The value whose type should be checked.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+## types.is_dict
+
+<pre>
+types.is_dict(<a href="#types.is_dict-v">v</a>)
+</pre>
+
+Returns True if v is an instance of a dict.
+
+### Parameters
+
+<table class="params-table">
+  <colgroup>
+    <col class="col-param" />
+    <col class="col-description" />
+  </colgroup>
+  <tbody>
+    <tr id="types.is_dict-v">
+      <td><code>v</code></td>
+      <td>
+        required.
+        <p>
+          The value whose type should be checked.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+## types.is_function
+
+<pre>
+types.is_function(<a href="#types.is_function-v">v</a>)
+</pre>
+
+Returns True if v is an instance of a function.
+
+### Parameters
+
+<table class="params-table">
+  <colgroup>
+    <col class="col-param" />
+    <col class="col-description" />
+  </colgroup>
+  <tbody>
+    <tr id="types.is_function-v">
+      <td><code>v</code></td>
+      <td>
+        required.
+        <p>
+          The value whose type should be checked.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+## types.is_depset
+
+<pre>
+types.is_depset(<a href="#types.is_depset-v">v</a>)
+</pre>
+
+Returns True if v is an instance of a `depset`.
+
+### Parameters
+
+<table class="params-table">
+  <colgroup>
+    <col class="col-param" />
+    <col class="col-description" />
+  </colgroup>
+  <tbody>
+    <tr id="types.is_depset-v">
       <td><code>v</code></td>
       <td>
         required.

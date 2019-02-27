@@ -32,7 +32,7 @@ Typical usage:
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="build_test-name>
+    <tr id="build_test-name">
       <td><code>name</code></td>
       <td>
         required.
@@ -41,7 +41,7 @@ Typical usage:
         </p>
       </td>
     </tr>
-    <tr id="build_test-targets>
+    <tr id="build_test-targets">
       <td><code>targets</code></td>
       <td>
         required.
@@ -50,10 +50,13 @@ Typical usage:
         </p>
       </td>
     </tr>
-    <tr id="build_test-kwargs>
+    <tr id="build_test-kwargs">
       <td><code>kwargs</code></td>
       <td>
-        required.
+        optional.
+        <p>
+          The <a href="https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
+        </p>
       </td>
     </tr>
   </tbody>
