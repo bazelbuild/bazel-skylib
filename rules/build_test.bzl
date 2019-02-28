@@ -28,6 +28,7 @@ def build_test(name, targets, **kwargs):
 
     Typical usage:
 
+    ```
       load("@bazel_skylib//rules:build_test.bzl", "build_test")
       build_test(
           name = "my_build_test",
@@ -35,6 +36,7 @@ def build_test(name, targets, **kwargs):
               "//some/package:rule",
           ],
       )
+    ```
 
     Args:
       name: The name of the test rule.
