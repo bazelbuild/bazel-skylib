@@ -56,22 +56,24 @@ s = shell.quote(p)
 
 ## List of modules (in lib/)
 
-* [collections](lib/collections.bzl)
-* [dicts](lib/dicts.bzl)
-* [partial](lib/partial.bzl)
-* [paths](lib/paths.bzl)
-* [selects](lib/selects.bzl)
+* [collections](docs/collections_doc.md)
+* [dicts](docs/dicts_doc.md)
+* [partial](docs/partial_doc.md)
+* [paths](docs/paths_doc.md)
+* [selects](docs/selects_doc.md)
 * [sets](lib/sets.bzl) - _deprecated_, use `new_sets`
-* [new_sets](lib/new_sets.bzl)
-* [shell](lib/shell.bzl)
-* [structs](lib/structs.bzl)
-* [types](lib/types.bzl)
-* [unittest](lib/unittest.bzl)
-* [versions](lib/versions.bzl)
+* [new_sets](docs/new_sets.md)
+* [shell](docs/shell_doc.md)
+* [structs](docs/structs_doc.md)
+* [types](docs/types_doc.md)
+* [unittest](docs/unittest_doc.md)
+* [versions](docs/versions_doc.md)
 
 ## List of rules (in rules/)
 
-* [`cmd_maprule` and `bash_maprule`](lib/maprule.bzl)
+* [analysis_test](docs/analysis_test_doc.md)
+* [build_test](docs/build_test_doc.md)
+* [`cmd_maprule` and `bash_maprule`](docs/maprule_doc.md)
 
 ## Writing a new module
 
