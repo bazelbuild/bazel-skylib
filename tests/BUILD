@@ -57,6 +57,12 @@ sh_test(
     data = [
         ":unittest.bash",
         ":unittest_tests_bzl",
+        "//lib:dicts.bzl",
+        "//lib:new_sets.bzl",
+        "//lib:old_sets.bzl",
+        "//lib:sets.bzl",
+        "//lib:types.bzl",
+        "//lib:unittest.bzl",
         "//toolchains/unittest:test_deps",
         "@bazel_tools//tools/bash/runfiles",
     ],
