@@ -41,7 +41,7 @@ source "$(rlocation bazel_skylib/tests/unittest.bash)" \
 function assert_empty_file() {
   local -r path="$1"
   # Using 'du -h' because that is available on all platforms (unlike 'du -b').
-  [[ "$(du -h "$path" | awk '{print $1}')" = "0" ]]
+  [[ "$(du -h -L "$path" | awk '{print $1}')" = "0" ]]
 }
 
 function test_write_empty_text() {
