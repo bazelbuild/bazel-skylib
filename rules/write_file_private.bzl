@@ -62,8 +62,11 @@ def write_file(name, out, content = [], is_executable = False, **kwargs):
     Args:
       name: Name of the rule.
       out: Path of the output file, relative to this package.
-      content: Lines of text, the contents of the file. Newlines are added
-        automatically after every line except the last one.
+      content: A list of strings. Lines of text, the contents of the file.
+          Newlines are added automatically after every line except the last one.
+      is_executable: A boolean. Whether to make the output file executable. When
+          True, the rule's output can be executed using `bazel run` and can be
+          in the srcs of binary and test rules that require executable sources.
     """
     if is_executable:
         _write_xfile(
