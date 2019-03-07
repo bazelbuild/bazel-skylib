@@ -40,7 +40,7 @@ def _common_impl(ctx, is_executable):
             outputs = [ctx.outputs.out],
             executable = "cmd.exe",
             arguments = ["/C", bat.path.replace("/", "\\")],
-            mnemonic = "StarlarkCopyFile",
+            mnemonic = "CopyFile",
             progress_message = "Copying files",
             use_default_shell_env = True,
         )
@@ -50,7 +50,7 @@ def _common_impl(ctx, is_executable):
             outputs = [ctx.outputs.out],
             command = "cp -f \"$1\" \"$2\"",
             arguments = [ctx.file.src.path, ctx.outputs.out.path],
-            mnemonic = "StarlarkCopyFile",
+            mnemonic = "CopyFile",
             progress_message = "Copying files",
             use_default_shell_env = True,
         )
