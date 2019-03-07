@@ -48,7 +48,7 @@ function assert_empty_file() {
   echo >&2 " | DEBUG | awk_out=($awk_out)"
   echo >&2 " | DEBUG | stat=($(stat "$path"))"
   echo >&2 " | DEBUG | cat=($(cat "$path"))"
-  [[ "$(du -h -L "$path" | awk '{print $1}')" = "0" ]]
+  [[ "$(echo -n "($(cat "$path"))")" = "()" ]]
 }
 
 function test_write_empty_text() {
