@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Implementation of copy_file and copy_xfile rules.
+"""Implementation of copy_file macro and underlying rules.
 
 These rules copy a file to another location using Bash (on Linux/macOS) or
-cmd.exe (on Windows). 'copy_xfile' marks the resulting file executable,
-'copy_file' does not.
+cmd.exe (on Windows). '_copy_xfile' marks the resulting file executable,
+'_copy_file' does not.
 """
 
 def _common_impl(ctx, is_executable):
@@ -96,26 +96,26 @@ _copy_xfile = rule(
     doc = "Copies a file to another location and makes the new file executable.",
 )
 
-def copy_xfile(name, src, out, **kwargs):
-    _copy_xfile(
-        name = name,
-        src = src,
-        out = out,
-        is_windows = select({
-            "@bazel_tools//src/conditions:host_windows": True,
-            "//conditions:default": False,
-        }),
-        **kwargs
-    )
-
-def copy_file(name, src, out, **kwargs):
-    _copy_file(
-        name = name,
-        src = src,
-        out = out,
-        is_windows = select({
-            "@bazel_tools//src/conditions:host_windows": True,
-            "//conditions:default": False,
-        }),
-        **kwargs
-    )
+def copy_file(name, src, out, is_executable=False, **kwargs):
+    if is_executable:
+        _copy_xfile(
+            name = name,
+            src = src,
+            out = out,
+            is_windows = select({
+                "@bazel_tools//src/conditions:host_windows": True,
+                "//conditions:default": False,
+            }),
+            **kwargs
+        )
+    else:
+        _copy_file(
+            name = name,
+            src = src,
+            out = out,
+            is_windows = select({
+                "@bazel_tools//src/conditions:host_windows": True,
+                "//conditions:default": False,
+            }),
+            **kwargs
+        )

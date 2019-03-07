@@ -15,18 +15,15 @@
 """A rule that copies a file to another place.
 
 native.genrule() is sometimes used to copy files (often wishing to rename them).
-The 'copy_file' and 'copy_xfile' rules do this with a simpler interface than
-genrule.
+The 'copy_file' rule does this with a simpler interface than genrule.
 
-These rules use a Bash command on Linux/macOS/non-Windows, and use a cmd.exe
-command on Windows (no Bash is required).
+The rule uses a Bash command on Linux/macOS/non-Windows, and a cmd.exe command
+on Windows (no Bash is required).
 """
 
 load(
     ":copy_file_private.bzl",
     _copy_file = "copy_file",
-    _copy_xfile = "copy_xfile",
 )
 
 copy_file = _copy_file
-copy_xfile = _copy_xfile

@@ -1,4 +1,4 @@
-load("//rules:copy_file.bzl", "copy_file", "copy_xfile")
+load("//rules:copy_file.bzl", "copy_file")
 
 package(default_testonly = 1)
 
@@ -25,7 +25,7 @@ filegroup(
 )
 
 # If 'run_executables' is built, then 'bin_gen' and 'bin_src' are
-# executable, asserting that copy_xfile makes the output executable.
+# executable, asserting that copy_file makes the output executable.
 genrule(
     name = "run_executables",
     outs = [
@@ -65,16 +65,18 @@ copy_file(
     out = "out/gen-out.txt",
 )
 
-copy_xfile(
+copy_file(
     name = "copy_xsrc",
     src = "a.txt",
     out = "xout/a-out.sh",
+    is_executable = True,
 )
 
-copy_xfile(
+copy_file(
     name = "copy_xgen",
     src = ":gen",
     out = "xout/gen-out.sh",
+    is_executable = True,
 )
 
 genrule(
