@@ -69,15 +69,8 @@ def _ximpl(ctx):
     return _common_impl(ctx, True)
 
 _ATTRS = {
-    "src": attr.label(
-        mandatory = True,
-        allow_single_file = True,
-        doc = "The file to make a copy of.",
-    ),
-    "out": attr.output(
-        mandatory = True,
-        doc = "Path of the output file, relative to this package.",
-    ),
+    "src": attr.label(mandatory = True, allow_single_file = True),
+    "out": attr.output(mandatory = True),
     "is_windows": attr.bool(mandatory = True),
 }
 
@@ -85,7 +78,6 @@ _copy_file = rule(
     implementation = _impl,
     provides = [DefaultInfo],
     attrs = _ATTRS,
-    doc = "Copies a file to another location.",
 )
 
 _copy_xfile = rule(
@@ -93,10 +85,24 @@ _copy_xfile = rule(
     executable = True,
     provides = [DefaultInfo],
     attrs = _ATTRS,
-    doc = "Copies a file to another location and makes the new file executable.",
 )
 
-def copy_file(name, src, out, is_executable=False, **kwargs):
+def copy_file(name, src, out, is_executable = False, **kwargs):
+    """Copies a file to another location.
+
+    `native.genrule()` is sometimes used to copy files (often wishing to rename them). The 'copy_file' rule does this with a simpler interface than genrule.
+
+    This rule uses a Bash command on Linux/macOS/non-Windows, and a cmd.exe command on Windows (no Bash is required).
+
+    Args:
+      name: Name of the rule.
+      src: A Label. The file to make a copy of. (Can also be the label of a rule
+          that generates a file.)
+      out: Path of the output file, relative to this package.
+      is_executable: A boolean. Whether to make the output file executable. When
+          True, the rule's output can be executed using `bazel run` and can be
+          in the srcs of binary and test rules that require executable sources.
+    """
     if is_executable:
         _copy_xfile(
             name = name,
