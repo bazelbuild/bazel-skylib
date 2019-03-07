@@ -39,23 +39,14 @@ def _ximpl(ctx):
     return _common_impl(ctx, True)
 
 _ATTRS = {
-    "content": attr.string_list(
-        mandatory = False,
-        allow_empty = True,
-        doc = ("Lines of text: the contents of the file. Newlines are added " +
-               "automatically after every line except the last one."),
-    ),
-    "out": attr.output(
-        mandatory = True,
-        doc = "Path of the output file, relative to this package.",
-    ),
+    "content": attr.string_list(mandatory = False, allow_empty = True),
+    "out": attr.output(mandatory = True),
 }
 
 _write_file = rule(
     implementation = _impl,
     provides = [DefaultInfo],
     attrs = _ATTRS,
-    doc = "Creates a UTF-8 encoded text file.",
 )
 
 _write_xfile = rule(
@@ -63,10 +54,17 @@ _write_xfile = rule(
     executable = True,
     provides = [DefaultInfo],
     attrs = _ATTRS,
-    doc = "Creates a UTF-8 encoded text file and makes it executable.",
 )
 
-def write_file(name, out, content = None, is_executable = False, **kwargs):
+def write_file(name, out, content = [], is_executable = False, **kwargs):
+    """Creates a UTF-8 encoded text file.
+
+    Args:
+      name: Name of the rule.
+      out: Path of the output file, relative to this package.
+      content: Lines of text, the contents of the file. Newlines are added
+        automatically after every line except the last one.
+    """
     if is_executable:
         _write_xfile(
             name = name,
