@@ -46,6 +46,8 @@ function assert_empty_file() {
   echo >&2 " | DEBUG | path=($path)"
   echo >&2 " | DEBUG | du_out=($du_out)"
   echo >&2 " | DEBUG | awk_out=($awk_out)"
+  echo >&2 " | DEBUG | stat=($(stat "$path"))"
+  echo >&2 " | DEBUG | cat=($(cat "$path"))"
   [[ "$(du -h -L "$path" | awk '{print $1}')" = "0" ]]
 }
 
