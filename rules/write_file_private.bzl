@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Implementation of write_file and write_xfile rules.
+"""Implementation of write_file macro and underlying rules.
 
 These rules write a UTF-8 encoded text file, using Bazel's FileWriteAction.
-'write_xfile' marks the resulting file executable, 'write_file' does not.
+'_write_xfile' marks the resulting file executable, '_write_file' does not.
 """
 
 def _common_impl(ctx, is_executable):
@@ -51,17 +51,33 @@ _ATTRS = {
     ),
 }
 
-write_file = rule(
+_write_file = rule(
     implementation = _impl,
     provides = [DefaultInfo],
     attrs = _ATTRS,
     doc = "Creates a UTF-8 encoded text file.",
 )
 
-write_xfile = rule(
+_write_xfile = rule(
     implementation = _ximpl,
     executable = True,
     provides = [DefaultInfo],
     attrs = _ATTRS,
     doc = "Creates a UTF-8 encoded text file and makes it executable.",
 )
+
+def write_file(name, out, content = None, is_executable = False, **kwargs):
+    if is_executable:
+        _write_xfile(
+            name = name,
+            content = content,
+            out = out,
+            **kwargs
+        )
+    else:
+        _write_file(
+            name = name,
+            content = content,
+            out = out,
+            **kwargs
+        )

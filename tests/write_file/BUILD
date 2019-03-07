@@ -1,4 +1,4 @@
-load("//rules:write_file.bzl", "write_file", "write_xfile")
+load("//rules:write_file.bzl", "write_file")
 
 package(default_testonly = 1)
 
@@ -23,7 +23,7 @@ filegroup(
 )
 
 # If 'run_executables' is built, then 'bin_nonempty' and 'bin_empty' are
-# executable, asserting that write_xfile makes the output executable.
+# executable, asserting that write_file makes the output executable.
 genrule(
     name = "run_executables",
     outs = [
@@ -66,16 +66,18 @@ write_file(
     ],
 )
 
-write_xfile(
+write_file(
     name = "write_empty_bin",
     out = "out/empty.sh",
+    is_executable = True,
 )
 
-write_xfile(
+write_file(
     name = "write_nonempty_bin",
     out = "out/nonempty.sh",
     content = [
         "#!/bin/bash",
         "echo potato",
     ],
+    is_executable = True,
 )
