@@ -1,3 +1,37 @@
+# This package aids testing the 'write_file' rule.
+#
+# The package contains 4 write_file rules:
+# - 'write_empty_text' and 'write_empty_bin' write an empty text and an empty
+#   executable file respectively
+# - 'write_nonempty_text' and 'write_nonempty_bin' write a non-empty text and
+#   a non-empty executable file (a shell script) respectively
+#
+# The 'bin_empty' and 'bin_nonempty' rules are sh_binary rules. They use
+# the 'write_empty_bin' and 'write_nonempty_bin' rules respectively. The
+# sh_binary rule requires its source to be executable, so building these two
+# rules successfully means that 'write_file' managed to make its output
+# executable.
+#
+# The 'run_executables' genrule runs the 'bin_empty' and 'bin_nonempty'
+# binaries, partly to ensure they can be run, and partly so we can observe their
+# output and assert the contents in the 'write_file_tests' test.
+#
+# The 'file_deps' filegroup depends on 'write_empty_text'. The filegroup rule
+# uses the DefaultInfo.files field from its dependencies. When we data-depend on
+# the filegroup from 'write_file_tests', we transitively data-depend on the
+# DefaultInfo.files of the 'write_empty_text' rule.
+#
+# The 'write_file_tests' test is the actual integration test. It data-depends
+# on:
+# - the 'run_executables' rule, to get the outputs of 'bin_empty' and
+#   'bin_nonempty'
+# - the 'file_deps' rule, and by nature of using a filegroup, we get the files
+#   from the DefaultInfo.files of the 'write_file' rule, and thereby assert that
+#   that field contains the output file of the rule
+# - the 'write_nonempty_text' rule, and thereby on the DefaultInfo.runfiles
+#   field of it, so we assert that that field contains the output file of the
+#   rule
+
 load("//rules:write_file.bzl", "write_file")
 
 package(default_testonly = 1)
