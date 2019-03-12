@@ -104,6 +104,7 @@ def copy_file(name, src, out, is_executable = False, **kwargs):
       is_executable: A boolean. Whether to make the output file executable. When
           True, the rule's output can be executed using `bazel run` and can be
           in the srcs of binary and test rules that require executable sources.
+      kwargs: further keyword arguments, e.g. `visibility`
     """
     if is_executable:
         _copy_xfile(
