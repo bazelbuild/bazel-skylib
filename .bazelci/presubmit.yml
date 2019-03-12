@@ -108,4 +108,4 @@ tasks:
     - "-//tests:analysis_test_e2e_test"
     - "-//tests:unittest_e2e_test"
 
-buildifier: true
+buildifier: latest
