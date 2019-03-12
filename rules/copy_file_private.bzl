@@ -29,6 +29,8 @@ def _common_impl(ctx, is_executable):
         bat = ctx.actions.declare_file(ctx.label.name + "-cmd.bat")
         ctx.actions.write(
             output = bat,
+            # Do not use lib/shell.bzl's shell.quote() method, because that uses
+            # Bash quoting syntax, which is different from cmd.exe's syntax.
             content = "@copy /Y \"%s\" \"%s\" >NUL" % (
                 ctx.file.src.path.replace("/", "\\"),
                 ctx.outputs.out.path.replace("/", "\\"),
