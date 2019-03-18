@@ -8,7 +8,7 @@ load(":partial_tests.bzl", "partial_test_suite")
 load(":paths_tests.bzl", "paths_test_suite")
 load(":selects_tests.bzl", "selects_test_suite")
 load(":sets_tests.bzl", "sets_test_suite")
-load(":shell_tests.bzl", "shell_test_suite")
+load(":shell_tests.bzl", "shell_test_suite", "shell_args_test_gen")
 load(":structs_tests.bzl", "structs_test_suite")
 load(":types_tests.bzl", "types_test_suite")
 load(":unittest_tests.bzl", "unittest_passing_tests_suite")
@@ -72,4 +72,13 @@ sh_test(
         "@bazel_tools//tools/bash/runfiles",
     ],
     tags = ["local"],
+)
+
+shell_args_test_gen(
+    name = "shell_spawn_e2e_test_src",
+)
+
+sh_test(
+    name = "shell_spawn_e2e_test",
+    srcs = [":shell_spawn_e2e_test_src"],
 )
