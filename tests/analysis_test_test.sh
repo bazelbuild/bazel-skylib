@@ -134,7 +134,10 @@ function test_direct_target_fails() {
   local -r pkg="${FUNCNAME[0]}"
   create_pkg "$pkg"
 
-  bazel test testdir:direct_target_fails --test_output=all --verbose_failures \
+  echo " | DEBUG | ---------------"
+  env | sed 's/^/ | DEBUG | /'
+  echo " | DEBUG | ---------------"
+  bazel --client_debug test testdir:direct_target_fails --test_output=all --verbose_failures \
       >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
 
   expect_log "This rule should never work"
