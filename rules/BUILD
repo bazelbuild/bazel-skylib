@@ -11,6 +11,18 @@ bzl_library(
 )
 
 bzl_library(
+    name = "copy_file",
+    srcs = ["copy_file.bzl"],
+    deps = [":copy_file_private"],
+)
+
+bzl_library(
+    name = "copy_file_private",
+    srcs = ["copy_file_private.bzl"],
+    visibility = ["//visibility:private"],
+)
+
+bzl_library(
     name = "maprule",
     srcs = ["maprule.bzl"],
     deps = [":maprule_private"],

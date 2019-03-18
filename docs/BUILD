@@ -93,6 +93,13 @@ stardoc(
 )
 
 stardoc(
+    name = "copy_file_docs",
+    out = "copy_file_doc_gen.md",
+    input = "//rules:copy_file.bzl",
+    deps = ["//rules:copy_file"],
+)
+
+stardoc(
     name = "maprule_docs",
     out = "maprule_doc_gen.md",
     input = "//rules:maprule.bzl",
