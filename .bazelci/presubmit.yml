@@ -5,11 +5,11 @@ tasks:
     platform: ubuntu1804
     bazel: latest
     build_targets:
-    - "..."
+    - "//..."
     build_flags:
     - "--incompatible_remap_main_repo"
     test_targets:
-    - "..."
+    - "//..."
     test_flags:
     - "--test_env=PATH"
 
@@ -18,11 +18,11 @@ tasks:
     platform: ubuntu1604
     bazel: latest
     build_targets:
-    - "..."
+    - "//..."
     build_flags:
     - "--incompatible_remap_main_repo"
     test_targets:
-    - "..."
+    - "//..."
     test_flags:
     - "--test_env=PATH"
 
@@ -31,11 +31,11 @@ tasks:
     platform: macos
     bazel: latest
     build_targets:
-    - "..."
+    - "//..."
     build_flags:
     - "--incompatible_remap_main_repo"
     test_targets:
-    - "..."
+    - "//..."
     test_flags:
     - "--test_env=PATH"
 
@@ -44,12 +44,12 @@ tasks:
     platform: windows
     bazel: latest
     build_targets:
-    - "..."
+    - "//..."
     build_flags:
     - "--incompatible_remap_main_repo"
     test_targets:
     - "--"
-    - "..."
+    - "//..."
     # Shell tests don't run on windows.
     - "-//tests:analysis_test_e2e_test"
     - "-//tests:unittest_e2e_test"
@@ -59,11 +59,11 @@ tasks:
     platform: ubuntu1804
     bazel: last_green
     build_targets:
-    - "..."
+    - "//..."
     build_flags:
     - "--incompatible_remap_main_repo"
     test_targets:
-    - "..."
+    - "//..."
     test_flags:
     - "--test_env=PATH"
 
@@ -72,11 +72,11 @@ tasks:
     platform: ubuntu1604
     bazel: last_green
     build_targets:
-    - "..."
+    - "//..."
     build_flags:
     - "--incompatible_remap_main_repo"
     test_targets:
-    - "..."
+    - "//..."
     test_flags:
     - "--test_env=PATH"
 
@@ -85,11 +85,11 @@ tasks:
     platform: macos
     bazel: last_green
     build_targets:
-    - "..."
+    - "//..."
     build_flags:
     - "--incompatible_remap_main_repo"
     test_targets:
-    - "..."
+    - "//..."
     test_flags:
     - "--test_env=PATH"
 
@@ -98,12 +98,12 @@ tasks:
     platform: windows
     bazel: last_green
     build_targets:
-    - "..."
+    - "//..."
     build_flags:
     - "--incompatible_remap_main_repo"
     test_targets:
     - "--"
-    - "..."
+    - "//..."
     # Shell tests don't run on windows.
     - "-//tests:analysis_test_e2e_test"
     - "-//tests:unittest_e2e_test"
