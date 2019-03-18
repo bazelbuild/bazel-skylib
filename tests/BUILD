@@ -16,6 +16,11 @@ load(":versions_tests.bzl", "versions_test_suite")
 
 licenses(["notice"])
 
+exports_files(
+    ["unittest.bash"],
+    visibility = ["//tests:__subpackages__"],
+)
+
 build_test_test_suite()
 
 collections_test_suite()
