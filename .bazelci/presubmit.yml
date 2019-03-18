@@ -50,9 +50,6 @@ tasks:
     test_targets:
     - "--"
     - "//..."
-    # Shell tests don't run on windows.
-    - "-//tests:analysis_test_e2e_test"
-    - "-//tests:unittest_e2e_test"
 
   ubuntu1804_last_green:
     name: "Last Green Bazel"
@@ -104,8 +101,5 @@ tasks:
     test_targets:
     - "--"
     - "//..."
-    # Shell tests don't run on windows.
-    - "-//tests:analysis_test_e2e_test"
-    - "-//tests:unittest_e2e_test"
 
 buildifier: latest
