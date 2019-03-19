@@ -135,20 +135,16 @@ function test_direct_target_fails() {
   create_pkg "$pkg"
 
   echo " | DEBUG | -1--------------"
-  env | grep '^[A-Z_]*=' | sort | sed 's/^/ | DEBUG | /;s/=.*//'
+  env | grep '^[a-zA-Z0-9_]*=' | sort | sed 's/^/ | DEBUG | /;s/=.*//'
   echo " | DEBUG | -2--------------"
   echo "${SYSTEMROOT}"  # fail fast on every platform but Windows
-  realpath "$(which bazel)"
-  cp "$(realpath $(which bazel))" "$TEST_UNDECLARED_OUTPUTS_DIR/bazel-dev.exe"
-  echo " | DEBUG | -2.5--------------"
-  bazel --client_debug info --announce_rc 
+  which bazel
   echo " | DEBUG | -3--------------"
-  bazel --client_debug test testdir:direct_target_fails --test_output=all --verbose_failures --curses=no --color=no >&"$TEST_log"|| true
-  cat "$TEST_log" | sed 's/^/ | DEBUG | /'
+  bazel --client_debug info --announce_rc 
   echo " | DEBUG | -4--------------"
 
-  bazel --client_debug test testdir:direct_target_fails --test_output=all --verbose_failures \
-      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
+#  bazel --client_debug test testdir:direct_target_fails --test_output=all --verbose_failures \
+#      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
 
   expect_log "This rule should never work"
 }
