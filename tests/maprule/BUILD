@@ -24,6 +24,12 @@ filegroup(
 bash_maprule(
     name = "mr_bash",
     srcs = ["common.txt"],
+    add_env = {
+        "TOOL": "$(location :mr_bash_tool)",
+    },
+    # TODO(laszlocsomor): add quotes around $MAPRULE_TOOL after
+    # https://github.com/bazelbuild/bazel/issues/7454 is fixed.
+    cmd = "$MAPRULE_TOOL",
     foreach_srcs = [
         "foo.txt",
         "b/bar.txt",
@@ -32,11 +38,7 @@ bash_maprule(
         "OUT1": "{src}.out1",
         "OUT2": "out2/{src_name_noext}",
     },
-    add_env = {
-        "TOOL": "$(location :mr_bash_tool)",
-    },
     tools = [":mr_bash_tool"],
-    cmd = '"$MAPRULE_TOOL"',
 )
 
 sh_binary(

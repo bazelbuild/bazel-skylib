@@ -454,12 +454,15 @@ def _maprule_main(ctx, strategy):
             inputs = depset(direct = [src], transitive = [common_srcs, inputs_from_tools]),
             outputs = foreach_src_outs_dicts[src].values(),
             # The custom envmap contains envvars specific to the current "src", such as MAPRULE_SRC.
-            env = common_envmap + _custom_envmap(
-                ctx,
-                strategy,
-                src_placeholders_dicts[src],
-                foreach_src_outs_dicts[src],
-                add_env,
+            env = dicts.add(
+                common_envmap,
+                _custom_envmap(
+                    ctx,
+                    strategy,
+                    src_placeholders_dicts[src],
+                    foreach_src_outs_dicts[src],
+                    add_env,
+                ),
             ),
             command = ctx.attr.cmd,
             progress_message = progress_message,
