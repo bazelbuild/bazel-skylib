@@ -105,3 +105,10 @@ stardoc(
     input = "//rules:maprule.bzl",
     deps = ["//rules:maprule"],
 )
+
+stardoc(
+    name = "write_file_docs",
+    out = "write_file_doc_gen.md",
+    input = "//rules:write_file.bzl",
+    deps = ["//rules:write_file"],
+)

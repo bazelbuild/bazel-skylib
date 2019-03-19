@@ -44,6 +44,18 @@ bzl_library(
     srcs = ["maprule_util.bzl"],
 )
 
+bzl_library(
+    name = "write_file",
+    srcs = ["write_file.bzl"],
+    deps = [":write_file_private"],
+)
+
+bzl_library(
+    name = "write_file_private",
+    srcs = ["write_file_private.bzl"],
+    visibility = ["//visibility:private"],
+)
+
 # Exported for build_test.bzl to make sure of, it is an implementation detail
 # of the rule and should not be directly used by anything else.
 exports_files(["empty_test.sh"])
