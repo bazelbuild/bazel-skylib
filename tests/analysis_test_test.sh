@@ -121,42 +121,33 @@ analysis_test(
 EOF
 }
 
-# function test_target_succeeds() {
-#   local -r pkg="${FUNCNAME[0]}"
-#   create_pkg "$pkg"
-# 
-#   bazel test testdir:target_succeeds >"$TEST_log" 2>&1 || fail "Expected test to pass"
-# 
-#   expect_log "PASSED"
-# }
+function test_target_succeeds() {
+  local -r pkg="${FUNCNAME[0]}"
+  create_pkg "$pkg"
+
+  bazel test testdir:target_succeeds >"$TEST_log" 2>&1 || fail "Expected test to pass"
+
+  expect_log "PASSED"
+}
 
 function test_direct_target_fails() {
   local -r pkg="${FUNCNAME[0]}"
   create_pkg "$pkg"
 
-  echo " | DEBUG | -1--------------"
-  env | grep '^[a-zA-Z0-9_]*=' | sort | sed 's/^/ | DEBUG | /;s/=.*//'
-  echo " | DEBUG | -2--------------"
-  echo "${SYSTEMROOT}"  # fail fast on every platform but Windows
-  which bazel
-  echo " | DEBUG | -3--------------"
-  bazel --client_debug info --announce_rc 
-  echo " | DEBUG | -4--------------"
-
-#  bazel --client_debug test testdir:direct_target_fails --test_output=all --verbose_failures \
-#      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
+  bazel test testdir:direct_target_fails --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
 
   expect_log "This rule should never work"
 }
 
-# function test_transitive_target_fails() {
-#   local -r pkg="${FUNCNAME[0]}"
-#   create_pkg "$pkg"
-# 
-#   bazel test testdir:transitive_target_fails --test_output=all --verbose_failures \
-#       >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
-# 
-#   expect_log "This rule should never work"
-# }
+function test_transitive_target_fails() {
+  local -r pkg="${FUNCNAME[0]}"
+  create_pkg "$pkg"
+
+  bazel test testdir:transitive_target_fails --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
+
+  expect_log "This rule should never work"
+}
 
 run_suite "analysis_test test suite"
