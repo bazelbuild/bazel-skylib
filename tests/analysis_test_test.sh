@@ -134,12 +134,17 @@ function test_direct_target_fails() {
   local -r pkg="${FUNCNAME[0]}"
   create_pkg "$pkg"
 
-  echo " | DEBUG | ---------------"
+  echo " | DEBUG | -1--------------"
   env | sed 's/^/ | DEBUG | /'
-  echo " | DEBUG | ---------------"
+  echo " | DEBUG | -2--------------"
+  which bazel |& sed 's/^/ | DEBUG | /'
+  bazel --client_debug |& sed 's/^/ | DEBUG | /'
+  echo " | DEBUG | -2.5--------------"
+  bazel --client_debug info |& sed 's/^/ | DEBUG | /'
+  echo " | DEBUG | -3--------------"
   bazel --client_debug test testdir:direct_target_fails --test_output=all --verbose_failures --curses=no --color=no >&"$TEST_log"|| true
   cat "$TEST_log" | sed 's/^/ | DEBUG | /'
-  echo " | DEBUG | ---------------"
+  echo " | DEBUG | -4--------------"
 
   bazel --client_debug test testdir:direct_target_fails --test_output=all --verbose_failures \
       >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
