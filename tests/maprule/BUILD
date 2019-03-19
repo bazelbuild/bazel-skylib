@@ -1,6 +1,6 @@
 # This package aids testing the 'maprule' rule.
 
-load("//rules:maprule.bzl", "bash_maprule", "cmd_maprule")
+load("//rules:maprule.bzl", "bash_maprule")
 
 package(default_testonly = 1)
 
