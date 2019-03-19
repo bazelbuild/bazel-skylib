@@ -137,9 +137,11 @@ function test_direct_target_fails() {
   echo " | DEBUG | -1--------------"
   env | grep '^[A-Z_]*=' | sort | sed 's/^/ | DEBUG | /;s/=.*//'
   echo " | DEBUG | -2--------------"
-  which bazel
+  echo "${SYSTEMROOT}"  # fail fast on every platform but Windows
+  realpath "$(which bazel)"
+  cp "$(realpath $(which bazel))" "$TEST_UNDECLARED_OUTPUTS_DIR/bazel-dev.exe"
   echo " | DEBUG | -2.5--------------"
-  LOCALAPPDATA="$TMP" bazel --client_debug info --announce_rc 
+  bazel --client_debug info --announce_rc 
   echo " | DEBUG | -3--------------"
   bazel --client_debug test testdir:direct_target_fails --test_output=all --verbose_failures --curses=no --color=no >&"$TEST_log"|| true
   cat "$TEST_log" | sed 's/^/ | DEBUG | /'
