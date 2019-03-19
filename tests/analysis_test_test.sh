@@ -135,12 +135,11 @@ function test_direct_target_fails() {
   create_pkg "$pkg"
 
   echo " | DEBUG | -1--------------"
-  env | sed 's/^/ | DEBUG | /'
+  env | grep '^[A-Z_]*=' | sort | sed 's/^/ | DEBUG | /;s/=.*//'
   echo " | DEBUG | -2--------------"
-  which bazel |& sed 's/^/ | DEBUG | /'
-  bazel --client_debug |& sed 's/^/ | DEBUG | /'
+  which bazel
   echo " | DEBUG | -2.5--------------"
-  bazel --client_debug info |& sed 's/^/ | DEBUG | /'
+  LOCALAPPDATA="$TMP" bazel --client_debug info --announce_rc 
   echo " | DEBUG | -3--------------"
   bazel --client_debug test testdir:direct_target_fails --test_output=all --verbose_failures --curses=no --color=no >&"$TEST_log"|| true
   cat "$TEST_log" | sed 's/^/ | DEBUG | /'
