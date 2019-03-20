@@ -39,8 +39,8 @@ def _add_test(ctx):
     )
     asserts.equals(
         env,
-        {"a": 1, "b": 2, "c": 3, "d": 4, "e": 4},
-        dicts.add({"a": 1}, {"b": 2}, {"c": 3}, {"d": 4}, e = 4),
+        {"a": 1, "b": 2, "c": 3, "d": 4, "e": 5},
+        dicts.add({"a": 1}, {"b": 2}, {"c": 3}, {"d": 4}, e = 5),
     )
 
     # Test same-key overriding.
