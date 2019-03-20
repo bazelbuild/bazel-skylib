@@ -1,6 +1,9 @@
 # This package aids testing the 'maprule' rule.
+#
+# ATTENTION: As of 2019-03-20, maprule is not ready for public use.
+# @laszlocsomor is planning incompatible changes to the rule.
 
-load("//rules:maprule.bzl", "bash_maprule")
+load("//rules/private:maprule.bzl", "bash_maprule")
 
 package(default_testonly = 1)
 

@@ -15,7 +15,7 @@
 """Unit tests for maprule.bzl."""
 
 load("//lib:unittest.bzl", "asserts", "unittest")
-load("//rules:maprule_testing.bzl", "maprule_testing")
+load("//rules/private:maprule_testing.bzl", "maprule_testing")
 
 def _dummy_generating_action(ctx, path):
     ctx.actions.write(path, "hello")
