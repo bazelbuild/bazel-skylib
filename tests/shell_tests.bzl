@@ -83,18 +83,24 @@ def _shell_args_test_gen_impl(ctx):
         "line tab\tcharacter $foo qu\"o\"te it'\\''s foo\\bar back`echo q`uote'",
         '[[ "${output}" == "${expected}" ]]',
     ])
-    script_file = ctx.outputs.script
     ctx.actions.write(
-        output = script_file,
+        output = ctx.outputs.out,
         content = script_content,
         is_executable = True,
     )
-    return [DefaultInfo(files = depset([script_file]))]
+    return [DefaultInfo(files = depset([ctx.outputs.out]))]
 
-shell_args_test_gen = rule(
+_shell_args_test_gen = rule(
     implementation = _shell_args_test_gen_impl,
-    outputs = {"script": "%{name}.sh"},
+    attrs = {"out": attr.output()},
 )
+
+def shell_args_test_gen(name, **kwargs):
+    _shell_args_test_gen(
+        name = name,
+        out = "%s.sh" % name,
+        **kwargs
+    )
 
 def shell_test_suite():
     """Creates the test targets and test suite for shell.bzl tests."""
