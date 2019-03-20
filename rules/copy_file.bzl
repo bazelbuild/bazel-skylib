@@ -22,7 +22,7 @@ on Windows (no Bash is required).
 """
 
 load(
-    ":copy_file_private.bzl",
+    "//rules/private:copy_file_private.bzl",
     _copy_file = "copy_file",
 )
 

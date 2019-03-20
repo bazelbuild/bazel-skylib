@@ -13,47 +13,13 @@ bzl_library(
 bzl_library(
     name = "copy_file",
     srcs = ["copy_file.bzl"],
-    deps = [":copy_file_private"],
-)
-
-bzl_library(
-    name = "copy_file_private",
-    srcs = ["copy_file_private.bzl"],
-    visibility = ["//visibility:private"],
-)
-
-bzl_library(
-    name = "maprule",
-    srcs = ["maprule.bzl"],
-    deps = [":maprule_private"],
-)
-
-bzl_library(
-    name = "maprule_private",
-    srcs = ["maprule_private.bzl"],
-    visibility = ["//visibility:private"],
-    deps = [
-        ":maprule_util",
-        "//lib:dicts",
-        "//lib:paths",
-    ],
-)
-
-bzl_library(
-    name = "maprule_util",
-    srcs = ["maprule_util.bzl"],
+    deps = ["//rules/private:copy_file_private"],
 )
 
 bzl_library(
     name = "write_file",
     srcs = ["write_file.bzl"],
-    deps = [":write_file_private"],
-)
-
-bzl_library(
-    name = "write_file_private",
-    srcs = ["write_file_private.bzl"],
-    visibility = ["//visibility:private"],
+    deps = ["//rules/private:write_file_private"],
 )
 
 # Exported for build_test.bzl to make sure of, it is an implementation detail
