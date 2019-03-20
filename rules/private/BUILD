@@ -15,8 +15,8 @@ bzl_library(
 bzl_library(
     name = "maprule",
     srcs = ["maprule.bzl"],
-    deps = [":maprule_private"],
     visibility = ["//tests:__pkg__"],
+    deps = [":maprule_private"],
 )
 
 bzl_library(
