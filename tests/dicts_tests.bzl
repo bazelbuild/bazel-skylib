@@ -60,6 +60,11 @@ def _add_test(ctx):
         {"a": 10, "b": 5},
         dicts.add({"a": 1}, {"a": 10, "b": 5}),
     )
+    asserts.equals(
+        env,
+        {"a": 10, "b": 5},
+        dicts.add({"a": 1}, a = 10, b = 5),
+    )
 
     # Test some other boundary cases.
     asserts.equals(env, {"a": 1}, dicts.add({"a": 1}, {}))
