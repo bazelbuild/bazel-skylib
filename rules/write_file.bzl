@@ -23,7 +23,7 @@ file. Instead they use Starlark's built-in file writing action
 """
 
 load(
-    ":write_file_private.bzl",
+    "//rules/private:write_file_private.bzl",
     _write_file = "write_file",
 )
 
