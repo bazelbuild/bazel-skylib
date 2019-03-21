@@ -105,3 +105,10 @@ stardoc(
     input = "//rules:write_file.bzl",
     deps = ["//rules:write_file"],
 )
+
+stardoc(
+    name = "diff_test_docs",
+    out = "diff_test_doc_gen.md",
+    input = "//rules:diff_test.bzl",
+    deps = ["//rules:diff_test"],
+)
