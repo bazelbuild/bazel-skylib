@@ -92,7 +92,7 @@ def _shell_args_test_gen_impl(ctx):
 
 _shell_args_test_gen = rule(
     implementation = _shell_args_test_gen_impl,
-    attrs = {"out": attr.output()},
+    attrs = {"out": attr.output(mandatory = True)},
 )
 
 def shell_args_test_gen(name, **kwargs):
