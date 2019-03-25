@@ -66,3 +66,74 @@ def resolve_locations(ctx, strategy, d):
         resolved = d
 
     return resolved
+
+def fail_if_errors(errors):
+    """Reports errors and fails the rule.
+
+    Args:
+        errors: list of strings; the errors to report. At most 10 are reported.
+    """
+    if errors:
+        # Don't overwhelm the user; report up to ten errors.
+        fail("\n".join(errors[:10]))
+
+def _as_windows_path(s):
+    """Returns the input path as a Windows path (replaces all of "/" with "\")."""
+    return s.replace("/", "\\")
+
+def _unchanged_path(s):
+    """Returns the input string (path) unchanged."""
+    return s
+
+def _create_cmd_action(
+        ctx,
+        outputs,
+        command,
+        inputs = None,
+        env = None,
+        progress_message = None,
+        mnemonic = None,
+        manifests_from_tools = None):
+    """Create one action using cmd.exe."""
+    ctx.actions.run(
+        inputs = inputs or [],
+        outputs = outputs,
+        executable = "cmd.exe",
+        env = env,
+        arguments = ["/C", command],
+        progress_message = progress_message or "Running cmd.exe command",
+        mnemonic = mnemonic or "CmdExeCommand",
+        input_manifests = manifests_from_tools,
+    )
+
+def _create_bash_action(
+        ctx,
+        outputs,
+        command,
+        inputs = None,
+        env = None,
+        progress_message = None,
+        mnemonic = None,
+        manifests_from_tools = None):
+    """Create one action using Bash."""
+    ctx.actions.run_shell(
+        inputs = inputs or [],
+        outputs = outputs,
+        env = env,
+        command = command,
+        progress_message = progress_message or "Running Bash command",
+        mnemonic = mnemonic or "BashCommand",
+        input_manifests = manifests_from_tools,
+    )
+
+# Action creation utilities for cmd.exe actions.
+CMD_STRATEGY = struct(
+    as_path = _as_windows_path,
+    create_action = _create_cmd_action,
+)
+
+# Action creation utilities for Bash actions.
+BASH_STRATEGY = struct(
+    as_path = _unchanged_path,
+    create_action = _create_bash_action,
+)

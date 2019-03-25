@@ -25,7 +25,13 @@ This module exports:
 
 load("//lib:dicts.bzl", "dicts")
 load("//lib:paths.bzl", "paths")
-load(":maprule_util.bzl", "resolve_locations")
+load(
+    ":maprule_util.bzl",
+    "BASH_STRATEGY",
+    "CMD_STRATEGY",
+    "fail_if_errors",
+    "resolve_locations",
+)
 
 _cmd_maprule_intro = """
 Maprule that runs a Windows Command Prompt (`cmd.exe`) command.
@@ -407,14 +413,9 @@ def _custom_envmap(ctx, strategy, src_placeholders, outs_dict, resolved_add_env)
         },
     )
 
-def _fail_if_errors(errors):
-    if errors:
-        # Don't overwhelm the user; report up to ten errors.
-        fail("\n".join(errors[:10]))
-
 def _maprule_main(ctx, strategy):
     errors = _validate_attributes(ctx.attr.outs_templates, ctx.attr.add_env)
-    _fail_if_errors(errors)
+    fail_if_errors(errors)
 
     # From "srcs": merge the depsets in the DefaultInfo.files of the targets.
     common_srcs = depset(transitive = [t[DefaultInfo].files for t in ctx.attr.srcs])
@@ -433,7 +434,7 @@ def _maprule_main(ctx, strategy):
         strategy,
         foreach_srcs,
     )
-    _fail_if_errors(errors)
+    fail_if_errors(errors)
 
     progress_message = (ctx.attr.message or "Executing maprule") + " for %s" % ctx.label
 
@@ -466,59 +467,17 @@ def _maprule_main(ctx, strategy):
             ),
             command = ctx.attr.cmd,
             progress_message = progress_message,
+            mnemonic = "Maprule",
             manifests_from_tools = manifests_from_tools,
         )
 
     return [DefaultInfo(files = depset(all_outputs))]
 
-def _as_windows_path(s):
-    """Returns the input path as a Windows path (replaces all of "/" with "\")."""
-    return s.replace("/", "\\")
-
-def _unchanged_path(s):
-    """Returns the input string (path) unchanged."""
-    return s
-
-def _create_cmd_action(ctx, inputs, outputs, env, command, progress_message, manifests_from_tools):
-    """Create one action using cmd.exe for one of the "foreach" sources."""
-    ctx.actions.run(
-        inputs = inputs,
-        outputs = outputs,
-        executable = "cmd.exe",
-        env = env,
-        arguments = ["/C", command],
-        progress_message = progress_message,
-        mnemonic = "Maprule",
-        input_manifests = manifests_from_tools,
-    )
-
-def _create_bash_action(ctx, inputs, outputs, env, command, progress_message, manifests_from_tools):
-    """Create one action using Bash for one of the "foreach" sources."""
-    ctx.actions.run_shell(
-        inputs = inputs,
-        outputs = outputs,
-        env = env,
-        command = command,
-        progress_message = progress_message,
-        mnemonic = "Maprule",
-        input_manifests = manifests_from_tools,
-    )
-
-_CMD_STRATEGY = struct(
-    as_path = _as_windows_path,
-    create_action = _create_cmd_action,
-)
-
-_BASH_STRATEGY = struct(
-    as_path = _unchanged_path,
-    create_action = _create_bash_action,
-)
-
 def _cmd_maprule_impl(ctx):
-    return _maprule_main(ctx, _CMD_STRATEGY)
+    return _maprule_main(ctx, CMD_STRATEGY)
 
 def _bash_maprule_impl(ctx):
-    return _maprule_main(ctx, _BASH_STRATEGY)
+    return _maprule_main(ctx, BASH_STRATEGY)
 
 _ATTRS = {
     "srcs": attr.label_list(
@@ -605,8 +564,8 @@ bash_maprule = rule(
 
 # Only used in unittesting maprule.
 maprule_testing = struct(
-    cmd_strategy = _CMD_STRATEGY,
-    bash_strategy = _BASH_STRATEGY,
+    cmd_strategy = CMD_STRATEGY,
+    bash_strategy = BASH_STRATEGY,
     src_placeholders = _src_placeholders,
     validate_attributes = _validate_attributes,
     is_relative_path = _is_relative_path,
