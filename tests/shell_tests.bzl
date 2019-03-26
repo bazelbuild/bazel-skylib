@@ -52,8 +52,8 @@ def _shell_quote_test(ctx):
 
 shell_quote_test = unittest.make(_shell_quote_test)
 
-def _shell_spawn_e2e_test_impl(ctx):
-    """Test spawning a real shell."""
+def _shell_args_test_gen_impl(ctx):
+    """Test argument escaping: this rule writes a script for a sh_test."""
     args = [
         "foo",
         "foo bar",
@@ -83,19 +83,16 @@ def _shell_spawn_e2e_test_impl(ctx):
         "line tab\tcharacter $foo qu\"o\"te it'\\''s foo\\bar back`echo q`uote'",
         '[[ "${output}" == "${expected}" ]]',
     ])
-    script_file = ctx.actions.declare_file("%s.sh" % (ctx.label.name))
+    out = ctx.actions.declare_file(ctx.label.name + ".sh")
     ctx.actions.write(
-        output = script_file,
+        output = out,
         content = script_content,
         is_executable = True,
     )
-    return [
-        DefaultInfo(executable = script_file),
-    ]
+    return [DefaultInfo(files = depset([out]))]
 
-shell_spawn_e2e_test = rule(
-    test = True,
-    implementation = _shell_spawn_e2e_test_impl,
+shell_args_test_gen = rule(
+    implementation = _shell_args_test_gen_impl,
 )
 
 def shell_test_suite():
@@ -104,5 +101,4 @@ def shell_test_suite():
         "shell_tests",
         shell_array_literal_test,
         shell_quote_test,
-        shell_spawn_e2e_test,
     )
