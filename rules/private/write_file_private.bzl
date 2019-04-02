@@ -39,8 +39,8 @@ def _ximpl(ctx):
     return _common_impl(ctx, True)
 
 _ATTRS = {
-    "content": attr.string_list(mandatory = False, allow_empty = True),
     "out": attr.output(mandatory = True),
+    "content": attr.string_list(mandatory = False, allow_empty = True),
 }
 
 _write_file = rule(
