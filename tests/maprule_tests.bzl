@@ -15,7 +15,7 @@
 """Unit tests for maprule.bzl."""
 
 load("//lib:unittest.bzl", "asserts", "unittest")
-load("//rules:maprule_testing.bzl", "maprule_testing")
+load("//rules/private:maprule_testing.bzl", "maprule_testing")
 
 def _dummy_generating_action(ctx, path):
     ctx.actions.write(path, "hello")
@@ -283,7 +283,7 @@ def _custom_envmap_test(ctx):
                 "out1": _mock_file(ctx, language + "/Foo/Out1"),
                 "out2": _mock_file(ctx, language + "/Foo/Out2"),
             },
-            add_env = {"ENV1": "Env1"},
+            resolved_add_env = {"ENV1": "Env1"},
         )
         _assert_dict_keys(
             env,

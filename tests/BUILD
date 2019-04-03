@@ -8,13 +8,18 @@ load(":partial_tests.bzl", "partial_test_suite")
 load(":paths_tests.bzl", "paths_test_suite")
 load(":selects_tests.bzl", "selects_test_suite")
 load(":sets_tests.bzl", "sets_test_suite")
-load(":shell_tests.bzl", "shell_test_suite")
+load(":shell_tests.bzl", "shell_args_test_gen", "shell_test_suite")
 load(":structs_tests.bzl", "structs_test_suite")
 load(":types_tests.bzl", "types_test_suite")
 load(":unittest_tests.bzl", "unittest_passing_tests_suite")
 load(":versions_tests.bzl", "versions_test_suite")
 
 licenses(["notice"])
+
+exports_files(
+    ["unittest.bash"],
+    visibility = ["//tests:__subpackages__"],
+)
 
 build_test_test_suite()
 
@@ -57,6 +62,12 @@ sh_test(
     data = [
         ":unittest.bash",
         ":unittest_tests_bzl",
+        "//lib:dicts.bzl",
+        "//lib:new_sets.bzl",
+        "//lib:old_sets.bzl",
+        "//lib:sets.bzl",
+        "//lib:types.bzl",
+        "//lib:unittest.bzl",
         "//toolchains/unittest:test_deps",
         "@bazel_tools//tools/bash/runfiles",
     ],
@@ -72,4 +83,13 @@ sh_test(
         "@bazel_tools//tools/bash/runfiles",
     ],
     tags = ["local"],
+)
+
+shell_args_test_gen(
+    name = "shell_spawn_e2e_test_src",
+)
+
+sh_test(
+    name = "shell_spawn_e2e_test",
+    srcs = [":shell_spawn_e2e_test_src"],
 )
