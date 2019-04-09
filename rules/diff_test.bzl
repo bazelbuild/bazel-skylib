@@ -100,13 +100,13 @@ _diff_test = rule(
     attrs = {
         "file1": attr.label(
             allow_files = True,
+            allow_single_file = True,
             mandatory = True,
-            single_file = True,
         ),
         "file2": attr.label(
             allow_files = True,
+            allow_single_file = True,
             mandatory = True,
-            single_file = True,
         ),
         "is_windows": attr.bool(mandatory = True),
     },
