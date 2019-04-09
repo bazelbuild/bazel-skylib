@@ -30,33 +30,34 @@ def _diff_test_impl(ctx):
         ctx.actions.write(
             output = test_bin,
             content = r"""@echo off
-setlocal enableextensions
+SETLOCAL ENABLEEXTENSIONS
+SETLOCAL ENABLEDELAYEDEXPANSION
 set MF=%RUNFILES_MANIFEST_FILE:/=\%
 set PATH=%SYSTEMROOT%\system32
-for /F "tokens=2* usebackq" %%i in (`findstr.exe /l /c:"%TEST_WORKSPACE%/{file1} " "%MF%"`) do (
+for /F "tokens=2* usebackq" %%i in (`findstr.exe /l /c:"!TEST_WORKSPACE!/{file1} " "%MF%"`) do (
   set RF1=%%i
-  set RF1=%RF1:/=\%
+  set RF1=!RF1:/=\!
 )
-if "%RF1%" equ "" (
+if "!RF1!" equ "" (
   echo>&2 ERROR: {file1} not found
   exit /b 1
 )
-for /F "tokens=2* usebackq" %%i in (`findstr.exe /l /c:"%TEST_WORKSPACE%/{file2} " "%MF%"`) do (
+for /F "tokens=2* usebackq" %%i in (`findstr.exe /l /c:"!TEST_WORKSPACE!/{file2} " "%MF%"`) do (
   set RF2=%%i
-  set RF2=%RF2:/=\%
+  set RF2=!RF2:/=\!
 )
-if "%RF2%" equ "" (
+if "!RF2!" equ "" (
   echo>&2 ERROR: {file2} not found
   exit /b 1
 )
-fc.exe 2>NUL 1>NUL /B "%RF1%" "%RF2%"
-if %ERRORLEVEL% equ 2 (
-  echo>&2 FAIL: "{file1}" and/or "{file2}" not found
-  exit /b 1
-) else (
+fc.exe 2>NUL 1>NUL /B "!RF1!" "!RF2!"
+if %ERRORLEVEL% neq 0 (
   if %ERRORLEVEL% equ 1 (
     echo>&2 FAIL: files "{file1}" and "{file2}" differ
     exit /b 1
+  ) else (
+    fc.exe /B "!RF1!" "!RF2!"
+    exit /b %errorlevel%
   )
 )
 """.format(
@@ -99,12 +100,10 @@ fi
 _diff_test = rule(
     attrs = {
         "file1": attr.label(
-            allow_files = True,
             allow_single_file = True,
             mandatory = True,
         ),
         "file2": attr.label(
-            allow_files = True,
             allow_single_file = True,
             mandatory = True,
         ),
