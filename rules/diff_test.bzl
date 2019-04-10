@@ -34,20 +34,24 @@ SETLOCAL ENABLEEXTENSIONS
 SETLOCAL ENABLEDELAYEDEXPANSION
 set MF=%RUNFILES_MANIFEST_FILE:/=\%
 set PATH=%SYSTEMROOT%\system32
-for /F "tokens=2* usebackq" %%i in (`findstr.exe /l /c:"!TEST_WORKSPACE!/{file1} " "%MF%"`) do (
+set F1={file1}
+set F2={file2}
+if "!F1:~0,9!" equ "external/" (set F1=!F1:~9!) else (set F1=!TEST_WORKSPACE!/!F1!)
+if "!F2:~0,9!" equ "external/" (set F2=!F2:~9!) else (set F2=!TEST_WORKSPACE!/!F2!)
+for /F "tokens=2* usebackq" %%i in (`findstr.exe /l /c:"!F1! " "%MF%"`) do (
   set RF1=%%i
   set RF1=!RF1:/=\!
 )
 if "!RF1!" equ "" (
-  echo>&2 ERROR: {file1} not found
+  echo>&2 ERROR: !F1! not found
   exit /b 1
 )
-for /F "tokens=2* usebackq" %%i in (`findstr.exe /l /c:"!TEST_WORKSPACE!/{file2} " "%MF%"`) do (
+for /F "tokens=2* usebackq" %%i in (`findstr.exe /l /c:"!F2! " "%MF%"`) do (
   set RF2=%%i
   set RF2=!RF2:/=\!
 )
 if "!RF2!" equ "" (
-  echo>&2 ERROR: {file2} not found
+  echo>&2 ERROR: !F2! not found
   exit /b 1
 )
 fc.exe 2>NUL 1>NUL /B "!RF1!" "!RF2!"
@@ -72,12 +76,16 @@ if %ERRORLEVEL% neq 0 (
             output = test_bin,
             content = r"""#!/bin/bash
 set -euo pipefail
+F1="{file1}"
+F2="{file2}"
+[[ "$F1" =~ external/* ]] && F1="${{F1#external/}}" || F1="$TEST_WORKSPACE/$F1"
+[[ "$F2" =~ external/* ]] && F2="${{F2#external/}}" || F2="$TEST_WORKSPACE/$F2"
 if [[ -d "${{RUNFILES_DIR:-/dev/null}}" ]]; then
-  RF1="$RUNFILES_DIR/$TEST_WORKSPACE/{file1}"
-  RF2="$RUNFILES_DIR/$TEST_WORKSPACE/{file2}"
+  RF1="$RUNFILES_DIR/$F1"
+  RF2="$RUNFILES_DIR/$F2"
 elif [[ -f "${{RUNFILES_MANIFEST_FILE:-/dev/null}}" ]]; then
-  RF1="$(grep -F -m1 '{file1} ' "$RUNFILES_MANIFEST_FILE" | sed 's/^[^ ]* //')"
-  RF2="$(grep -F -m1 '{file2} ' "$RUNFILES_MANIFEST_FILE" | sed 's/^[^ ]* //'))"
+  RF1="$(grep -F -m1 "$F1 " "$RUNFILES_MANIFEST_FILE" | sed 's/^[^ ]* //')"
+  RF2="$(grep -F -m1 "$F2 " "$RUNFILES_MANIFEST_FILE" | sed 's/^[^ ]* //'))"
 else
   echo >&2 "ERROR: could not find \"{file1}\" and \"{file2}\""
 fi

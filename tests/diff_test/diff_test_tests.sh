@@ -38,8 +38,9 @@ fi
 source "$(rlocation bazel_skylib/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
 
-function test_diff_test() {
-  local -r ws="${TEST_TMPDIR}/${FUNCNAME[0]}"
+function assert_simple_diff_test() {
+  local -r flag="$1"
+  local -r ws="${TEST_TMPDIR}/$2"
 
   mkdir -p "$ws/rules"
   ln -sf "$(rlocation bazel_skylib/rules/diff_test.bzl)" "$ws/rules/diff_test.bzl"
@@ -64,39 +65,46 @@ eof
   echo bar > "$ws/b.txt"
 
   (cd "$ws" && \
-   bazel test //:same --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test "$flag" //:same --test_output=errors 1>"$TEST_log" 2>&1 \
      || fail "expected success")
 
   (cd "$ws" && \
-   bazel test //:different --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test "$flag" //:different --test_output=errors 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
   expect_log 'FAIL: files "a.txt" and "b.txt" differ'
 }
 
-function test_from_ext_repo() {
-  local -r ws="${TEST_TMPDIR}/${FUNCNAME[0]}"
+function assert_from_ext_repo() {
+  local -r flag="$1"
+  local -r ws="${TEST_TMPDIR}/$2"
 
-  mkdir -p "$ws/rules" "$ws/ext1/foo" "$ws/ext2/foo" 
-  ln -sf "$(rlocation bazel_skylib/rules/diff_test.bzl)" "$ws/rules/diff_test.bzl"
-  echo "exports_files(['diff_test.bzl'])" > "$ws/rules/BUILD"
-  cat >"$ws/WORKSPACE" <<'eof'
+  mkdir -p "$ws/main/rules" "$ws/ext1/foo" "$ws/main/ext1/foo" \
+           "$ws/ext2/foo" "$ws/main/ext2/foo"
+  ln -sf "$(rlocation bazel_skylib/rules/diff_test.bzl)" \
+         "$ws/main/rules/diff_test.bzl"
+  echo "exports_files(['diff_test.bzl'])" > "$ws/main/rules/BUILD"
+  cat >"$ws/main/WORKSPACE" <<'eof'
 local_repository(
     name = "ext1",
-    path = "ext1",
+    path = "../ext1",
 )
 
 local_repository(
     name = "ext2",
-    path = "ext2",
+    path = "../ext2",
 )
 eof
 
-  # ext1 has source files
+  # @ext1 has source files
   touch "$ws/ext1/WORKSPACE"
   echo 'exports_files(["foo.txt"])' >"$ws/ext1/foo/BUILD"
   echo 'foo' > "$ws/ext1/foo/foo.txt"
 
-  # ext2 has generated files
+  # @//ext1/foo has different files than @ext1//foo
+  echo 'exports_files(["foo.txt"])' >"$ws/main/ext1/foo/BUILD"
+  echo 'not foo' > "$ws/main/ext1/foo/foo.txt"
+
+  # @ext2 has generated files
   touch "$ws/ext2/WORKSPACE"
   cat >"$ws/ext2/foo/BUILD" <<'eof'
 genrule(
@@ -110,7 +118,17 @@ genrule(
 )
 eof
 
-  cat >"$ws/BUILD" <<'eof'
+  # @//ext2/foo has different files than @ext2//foo
+  cat >"$ws/main/ext2/foo/BUILD" <<'eof'
+genrule(
+    name = "gen",
+    outs = ["foo.txt"],
+    cmd = "echo 'not foo' > $@",
+    visibility = ["//visibility:public"],
+)
+eof
+
+  cat >"$ws/main/BUILD" <<'eof'
 load("//rules:diff_test.bzl", "diff_test")
 
 diff_test(
@@ -120,20 +138,58 @@ diff_test(
 )
 
 diff_test(
-    name = "different",
+    name = "different1",
     file1 = "@ext1//foo:foo.txt",
     file2 = "@ext2//foo:bar.txt",
 )
+
+diff_test(
+    name = "different2",
+    file1 = "@ext1//foo:foo.txt",
+    file2 = "//ext1/foo:foo.txt",
+)
+
+diff_test(
+    name = "different3",
+    file1 = "//ext2/foo:foo.txt",
+    file2 = "@ext2//foo:foo.txt",
+)
 eof
 
-  (cd "$ws" && \
-   bazel test //:same --test_output=errors 1>"$TEST_log" 2>&1 \
+  (cd "$ws/main" && \
+   bazel test "$flag" //:same --test_output=errors 1>"$TEST_log" 2>&1 \
      || fail "expected success")
 
-  (cd "$ws" && \
-   bazel test //:different --test_output=errors 1>"$TEST_log" 2>&1 \
+  (cd "$ws/main" && \
+   bazel test "$flag" //:different1 --test_output=errors 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
   expect_log 'FAIL: files "external/ext1/foo/foo.txt" and "external/ext2/foo/bar.txt" differ'
+
+  (cd "$ws/main" && \
+   bazel test "$flag" //:different2 --test_output=errors 1>"$TEST_log" 2>&1 \
+     && fail "expected failure" || true)
+  expect_log 'FAIL: files "external/ext1/foo/foo.txt" and "ext1/foo/foo.txt" differ'
+
+  (cd "$ws/main" && \
+   bazel test "$flag" //:different3 --test_output=errors 1>"$TEST_log" 2>&1 \
+     && fail "expected failure" || true)
+  expect_log 'FAIL: files "ext2/foo/foo.txt" and "external/ext2/foo/foo.txt" differ'
+}
+
+function test_simple_diff_test_with_legacy_external_runfiles() {
+  assert_simple_diff_test "--legacy_external_runfiles" "${FUNCNAME[0]}"
+}
+
+function test_simple_diff_test_without_legacy_external_runfiles() {
+  assert_simple_diff_test "--nolegacy_external_runfiles" "${FUNCNAME[0]}"
+}
+
+function test_from_ext_repo_with_legacy_external_runfiles() {
+  assert_from_ext_repo "--legacy_external_runfiles" "${FUNCNAME[0]}"
+}
+
+function test_from_ext_repo_without_legacy_external_runfiles() {
+  assert_from_ext_repo "--nolegacy_external_runfiles" "${FUNCNAME[0]}"
 }
 
 run_suite "diff_test_tests test suite"
