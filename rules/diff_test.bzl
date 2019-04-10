@@ -80,14 +80,15 @@ F1="{file1}"
 F2="{file2}"
 [[ "$F1" =~ external/* ]] && F1="${{F1#external/}}" || F1="$TEST_WORKSPACE/$F1"
 [[ "$F2" =~ external/* ]] && F2="${{F2#external/}}" || F2="$TEST_WORKSPACE/$F2"
-if [[ -d "${{RUNFILES_DIR:-/dev/null}}" ]]; then
+if [[ -d "${{RUNFILES_DIR:-/dev/null}}" && "${{RUNFILES_MANIFEST_ONLY:-}}" != 1 ]]; then
   RF1="$RUNFILES_DIR/$F1"
   RF2="$RUNFILES_DIR/$F2"
 elif [[ -f "${{RUNFILES_MANIFEST_FILE:-/dev/null}}" ]]; then
   RF1="$(grep -F -m1 "$F1 " "$RUNFILES_MANIFEST_FILE" | sed 's/^[^ ]* //')"
-  RF2="$(grep -F -m1 "$F2 " "$RUNFILES_MANIFEST_FILE" | sed 's/^[^ ]* //'))"
+  RF2="$(grep -F -m1 "$F2 " "$RUNFILES_MANIFEST_FILE" | sed 's/^[^ ]* //')"
 else
   echo >&2 "ERROR: could not find \"{file1}\" and \"{file2}\""
+  exit 1
 fi
 if ! diff "$RF1" "$RF2"; then
   echo >&2 "FAIL: files \"{file1}\" and \"{file2}\" differ"
