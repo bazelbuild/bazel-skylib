@@ -38,13 +38,20 @@ fi
 source "$(rlocation bazel_skylib/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
 
+function import_diff_test() {
+  local -r repo="$1"
+  mkdir -p "${repo}/rules"
+  touch "${repo}/WORKSPACE"
+  ln -sf "$(rlocation bazel_skylib/rules/diff_test.bzl)" \
+         "${repo}/rules/diff_test.bzl"
+  echo "exports_files(['diff_test.bzl'])" > "${repo}/rules/BUILD"
+}
+
 function assert_simple_diff_test() {
   local -r flag="$1"
   local -r ws="${TEST_TMPDIR}/$2"
 
-  mkdir -p "$ws/rules"
-  ln -sf "$(rlocation bazel_skylib/rules/diff_test.bzl)" "$ws/rules/diff_test.bzl"
-  echo "exports_files(['diff_test.bzl'])" > "$ws/rules/BUILD"
+  import_diff_test "$ws"
   touch "$ws/WORKSPACE"
   cat >"$ws/BUILD" <<'eof'
 load("//rules:diff_test.bzl", "diff_test")
@@ -78,12 +85,15 @@ function assert_from_ext_repo() {
   local -r flag="$1"
   local -r ws="${TEST_TMPDIR}/$2"
 
-  mkdir -p "$ws/main/rules" "$ws/ext1/foo" "$ws/main/ext1/foo" \
-           "$ws/ext2/foo" "$ws/main/ext2/foo"
-  ln -sf "$(rlocation bazel_skylib/rules/diff_test.bzl)" \
-         "$ws/main/rules/diff_test.bzl"
-  echo "exports_files(['diff_test.bzl'])" > "$ws/main/rules/BUILD"
+  # Import the rule to an external repository.
+  import_diff_test "$ws/bzl"
+  mkdir -p "$ws/ext1/foo" "$ws/main/ext1/foo" "$ws/ext2/foo" "$ws/main/ext2/foo"
   cat >"$ws/main/WORKSPACE" <<'eof'
+local_repository(
+    name = "bzl",
+    path = "../bzl",
+)
+
 local_repository(
     name = "ext1",
     path = "../ext1",
@@ -129,7 +139,7 @@ genrule(
 eof
 
   cat >"$ws/main/BUILD" <<'eof'
-load("//rules:diff_test.bzl", "diff_test")
+load("@bzl//rules:diff_test.bzl", "diff_test")
 
 diff_test(
     name = "same",
