@@ -5,6 +5,8 @@
 
 load("//rules/private:maprule.bzl", "bash_maprule")
 
+licenses(["notice"])
+
 package(default_testonly = 1)
 
 sh_test(
