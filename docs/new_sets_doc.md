@@ -96,7 +96,7 @@ sets.insert(<a href="#sets.insert-s">s</a>, <a href="#sets.insert-e">e</a>)
 
 Inserts an element into the set.
 
-Element must be hashable.  This mutates the orginal set.
+Element must be hashable.  This mutates the original set.
 
 
 ### Parameters
@@ -426,7 +426,7 @@ sets.remove(<a href="#sets.remove-s">s</a>, <a href="#sets.remove-e">e</a>)
 
 Removes an element from the set.
 
-Element must be hashable.  This mutates the orginal set.
+Element must be hashable.  This mutates the original set.
 
 
 ### Parameters
