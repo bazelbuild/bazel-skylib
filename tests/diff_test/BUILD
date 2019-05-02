@@ -2,6 +2,8 @@
 
 load("//rules:diff_test.bzl", "diff_test")
 
+licenses(["notice"])
+
 package(default_testonly = 1)
 
 sh_test(

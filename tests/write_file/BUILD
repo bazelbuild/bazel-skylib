@@ -34,6 +34,8 @@
 
 load("//rules:write_file.bzl", "write_file")
 
+licenses(["notice"])
+
 package(default_testonly = 1)
 
 sh_test(

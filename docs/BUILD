@@ -1,5 +1,7 @@
 load("@io_bazel_skydoc//stardoc:stardoc.bzl", "stardoc")
 
+licenses(["notice"])
+
 # Note that due to a bug in Bazel 0.22.0, these targets cannot be built without
 # the --incompatible_remap_main_repo flag.
 stardoc(

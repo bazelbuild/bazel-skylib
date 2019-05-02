@@ -33,6 +33,8 @@
 
 load("//rules:copy_file.bzl", "copy_file")
 
+licenses(["notice"])
+
 package(default_testonly = 1)
 
 sh_test(

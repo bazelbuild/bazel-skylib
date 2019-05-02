@@ -61,7 +61,7 @@ def _to_list(s):
 def _insert(s, e):
     """Inserts an element into the set.
 
-    Element must be hashable.  This mutates the orginal set.
+    Element must be hashable.  This mutates the original set.
 
     Args:
       s: A set, as returned by `sets.make()`.
@@ -76,7 +76,7 @@ def _insert(s, e):
 def _remove(s, e):
     """Removes an element from the set.
 
-    Element must be hashable.  This mutates the orginal set.
+    Element must be hashable.  This mutates the original set.
 
     Args:
       s: A set, as returned by `sets.make()`.
