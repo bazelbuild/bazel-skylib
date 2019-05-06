@@ -131,4 +131,5 @@ function test_fail_unexpected_passing_test() {
   expect_log "Expected failure of target_under_test, but found success"
 }
 
+cd "$TEST_TMPDIR"
 run_suite "unittest test suite"
