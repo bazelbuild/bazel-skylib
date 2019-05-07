@@ -202,4 +202,5 @@ function test_from_ext_repo_without_legacy_external_runfiles() {
   assert_from_ext_repo "--nolegacy_external_runfiles" "${FUNCNAME[0]}"
 }
 
+cd "$TEST_TMPDIR"
 run_suite "diff_test_tests test suite"
