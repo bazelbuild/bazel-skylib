@@ -150,4 +150,5 @@ function test_transitive_target_fails() {
   expect_log "This rule should never work"
 }
 
+cd "$TEST_TMPDIR"
 run_suite "analysis_test test suite"

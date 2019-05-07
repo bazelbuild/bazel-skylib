@@ -80,7 +80,7 @@ def _impl_function_name(impl):
     impl_name = impl_name.partition("<function ")[-1]
     return impl_name.rpartition(">")[0]
 
-def _make(impl, attrs = None):
+def _make(impl, attrs = {}):
     """Creates a unit test rule from its implementation function.
 
     Each unit test is defined in an implementation function that must then be
@@ -115,7 +115,7 @@ def _make(impl, attrs = None):
       A rule definition that should be stored in a global whose name ends in
       `_test`.
     """
-    attrs = dict(attrs) if attrs else {}
+    attrs = dict(attrs)
     attrs["_impl_name"] = attr.string(default = _impl_function_name(impl))
 
     return rule(
@@ -138,7 +138,7 @@ _action_retrieving_aspect = aspect(
 )
 
 # TODO(cparsons): Provide more full documentation on analysis testing in README.
-def _make_analysis_test(impl, expect_failure = False, config_settings = {}):
+def _make_analysis_test(impl, expect_failure = False, attrs = {}, config_settings = {}):
     """Creates an analysis test rule from its implementation function.
 
     An analysis test verifies the behavior of a "real" rule target by examining
@@ -168,6 +168,8 @@ def _make_analysis_test(impl, expect_failure = False, config_settings = {}):
       impl: The implementation function of the unit test.
       expect_failure: If true, the analysis test will expect the target_under_test
           to fail. Assertions can be made on the underlying failure using asserts.expect_failure
+      attrs: An optional dictionary to supplement the attrs passed to the
+          unit test's `rule()` constructor.
       config_settings: A dictionary of configuration settings to change for the target under
           test and its dependencies. This may be used to essentially change 'build flags' for
           the target under test, and may thus be utilized to test multiple targets with different
@@ -177,7 +179,7 @@ def _make_analysis_test(impl, expect_failure = False, config_settings = {}):
       A rule definition that should be stored in a global whose name ends in
       `_test`.
     """
-    attrs = {}
+    attrs = dict(attrs)
     attrs["_impl_name"] = attr.string(default = _impl_function_name(impl))
 
     changed_settings = dict(config_settings)
