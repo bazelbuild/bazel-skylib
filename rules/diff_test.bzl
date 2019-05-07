@@ -86,6 +86,9 @@ if [[ -d "${{RUNFILES_DIR:-/dev/null}}" && "${{RUNFILES_MANIFEST_ONLY:-}}" != 1 
 elif [[ -f "${{RUNFILES_MANIFEST_FILE:-/dev/null}}" ]]; then
   RF1="$(grep -F -m1 "$F1 " "$RUNFILES_MANIFEST_FILE" | sed 's/^[^ ]* //')"
   RF2="$(grep -F -m1 "$F2 " "$RUNFILES_MANIFEST_FILE" | sed 's/^[^ ]* //')"
+elif [[ -f "$TEST_SRCDIR/$F1" && -f "$TEST_SRCDIR/$F2" ]]; then
+  RF1="$TEST_SRCDIR/$F1"
+  RF2="$TEST_SRCDIR/$F2"
 else
   echo >&2 "ERROR: could not find \"{file1}\" and \"{file2}\""
   exit 1

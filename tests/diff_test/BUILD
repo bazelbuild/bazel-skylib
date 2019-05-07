@@ -13,6 +13,8 @@ sh_test(
         "//rules:diff_test",
         "//tests:unittest.bash",
     ],
+    # Test marked local because it uses bazel.
+    tags = ["local"],
     deps = ["@bazel_tools//tools/bash/runfiles"],
 )
 
