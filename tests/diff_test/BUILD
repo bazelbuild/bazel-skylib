@@ -14,6 +14,7 @@ sh_test(
         "//tests:unittest.bash",
     ],
     deps = ["@bazel_tools//tools/bash/runfiles"],
+    # Test marked local because it uses bazel.
     tags = ["local"],
 )
 
