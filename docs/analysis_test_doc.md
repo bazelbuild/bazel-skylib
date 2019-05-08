@@ -31,7 +31,6 @@ Test rule checking that other targets can be successfully analyzed.
     Args:
       name: The name of the test rule.
       targets: A list of targets to ensure build.
-    
 
 ### Attributes
 

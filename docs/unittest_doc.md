@@ -55,7 +55,7 @@ unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unitte
 ## analysistest.make
 
 <pre>
-analysistest.make(<a href="#analysistest.make-impl">impl</a>, <a href="#analysistest.make-expect_failure">expect_failure</a>, <a href="#analysistest.make-config_settings">config_settings</a>)
+analysistest.make(<a href="#analysistest.make-impl">impl</a>, <a href="#analysistest.make-expect_failure">expect_failure</a>, <a href="#analysistest.make-attrs">attrs</a>, <a href="#analysistest.make-config_settings">config_settings</a>)
 </pre>
 
 Creates an analysis test rule from its implementation function.
@@ -108,6 +108,16 @@ Recall that names of test rules must end in `_test`.
         <p>
           If true, the analysis test will expect the target_under_test
     to fail. Assertions can be made on the underlying failure using asserts.expect_failure
+        </p>
+      </td>
+    </tr>
+    <tr id="analysistest.make-attrs">
+      <td><code>attrs</code></td>
+      <td>
+        optional. default is <code>{}</code>
+        <p>
+          An optional dictionary to supplement the attrs passed to the
+    unit test's `rule()` constructor.
         </p>
       </td>
     </tr>
@@ -663,7 +673,7 @@ Recall that names of test rules must end in `_test`.
     <tr id="unittest.make-attrs">
       <td><code>attrs</code></td>
       <td>
-        optional. default is <code>None</code>
+        optional. default is <code>{}</code>
         <p>
           An optional dictionary to supplement the attrs passed to the
     unit test's `rule()` constructor.
