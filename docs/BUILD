@@ -114,3 +114,10 @@ stardoc(
     input = "//rules:diff_test.bzl",
     deps = ["//rules:diff_test"],
 )
+
+stardoc(
+    name = "native_binary_docs",
+    out = "native_binary_doc_gen.md",
+    input = "//rules:native_binary.bzl",
+    deps = ["//rules:native_binary"],
+)
