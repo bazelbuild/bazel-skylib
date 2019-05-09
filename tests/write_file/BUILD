@@ -122,8 +122,12 @@ write_file(
 write_file(
     name = "newline_unix_actual",
     out = "out/newline_unix_actual.txt",
+    content = [
+        "ab",
+        "cd",
+        "ef",
+    ],
     newline = "unix",
-    content = ["ab", "cd", "ef"],
 )
 
 write_file(
@@ -141,8 +145,12 @@ diff_test(
 write_file(
     name = "newline_win_actual",
     out = "out/newline_win_actual.txt",
+    content = [
+        "ab",
+        "cd",
+        "ef",
+    ],
     newline = "windows",
-    content = ["ab", "cd", "ef"],
 )
 
 write_file(

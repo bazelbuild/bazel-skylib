@@ -57,11 +57,10 @@ Creates a UTF-8 encoded text file.
     <tr id="write_file-newline">
       <td><code>newline</code></td>
       <td>
-        optional. default is <code>None</code>
+        optional. default is <code>"auto"</code>
         <p>
-          one of ["auto", "unix", "windows"], default is "auto": line
-    endings to use. "auto" for platform-determined, "unix" for LF and
-    "windows" for CRLF.
+          one of ["auto", "unix", "windows"]: line endings to use. "auto"
+    for platform-determined, "unix" for LF, and "windows" for CRLF.
         </p>
       </td>
     </tr>
@@ -70,7 +69,7 @@ Creates a UTF-8 encoded text file.
       <td>
         optional.
         <p>
-          further keyword arguments, e.g. `visibility`
+          further keyword arguments, e.g. <code>visibility</code>
         </p>
       </td>
     </tr>

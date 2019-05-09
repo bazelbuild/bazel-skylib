@@ -70,7 +70,7 @@ def write_file(
         out,
         content = [],
         is_executable = False,
-        newline = None,
+        newline = "auto",
         **kwargs):
     """Creates a UTF-8 encoded text file.
 
@@ -83,10 +83,9 @@ def write_file(
           When True, the rule's output can be executed using `bazel run` and can
           be in the srcs of binary and test rules that require executable
           sources.
-      newline: one of ["auto", "unix", "windows"], default is "auto": line
-          endings to use. "auto" for platform-determined, "unix" for LF and
-          "windows" for CRLF.
-      **kwargs: further keyword arguments, e.g. `visibility`
+      newline: one of ["auto", "unix", "windows"]: line endings to use. "auto"
+          for platform-determined, "unix" for LF, and "windows" for CRLF.
+      **kwargs: further keyword arguments, e.g. <code>visibility</code>
     """
     if is_executable:
         _write_xfile(
