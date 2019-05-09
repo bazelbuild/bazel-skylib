@@ -18,11 +18,18 @@ These rules write a UTF-8 encoded text file, using Bazel's FileWriteAction.
 '_write_xfile' marks the resulting file executable, '_write_file' does not.
 """
 
-def _common_impl(ctx, is_executable):
+def _common_impl(ctx, is_windows, is_executable):
+    if ctx.attr.newline == "auto":
+        newline = "\r\n" if is_windows else "\n"
+    elif ctx.attr.newline == "windows":
+        newline = "\r\n"
+    else:
+        newline = "\n"
+
     # ctx.actions.write creates a FileWriteAction which uses UTF-8 encoding.
     ctx.actions.write(
         output = ctx.outputs.out,
-        content = "\n".join(ctx.attr.content) if ctx.attr.content else "",
+        content = newline.join(ctx.attr.content) if ctx.attr.content else "",
         is_executable = is_executable,
     )
     files = depset(direct = [ctx.outputs.out])
@@ -33,14 +40,16 @@ def _common_impl(ctx, is_executable):
         return [DefaultInfo(files = files, runfiles = runfiles)]
 
 def _impl(ctx):
-    return _common_impl(ctx, False)
+    return _common_impl(ctx, ctx.attr.is_windows, False)
 
 def _ximpl(ctx):
-    return _common_impl(ctx, True)
+    return _common_impl(ctx, ctx.attr.is_windows, True)
 
 _ATTRS = {
     "out": attr.output(mandatory = True),
     "content": attr.string_list(mandatory = False, allow_empty = True),
+    "newline": attr.string(values = ["unix", "windows", "auto"], default = "auto"),
+    "is_windows": attr.bool(mandatory = True),
 }
 
 _write_file = rule(
@@ -56,7 +65,13 @@ _write_xfile = rule(
     attrs = _ATTRS,
 )
 
-def write_file(name, out, content = [], is_executable = False, **kwargs):
+def write_file(
+        name,
+        out,
+        content = [],
+        is_executable = False,
+        newline = None,
+        **kwargs):
     """Creates a UTF-8 encoded text file.
 
     Args:
@@ -64,9 +79,13 @@ def write_file(name, out, content = [], is_executable = False, **kwargs):
       out: Path of the output file, relative to this package.
       content: A list of strings. Lines of text, the contents of the file.
           Newlines are added automatically after every line except the last one.
-      is_executable: A boolean. Whether to make the output file executable. When
-          True, the rule's output can be executed using `bazel run` and can be
-          in the srcs of binary and test rules that require executable sources.
+      is_executable: A boolean. Whether to make the output file executable.
+          When True, the rule's output can be executed using `bazel run` and can
+          be in the srcs of binary and test rules that require executable
+          sources.
+      newline: one of ["auto", "unix", "windows"], default is "auto": line
+          endings to use. "auto" for platform-determined, "unix" for LF and
+          "windows" for CRLF.
       **kwargs: further keyword arguments, e.g. `visibility`
     """
     if is_executable:
@@ -74,6 +93,11 @@ def write_file(name, out, content = [], is_executable = False, **kwargs):
             name = name,
             content = content,
             out = out,
+            newline = newline or "auto",
+            is_windows = select({
+                "@bazel_tools//src/conditions:host_windows": True,
+                "//conditions:default": False,
+            }),
             **kwargs
         )
     else:
@@ -81,5 +105,10 @@ def write_file(name, out, content = [], is_executable = False, **kwargs):
             name = name,
             content = content,
             out = out,
+            newline = newline or "auto",
+            is_windows = select({
+                "@bazel_tools//src/conditions:host_windows": True,
+                "//conditions:default": False,
+            }),
             **kwargs
         )
