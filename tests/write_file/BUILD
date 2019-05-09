@@ -32,6 +32,7 @@
 #   field of it, so we assert that that field contains the output file of the
 #   rule
 
+load("//rules:diff_test.bzl", "diff_test")
 load("//rules:write_file.bzl", "write_file")
 
 licenses(["notice"])
@@ -116,4 +117,50 @@ write_file(
         "echo potato",
     ],
     is_executable = True,
+)
+
+write_file(
+    name = "newline_unix_actual",
+    out = "out/newline_unix_actual.txt",
+    content = [
+        "ab",
+        "cd",
+        "ef",
+    ],
+    newline = "unix",
+)
+
+write_file(
+    name = "newline_unix_exp",
+    out = "out/newline_unix_exp.txt",
+    content = ["ab\ncd\nef"],
+)
+
+diff_test(
+    name = "unix_line_ending_test",
+    file1 = ":newline_unix_actual",
+    file2 = ":newline_unix_exp",
+)
+
+write_file(
+    name = "newline_win_actual",
+    out = "out/newline_win_actual.txt",
+    content = [
+        "ab",
+        "cd",
+        "ef",
+    ],
+    newline = "windows",
+)
+
+write_file(
+    name = "newline_win_exp",
+    out = "out/newline_win_exp.txt",
+    content = ["ab\r\ncd\r\nef"],
+)
+
+diff_test(
+    name = "win_line_ending_test",
+    file1 = ":newline_win_actual",
+    file2 = ":newline_win_exp",
 )
