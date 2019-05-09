@@ -33,6 +33,12 @@ bzl_library(
     deps = ["//rules/private:copy_file_private"],
 )
 
+bzl_library(
+    name = "run_binary",
+    srcs = ["run_binary.bzl"],
+    deps = ["//lib:dicts"],
+)
+
 # Exported for build_test.bzl to make sure of, it is an implementation detail
 # of the rule and should not be directly used by anything else.
 exports_files(["empty_test.sh"])
