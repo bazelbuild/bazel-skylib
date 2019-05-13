@@ -12,6 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""native_binary() and native_test() rule implementations.
+
+These rules let you wrap a pre-built binary or script in a conventional binary
+and test rule respectively. They fulfill the same goal as sh_binary and sh_test
+do, but they run the wrapped binary directly, instead of through Bash, so they
+don't depend on Bash and work with --shell_exectuable="".
+"""
+
 load("//rules/private:copy_file_private.bzl", "copy_bash", "copy_cmd")
 
 def _impl_rule(ctx, is_windows):
@@ -59,12 +67,13 @@ _native_test = rule(
     test = True,
 )
 
-def native_binary(name, src, out, data=None, **kwargs):
+def native_binary(name, src, out, data = None, **kwargs):
     """Wraps a pre-built binary or script with a binary rule.
 
     You can "bazel run" this rule like any other binary rule, and use it as a tool in genrule.tools for example. You can also augment the binary with runfiles.
 
     Args:
+      name: The name of the test rule.
       src: label; path of the pre-built executable
       out: output; an output name for the copy of the binary. (Bazel requires that this rule make a copy of 'src'.)
       data: list of labels; data dependencies
@@ -82,13 +91,14 @@ def native_binary(name, src, out, data=None, **kwargs):
         **kwargs
     )
 
-def native_test(name, src, out, data=None, **kwargs):
+def native_test(name, src, out, data = None, **kwargs):
     """Wraps a pre-built binary or script with a test rule.
 
     You can "bazel test" this rule like any other test rule. You can also augment the binary with
     runfiles.
 
     Args:
+      name: The name of the test rule.
       src: label; path of the pre-built executable
       out: output; an output name for the copy of the binary. (Bazel requires that this rule make a copy of 'src'.)
       data: list of labels; data dependencies

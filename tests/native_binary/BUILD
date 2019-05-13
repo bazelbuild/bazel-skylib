@@ -1,6 +1,5 @@
 load("//rules:copy_file.bzl", "copy_file")
 load("//rules:native_binary.bzl", "native_binary", "native_test")
-load("//rules:write_file.bzl", "write_file")
 
 package(
     default_testonly = 1,
