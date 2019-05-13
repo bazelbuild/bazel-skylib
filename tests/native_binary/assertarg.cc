@@ -34,7 +34,8 @@ int main(int argc, char** argv) {
     "",
   };
 
-  for (int i = 1; i < argc; ++i) {
+  int i = 1;
+  for (; kExpected[i][0]; ++i) {
     if (argc < i) {
       fprintf(stderr, "expected more than %d arguments\n", i);
       return 1;
@@ -44,6 +45,10 @@ int main(int argc, char** argv) {
               kExpected[i - 1]);
       return 1;
     }
+  }
+  if (argc >= i) {
+    fprintf(stderr, "too many arguments (%d), expected only %d\n", argc - 1, i);
+    return 1;
   }
   return 0;
 }
