@@ -49,7 +49,12 @@ _ARGS = [
     "c\\ d",
     "$(location testdata.txt) $$(location testdata.txt) $(location testdata.txt)",
     "'$(location testdata.txt) $$(location testdata.txt) $(location testdata.txt)'",
-    "$$TEST_SRCDIR $${TEST_SRCDIR}",
+    "$$TEST_SRCDIR",
+
+    # TODO(laszlocsomor): uncomment this (and its counterpart in assertarg.cc)
+    # after https://github.com/bazelbuild/bazel/issues/6622 is resolved and the
+    # Bash-less test wrapper is the default on Windows.
+    # "$${TEST_SRCDIR}",
 ]
 
 native_binary(
