@@ -23,8 +23,6 @@ don't depend on Bash and work with --shell_exectuable="".
 load("//rules/private:copy_file_private.bzl", "copy_bash", "copy_cmd")
 
 def _impl_rule(ctx, is_windows):
-    if not ctx.attr.out:
-        fail(msg = "Must not be empty", attr = "out")
     out = ctx.actions.declare_file(ctx.attr.out)
     if is_windows:
         copy_cmd(ctx, ctx.file.src, out)
@@ -51,6 +49,7 @@ _ATTRS = {
         cfg = "host",
     ),
     "data": attr.label_list(allow_files = True),
+    # "out" is attr.string instead of attr.output, so that it is select()'able.
     "out": attr.string(mandatory = True),
     "is_windows": attr.bool(mandatory = True),
 }
