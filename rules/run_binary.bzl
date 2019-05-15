@@ -12,6 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+run_binary() build rule implementation.
+
+Runs a binary as a build action. This rule does not require Bash (unlike native.genrule()).
+"""
+
 load("//lib:dicts.bzl", "dicts")
 
 def _make_args(ctx):
