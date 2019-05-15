@@ -27,8 +27,8 @@ write_file(
         "ENV_COMPLEX=(xx/yy \\\"zz)",
         "ENV_PATH_BASH=($PATH)",
         "ENV_PATH_CMD=(%PATH%)",
-        # Can't prevent "echo" adding a newline on Windows, so let's add one to
-        # the expected output too.
+        # Can't prevent "echo" from adding a newline on Windows, so let's add
+        # one to the expected output too.
         "",
     ],
 )
@@ -106,8 +106,6 @@ diff_test(
 write_file(
     name = "run_bin_expected",
     out = "run_bin.expected",
-    # Can't prevent "echo" adding a newline on Windows, so let's add one to the
-    # expected output too.
     content = [
         "arg1=(a b)",
         "arg2=(c d)",
