@@ -21,7 +21,7 @@ Runs a binary as a build action. This rule does not require Bash (unlike native.
 load("//lib:dicts.bzl", "dicts")
 
 def _make_args(ctx):
-    targets = [ctx.attr.tool]  #+ ctx.attr.srcs
+    targets = [ctx.attr.tool]
     resolved = [
         ctx.expand_location(a, targets) if "$(location" in a else a
         for a in ctx.attr.args
@@ -48,7 +48,6 @@ def _impl(ctx):
         executable = ctx.executable.tool,
         arguments = args,
         mnemonic = "RunBinary",
-        progress_message = "Running tool",
         use_default_shell_env = False,
         env = dicts.add(ctx.configuration.default_shell_env, envs),
         input_manifests = tool_input_mfs,
@@ -75,16 +74,12 @@ run_binary = rule(
             cfg = "host",
         ),
         "env": attr.string_dict(
-            allow_empty = True,
-            mandatory = False,
             doc = "Environment variables of the action.<br/><br/>Subject to " +
                   " <code><a href=\"https://docs.bazel.build/versions/master/be/make-variables.html#location\">$(location)</a></code>" +
                   " expansion.",
         ),
         "srcs": attr.label_list(
-            allow_empty = True,
             allow_files = True,
-            mandatory = False,
             doc = "Additional inputs of the action.<br/><br/>These labels are available for" +
                   " <code>$(location)</code> expansion in <code>args</code> and <code>env</code>.",
         ),
@@ -94,8 +89,6 @@ run_binary = rule(
                   " <code>$(location)</code> expansion in <code>args</code> and <code>env</code>.",
         ),
         "args": attr.string_list(
-            allow_empty = True,
-            mandatory = False,
             doc = "Command line arguments of the binary.<br/><br/>Subject to" +
                   "<code><a href=\"https://docs.bazel.build/versions/master/be/make-variables.html#location\">$(location)</a></code>" +
                   " expansion and" +
