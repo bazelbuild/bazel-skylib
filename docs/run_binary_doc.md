@@ -29,7 +29,7 @@ Runs a binary as a build action.<br/><br/>This rule does not require Bash (unlik
       <td>
         List of strings; optional
         <p>
-          Command line arguments of the binary.<br/><br/>Subject to<code><a href="https://docs.bazel.build/versions/master/be/make-variables.html#location">$(location)</a></code> expansion and <a href="https://docs.bazel.build/versions/master/be/common-definitions.html#sh-tokenization">Bourne shell tokenization</a>.
+          Command line arguments of the binary.<br/><br/>Subject to<code><a href="https://docs.bazel.build/versions/master/be/make-variables.html#location">$(location)</a></code> expansion.
         </p>
       </td>
     </tr>
