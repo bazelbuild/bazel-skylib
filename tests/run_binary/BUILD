@@ -108,16 +108,15 @@ write_file(
     out = "run_bin.expected",
     content = [
         "arg1=(a b)",
-        "arg2=(c d)",
-        "arg3=(e f)",
-        "arg4=(xx/yy \"zz)",
+        "arg2=(\"c d\")",
+        "arg3=(e\\ f)",
+        "arg4=(xx/yy\\ \\\"zz)",
         "arg5=(tests/run_binary/BUILD)",
-        "arg6=(tests/run_binary/BUILD)",
-        "arg7=(tests/run_binary/printargs.cc)",
-        "arg8=(tests/run_binary/BUILD $tests/run_binary/BUILD)",
-        "arg9=($PATH)",
-        "arg10=($$PATH)",
-        "arg11=(${PATH})",
+        "arg6=(tests/run_binary/BUILD tests/run_binary/printargs.cc)",
+        "arg7=('tests/run_binary/BUILD $tests/run_binary/BUILD')",
+        "arg8=($PATH)",
+        "arg9=($$PATH)",
+        "arg10=(${PATH})",
         # Add trailing newline, as printed by printargs.
         "",
     ],
@@ -130,10 +129,10 @@ run_binary(
         ":dummy_srcs",
     ],
     outs = ["run_bin.out"],
-    # Test complex arguments here. They are location-expanded and
+    # Test complex arguments here. They are location-expanded but not
     # Bash-tokenized, and should appear the same on every platform.
     args = [
-        "'a b'",
+        "a b",
         "\"c d\"",
         "e\\ f",
         "xx/yy\\ \\\"zz",

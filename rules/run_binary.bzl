@@ -20,28 +20,17 @@ Runs a binary as a build action. This rule does not require Bash (unlike native.
 
 load("//lib:dicts.bzl", "dicts")
 
-def _make_args(ctx):
-    targets = [ctx.attr.tool]
-    resolved = [
-        ctx.expand_location(a, targets) if "$(location" in a else a
+def _impl(ctx):
+    tool_as_list = [ctx.attr.tool]
+    tool_inputs, tool_input_mfs = ctx.resolve_tools(tools = tool_as_list)
+    args = [ 
+        ctx.expand_location(a, tool_as_list) if "$(location" in a else a
         for a in ctx.attr.args
     ]
-    result = []
-    for v in resolved:
-        result += ctx.tokenize(v)
-    return result
-
-def _make_envs(ctx):
-    targets = [ctx.attr.tool]  #+ ctx.attr.srcs
-    return {
-        k: ctx.expand_location(v, targets) if "$(location" in v else v
+    envs = {
+        k: ctx.expand_location(v, tool_as_list) if "$(location" in v else v
         for k, v in ctx.attr.env.items()
     }
-
-def _impl(ctx):
-    tool_inputs, tool_input_mfs = ctx.resolve_tools(tools = [ctx.attr.tool])
-    args = _make_args(ctx)
-    envs = _make_envs(ctx)
     ctx.actions.run(
         outputs = ctx.outputs.outs,
         inputs = depset(direct = ctx.files.srcs, transitive = [tool_inputs]),
@@ -91,8 +80,7 @@ run_binary = rule(
         "args": attr.string_list(
             doc = "Command line arguments of the binary.<br/><br/>Subject to" +
                   "<code><a href=\"https://docs.bazel.build/versions/master/be/make-variables.html#location\">$(location)</a></code>" +
-                  " expansion and" +
-                  " <a href=\"https://docs.bazel.build/versions/master/be/common-definitions.html#sh-tokenization\">Bourne shell tokenization</a>.",
+                  " expansion.",
         ),
     },
 )
