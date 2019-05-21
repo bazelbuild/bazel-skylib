@@ -121,3 +121,10 @@ stardoc(
     input = "//rules:native_binary.bzl",
     deps = ["//rules:native_binary"],
 )
+
+stardoc(
+    name = "run_binary_docs",
+    out = "run_binary_doc_gen.md",
+    input = "//rules:run_binary.bzl",
+    deps = ["//rules:run_binary"],
+)
