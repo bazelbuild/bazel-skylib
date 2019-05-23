@@ -48,7 +48,7 @@ def copy_cmd(ctx, src, dst):
 
 def copy_bash(ctx, src, dst):
     ctx.actions.run_shell(
-        inputs = [src],
+        tools = [src],
         outputs = [dst],
         command = "cp -f \"$1\" \"$2\"",
         arguments = [src.path, dst.path],

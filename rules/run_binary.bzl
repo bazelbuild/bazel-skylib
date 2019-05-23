@@ -23,7 +23,7 @@ load("//lib:dicts.bzl", "dicts")
 def _impl(ctx):
     tool_as_list = [ctx.attr.tool]
     tool_inputs, tool_input_mfs = ctx.resolve_tools(tools = tool_as_list)
-    args = [ 
+    args = [
         # Expand $(location) / $(locations) in args.
         #
         # To keep the rule simple, do not expand Make Variables (like *_binary.args usually would).
@@ -44,7 +44,8 @@ def _impl(ctx):
     }
     ctx.actions.run(
         outputs = ctx.outputs.outs,
-        inputs = depset(direct = ctx.files.srcs, transitive = [tool_inputs]),
+        inputs = ctx.files.srcs,
+        tools = tool_inputs,
         executable = ctx.executable.tool,
         arguments = args,
         mnemonic = "RunBinary",
