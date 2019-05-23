@@ -44,7 +44,7 @@ def _impl(ctx):
     }
     ctx.actions.run(
         outputs = ctx.outputs.outs,
-        inputs = depset(direct = ctx.files.srcs),
+        inputs = ctx.files.srcs,
         tools = tool_inputs,
         executable = ctx.executable.tool,
         arguments = args,
