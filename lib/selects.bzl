@@ -159,8 +159,7 @@ def _config_setting_or_group(name, settings):
         _config_setting_always_true(name)
         return
 
-    # One entry? Just alias directly to it.
-    elif len(settings) == 1:
+    elif len(settings) == 1:  # One entry? Just alias directly to it.
         native.alias(
             name = name,
             actual = settings[0],
@@ -269,5 +268,5 @@ def _config_setting_always_true(name):
 selects = struct(
     with_or = _with_or,
     with_or_dict = _with_or_dict,
-    config_setting_group = _config_setting_group
+    config_setting_group = _config_setting_group,
 )
