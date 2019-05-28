@@ -1,17 +1,113 @@
 ---
-platforms:
-  ubuntu1404:
+tasks:
+  ubuntu1804_latest:
+    name: "Latest Bazel"
+    platform: ubuntu1804
+    bazel: latest
     build_targets:
-    - "..."
+    - "//..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
     test_targets:
-    - "..."
-  ubuntu1604:
+    - "//..."
+    test_flags:
+    - "--test_env=PATH"
+
+  ubuntu1604_latest:
+    name: "Latest Bazel"
+    platform: ubuntu1604
+    bazel: latest
     build_targets:
-    - "..."
+    - "//..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
     test_targets:
-    - "..."
-  macos:
+    - "//..."
+    test_flags:
+    - "--test_env=PATH"
+
+  macos_latest:
+    name: "Latest Bazel"
+    platform: macos
+    bazel: latest
     build_targets:
-    - "..."
+    - "//..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
     test_targets:
-    - "..."
+    - "//..."
+    test_flags:
+    - "--test_env=PATH"
+
+  windows_latest:
+    name: "Latest Bazel"
+    platform: windows
+    bazel: latest
+    build_targets:
+    - "//..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
+    test_targets:
+    - "--"
+    - "//..."
+    test_flags:
+    # TODO(laszlocsomor): remove "--test_env=LOCALAPPDATA" after
+    # https://github.com/bazelbuild/bazel/issues/7761 is fixed
+    - "--test_env=LOCALAPPDATA"
+
+  ubuntu1804_last_green:
+    name: "Last Green Bazel"
+    platform: ubuntu1804
+    bazel: last_green
+    build_targets:
+    - "//..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
+    test_targets:
+    - "//..."
+    test_flags:
+    - "--test_env=PATH"
+
+  ubuntu1604_last_green:
+    name: "Last Green Bazel"
+    platform: ubuntu1604
+    bazel: last_green
+    build_targets:
+    - "//..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
+    test_targets:
+    - "//..."
+    test_flags:
+    - "--test_env=PATH"
+
+  macos_last_green:
+    name: "Last Green Bazel"
+    platform: macos
+    bazel: last_green
+    build_targets:
+    - "//..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
+    test_targets:
+    - "//..."
+    test_flags:
+    - "--test_env=PATH"
+
+  windows_last_green:
+    name: "Last Green Bazel"
+    platform: windows
+    bazel: last_green
+    build_targets:
+    - "//..."
+    build_flags:
+    - "--incompatible_remap_main_repo"
+    test_targets:
+    - "--"
+    - "//..."
+    test_flags:
+    # TODO(laszlocsomor): remove "--test_env=LOCALAPPDATA" after
+    # https://github.com/bazelbuild/bazel/issues/7761 is fixed
+    - "--test_env=LOCALAPPDATA"
+
+buildifier: latest

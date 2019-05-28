@@ -15,6 +15,8 @@ filegroup(
     srcs = [
         "BUILD",
         "//lib:test_deps",
+        "//rules:test_deps",
+        "//toolchains/unittest:test_deps",
     ] + glob(["*.bzl"]),
 )
 

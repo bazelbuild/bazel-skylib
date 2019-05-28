@@ -1,5 +1,7 @@
 load("//lib:unittest.bzl", "TOOLCHAIN_TYPE", "unittest_toolchain")
 
+licenses(["notice"])
+
 toolchain_type(
     name = "toolchain_type",
     visibility = ["//visibility:public"],
@@ -17,6 +19,15 @@ exit /b 1
     visibility = ["//visibility:public"],
 )
 
+toolchain(
+    name = "cmd_toolchain",
+    exec_compatible_with = [
+        "@bazel_tools//platforms:windows",
+    ],
+    toolchain = ":cmd",
+    toolchain_type = TOOLCHAIN_TYPE,
+)
+
 unittest_toolchain(
     name = "bash",
     failure_templ = """#!/bin/sh
@@ -32,16 +43,16 @@ exit 1
 )
 
 toolchain(
-    name = "cmd_toolchain",
-    exec_compatible_with = [
-        "@bazel_tools//platforms:windows",
-    ],
-    toolchain = ":cmd",
-    toolchain_type = TOOLCHAIN_TYPE,
-)
-
-toolchain(
     name = "bash_toolchain",
     toolchain = ":bash",
     toolchain_type = TOOLCHAIN_TYPE,
+)
+
+filegroup(
+    name = "test_deps",
+    testonly = True,
+    srcs = [
+        "BUILD",
+    ],
+    visibility = ["//:__subpackages__"],
 )

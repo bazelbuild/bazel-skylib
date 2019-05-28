@@ -24,9 +24,12 @@ def _add_test(ctx):
     # Test zero- and one-argument behavior.
     asserts.equals(env, {}, dicts.add())
     asserts.equals(env, {"a": 1}, dicts.add({"a": 1}))
+    asserts.equals(env, {"a": 1}, dicts.add(a = 1))
+    asserts.equals(env, {"a": 1, "b": 2}, dicts.add({"a": 1}, b = 2))
 
     # Test simple two-argument behavior.
     asserts.equals(env, {"a": 1, "b": 2}, dicts.add({"a": 1}, {"b": 2}))
+    asserts.equals(env, {"a": 1, "b": 2, "c": 3}, dicts.add({"a": 1}, {"b": 2}, c = 3))
 
     # Test simple more-than-two-argument behavior.
     asserts.equals(
@@ -34,20 +37,33 @@ def _add_test(ctx):
         {"a": 1, "b": 2, "c": 3, "d": 4},
         dicts.add({"a": 1}, {"b": 2}, {"c": 3}, {"d": 4}),
     )
+    asserts.equals(
+        env,
+        {"a": 1, "b": 2, "c": 3, "d": 4, "e": 5},
+        dicts.add({"a": 1}, {"b": 2}, {"c": 3}, {"d": 4}, e = 5),
+    )
 
     # Test same-key overriding.
     asserts.equals(env, {"a": 100}, dicts.add({"a": 1}, {"a": 100}))
+    asserts.equals(env, {"a": 100}, dicts.add({"a": 1}, a = 100))
     asserts.equals(env, {"a": 10}, dicts.add({"a": 1}, {"a": 100}, {"a": 10}))
+    asserts.equals(env, {"a": 10}, dicts.add({"a": 1}, {"a": 100}, a = 10))
     asserts.equals(
         env,
         {"a": 100, "b": 10},
         dicts.add({"a": 1}, {"a": 100}, {"b": 10}),
     )
     asserts.equals(env, {"a": 10}, dicts.add({"a": 1}, {}, {"a": 10}))
+    asserts.equals(env, {"a": 10}, dicts.add({"a": 1}, {}, a = 10))
     asserts.equals(
         env,
         {"a": 10, "b": 5},
         dicts.add({"a": 1}, {"a": 10, "b": 5}),
+    )
+    asserts.equals(
+        env,
+        {"a": 10, "b": 5},
+        dicts.add({"a": 1}, a = 10, b = 5),
     )
 
     # Test some other boundary cases.

@@ -32,7 +32,7 @@ def _with_or_test(ctx):
     or_dict = {(":foo", ":bar"): ":d1"}
     asserts.equals(
         env,
-        {":foo": ":d1", ":bar": ":d1"},
+        {":bar": ":d1", ":foo": ":d1"},
         selects.with_or_dict(or_dict),
     )
 
@@ -45,9 +45,9 @@ def _with_or_test(ctx):
     asserts.equals(
         env,
         {
-            ":foo": ":d1",
             ":bar": ":d2",
             ":baz": ":d2",
+            ":foo": ":d1",
             "//conditions:default": ":d3",
         },
         selects.with_or_dict(mixed_dict),

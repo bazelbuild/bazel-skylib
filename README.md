@@ -1,6 +1,5 @@
 # Skylib
 
-[![Build Status](https://travis-ci.org/bazelbuild/bazel-skylib.svg?branch=master)](https://travis-ci.org/bazelbuild/bazel-skylib)
 [![Build status](https://badge.buildkite.com/921dc61e2d3a350ec40efb291914360c0bfa9b6196fa357420.svg)](https://buildkite.com/bazel/bazel-skylib)
 
 Skylib is a standard library that provides functions useful for manipulating
@@ -14,6 +13,8 @@ Each of the `.bzl` files in the `lib` directory defines a "module"&mdash;a
 `struct` that contains a set of related functions and/or other symbols that can
 be loaded as a single unit, for convenience.
 
+Skylib also provides build rules under the `rules` directory.
+
 ## Getting Started
 
 ### `WORKSPACE` file
@@ -23,10 +24,13 @@ your workspace. Replace the version number in the `tag` attribute with the
 version you wish to depend on:
 
 ```python
-git_repository(
+# bazel-skylb 0.8.0 released 2019.03.20 (https://github.com/bazelbuild/bazel-skylib/releases/tag/0.8.0)
+skylib_version = "0.8.0"
+http_archive(
     name = "bazel_skylib",
-    remote = "https://github.com/bazelbuild/bazel-skylib.git",
-    tag = "0.1.0",  # change this to use a different release
+    type = "tar.gz",
+    url = "https://github.com/bazelbuild/bazel-skylib/releases/download/{}/bazel-skylib.{}.tar.gz".format (skylib_version, skylib_version),
+    sha256 = "2ef429f5d7ce7111263289644d233707dba35e39696377ebab8b0bc701f7818e",
 )
 ```
 
@@ -55,18 +59,24 @@ s = shell.quote(p)
 
 ## List of modules (in lib/)
 
-* [collections](lib/collections.bzl)
-* [dicts](lib/dicts.bzl)
-* [partial](lib/partial.bzl)
-* [paths](lib/paths.bzl)
-* [selects](lib/selects.bzl)
+* [collections](docs/collections_doc.md)
+* [dicts](docs/dicts_doc.md)
+* [partial](docs/partial_doc.md)
+* [paths](docs/paths_doc.md)
+* [selects](docs/selects_doc.md)
 * [sets](lib/sets.bzl) - _deprecated_, use `new_sets`
-* [new_sets](lib/new_sets.bzl)
-* [shell](lib/shell.bzl)
-* [structs](lib/structs.bzl)
-* [types](lib/types.bzl)
-* [unittest](lib/unittest.bzl)
-* [versions](lib/versions.bzl)
+* [new_sets](docs/new_sets_doc.md)
+* [shell](docs/shell_doc.md)
+* [structs](docs/structs_doc.md)
+* [types](docs/types_doc.md)
+* [unittest](docs/unittest_doc.md)
+* [versions](docs/versions_doc.md)
+
+## List of rules (in rules/)
+
+* [analysis_test](docs/analysis_test_doc.md)
+* [build_test](docs/build_test_doc.md)
+* [`cmd_maprule` and `bash_maprule`](docs/maprule_doc.md)
 
 ## Writing a new module
 

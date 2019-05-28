@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for sets.bzl."""
+"""Unit tests for old_sets.bzl."""
 
-load("//lib:sets.bzl", "sets")
+load("//lib:old_sets.bzl", "sets")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
 def _is_equal_test(ctx):
@@ -140,10 +140,10 @@ def _difference_test(ctx):
 
 difference_test = unittest.make(_difference_test)
 
-def sets_test_suite():
-    """Creates the test targets and test suite for sets.bzl tests."""
+def old_sets_test_suite():
+    """Creates the test targets and test suite for old_sets.bzl tests."""
     unittest.suite(
-        "sets_tests",
+        "old_sets_tests",
         disjoint_test,
         intersection_test,
         is_equal_test,
