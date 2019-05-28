@@ -37,7 +37,8 @@ def copy_cmd(ctx, src, dst):
         is_executable = True,
     )
     ctx.actions.run(
-        inputs = [src, bat],
+        inputs = [src],
+        tools = [bat],
         outputs = [dst],
         executable = "cmd.exe",
         arguments = ["/C", bat.path.replace("/", "\\")],
