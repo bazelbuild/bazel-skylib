@@ -20,7 +20,7 @@ assertions used to within tests.
 """
 
 load(":new_sets.bzl", new_sets = "sets")
-load(":sets.bzl", "sets")
+load(":old_sets.bzl", "sets")
 load(":types.bzl", "types")
 
 # The following function should only be called from WORKSPACE files and workspace macros.
