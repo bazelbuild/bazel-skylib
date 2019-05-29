@@ -12,10 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Common build setting rules that return a BuildSettingInfo with the value of the build setting.
-For label-typed settings, use the native label_flag and label_setting rules."""
+"""Common build setting rules
 
-BuildSettingInfo = provider(fields = ["value"])
+These rules return a BuildSettingInfo with the value of the build setting.
+For label-typed settings, use the native label_flag and label_setting rules.
+
+More documentation on how to use build settings at
+https://docs.bazel.build/versions/master/skylark/config.html#user-defined-build-settings
+"""
+
+BuildSettingInfo = provider(
+    doc = """A singleton provider that contains the raw value of a build setting""",
+    fields = ["value"]
+)
 
 def _impl(ctx):
     return BuildSettingInfo(value = ctx.build_setting_value)
@@ -23,39 +32,65 @@ def _impl(ctx):
 int_flag = rule(
     implementation = _impl,
     build_setting = config.int(flag = True),
+    doc = """An int-typed build setting that is user settable""",
 )
 
 int_setting = rule(
     implementation = _impl,
     build_setting = config.int(),
+    doc = """An int-typed build setting that is not user settable""",
+
 )
 
 bool_flag = rule(
     implementation = _impl,
     build_setting = config.bool(flag = True),
+    doc = """A bool-typed build setting that is user settable""",
 )
 
 bool_setting = rule(
     implementation = _impl,
     build_setting = config.bool(),
-)
-
-string_flag = rule(
-    implementation = _impl,
-    build_setting = config.bool(flag = True),
-)
-
-string_setting = rule(
-    implementation = _impl,
-    build_setting = config.bool(),
+    doc = """A bool-typed build setting that is not user settable""",
 )
 
 string_list_flag = rule(
     implementation = _impl,
     build_setting = config.bool(flag = True),
+    doc = """A string list-typed build setting that is user settable""",
 )
 
 string_list_setting = rule(
     implementation = _impl,
     build_setting = config.bool(),
+    doc = """A string list-typed build setting that is not user settable""",
+)
+
+def _string_impl(ctx):
+    allowed_values = ctx.attr.values
+    value = ctx.build_setting_value
+    if len(allowed_values) == 0 or value in ctx.attr.values
+        return BuildSettingInfo(value = value)
+    else:
+        fail(ctx.label + ": invalid value " + value + ". Allowed values are " + allowed_values)
+        
+
+string_flag = rule(
+    implementation = _string_impl,
+    build_setting = config.bool(flag = True),
+    attrs = {
+        "values" : attr.string_list(
+            doc = "The list of allowed values for this setting. An error is raised if any other value is given."
+        )},
+    doc = """A string-typed build setting that is user settable""",
+)
+
+string_setting = rule(
+    implementation = _string_impl,
+    build_setting = config.bool(),
+    attrs = {
+    "values" : attr.string_list(
+        doc = "The list of allowed values for this setting. An error is raised if any other value is given."
+    )},
+    doc = """A string-typed build setting that is not user settable""",
 )
