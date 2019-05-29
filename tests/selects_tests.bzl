@@ -538,8 +538,18 @@ def _or_config_setting_group_single_setting_fails_test():
 # empty_config_setting_group_not_allowed_test
 ###################################################
 
-# config_setting_group with no parameters trigers a failure.
-# TODO: how do we test this?
+# config_setting_group with no parameters triggers a failure.
+# TODO: how do we test this? This requires catching macro
+# evaluation failure.
+
+###################################################
+# and_and_or_not_allowed_together_test
+###################################################
+
+# config_setting_group: setting both match_any and match_or
+# triggers a failure.
+# TODO: how do we test this? This requires catching macro
+# evaluation failure.
 
 ###################################################
 
@@ -572,3 +582,4 @@ def selects_test_suite():
     _or_config_setting_group_single_setting_fails_test()
 
     # _empty_config_setting_group_not_allowed_test()
+    # _and_and_or_not_allowed_together_test()
