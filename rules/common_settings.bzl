@@ -69,7 +69,7 @@ string_list_setting = rule(
 def _string_impl(ctx):
     allowed_values = ctx.attr.values
     value = ctx.build_setting_value
-    if len(allowed_values) == 0 or value in ctx.attr.values
+    if len(allowed_values) == 0 or value in ctx.attr.values:
         return BuildSettingInfo(value = value)
     else:
         fail(ctx.label + ": invalid value " + value + ". Allowed values are " + allowed_values)
