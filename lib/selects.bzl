@@ -87,6 +87,8 @@ def _config_setting_group(name, match_any = [], match_all = []):
           member in the list matches. If this is set, `match_any` must be not
           set.
 
+    Exactly one of match_any or match_all must be non-empty.
+
     Example:
 
       ```build
