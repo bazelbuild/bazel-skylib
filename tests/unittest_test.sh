@@ -58,6 +58,7 @@ load("//lib:unittest.bzl", "register_unittest_toolchains")
 register_unittest_toolchains()
 EOF
 
+  # Copy relevant skylib sources into the current workspace.
   mkdir -p tests
   touch tests/BUILD
   cat > tests/BUILD <<EOF
@@ -77,6 +78,10 @@ EOF
   ln -sf "$(rlocation bazel_skylib/lib/types.bzl)" lib/types.bzl
   ln -sf "$(rlocation bazel_skylib/lib/unittest.bzl)" lib/unittest.bzl
 
+  mkdir -p toolchains/unittest
+  ln -sf "$(rlocation bazel_skylib/toolchains/unittest/BUILD)" toolchains/unittest/BUILD
+
+  # Create test files.
   mkdir -p testdir
   cat > testdir/BUILD <<EOF
 load("//tests:unittest_tests.bzl",
@@ -97,9 +102,6 @@ fail_unexpected_passing_fake_rule(
     name = "fail_unexpected_passing_fake_target",
     tags = ["manual"])
 EOF
-
-  mkdir -p toolchains/unittest
-  ln -sf "$(rlocation bazel_skylib/toolchains/unittest/BUILD)" toolchains/unittest/BUILD
 }
 
 function test_basic_passing_test() {
