@@ -22,7 +22,7 @@ https://docs.bazel.build/versions/master/skylark/config.html#user-defined-build-
 """
 
 BuildSettingInfo = provider(
-    doc = """A singleton provider that contains the raw value of a build setting""",
+    doc = "A singleton provider that contains the raw value of a build setting",
     fields = ["value"]
 )
 
@@ -32,38 +32,37 @@ def _impl(ctx):
 int_flag = rule(
     implementation = _impl,
     build_setting = config.int(flag = True),
-    doc = """An int-typed build setting that is user settable""",
+    doc = "An int-typed build setting that can be set on the command line",
 )
 
 int_setting = rule(
     implementation = _impl,
     build_setting = config.int(),
-    doc = """An int-typed build setting that is not user settable""",
-
+    doc = "An int-typed build setting that cannot be set on the command line",
 )
 
 bool_flag = rule(
     implementation = _impl,
     build_setting = config.bool(flag = True),
-    doc = """A bool-typed build setting that is user settable""",
+    doc = "A bool-typed build setting that can be set on the command line",
 )
 
 bool_setting = rule(
     implementation = _impl,
     build_setting = config.bool(),
-    doc = """A bool-typed build setting that is not user settable""",
+    doc = "A bool-typed build setting that cannot be set on the command line",
 )
 
 string_list_flag = rule(
     implementation = _impl,
-    build_setting = config.bool(flag = True),
-    doc = """A string list-typed build setting that is user settable""",
+    build_setting = config.string_list(flag = True),
+    doc = "A string list-typed build setting that can be set on the command line",
 )
 
 string_list_setting = rule(
     implementation = _impl,
-    build_setting = config.bool(),
-    doc = """A string list-typed build setting that is not user settable""",
+    build_setting = config.string_list(),
+    doc = "A string list-typed build setting that cannot be set on the command line",
 )
 
 def _string_impl(ctx):
@@ -72,25 +71,24 @@ def _string_impl(ctx):
     if len(allowed_values) == 0 or value in ctx.attr.values:
         return BuildSettingInfo(value = value)
     else:
-        fail(ctx.label + ": invalid value " + value + ". Allowed values are " + allowed_values)
-        
+      fail("Error setting "+ str(ctx.label) + ": invalid value '" + value + "'. Allowed values are " + str(allowed_values))
 
 string_flag = rule(
     implementation = _string_impl,
-    build_setting = config.bool(flag = True),
+    build_setting = config.string(flag = True),
     attrs = {
         "values" : attr.string_list(
             doc = "The list of allowed values for this setting. An error is raised if any other value is given."
         )},
-    doc = """A string-typed build setting that is user settable""",
+    doc = "A string-typed build setting that can be set on the command line",
 )
 
 string_setting = rule(
     implementation = _string_impl,
-    build_setting = config.bool(),
+    build_setting = config.string(),
     attrs = {
     "values" : attr.string_list(
         doc = "The list of allowed values for this setting. An error is raised if any other value is given."
     )},
-    doc = """A string-typed build setting that is not user settable""",
+    doc = "A string-typed build setting that cannot be set on the command line",
 )
