@@ -92,12 +92,31 @@ load(
 )
 load("//volcano:rules.bzl", "volcano")
 
-int_flag(name = "height-flag", build_setting_default = 9677) # pre-1980 explosion
-bool_flag(name = "active-flag", build_setting_default = True)
-string_flag(name = "namer-flag", build_setting_default = "cpt-george-vancouver", values = ["cpt-george-vancouver", "puyallup-tribe"])
-string_list_flag(name = "nicknames-flag", build_setting_default = ["loowit", "loowitiatkla", "lavelatla"])
+int_flag(
+  name = "height-flag",
+  build_setting_default = 9677 # pre-1980 explosion
+)
 
-int_setting(name = "height-setting", build_setting_default = 9677)
+bool_flag(
+  name = "active-flag",
+  build_setting_default = True
+)
+
+string_flag(
+  name = "namer-flag",
+  build_setting_default = "cpt-george-vancouver",
+  values = ["cpt-george-vancouver", "puyallup-tribe"]
+)
+
+string_list_flag(
+  name = "nicknames-flag",
+  build_setting_default = ["loowit", "loowitiatkla", "lavelatla"]
+)
+
+int_setting(
+  name = "height-setting",
+  build_setting_default = 9677
+)
 
 volcano(
   name = "mt-st-helens",
@@ -115,7 +134,8 @@ function test_can_set_flags() {
   create_volcano_pkg "$pkg"
 
   bazel build volcano:mt-st-helens --experimental_build_setting_api --//volcano:height-flag=8366 \
-    --//volcano:active-flag=False --//volcano:namer-flag=puyallup-tribe --//volcano:nicknames-flag=volcano-mc-volcanoface \
+    --//volcano:active-flag=False --//volcano:namer-flag=puyallup-tribe \
+    --//volcano:nicknames-flag=volcano-mc-volcanoface \
     >"$TEST_log" 2>&1 || fail "Expected test to pass"
 
   expect_log "active = False"
