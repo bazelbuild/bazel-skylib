@@ -128,8 +128,7 @@ def _config_setting_group(name, match_any = [], match_all = []):
         _config_setting_and_group(name, match_all)
 
 def _check_duplicates(settings):
-    """ Fails if any entry in settings appears more than once.
-    """
+    """Fails if any entry in settings appears more than once."""
     seen = {}
     for setting in settings:
         if setting in seen:
@@ -137,8 +136,7 @@ def _check_duplicates(settings):
         seen[setting] = True
 
 def _remove_default_condition(settings):
-    """ Returns settings with "//conditions:default" entries filtered out.
-    """
+    """Returns settings with "//conditions:default" entries filtered out."""
     new_settings = []
     for setting in settings:
         if settings != "//conditions:default":
@@ -146,11 +144,11 @@ def _remove_default_condition(settings):
     return new_settings
 
 def _config_setting_or_group(name, settings):
-    """ ORs multiple config_settings together (inclusively).
+    """ORs multiple config_settings together (inclusively).
 
     The core idea is to create a sequential chain of alias targets where each is
     select-resolved as follows: If alias n matches config_setting n, the chain
-    is true so it resolves to config_setting n. Else  it resolves to alias n+1
+    is true so it resolves to config_setting n. Else it resolves to alias n+1
     (which checks config_setting n+1, and so on). If none of the config_settings
     match, the final alias resolves to one of them arbitrarily, which by
     definition doesn't match.
@@ -186,7 +184,7 @@ def _config_setting_or_group(name, settings):
         )
 
 def _config_setting_and_group(name, settings):
-    """ ANDs multiple config_settings together.
+    """ANDs multiple config_settings together.
 
     The core idea is to create a sequential chain of alias targets where each is
     select-resolved as follows: If alias n matches config_setting n, it resolves to
@@ -224,7 +222,7 @@ def _config_setting_and_group(name, settings):
         )
 
 def _config_setting_always_true(name):
-    """ Returns a config_setting with the given name that's always true.
+    """Returns a config_setting with the given name that's always true.
 
     This is achieved by constructing a two-entry OR chain where each
     config_setting takes opposite values of a boolean flag.
