@@ -24,7 +24,7 @@ your workspace. Replace the version number in the `tag` attribute with the
 version you wish to depend on:
 
 ```python
-# bazel-skylb 0.8.0 released 2019.03.20 (https://github.com/bazelbuild/bazel-skylib/releases/tag/0.8.0)
+# bazel-skylib 0.8.0 released 2019.03.20 (https://github.com/bazelbuild/bazel-skylib/releases/tag/0.8.0)
 skylib_version = "0.8.0"
 http_archive(
     name = "bazel_skylib",
