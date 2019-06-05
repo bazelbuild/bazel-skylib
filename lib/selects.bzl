@@ -168,35 +168,22 @@ def _config_setting_or_group(name, settings):
         )
         return
 
-    # First alias adopts the core name so user references start here.
-    native.alias(
-        name = name,
-        actual = select({
-            settings[0]: settings[0],
-            "//conditions:default": name + "_2",
-        }),
-    )
+    # We need n-1 aliases for n settings. The first alias has no extension. The
+    # second alias is named name + "_2", and so on. For the first n-2 aliases,
+    # if they don't match they reference the next alias over. If the n-1st alias
+    # doesn't match, it references the final setting (which is then evaluated
+    # directly to determine the final value of the AND chain).
+    actual = [name + "_" + str(i) for i in range(2, len(settings))]
+    actual.append(settings[-1])
 
-    # Second through (n-2)nd aliases:
-    for i in range(2, len(settings) - 1):
-        cur_setting = settings[i - 1]
+    for i in range(1, len(settings)):
         native.alias(
-            name = name + "_" + str(i),
+            name = name if i == 1 else name + "_" + str(i),
             actual = select({
-                cur_setting: cur_setting,
-                "//conditions:default": name + "_" + str(i + 1),
+                settings[i - 1]: settings[i - 1],
+                "//conditions:default": actual[i - 1],
             }),
         )
-
-    # (n-1)st alias: if true it can resolve directly to the final config_setting
-    # (which doesn't need an equivalent alias).
-    native.alias(
-        name = name + "_" + str(len(settings) - 1),
-        actual = select({
-            settings[-2]: settings[-2],
-            "//conditions:default": settings[-1],
-        }),
-    )
 
 def _config_setting_and_group(name, settings):
     """ ANDs multiple config_settings together.
@@ -219,35 +206,22 @@ def _config_setting_and_group(name, settings):
         )
         return
 
-    # First alias adopts the core name so user references start here.
-    native.alias(
-        name = name,
-        actual = select({
-            settings[0]: name + "_2",
-            "//conditions:default": settings[0],
-        }),
-    )
+    # We need n-1 aliases for n settings. The first alias has no extension. The
+    # second alias is named name + "_2", and so on. For the first n-2 aliases,
+    # if they match they reference the next alias over. If the n-1st alias matches,
+    # it references the final setting (which is then evaluated directly to determine
+    # the final value of the AND chain).
+    actual = [name + "_" + str(i) for i in range(2, len(settings))]
+    actual.append(settings[-1])
 
-    # Second through (n-2)nd aliases:
-    for i in range(2, len(settings) - 1):
-        cur_setting = settings[i - 1]
+    for i in range(1, len(settings)):
         native.alias(
-            name = name + "_" + str(i),
+            name = name if i == 1 else name + "_" + str(i),
             actual = select({
-                cur_setting: name + "_" + str(i + 1),
-                "//conditions:default": cur_setting,
+                settings[i - 1]: actual[i - 1],
+                "//conditions:default": settings[i - 1],
             }),
         )
-
-    # (n-1)st alias: if true it can resolve directly to the final config_setting
-    # (which doesn't need an equivalent alias).
-    native.alias(
-        name = name + "_" + str(len(settings) - 1),
-        actual = select({
-            settings[-2]: settings[-1],
-            "//conditions:default": settings[-2],
-        }),
-    )
 
 def _config_setting_always_true(name):
     """ Returns a config_setting with the given name that's always true.
