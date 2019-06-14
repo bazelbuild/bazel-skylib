@@ -85,6 +85,17 @@ sh_test(
     tags = ["local"],
 )
 
+sh_test(
+    name = "common_settings_e2e_test",
+    srcs = ["common_settings_test.sh"],
+    data = [
+        ":unittest.bash",
+        "//rules:common_settings.bzl",
+        "@bazel_tools//tools/bash/runfiles",
+    ],
+    tags = ["local"],
+)
+
 shell_args_test_gen(
     name = "shell_spawn_e2e_test_src",
 )
