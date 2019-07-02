@@ -17,13 +17,6 @@
 def _with_or(input_dict, no_match_error = ""):
     """Drop-in replacement for `select()` that supports ORed keys.
 
-    Args:
-      input_dict: The same dictionary `select()` takes, except keys may take
-          either the usual form `"//foo:config1"` or
-          `("//foo:config1", "//foo:config2", ...)` to signify
-          `//foo:config1` OR `//foo:config2` OR `...`.
-      no_match_error: Optional custom error to report if no condition matches.
-
     Example:
 
           ```build
@@ -36,6 +29,13 @@ def _with_or(input_dict, no_match_error = ""):
           ```
 
           Key labels may appear at most once anywhere in the input.
+
+    Args:
+      input_dict: The same dictionary `select()` takes, except keys may take
+          either the usual form `"//foo:config1"` or
+          `("//foo:config1", "//foo:config2", ...)` to signify
+          `//foo:config1` OR `//foo:config2` OR `...`.
+      no_match_error: Optional custom error to report if no condition matches.
 
     Returns:
       A native `select()` that expands
@@ -79,16 +79,6 @@ def _with_or_dict(input_dict):
 def _config_setting_group(name, match_any = [], match_all = []):
     """Matches if all or any of its member `config_setting`s match.
 
-    Args:
-      name: The group's name. This is how `select()`s reference it.
-      match_any: A list of `config_settings`. This group matches if *any* member
-          in the list matches. If this is set, `match_all` must not be set.
-      match_all: A list of `config_settings`. This group matches if *every*
-          member in the list matches. If this is set, `match_any` must be not
-          set.
-
-    Exactly one of match_any or match_all must be non-empty.
-
     Example:
 
       ```build
@@ -109,6 +99,14 @@ def _config_setting_group(name, match_any = [], match_all = []):
               "//conditions:default": [":default_deps"]
           })
       ```
+
+    Args:
+      name: The group's name. This is how `select()`s reference it.
+      match_any: A list of `config_settings`. This group matches if *any* member
+          in the list matches. If this is set, `match_all` must not be set.
+      match_all: A list of `config_settings`. This group matches if *every*
+          member in the list matches. If this is set, `match_any` must be not
+          set.
     """
     empty1 = not bool(len(match_any))
     empty2 = not bool(len(match_all))
