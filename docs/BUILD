@@ -128,3 +128,11 @@ stardoc(
     input = "//rules:run_binary.bzl",
     deps = ["//rules:run_binary"],
 )
+
+stardoc(
+    name = "common_settings_docs",
+    out = "common_settings_doc_gen.md",
+    input = "//rules:common_settings.bzl",
+    deps = ["//rules:common_settings"],
+    semantic_flags = ["--experimental_build_setting_api=True"],
+)
