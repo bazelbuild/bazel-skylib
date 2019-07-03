@@ -39,6 +39,11 @@ bzl_library(
     deps = ["//lib:dicts"],
 )
 
+bzl_library(
+    name = "common_settings",
+    srcs = ["common_settings.bzl"],
+)
+
 # Exported for build_test.bzl to make sure of, it is an implementation detail
 # of the rule and should not be directly used by anything else.
 exports_files(["empty_test.sh"])
