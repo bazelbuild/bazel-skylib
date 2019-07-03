@@ -287,7 +287,7 @@ A singleton provider that contains the raw value of a build setting
     <tr id="BuildSettingInfo-value">
       <td><code>value</code></td>
       <td>
-        <p>(Undocumented)</p>
+        <p>The value of the build setting in the current configuration. This value may come from the command line or an upstream transition, or else it will be the build setting's default.</p>
       </td>
     </tr>
   </tbody>
