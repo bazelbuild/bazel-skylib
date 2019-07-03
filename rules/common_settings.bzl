@@ -23,7 +23,7 @@ https://docs.bazel.build/versions/master/skylark/config.html#user-defined-build-
 
 BuildSettingInfo = provider(
     doc = "A singleton provider that contains the raw value of a build setting",
-    fields = ["value"]
+    fields = {"value": "raw value of build settings from command line or default"}
 )
 
 def _impl(ctx):
