@@ -76,7 +76,7 @@ def _with_or_dict(input_dict):
             output_dict[key] = value
     return output_dict
 
-def _config_setting_group(name, match_any = [], match_all = []):
+def _config_setting_group(name, match_any = [], match_all = [], visibility = None):
     """Matches if all or any of its member `config_setting`s match.
 
     Example:
@@ -107,6 +107,7 @@ def _config_setting_group(name, match_any = [], match_all = []):
       match_all: A list of `config_settings`. This group matches if *every*
           member in the list matches. If this is set, `match_any` must be not
           set.
+      visibility: Visibiliity of the main alias used.
     """
     empty1 = not bool(len(match_any))
     empty2 = not bool(len(match_all))
@@ -119,11 +120,11 @@ def _config_setting_group(name, match_any = [], match_all = []):
         (len(match_all) == 1 and match_all[0] == "//conditions:default")):
         # If the only entry is "//conditions:default", the condition is
         # automatically true.
-        _config_setting_always_true(name)
+        _config_setting_always_true(name, visibility)
     elif not empty1:
-        _config_setting_or_group(name, match_any)
+        _config_setting_or_group(name, match_any, visibility)
     else:
-        _config_setting_and_group(name, match_all)
+        _config_setting_and_group(name, match_all, visibility)
 
 def _check_duplicates(settings):
     """Fails if any entry in settings appears more than once."""
@@ -141,7 +142,7 @@ def _remove_default_condition(settings):
             new_settings.append(setting)
     return new_settings
 
-def _config_setting_or_group(name, settings):
+def _config_setting_or_group(name, settings, visibility):
     """ORs multiple config_settings together (inclusively).
 
     The core idea is to create a sequential chain of alias targets where each is
@@ -154,13 +155,14 @@ def _config_setting_or_group(name, settings):
 
     # "//conditions:default" is present, the whole chain is automatically true.
     if len(_remove_default_condition(settings)) < len(settings):
-        _config_setting_always_true(name)
+        _config_setting_always_true(name, visibility)
         return
 
     elif len(settings) == 1:  # One entry? Just alias directly to it.
         native.alias(
             name = name,
             actual = settings[0],
+            visibility = visibility,
         )
         return
 
@@ -179,9 +181,10 @@ def _config_setting_or_group(name, settings):
                 settings[i - 1]: settings[i - 1],
                 "//conditions:default": actual[i - 1],
             }),
+            visibility = visibility if i == 1 else ["//visibility:private"],
         )
 
-def _config_setting_and_group(name, settings):
+def _config_setting_and_group(name, settings, visibility):
     """ANDs multiple config_settings together.
 
     The core idea is to create a sequential chain of alias targets where each is
@@ -199,6 +202,7 @@ def _config_setting_and_group(name, settings):
         native.alias(
             name = name,
             actual = settings[0],
+            visibility = visibility,
         )
         return
 
@@ -217,9 +221,10 @@ def _config_setting_and_group(name, settings):
                 settings[i - 1]: actual[i - 1],
                 "//conditions:default": settings[i - 1],
             }),
+            visibility = visibility if i == 1 else ["//visibility:private"],
         )
 
-def _config_setting_always_true(name):
+def _config_setting_always_true(name, visibility):
     """Returns a config_setting with the given name that's always true.
 
     This is achieved by constructing a two-entry OR chain where each
@@ -235,7 +240,7 @@ def _config_setting_always_true(name):
         name = name_off,
         values = {"stamp": False},
     )
-    return _config_setting_or_group(name, [":" + name_on, ":" + name_off])
+    return _config_setting_or_group(name, [":" + name_on, ":" + name_off], visibility)
 
 selects = struct(
     with_or = _with_or,
