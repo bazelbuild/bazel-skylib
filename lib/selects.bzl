@@ -107,7 +107,7 @@ def _config_setting_group(name, match_any = [], match_all = [], visibility = Non
       match_all: A list of `config_settings`. This group matches if *every*
           member in the list matches. If this is set, `match_any` must be not
           set.
-      visibility: Visibiliity of the main alias used.
+      visibility: Visibility of the config_setting_group.
     """
     empty1 = not bool(len(match_any))
     empty2 = not bool(len(match_all))
