@@ -47,3 +47,15 @@ bzl_library(
     name = "bzl_library",
     srcs = ["bzl_library.bzl"],
 )
+
+# This target represents the files needed for pure users of the package.
+filegroup(
+    name = "standard_package",
+    srcs = glob(["BUILD", "LICENSE", "AUTHORS", "*.bzl", "*.py", "*.md",
+                 "docs/**", "lib/**", "tests/**"]) + [
+        "@bazel_skylib//rules:distribution",
+        # "toolchains:distribution"",
+    ],
+    # This is not working, for reasons I do not have time to explore today.
+    # visibility = ["@bazel_skylib//distribution:__pkg__"],
+)

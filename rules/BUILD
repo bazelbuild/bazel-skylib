@@ -56,3 +56,13 @@ filegroup(
         "empty_test.sh",
     ] + glob(["*.bzl"]),
 )
+
+# The files needed for distribution
+filegroup(
+    name = "distribution",
+    srcs = glob(["*"]),
+    visibility = [
+        "@bazel_skylib//:__pkg__",
+        "@bazel_skylib//distribution:__pkg__",
+    ],
+)
