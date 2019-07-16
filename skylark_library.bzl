@@ -20,8 +20,8 @@ Deprecated:
 
 load("//:bzl_library.bzl", "StarlarkLibraryInfo", "bzl_library")
 
-print(
-    "WARNING: skylark_library.bzl is deprecated and will go away in the future, please" +
+fail(
+    "skylark_library.bzl is deprecated and no longer supported. Please" +
     " use bzl_library.bzl instead.",
 )
 

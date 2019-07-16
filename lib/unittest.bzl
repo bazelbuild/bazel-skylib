@@ -335,7 +335,6 @@ def _fail(env, msg):
       msg: The message to log describing the failure.
     """
     full_msg = "In test %s: %s" % (env.ctx.attr._impl_name, msg)
-    print(full_msg)
     env.failures.append(full_msg)
 
 def _assert_true(
