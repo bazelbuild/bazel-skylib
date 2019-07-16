@@ -28,7 +28,7 @@ load("//lib:unittest.bzl", _asserts = "asserts", _unittest = "unittest")
 load("//lib:versions.bzl", _versions = "versions")
 
 fail(
-    "WARNING: lib.bzl is deprecated and will go away in the future, please" +
+    "lib.bzl is deprecated and no longer supported. Please" +
     " directly load the bzl file(s) of the module(s) needed as it is more" +
     " efficient.",
 )
