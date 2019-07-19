@@ -9,9 +9,10 @@ tasks:
     build_flags:
     - "--incompatible_remap_main_repo"
     test_targets:
-    - "//..."
+    - "//..."    
     test_flags:
     - "--test_env=PATH"
+    - "--incompatible_remap_main_repo"    
 
   ubuntu1604_latest:
     name: "Latest Bazel"
@@ -25,6 +26,7 @@ tasks:
     - "//..."
     test_flags:
     - "--test_env=PATH"
+    - "--incompatible_remap_main_repo"    
 
   macos_latest:
     name: "Latest Bazel"
@@ -38,6 +40,7 @@ tasks:
     - "//..."
     test_flags:
     - "--test_env=PATH"
+    - "--incompatible_remap_main_repo"    
 
   windows_latest:
     name: "Latest Bazel"
@@ -54,6 +57,7 @@ tasks:
     # TODO(laszlocsomor): remove "--test_env=LOCALAPPDATA" after
     # https://github.com/bazelbuild/bazel/issues/7761 is fixed
     - "--test_env=LOCALAPPDATA"
+    - "--incompatible_remap_main_repo"    
 
   ubuntu1804_last_green:
     name: "Last Green Bazel"
@@ -67,6 +71,7 @@ tasks:
     - "//..."
     test_flags:
     - "--test_env=PATH"
+    - "--incompatible_remap_main_repo"    
 
   ubuntu1604_last_green:
     name: "Last Green Bazel"
@@ -80,6 +85,7 @@ tasks:
     - "//..."
     test_flags:
     - "--test_env=PATH"
+    - "--incompatible_remap_main_repo"    
 
   macos_last_green:
     name: "Last Green Bazel"
@@ -93,6 +99,7 @@ tasks:
     - "//..."
     test_flags:
     - "--test_env=PATH"
+    - "--incompatible_remap_main_repo"    
 
   windows_last_green:
     name: "Last Green Bazel"
@@ -109,5 +116,6 @@ tasks:
     # TODO(laszlocsomor): remove "--test_env=LOCALAPPDATA" after
     # https://github.com/bazelbuild/bazel/issues/7761 is fixed
     - "--test_env=LOCALAPPDATA"
+    - "--incompatible_remap_main_repo"    
 
 buildifier: latest
