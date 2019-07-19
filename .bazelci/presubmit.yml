@@ -9,7 +9,7 @@ tasks:
     build_flags:
     - "--incompatible_remap_main_repo"
     test_targets:
-    - "//..."    
+    - "//..."
     test_flags:
     - "--test_env=PATH"
     - "--incompatible_remap_main_repo"    
