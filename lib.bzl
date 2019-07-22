@@ -15,7 +15,6 @@
 """Index from which multiple modules can be loaded."""
 
 fail(
-    "lib.bzl is deprecated and will go away in the future, please" +
-    " directly load the bzl file(s) of the module(s) needed as it is more" +
-    " efficient.",
+    "lib.bzl has been removed, please directly load the bzl file(s) of the" +
+    " module(s) needed as it is more efficient.",
 )
