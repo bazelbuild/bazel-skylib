@@ -14,38 +14,8 @@
 
 """Index from which multiple modules can be loaded."""
 
-load("//lib:collections.bzl", _collections = "collections")
-load("//lib:dicts.bzl", _dicts = "dicts")
-load("//lib:new_sets.bzl", _new_sets = "sets")
-load("//lib:partial.bzl", _partial = "partial")
-load("//lib:paths.bzl", _paths = "paths")
-load("//lib:selects.bzl", _selects = "selects")
-load("//lib:sets.bzl", _sets = "sets")
-load("//lib:shell.bzl", _shell = "shell")
-load("//lib:structs.bzl", _structs = "structs")
-load("//lib:types.bzl", _types = "types")
-load("//lib:unittest.bzl", _asserts = "asserts", _unittest = "unittest")
-load("//lib:versions.bzl", _versions = "versions")
-
-# There isn't a better way to issue warnings in Starlark, so use print.
-# buildifier: disable=print
-print(
-    "WARNING: lib.bzl is deprecated and will go away in the future, please" +
+fail(
+    "lib.bzl is deprecated and will go away in the future, please" +
     " directly load the bzl file(s) of the module(s) needed as it is more" +
     " efficient.",
 )
-
-collections = _collections
-dicts = _dicts
-new_sets = _new_sets
-partial = _partial
-paths = _paths
-selects = _selects
-sets = _sets
-shell = _shell
-structs = _structs
-types = _types
-versions = _versions
-
-asserts = _asserts
-unittest = _unittest

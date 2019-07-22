@@ -20,10 +20,8 @@ Deprecated:
 
 load("//:bzl_library.bzl", "StarlarkLibraryInfo", "bzl_library")
 
-# There isn't a better way to issue warnings in Starlark, so use print.
-# buildifier: disable=print
-print(
-    "WARNING: skylark_library.bzl is deprecated and will go away in the future, please" +
+fail(
+    "skylark_library.bzl is deprecated and will go away in the future, please" +
     " use bzl_library.bzl instead.",
 )
 
