@@ -254,6 +254,7 @@ def _is_set_test(ctx):
 
     asserts.true(env, sets.is_set(sets.make()))
     asserts.true(env, sets.is_set(sets.make([1])))
+    asserts.false(env, sets.is_set(None))
     asserts.false(env, sets.is_set({}))
     asserts.false(env, sets.is_set(struct(foo = 1)))
     asserts.false(env, sets.is_set(struct(_values = "not really values")))
