@@ -21,6 +21,7 @@
 """
 
 load(":dicts.bzl", "dicts")
+load(":types.bzl", "types")
 
 def _make(elements = None):
     """Creates a new set.
@@ -217,6 +218,19 @@ def _repr(s):
     """
     return repr(s._values.keys())
 
+_SET_TYPE = type(_make())
+
+def _is_set(v):
+    """Returns True if v is a set created by sets.make().
+
+    Args:
+      v: The value whose type should be checked.
+
+    Returns:
+      True if v was created by sets.make(), False otherwise.
+    """
+    return type(v) == _SET_TYPE and hasattr(v, "_values") and types.is_dict(v._values)
+
 sets = struct(
     make = _make,
     copy = _copy,
@@ -233,4 +247,5 @@ sets = struct(
     remove = _remove,
     repr = _repr,
     str = _repr,
+    is_set = _is_set,
 )
