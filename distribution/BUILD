@@ -10,8 +10,9 @@ load("@rules_pkg//releasing:defs.bzl", "print_rel_notes")
 pkg_tar(
     name = "bazel-skylib-%s" % version,
     srcs = [
-        "@bazel_skylib//:distribution",
+        "//:distribution",
     ],
+    strip_prefix = ".",
     extension = "tar.gz",
     # It is all source code, so make it read-only.
     mode = "0444",

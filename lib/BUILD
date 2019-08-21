@@ -84,7 +84,7 @@ filegroup(
     name = "distribution",
     srcs = glob(["*"]),
     visibility = [
-        "@bazel_skylib//:__pkg__",
-        "@bazel_skylib//distribution:__pkg__",
+        "//:__pkg__",
+        "//distribution:__pkg__",
     ],
 )

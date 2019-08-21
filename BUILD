@@ -57,7 +57,9 @@ filegroup(
     srcs = [
         "LICENSE",
         "BUILD",
-        "@bazel_skylib//lib:distribution",
-        "@bazel_skylib//rules:distribution",
+        "CODEOWNERS",
+        "CONTRIBUTORS",
+        "//lib:distribution",
+        "//rules:distribution",
     ] + glob(["*.bzl"]),
 )
