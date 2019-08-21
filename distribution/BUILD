@@ -10,7 +10,7 @@ load("@rules_pkg//releasing:defs.bzl", "print_rel_notes")
 pkg_tar(
     name = "bazel-skylib-%s" % version,
     srcs = [
-        "@bazel_skylib//:standard_package",
+        "@bazel_skylib//:distribution",
     ],
     extension = "tar.gz",
     # It is all source code, so make it read-only.
@@ -26,27 +26,3 @@ print_rel_notes(
     version = version,
     outs = ["relnotes.txt"],
 )
-
-"""
-py_test(
-    name = "packaging_test",
-    size = "large",
-    srcs = [
-        "packaging_test.py",
-    ],
-    data = [
-        ":rules_pkg-%s.tar.gz" % version,
-        "testdata/BUILD.tmpl",
-    ],
-    local = True,
-    python_version = "PY3",
-    tags = [
-        "no_windows",
-        "noci",
-    ],
-    deps = [
-        ":util",
-        "@bazel_tools//tools/python/runfiles",
-    ],
-)
-"""

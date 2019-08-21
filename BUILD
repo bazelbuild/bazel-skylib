@@ -47,3 +47,17 @@ bzl_library(
     name = "bzl_library",
     srcs = ["bzl_library.bzl"],
 )
+
+# The files needed for distribution.
+# TODO(aiuto): We should strip this from the release, but there is no
+# capability now to generate BUILD.foo from BUILD and have it appear in the
+# tarball as BUILD. 
+filegroup(
+    name = "distribution",
+    srcs = [
+        "LICENSE",
+        "BUILD",
+        "@bazel_skylib//lib:distribution",
+        "@bazel_skylib//rules:distribution",
+    ] + glob(["*.bzl"]),
+)
