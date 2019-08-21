@@ -1,4 +1,4 @@
-# Copyright 2017 The Bazel Authors. All rights reserved.
+# Copyright 2019 The Bazel Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Index from which multiple modules can be loaded."""
+"""Setup function that must be invoked before running skylib tests."""
 
-fail(
-    "lib.bzl has been removed, please directly load the bzl file(s) of the" +
-    " module(s) needed as it is more efficient.",
-)
+def bazel_skylib_internal_setup():
+    pass # placeholder function for the federation
