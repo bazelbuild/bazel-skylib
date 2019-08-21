@@ -4,27 +4,12 @@ package(
 
 load("@bazel_skylib//:version.bzl", "version")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
-
-py_binary(
-    name = "print_rel_notes",
-    srcs = [
-        "print_rel_notes.py",
-    ],
-    data = [
-        ":bazel_skylib-%s.tar.gz" % version,
-    ],
-    python_version = "PY3",
-    deps = [
-        ":util",
-        "@bazel_tools//tools/python/runfiles",
-    ],
-)
+load("@rules_pkg//releasing:defs.bzl", "print_rel_notes")
 
 # Build the artifact to put on the github release page.
 pkg_tar(
     name = "bazel-skylib-%s" % version,
     srcs = [
-        This is what I want
         "@bazel_skylib//:standard_package",
     ],
     extension = "tar.gz",
@@ -35,20 +20,14 @@ pkg_tar(
     package_dir = ".",
 )
 
-"""
-py_library(
-    name = "util",
-    srcs = [
-        "__init__.py",
-        "release_tools.py",
-        ":release_version.py",
-    ],
-    srcs_version = "PY3",
-    deps = [
-        "@bazel_tools//tools/python/runfiles",
-    ],
+print_rel_notes(
+    name = "relnotes",
+    repo = "bazel-skylib",
+    version = version,
+    outs = ["relnotes.txt"],
 )
 
+"""
 py_test(
     name = "packaging_test",
     size = "large",
@@ -70,11 +49,4 @@ py_test(
         "@bazel_tools//tools/python/runfiles",
     ],
 )
-
-genrule(
-    name = "version_as_py",
-    outs = ["release_version.py"],
-    cmd = "echo RELEASE_VERSION = \\'%s\\' >$@" % version
-)
 """
-

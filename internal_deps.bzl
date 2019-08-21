@@ -14,8 +14,14 @@
 
 """Dependencies that are needed for running skylib tests."""
 
-load("@bazel_federation//:repositories.bzl", "bazel", "bazel_stardoc")
+load(
+    "@bazel_federation//:repositories.bzl",
+    "bazel",
+    "bazel_stardoc",
+    "rules_pkg",
+)
 
 def bazel_skylib_internal_deps():
     bazel()
     bazel_stardoc()
+    rules_pkg()

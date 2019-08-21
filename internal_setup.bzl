@@ -14,5 +14,9 @@
 
 """Setup function that must be invoked before running skylib tests."""
 
+load("@bazel_federation//setup:bazel_stardoc.bzl", "bazel_stardoc_setup")
+load("@bazel_federation//setup:rules_pkg.bzl", "rules_pkg_setup")
+
 def bazel_skylib_internal_setup():
-    pass # placeholder function for the federation
+    bazel_stardoc_setup()
+    rules_pkg_setup()
