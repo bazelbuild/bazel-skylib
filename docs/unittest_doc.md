@@ -1,4 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
 <a name="#unittest_toolchain"></a>
+
 ## unittest_toolchain
 
 <pre>
@@ -51,6 +54,8 @@ unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unitte
   </tbody>
 </table>
 
+
+<a name="#analysistest.make"></a>
 
 ## analysistest.make
 
@@ -137,6 +142,8 @@ Recall that names of test rules must end in `_test`.
 </table>
 
 
+<a name="#analysistest.begin"></a>
+
 ## analysistest.begin
 
 <pre>
@@ -173,6 +180,8 @@ test.
 </table>
 
 
+<a name="#analysistest.end"></a>
+
 ## analysistest.end
 
 <pre>
@@ -205,6 +214,8 @@ that the results are reported.
   </tbody>
 </table>
 
+
+<a name="#analysistest.fail"></a>
 
 ## analysistest.fail
 
@@ -244,6 +255,8 @@ Unconditionally causes the current test to fail.
 </table>
 
 
+<a name="#analysistest.target_actions"></a>
+
 ## analysistest.target_actions
 
 <pre>
@@ -273,6 +286,8 @@ Returns a list of actions registered by the target under test.
 </table>
 
 
+<a name="#analysistest.target_under_test"></a>
+
 ## analysistest.target_under_test
 
 <pre>
@@ -301,6 +316,8 @@ Returns the target under test.
   </tbody>
 </table>
 
+
+<a name="#asserts.expect_failure"></a>
 
 ## asserts.expect_failure
 
@@ -343,6 +360,8 @@ This requires that the analysis test is created with `analysistest.make()` and
   </tbody>
 </table>
 
+
+<a name="#asserts.equals"></a>
 
 ## asserts.equals
 
@@ -401,6 +420,8 @@ Asserts that the given `expected` and `actual` values are equal.
 </table>
 
 
+<a name="#asserts.false"></a>
+
 ## asserts.false
 
 <pre>
@@ -448,6 +469,8 @@ Asserts that the given `condition` is false.
   </tbody>
 </table>
 
+
+<a name="#asserts.set_equals"></a>
 
 ## asserts.set_equals
 
@@ -506,6 +529,8 @@ Asserts that the given `expected` and `actual` sets are equal.
 </table>
 
 
+<a name="#asserts.new_set_equals"></a>
+
 ## asserts.new_set_equals
 
 <pre>
@@ -563,6 +588,8 @@ Asserts that the given `expected` and `actual` sets are equal.
 </table>
 
 
+<a name="#asserts.true"></a>
+
 ## asserts.true
 
 <pre>
@@ -611,6 +638,8 @@ Asserts that the given `condition` is true.
 </table>
 
 
+<a name="#register_unittest_toolchains"></a>
+
 ## register_unittest_toolchains
 
 <pre>
@@ -620,6 +649,8 @@ register_unittest_toolchains()
 Registers the toolchains for unittest users.
 
 
+
+<a name="#unittest.make"></a>
 
 ## unittest.make
 
@@ -683,6 +714,8 @@ Recall that names of test rules must end in `_test`.
   </tbody>
 </table>
 
+
+<a name="#unittest.suite"></a>
 
 ## unittest.suite
 
@@ -760,6 +793,8 @@ name each target.
 </table>
 
 
+<a name="#unittest.begin"></a>
+
 ## unittest.begin
 
 <pre>
@@ -796,6 +831,8 @@ test.
 </table>
 
 
+<a name="#unittest.end"></a>
+
 ## unittest.end
 
 <pre>
@@ -828,6 +865,8 @@ that the results are reported.
   </tbody>
 </table>
 
+
+<a name="#unittest.fail"></a>
 
 ## unittest.fail
 

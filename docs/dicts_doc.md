@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#dicts.add"></a>
+
 ## dicts.add
 
 <pre>

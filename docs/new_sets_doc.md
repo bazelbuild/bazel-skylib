@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#sets.make"></a>
+
 ## sets.make
 
 <pre>
@@ -30,6 +34,8 @@ All elements must be hashable.
 </table>
 
 
+<a name="#sets.copy"></a>
+
 ## sets.copy
 
 <pre>
@@ -59,6 +65,8 @@ Creates a new set from another set.
 </table>
 
 
+<a name="#sets.to_list"></a>
+
 ## sets.to_list
 
 <pre>
@@ -87,6 +95,8 @@ Creates a list from the values in the set.
   </tbody>
 </table>
 
+
+<a name="#sets.insert"></a>
 
 ## sets.insert
 
@@ -129,6 +139,8 @@ Element must be hashable.  This mutates the original set.
 </table>
 
 
+<a name="#sets.contains"></a>
+
 ## sets.contains
 
 <pre>
@@ -166,6 +178,8 @@ Checks for the existence of an element in a set.
   </tbody>
 </table>
 
+
+<a name="#sets.is_equal"></a>
 
 ## sets.is_equal
 
@@ -205,6 +219,8 @@ Returns whether two sets are equal.
 </table>
 
 
+<a name="#sets.is_subset"></a>
+
 ## sets.is_subset
 
 <pre>
@@ -242,6 +258,8 @@ Returns whether `a` is a subset of `b`.
   </tbody>
 </table>
 
+
+<a name="#sets.disjoint"></a>
 
 ## sets.disjoint
 
@@ -284,6 +302,8 @@ Two sets are disjoint if they have no elements in common.
 </table>
 
 
+<a name="#sets.intersection"></a>
+
 ## sets.intersection
 
 <pre>
@@ -322,6 +342,8 @@ Returns the intersection of two sets.
 </table>
 
 
+<a name="#sets.union"></a>
+
 ## sets.union
 
 <pre>
@@ -350,6 +372,8 @@ Returns the union of several sets.
   </tbody>
 </table>
 
+
+<a name="#sets.difference"></a>
 
 ## sets.difference
 
@@ -389,6 +413,8 @@ Returns the elements in `a` that are not in `b`.
 </table>
 
 
+<a name="#sets.length"></a>
+
 ## sets.length
 
 <pre>
@@ -417,6 +443,8 @@ Returns the number of elements in a set.
   </tbody>
 </table>
 
+
+<a name="#sets.remove"></a>
 
 ## sets.remove
 
@@ -459,6 +487,8 @@ Element must be hashable.  This mutates the original set.
 </table>
 
 
+<a name="#sets.repr"></a>
+
 ## sets.repr
 
 <pre>
@@ -487,6 +517,8 @@ Returns a string value representing the set.
   </tbody>
 </table>
 
+
+<a name="#sets.str"></a>
 
 ## sets.str
 

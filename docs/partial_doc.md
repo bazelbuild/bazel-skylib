@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#partial.make"></a>
+
 ## partial.make
 
 <pre>
@@ -119,6 +123,8 @@ partial.call(func, x=2)
   </tbody>
 </table>
 
+
+<a name="#partial.call"></a>
 
 ## partial.call
 

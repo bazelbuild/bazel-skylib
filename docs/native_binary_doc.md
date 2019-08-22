@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#native_binary"></a>
+
 ## native_binary
 
 <pre>
@@ -21,6 +25,9 @@ You can "bazel run" this rule like any other binary rule, and use it as a tool i
       <td><code>name</code></td>
       <td>
         required.
+        <p>
+          The name of the test rule.
+        </p>
       </td>
     </tr>
     <tr id="native_binary-src">
@@ -63,6 +70,8 @@ You can "bazel run" this rule like any other binary rule, and use it as a tool i
 </table>
 
 
+<a name="#native_test"></a>
+
 ## native_test
 
 <pre>
@@ -87,6 +96,9 @@ runfiles.
       <td><code>name</code></td>
       <td>
         required.
+        <p>
+          The name of the test rule.
+        </p>
       </td>
     </tr>
     <tr id="native_test-src">

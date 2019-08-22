@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#paths.basename"></a>
+
 ## paths.basename
 
 <pre>
@@ -33,6 +37,8 @@ the final slash).
 </table>
 
 
+<a name="#paths.dirname"></a>
+
 ## paths.dirname
 
 <pre>
@@ -67,6 +73,8 @@ included, unless omitting them would make the dirname empty.
 </table>
 
 
+<a name="#paths.is_absolute"></a>
+
 ## paths.is_absolute
 
 <pre>
@@ -95,6 +103,8 @@ Returns `True` if `path` is an absolute path.
   </tbody>
 </table>
 
+
+<a name="#paths.join"></a>
 
 ## paths.join
 
@@ -143,6 +153,8 @@ If any component is an absolute path, all previous components are discarded.
 </table>
 
 
+<a name="#paths.normalize"></a>
+
 ## paths.normalize
 
 <pre>
@@ -186,6 +198,8 @@ POSIX platforms; specifically:
   </tbody>
 </table>
 
+
+<a name="#paths.relativize"></a>
 
 ## paths.relativize
 
@@ -234,6 +248,8 @@ the path both start with the same initial parent references.
 </table>
 
 
+<a name="#paths.replace_extension"></a>
+
 ## paths.replace_extension
 
 <pre>
@@ -275,6 +291,8 @@ If the path has no extension, the new extension is added to it.
   </tbody>
 </table>
 
+
+<a name="#paths.split_extension"></a>
 
 ## paths.split_extension
 

@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#types.is_list"></a>
+
 ## types.is_list
 
 <pre>
@@ -26,6 +30,8 @@ Returns True if v is an instance of a list.
   </tbody>
 </table>
 
+
+<a name="#types.is_string"></a>
 
 ## types.is_string
 
@@ -56,6 +62,8 @@ Returns True if v is an instance of a string.
 </table>
 
 
+<a name="#types.is_bool"></a>
+
 ## types.is_bool
 
 <pre>
@@ -84,6 +92,8 @@ Returns True if v is an instance of a bool.
   </tbody>
 </table>
 
+
+<a name="#types.is_none"></a>
 
 ## types.is_none
 
@@ -114,6 +124,8 @@ Returns True if v has the type of None.
 </table>
 
 
+<a name="#types.is_int"></a>
+
 ## types.is_int
 
 <pre>
@@ -142,6 +154,8 @@ Returns True if v is an instance of a signed integer.
   </tbody>
 </table>
 
+
+<a name="#types.is_tuple"></a>
 
 ## types.is_tuple
 
@@ -172,6 +186,8 @@ Returns True if v is an instance of a tuple.
 </table>
 
 
+<a name="#types.is_dict"></a>
+
 ## types.is_dict
 
 <pre>
@@ -201,6 +217,8 @@ Returns True if v is an instance of a dict.
 </table>
 
 
+<a name="#types.is_function"></a>
+
 ## types.is_function
 
 <pre>
@@ -229,6 +247,8 @@ Returns True if v is an instance of a function.
   </tbody>
 </table>
 
+
+<a name="#types.is_depset"></a>
 
 ## types.is_depset
 

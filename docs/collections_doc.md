@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#collections.after_each"></a>
+
 ## collections.after_each
 
 <pre>
@@ -36,6 +40,8 @@ Inserts `separator` after each item in `iterable`.
 </table>
 
 
+<a name="#collections.before_each"></a>
+
 ## collections.before_each
 
 <pre>
@@ -73,6 +79,8 @@ Inserts `separator` before each item in `iterable`.
   </tbody>
 </table>
 
+
+<a name="#collections.uniq"></a>
 
 ## collections.uniq
 

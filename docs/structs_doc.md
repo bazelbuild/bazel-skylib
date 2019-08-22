@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#structs.to_dict"></a>
+
 ## structs.to_dict
 
 <pre>

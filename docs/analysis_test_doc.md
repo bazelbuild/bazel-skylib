@@ -1,4 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
 <a name="#analysis_test"></a>
+
 ## analysis_test
 
 <pre>

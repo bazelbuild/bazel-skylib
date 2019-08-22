@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#write_file"></a>
+
 ## write_file
 
 <pre>

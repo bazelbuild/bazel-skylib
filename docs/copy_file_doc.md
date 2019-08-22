@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#copy_file"></a>
+
 ## copy_file
 
 <pre>

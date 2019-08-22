@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#versions.get"></a>
+
 ## versions.get
 
 <pre>
@@ -7,6 +11,8 @@ versions.get()
 Returns the current Bazel version
 
 
+
+<a name="#versions.parse"></a>
 
 ## versions.parse
 
@@ -39,6 +45,8 @@ int tuples can be compared directly using binary operators (<, >).
   </tbody>
 </table>
 
+
+<a name="#versions.check"></a>
 
 ## versions.check
 
@@ -87,6 +95,8 @@ Check that the version of Bazel is valid within the specified range.
 </table>
 
 
+<a name="#versions.is_at_most"></a>
+
 ## versions.is_at_most
 
 <pre>
@@ -124,6 +134,8 @@ Check that a version is lower or equals to a threshold.
   </tbody>
 </table>
 
+
+<a name="#versions.is_at_least"></a>
 
 ## versions.is_at_least
 

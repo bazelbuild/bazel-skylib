@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#shell.array_literal"></a>
+
 ## shell.array_literal
 
 <pre>
@@ -35,6 +39,8 @@ safety, even if they do not need to be.
   </tbody>
 </table>
 
+
+<a name="#shell.quote"></a>
 
 ## shell.quote
 
