@@ -1,6 +1,6 @@
 # Skylib
 
-[![Build status](https://badge.buildkite.com/921dc61e2d3a350ec40efb291914360c0bfa9b6196fa357420.svg)](https://buildkite.com/bazel/bazel-skylib)
+[![Build status](https://badge.buildkite.com/921dc61e2d3a350ec40efb291914360c0bfa9b6196fa357420.svg?branch=master)](https://buildkite.com/bazel/bazel-skylib)
 
 Skylib is a standard library that provides functions useful for manipulating
 collections, file paths, and other features that are useful when writing custom
