@@ -7,12 +7,12 @@
 -   selects.bzl: Add config_setting_group for config_setting AND/OR-chaining
     Implements
     https://github.com/bazelbuild/proposals/blob/master/designs/2018-11-09-config-setting-chaining.md.
--   Make sets.bzl point to new_sets.bzl instead of old_sets.bzl new_sets.bzl and
-    old_sets.bzl should be removed in the following skylib release.
+-   Make sets.bzl point to new_sets.bzl instead of old_sets.bzl. new_sets.bzl
+    and old_sets.bzl should be removed in the following skylib release.
 
 -   run_binary: runs an executable as an action
 
-    -   This rule is an alternative for genrule(): it canrun a binary with the
+    -   This rule is an alternative for genrule(): it can run a binary with the
         desired arguments, environment, inputs, and outputs, as a single build
         action, without shelling out to Bash.
     -   Fixes https://github.com/bazelbuild/bazel-skylib/issues/149
@@ -39,7 +39,7 @@
     See https://github.com/bazelbuild/bazel/issues/5508,
     https://github.com/bazelbuild/bazel/issues/4319
 
--   maprule: move functionality to maprule_util.bzl maprule_util.bzl will
+-   maprule: move functionality to maprule_util.bzl. maprule_util.bzl will
     benefit planned new rules (namely a genrule alternative).
 
 **This release is tested with Bazel 0.28**
