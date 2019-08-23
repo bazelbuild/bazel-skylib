@@ -12,18 +12,18 @@ pkg_tar(
     srcs = [
         "//:distribution",
     ],
-    strip_prefix = ".",
     extension = "tar.gz",
     # It is all source code, so make it read-only.
     mode = "0444",
     # Make it owned by root so it does not have the uid of the CI robot.
     owner = "0.0",
     package_dir = ".",
+    strip_prefix = ".",
 )
 
 print_rel_notes(
     name = "relnotes",
+    outs = ["relnotes.txt"],
     repo = "bazel-skylib",
     version = version,
-    outs = ["relnotes.txt"],
 )
