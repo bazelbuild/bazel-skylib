@@ -11,17 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""The version of bazel-skylib."""
 
-"""Dependencies that are needed for running skylib tests."""
-
-load(
-    "@bazel_federation//:repositories.bzl",
-    "bazel",
-    "bazel_stardoc",
-    "rules_pkg",
-)
-
-def bazel_skylib_internal_deps():
-    bazel()
-    bazel_stardoc()
-    rules_pkg()
+version = "0.10.0"

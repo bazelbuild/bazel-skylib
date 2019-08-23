@@ -4,12 +4,6 @@ licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
-filegroup(
-    name = "test_deps",
-    testonly = True,
-    srcs = ["BUILD"] + glob(["*.bzl"]),
-)
-
 bzl_library(
     name = "collections",
     srcs = ["collections.bzl"],
@@ -77,4 +71,20 @@ bzl_library(
 bzl_library(
     name = "versions",
     srcs = ["versions.bzl"],
+)
+
+filegroup(
+    name = "test_deps",
+    testonly = True,
+    srcs = ["BUILD"] + glob(["*.bzl"]),
+)
+
+# The files needed for distribution
+filegroup(
+    name = "distribution",
+    srcs = glob(["*"]),
+    visibility = [
+        "//:__pkg__",
+        "//distribution:__pkg__",
+    ],
 )
