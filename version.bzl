@@ -1,4 +1,4 @@
-# Copyright 2017 The Bazel Authors. All rights reserved.
+# Copyright 2019 The Bazel Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,10 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""The version of bazel-skylib."""
 
-"""Index from which multiple modules can be loaded."""
-
-fail(
-    "lib.bzl has been removed, please directly load the bzl file(s) of the" +
-    " module(s) needed as it is more efficient.",
-)
+version = "0.10.0"

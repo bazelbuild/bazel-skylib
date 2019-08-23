@@ -93,8 +93,7 @@ def _check_bazel_version(minimum_bazel_version, maximum_bazel_version = None, ba
                 minimum_bazel_version,
             ))
         elif not native.bazel_version:
-            print("Current Bazel is not a release version; cannot check for compatibility. " +
-                  "Make sure that you are running at least Bazel {}.".format(minimum_bazel_version))
+            # Using a non-release version, assume it is good.
             return
         else:
             bazel_version = native.bazel_version
