@@ -1,3 +1,13 @@
+Release 1.0.0
+
+**Incompatible Changes**
+
+-   Remove @bazel_skylib//:lib.bzl. You now must specify specific modules
+    via @bazel_skylib//lib:<file>.bzl.
+
+
+Release 0.9.0
+
 **New Features**
 
 -   common_settings.bzl: Standard data types for user defined build

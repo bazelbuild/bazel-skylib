@@ -19,21 +19,7 @@ Skylib also provides build rules under the `rules` directory.
 
 ### `WORKSPACE` file
 
-Add the following to your `WORKSPACE` file to import the Skylib repository into
-your workspace. Replace the version number in the `tag` attribute with the
-version you wish to depend on:
-
-```python
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
-
-maybe(
-    http_archive,
-    name = "bazel_skylib",
-    url = "https://github.com/bazelbuild/bazel-skylib/releases/download/0.9.0/bazel_skylib-0.9.0.tar.gz",
-    sha256 = "1dde365491125a3db70731e25658dfdd3bc5dbdfd11b840b3e987ecf043c7ca0",
-)
-```
+See the **WORKSPACE setup** section [for the current release](https://github.com/bazelbuild/bazel-skylib/releases).
 
 If you want to use `lib/unittest.bzl` from Skylib versions released in or after
 December 2018, then you also should add to the `WORKSPACE` file:
