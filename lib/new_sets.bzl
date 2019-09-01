@@ -21,8 +21,7 @@
 """
 
 load(":dicts.bzl", "dicts")
-
-_list_type = type([])
+load(":types.bzl", "types")
 
 def _make(elements = None):
     """Creates a new set.
@@ -183,7 +182,7 @@ def _union(*args):
     Returns:
       The set union of all sets or lists in `*args`.
     """
-    return struct(_values = dicts.add(*[_make(s)._values if type(s) == _list_type else s._values for s in args]))
+    return struct(_values = dicts.add(*[_make(s)._values if types.is_list(s) else s._values for s in args]))
 
 def _difference(a, b):
     """Returns the elements in `a` that are not in `b`.

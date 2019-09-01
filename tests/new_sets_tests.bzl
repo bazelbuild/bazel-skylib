@@ -106,6 +106,9 @@ def _union_test(ctx):
     asserts.new_set_equals(env, sets.make([1]), sets.union(sets.make([1]), sets.make([1])))
     asserts.new_set_equals(env, sets.make([1, 2]), sets.union(sets.make([1]), sets.make([1, 2])))
     asserts.new_set_equals(env, sets.make([1, 2]), sets.union(sets.make([1]), sets.make([2])))
+    asserts.new_set_equals(env, sets.make([]), sets.union([]))
+    asserts.new_set_equals(env, sets.make([1, 2]), sets.union([1], [2]))
+    asserts.new_set_equals(env, sets.make([1, 2, 3, 4]), sets.union([1, 2], [3, 4]))
     asserts.new_set_equals(env, sets.make([1, 2]), sets.union([1], sets.make([2])))
 
     # If passing a list, verify that duplicate elements are ignored.
