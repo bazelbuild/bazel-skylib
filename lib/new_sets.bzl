@@ -222,8 +222,6 @@ def _repr(s):
     """
     return repr(s._values.keys())
 
-_SET_TYPE = type(_make())
-
 sets = struct(
     make = _make,
     copy = _copy,
