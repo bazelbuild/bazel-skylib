@@ -48,7 +48,6 @@ bzl_library(
     srcs = ["new_sets.bzl"],
     deps = [
       ":dicts",
-      ":types",
     ],
 )
 

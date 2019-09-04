@@ -21,6 +21,7 @@ _a_string_type = type("")
 _a_tuple_type = type(())
 _an_int_type = type(1)
 _a_depset_type = type(depset())
+_a_struct_type = type(struct())
 
 def _a_function():
     pass
@@ -126,6 +127,17 @@ def _is_depset(v):
     """
     return type(v) == _a_depset_type
 
+def _is_set(v):
+    """Returns True if v is a set created by sets.make().
+
+    Args:
+      v: The value whose type should be checked.
+
+    Returns:
+      True if v was created by sets.make(), False otherwise.
+    """
+    return type(v) == _a_struct_type and hasattr(v, "_values") and _is_dict(v._values)
+
 types = struct(
     is_list = _is_list,
     is_string = _is_string,
@@ -136,4 +148,5 @@ types = struct(
     is_dict = _is_dict,
     is_function = _is_function,
     is_depset = _is_depset,
+    is_set = _is_set,
 )

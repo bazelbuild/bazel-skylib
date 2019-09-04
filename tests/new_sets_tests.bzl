@@ -248,21 +248,6 @@ def _repr_str_test(ctx):
 
 repr_str_test = unittest.make(_repr_str_test)
 
-def _is_set_test(ctx):
-    """Unit test for sets.is_set."""
-    env = unittest.begin(ctx)
-
-    asserts.true(env, sets.is_set(sets.make()))
-    asserts.true(env, sets.is_set(sets.make([1])))
-    asserts.false(env, sets.is_set(None))
-    asserts.false(env, sets.is_set({}))
-    asserts.false(env, sets.is_set(struct(foo = 1)))
-    asserts.false(env, sets.is_set(struct(_values = "not really values")))
-
-    return unittest.end(env)
-
-is_set_test = unittest.make(_is_set_test)
-
 def new_sets_test_suite():
     """Creates the test targets and test suite for new_sets.bzl tests."""
     unittest.suite(
@@ -281,5 +266,4 @@ def new_sets_test_suite():
         length_test,
         remove_test,
         repr_str_test,
-        is_set_test,
     )
