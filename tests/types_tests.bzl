@@ -15,6 +15,7 @@
 
 load("//lib:types.bzl", "types")
 load("//lib:unittest.bzl", "asserts", "unittest")
+load("//lib:new_sets.bzl", "sets")
 
 def _a_function():
     """A dummy function for testing."""
@@ -215,6 +216,21 @@ def _is_depset_test(ctx):
 
 is_depset_test = unittest.make(_is_depset_test)
 
+def _is_set_test(ctx):
+    """Unit test for types.is_set."""
+    env = unittest.begin(ctx)
+
+    asserts.true(env, types.is_set(sets.make()))
+    asserts.true(env, types.is_set(sets.make([1])))
+    asserts.false(env, types.is_set(None))
+    asserts.false(env, types.is_set({}))
+    asserts.false(env, types.is_set(struct(foo = 1)))
+    asserts.false(env, types.is_set(struct(_values = "not really values")))
+
+    return unittest.end(env)
+
+is_set_test = unittest.make(_is_set_test)
+
 def types_test_suite():
     """Creates the test targets and test suite for types.bzl tests."""
     unittest.suite(
@@ -228,4 +244,5 @@ def types_test_suite():
         is_dict_test,
         is_function_test,
         is_depset_test,
+        is_set_test,
     )
