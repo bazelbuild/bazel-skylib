@@ -4,6 +4,11 @@ Release 1.0.0
 
 -   Remove @bazel_skylib//:lib.bzl. You now must specify specific modules
     via @bazel_skylib//lib:<file>.bzl.
+-   Remove maprule.bzl
+
+**New Features**
+
+-   Add types.is_set() to test whether an arbitrary object is a set as defined by sets.bzl.
 
 
 Release 0.9.0
