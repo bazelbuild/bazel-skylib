@@ -15,6 +15,7 @@
 """Unit tests for build_test.bzl."""
 
 load("//rules:build_test.bzl", "build_test")
+load("@rules_cc//cc:defs.bzl", "cc_library")
 
 def build_test_test_suite():
     # Since the rules doesn't do anything really, it just makes some targets
@@ -29,7 +30,7 @@ def build_test_test_suite():
     )
 
     # Use it in a non-test target
-    native.cc_library(
+    cc_library(
         name = "build_test__build_target",
         srcs = [":build_test__make_src"],
     )
