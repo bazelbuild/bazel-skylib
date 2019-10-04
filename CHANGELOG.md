@@ -1,3 +1,18 @@
+Release 1.0.0
+
+**Incompatible Changes**
+
+-   @bazel_skylib//:lib.bzl is removed. You now must specify specific modules
+    via @bazel_skylib//lib:<file>.bzl.
+-   maprule.bzl is removed.
+
+**New Features**
+
+-   Added types.is_set() to test whether an arbitrary object is a set as defined by sets.bzl.
+
+
+Release 0.9.0
+
 **New Features**
 
 -   common_settings.bzl: Standard data types for user defined build
