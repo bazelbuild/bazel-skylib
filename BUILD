@@ -61,5 +61,7 @@ filegroup(
         "CONTRIBUTORS",
         "//lib:distribution",
         "//rules:distribution",
+        "//rules/private:distribution",
+        "//toolchains/unittest:distribution",
     ] + glob(["*.bzl"]),
 )

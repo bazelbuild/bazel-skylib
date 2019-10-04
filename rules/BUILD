@@ -63,6 +63,5 @@ filegroup(
     srcs = glob(["*"]),
     visibility = [
         "//:__pkg__",
-        "//distribution:__pkg__",
     ],
 )
