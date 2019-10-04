@@ -193,20 +193,18 @@ def _make_analysis_test(
     if expect_failure:
         changed_settings["//command_line_option:allow_analysis_failures"] = "True"
 
+    target_attr_kwargs = {}
     if changed_settings:
         test_transition = analysis_test_transition(
             settings = changed_settings,
         )
-        attrs["target_under_test"] = attr.label(
-            aspects = [_action_retrieving_aspect],
-            cfg = test_transition,
-            mandatory = True,
-        )
-    else:
-        attrs["target_under_test"] = attr.label(
-            aspects = [_action_retrieving_aspect],
-            mandatory = True,
-        )
+        target_attr_kwargs["cfg"] = test_transition
+
+    attrs["target_under_test"] = attr.label(
+        aspects = [_action_retrieving_aspect],
+        mandatory = True,
+        **target_attr_kwargs,
+    )
 
     return rule(
         impl,
