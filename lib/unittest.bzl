@@ -138,7 +138,12 @@ _action_retrieving_aspect = aspect(
 )
 
 # TODO(cparsons): Provide more full documentation on analysis testing in README.
-def _make_analysis_test(impl, expect_failure = False, attrs = {}, config_settings = {}):
+def _make_analysis_test(
+        impl,
+        expect_failure = False,
+        attrs = {},
+        fragments = [],
+        config_settings = {}):
     """Creates an analysis test rule from its implementation function.
 
     An analysis test verifies the behavior of a "real" rule target by examining
@@ -170,6 +175,8 @@ def _make_analysis_test(impl, expect_failure = False, attrs = {}, config_setting
           to fail. Assertions can be made on the underlying failure using asserts.expect_failure
       attrs: An optional dictionary to supplement the attrs passed to the
           unit test's `rule()` constructor.
+      fragments: An optional list of fragment names that can be used to give rules access to
+          language-specific parts of configuration.
       config_settings: A dictionary of configuration settings to change for the target under
           test and its dependencies. This may be used to essentially change 'build flags' for
           the target under test, and may thus be utilized to test multiple targets with different
@@ -186,24 +193,23 @@ def _make_analysis_test(impl, expect_failure = False, attrs = {}, config_setting
     if expect_failure:
         changed_settings["//command_line_option:allow_analysis_failures"] = "True"
 
+    target_attr_kwargs = {}
     if changed_settings:
         test_transition = analysis_test_transition(
             settings = changed_settings,
         )
-        attrs["target_under_test"] = attr.label(
-            aspects = [_action_retrieving_aspect],
-            cfg = test_transition,
-            mandatory = True,
-        )
-    else:
-        attrs["target_under_test"] = attr.label(
-            aspects = [_action_retrieving_aspect],
-            mandatory = True,
-        )
+        target_attr_kwargs["cfg"] = test_transition
+
+    attrs["target_under_test"] = attr.label(
+        aspects = [_action_retrieving_aspect],
+        mandatory = True,
+        **target_attr_kwargs
+    )
 
     return rule(
         impl,
         attrs = attrs,
+        fragments = fragments,
         test = True,
         toolchains = [TOOLCHAIN_TYPE],
         analysis_test = True,
