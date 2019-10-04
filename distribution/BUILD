@@ -26,4 +26,6 @@ print_rel_notes(
     outs = ["relnotes.txt"],
     repo = "bazel-skylib",
     version = version,
+    setup_file = ":workspace.bzl",
+    deps_method = "bazel_skylib_workspace",
 )
