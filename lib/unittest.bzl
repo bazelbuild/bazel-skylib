@@ -203,7 +203,7 @@ def _make_analysis_test(
     attrs["target_under_test"] = attr.label(
         aspects = [_action_retrieving_aspect],
         mandatory = True,
-        **target_attr_kwargs,
+        **target_attr_kwargs
     )
 
     return rule(
