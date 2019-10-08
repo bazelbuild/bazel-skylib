@@ -193,12 +193,21 @@ def _inspect_output_dirs_test(ctx):
     bin_path = analysistest.target_bin_dir_path(env)
     genfiles_path = analysistest.target_genfiles_dir_path(env)
     target_under_test = analysistest.target_under_test(env)
-    asserts.false(not bin_path)
-    asserts.false(not genfiles_path)
-    asserts.false(bin_path == ctx.bin_dir.path)
-    asserts.false(genfiles_path == ctx.genfiles_dir.path)
-    asserts.equals(bin_path, target_under_test[_OutputDirInfo].bin_path)
+    asserts.false(env, not bin_path, "bin dir path not found.")
+    asserts.false(env, not genfiles_path, "genfiles path not found.")
+    asserts.false(
+        env,
+        bin_path == ctx.bin_dir.path,
+        "bin dir path expected to differ between test and target_under_test.",
+    )
+    asserts.false(
+        env,
+        genfiles_path == ctx.genfiles_dir.path,
+        "genfiles dir path expected to differ between test and target_under_test.",
+    )
+    asserts.equals(env, bin_path, target_under_test[_OutputDirInfo].bin_path)
     asserts.equals(
+        env,
         genfiles_path,
         target_under_test[_OutputDirInfo].genfiles_path,
     )
