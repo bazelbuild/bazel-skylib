@@ -126,11 +126,16 @@ def _make(impl, attrs = {}):
         toolchains = [TOOLCHAIN_TYPE],
     )
 
-_ActionInfo = provider(fields = ["actions"])
+_ActionInfo = provider(fields = ["actions", "bin_path", "genfiles_path"])
 
 def _action_retrieving_aspect_impl(target, ctx):
-    _ignore = [ctx]
-    return [_ActionInfo(actions = target.actions)]
+    return [
+        _ActionInfo(
+            actions = target.actions,
+            bin_path = ctx.bin_dir.path,
+            genfiles_path = ctx.genfiles_dir.path,
+        ),
+    ]
 
 _action_retrieving_aspect = aspect(
     attr_aspects = [],
@@ -463,8 +468,29 @@ def _target_actions(env):
     """
 
     # Validate?
-    dep = _target_under_test(env)
-    return dep[_ActionInfo].actions
+    return _target_under_test(env)[_ActionInfo].actions
+
+def _target_bin_dir_path(env):
+    """Returns ctx.bin_dir.path for the target under test.
+
+    Args:
+      env: The test environment returned by `analysistest.begin`.
+
+    Returns:
+      Output bin dir path string.
+    """
+    return _target_under_test(env)[_ActionInfo].bin_path
+
+def _target_genfiles_dir_path(env):
+    """Returns ctx.genfiles_dir.path for the target under test.
+
+    Args:
+      env: The test environment returned by `analysistest.begin`.
+
+    Returns:
+      Output genfiles dir path string.
+    """
+    return _target_under_test(env)[_ActionInfo].genfiles_path
 
 def _target_under_test(env):
     """Returns the target under test.
@@ -506,5 +532,7 @@ analysistest = struct(
     end = _end_analysis_test,
     fail = _fail,
     target_actions = _target_actions,
+    target_bin_dir_path = _target_bin_dir_path,
+    target_genfiles_dir_path = _target_genfiles_dir_path,
     target_under_test = _target_under_test,
 )
