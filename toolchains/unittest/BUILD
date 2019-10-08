@@ -56,3 +56,12 @@ filegroup(
     ],
     visibility = ["//:__subpackages__"],
 )
+
+# The files needed for distribution
+filegroup(
+    name = "distribution",
+    srcs = ["BUILD"],
+    visibility = [
+        "//:__pkg__",
+    ],
+)
