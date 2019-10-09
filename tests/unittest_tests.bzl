@@ -180,31 +180,44 @@ inspect_actions_test = analysistest.make(
 ########################################
 ####### inspect_output_dirs_test #######
 ########################################
-_OutputDirInfo = provider(fields = ["bin_path"])
+_OutputDirInfo = provider(fields = ["bin_path", "genfiles_path"])
 
 def _inspect_output_dirs_test(ctx):
     """Test verifying output directories used by a test."""
     env = analysistest.begin(ctx)
 
-    # Assert that the output bin dir observed by the aspect added by analysistest
-    # is the same as those observed by the rule directly, even when that's
-    # under a config transition and therefore not the same as the bin dir
-    # used by the test rule.
+    # Assert that the output dirs observed by the aspect added by analysistest
+    # are the same as those observed by the rule directly, even when that's
+    # under a config transition and therefore not the same as the output
+    # dirs used by the test rule.
     bin_path = analysistest.target_bin_dir_path(env)
+    genfiles_path = analysistest.target_genfiles_dir_path(env)
     target_under_test = analysistest.target_under_test(env)
     asserts.false(env, not bin_path, "bin dir path not found.")
+    asserts.false(env, not genfiles_path, "genfiles path not found.")
     asserts.false(
         env,
         bin_path == ctx.bin_dir.path,
         "bin dir path expected to differ between test and target_under_test.",
     )
+    asserts.false(
+        env,
+        genfiles_path == ctx.genfiles_dir.path,
+        "genfiles dir path expected to differ between test and target_under_test.",
+    )
     asserts.equals(env, bin_path, target_under_test[_OutputDirInfo].bin_path)
+    asserts.equals(
+        env,
+        genfiles_path,
+        target_under_test[_OutputDirInfo].genfiles_path,
+    )
     return analysistest.end(env)
 
 def _inspect_output_dirs_fake_rule(ctx):
     return [
         _OutputDirInfo(
             bin_path = ctx.bin_dir.path,
+            genfiles_path = ctx.genfiles_dir.path,
         ),
     ]
 
