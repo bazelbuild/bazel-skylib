@@ -13,8 +13,9 @@ pkg_tar(
         "//:distribution",
     ],
     extension = "tar.gz",
-    # It is all source code, so make it read-only.
-    mode = "0444",
+    # It is all source code, so make it read-only, but since there are
+    # shell scripts, 555 is a convient choice.
+    mode = "0555",
     # Make it owned by root so it does not have the uid of the CI robot.
     owner = "0.0",
     package_dir = ".",
