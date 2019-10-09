@@ -65,3 +65,10 @@ filegroup(
         "//toolchains/unittest:distribution",
     ] + glob(["*.bzl"]),
 )
+
+filegroup(
+    name = "bins",
+    srcs = [
+        "//rules:bins",
+    ],
+)
