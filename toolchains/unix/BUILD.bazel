@@ -1,0 +1,31 @@
+load("//lib:unix.bzl", "unix_make_variables")
+
+licenses(["notice"])
+
+toolchain_type(
+    name = "toolchain_type",
+    visibility = ["//visibility:public"],
+)
+
+unix_make_variables(
+    name = "make_variables",
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "test_deps",
+    testonly = True,
+    srcs = [
+        "BUILD.bazel",
+    ],
+    visibility = ["//:__subpackages__"],
+)
+
+# The files needed for distribution
+filegroup(
+    name = "distribution",
+    srcs = ["BUILD.bazel"],
+    visibility = [
+        "//:__pkg__",
+    ],
+)

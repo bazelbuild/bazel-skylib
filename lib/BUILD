@@ -71,6 +71,14 @@ bzl_library(
 )
 
 bzl_library(
+    name = "unix",
+    srcs = ["unix.bzl"],
+    deps = [
+        ":paths",
+    ],
+)
+
+bzl_library(
     name = "versions",
     srcs = ["versions.bzl"],
 )
