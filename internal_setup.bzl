@@ -14,5 +14,7 @@
 
 """Setup function that must be invoked before running skylib tests."""
 
+load("//lib:unix.bzl", "unix_configure")
+
 def bazel_skylib_internal_setup():
-    pass # placeholder function for the federation
+    unix_configure()  # Configure the Unix toolchain for unix.bzl tests.
