@@ -265,9 +265,12 @@ Example:
 
 def _unix_config_impl(repository_ctx):
     cpu = get_cpu_value(repository_ctx)
+    env = repository_ctx.os.environ
     commands = {}
     for cmd in _commands:
-        cmd_path = repository_ctx.which(cmd)
+        cmd_path = env.get("UNIX_%s" % cmd.upper(), None)
+        if cmd_path == None:
+            cmd_path = repository_ctx.which(cmd)
         if cmd_path == None and cpu == "x64_windows":
             cmd_path = repository_ctx.which(cmd + ".exe")
         commands[cmd] = cmd_path
@@ -306,7 +309,10 @@ toolchain(
 
 _unix_config = repository_rule(
     configure = True,
-    environ = ["PATH"],
+    environ = ["PATH"] + [
+        "UNIX_%s" % cmd.upper()
+        for cmd in _commands
+    ],
     local = True,
     implementation = _unix_config_impl,
 )
@@ -316,6 +322,10 @@ def unix_configure(name = "local_unix_config"):
 
     Scans the environment (`$PATH`) for standard shell commands, generates a
     corresponding unix toolchain and registers the toolchain.
+
+    You can override the autodetection for individual commands by setting
+    environment variables of the form `UNIX_<COMMAND>`. E.g.
+    `UNIX_MAKE=/usr/bin/gmake` will override the make command.
     """
     _unix_config(name = name)
     native.register_toolchains("@{}//:local_unix_toolchain".format(name))
