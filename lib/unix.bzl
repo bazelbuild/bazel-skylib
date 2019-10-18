@@ -305,6 +305,7 @@ toolchain(
     ))
 
 _unix_config = repository_rule(
+    configure = True,
     environ = ["PATH"],
     local = True,
     implementation = _unix_config_impl,
