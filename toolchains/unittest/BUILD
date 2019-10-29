@@ -22,7 +22,7 @@ exit /b 1
 toolchain(
     name = "cmd_toolchain",
     exec_compatible_with = [
-        "@bazel_tools//platforms:windows",
+        "@platforms//os:windows",
     ],
     toolchain = ":cmd",
     toolchain_type = TOOLCHAIN_TYPE,
