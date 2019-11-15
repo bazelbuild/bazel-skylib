@@ -41,7 +41,8 @@ _map_to_output = rule(
 )
 
 def map_to_output(name, src, **kwargs):
-  """Copies a source file to bazel-bin at the same execroot path
+  """Copies a source file to bazel-bin at the same execroot path.
+
      Eg. <source_root>/foo/bar/a.txt -> <bazel-bin>/foo/bar/a.txt
 
      Args:
