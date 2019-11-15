@@ -17,6 +17,12 @@ bzl_library(
 )
 
 bzl_library(
+    name = "map_to_output",
+    srcs = ["map_to_output.bzl"],
+    deps = ["//rules/private:map_to_output_private"],
+)
+
+bzl_library(
     name = "write_file",
     srcs = ["write_file.bzl"],
     deps = ["//rules/private:write_file_private"],
