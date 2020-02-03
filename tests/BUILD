@@ -2,7 +2,6 @@ load("//:bzl_library.bzl", "bzl_library")
 load(":build_test_tests.bzl", "build_test_test_suite")
 load(":collections_tests.bzl", "collections_test_suite")
 load(":dicts_tests.bzl", "dicts_test_suite")
-load(":old_sets_tests.bzl", "old_sets_test_suite")
 load(":new_sets_tests.bzl", "new_sets_test_suite")
 load(":partial_tests.bzl", "partial_test_suite")
 load(":paths_tests.bzl", "paths_test_suite")
@@ -25,8 +24,6 @@ build_test_test_suite()
 collections_test_suite()
 
 dicts_test_suite()
-
-old_sets_test_suite()
 
 new_sets_test_suite()
 
@@ -61,7 +58,6 @@ sh_test(
         ":unittest_tests_bzl",
         "//lib:dicts.bzl",
         "//lib:new_sets.bzl",
-        "//lib:old_sets.bzl",
         "//lib:sets.bzl",
         "//lib:types.bzl",
         "//lib:unittest.bzl",
