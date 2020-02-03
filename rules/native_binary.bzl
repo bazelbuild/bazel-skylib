@@ -30,7 +30,7 @@ def _impl_rule(ctx, is_windows):
         copy_bash(ctx, ctx.file.src, out)
     return DefaultInfo(
         executable = out,
-        files = depset(items = [out]),
+        files = depset([out]),
         runfiles = ctx.runfiles(
             files = [out],
             collect_data = True,

@@ -54,7 +54,7 @@ def _impl(ctx):
         input_manifests = tool_input_mfs,
     )
     return DefaultInfo(
-        files = depset(items = ctx.outputs.outs),
+        files = depset(ctx.outputs.outs),
         runfiles = ctx.runfiles(files = ctx.outputs.outs),
     )
 
