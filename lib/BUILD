@@ -31,17 +31,14 @@ bzl_library(
 
 bzl_library(
     name = "sets",
-    srcs = [
-        "old_sets.bzl",
-        "sets.bzl",
-    ],
+    srcs = ["sets.bzl"],
 )
 
 bzl_library(
     name = "new_sets",
     srcs = ["new_sets.bzl"],
     deps = [
-      ":dicts",
+        ":dicts",
     ],
 )
 
