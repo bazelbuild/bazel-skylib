@@ -16,7 +16,6 @@ def _impl(ctx):
             break
     if not out:
         fail("Can not find specified file in '%s'" % str(ctx.attr.srcs))
-    print("Selected: " + str(out))
     return [DefaultInfo(files = depset([out]))]
 
 select_file = rule(
