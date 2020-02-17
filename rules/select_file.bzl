@@ -15,7 +15,9 @@ def _impl(ctx):
             out = file_
             break
     if not out:
-        fail("Can not find specified file in '%s'" % str(ctx.attr.srcs))
+        files_str = ",\n".join([str(f.path) \
+for f in ctx.attr.srcs.files.to_list()])
+        fail("Can not find specified file in [%s]" % files_str)
     return [DefaultInfo(files = depset([out]))]
 
 select_file = rule(
@@ -25,9 +27,10 @@ by given relative path",
     attrs = {
         "srcs": attr.label(
             allow_files = True,
-            doc = "The target producing the file \
-among other outputs",
-        ),
-        "subpath": attr.string(doc = "Relative path to the file"),
+            mandatory = True,
+            doc = "The target producing the file among other outputs"),
+        "subpath": attr.string(
+            mandatory = True,
+            doc = "Relative path to the file"),
     },
 )
