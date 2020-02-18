@@ -15,8 +15,10 @@ def _impl(ctx):
             out = file_
             break
     if not out:
-        files_str = ",\n".join([str(f.path) \
-for f in ctx.attr.srcs.files.to_list()])
+        files_str = ",\n".join([
+            str(f.path)
+            for f in ctx.attr.srcs.files.to_list()
+        ])
         fail("Can not find specified file in [%s]" % files_str)
     return [DefaultInfo(files = depset([out]))]
 
@@ -28,9 +30,11 @@ by given relative path",
         "srcs": attr.label(
             allow_files = True,
             mandatory = True,
-            doc = "The target producing the file among other outputs"),
+            doc = "The target producing the file among other outputs",
+        ),
         "subpath": attr.string(
             mandatory = True,
-            doc = "Relative path to the file"),
+            doc = "Relative path to the file",
+        ),
     },
 )
