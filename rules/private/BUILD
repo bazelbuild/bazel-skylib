@@ -18,3 +18,12 @@ bzl_library(
     name = "maprule_util",
     srcs = ["maprule_util.bzl"],
 )
+
+# The files needed for distribution
+filegroup(
+    name = "distribution",
+    srcs = glob(["*"]),
+    visibility = [
+        "//:__subpackages__",
+    ],
+)

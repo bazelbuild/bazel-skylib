@@ -117,10 +117,16 @@ def _set_conditions(condition_list):
     ans = {}
     if condition_list[0]:
         ans["//command_line_option:cpu"] = "ppc"
+    else:
+        ans["//command_line_option:cpu"] = "k8"
     if condition_list[1]:
         ans["//command_line_option:compilation_mode"] = "opt"
+    else:
+        ans["//command_line_option:compilation_mode"] = "dbg"
     if condition_list[2]:
         ans["//command_line_option:features"] = ["myfeature"]
+    else:
+        ans["//command_line_option:features"] = ["notmyfeature"]
     return ans
 
 _BooleanInfo = provider()

@@ -1,6 +1,6 @@
 load("//:bzl_library.bzl", "bzl_library")
 
-licenses(["notice"])  # Apache 2.0
+licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
@@ -61,5 +61,14 @@ filegroup(
         "CONTRIBUTORS",
         "//lib:distribution",
         "//rules:distribution",
+        "//rules/private:distribution",
+        "//toolchains/unittest:distribution",
     ] + glob(["*.bzl"]),
+)
+
+filegroup(
+    name = "bins",
+    srcs = [
+        "//rules:bins",
+    ],
 )

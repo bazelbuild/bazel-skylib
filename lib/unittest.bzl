@@ -20,7 +20,6 @@ assertions used to within tests.
 """
 
 load(":new_sets.bzl", new_sets = "sets")
-load(":old_sets.bzl", "sets")
 load(":types.bzl", "types")
 
 # The following function should only be called from WORKSPACE files and workspace macros.
@@ -126,11 +125,15 @@ def _make(impl, attrs = {}):
         toolchains = [TOOLCHAIN_TYPE],
     )
 
-_ActionInfo = provider(fields = ["actions"])
+_ActionInfo = provider(fields = ["actions", "bin_path"])
 
 def _action_retrieving_aspect_impl(target, ctx):
-    _ignore = [ctx]
-    return [_ActionInfo(actions = target.actions)]
+    return [
+        _ActionInfo(
+            actions = target.actions,
+            bin_path = ctx.bin_dir.path,
+        ),
+    ]
 
 _action_retrieving_aspect = aspect(
     attr_aspects = [],
@@ -138,7 +141,12 @@ _action_retrieving_aspect = aspect(
 )
 
 # TODO(cparsons): Provide more full documentation on analysis testing in README.
-def _make_analysis_test(impl, expect_failure = False, attrs = {}, config_settings = {}):
+def _make_analysis_test(
+        impl,
+        expect_failure = False,
+        attrs = {},
+        fragments = [],
+        config_settings = {}):
     """Creates an analysis test rule from its implementation function.
 
     An analysis test verifies the behavior of a "real" rule target by examining
@@ -170,6 +178,8 @@ def _make_analysis_test(impl, expect_failure = False, attrs = {}, config_setting
           to fail. Assertions can be made on the underlying failure using asserts.expect_failure
       attrs: An optional dictionary to supplement the attrs passed to the
           unit test's `rule()` constructor.
+      fragments: An optional list of fragment names that can be used to give rules access to
+          language-specific parts of configuration.
       config_settings: A dictionary of configuration settings to change for the target under
           test and its dependencies. This may be used to essentially change 'build flags' for
           the target under test, and may thus be utilized to test multiple targets with different
@@ -186,24 +196,23 @@ def _make_analysis_test(impl, expect_failure = False, attrs = {}, config_setting
     if expect_failure:
         changed_settings["//command_line_option:allow_analysis_failures"] = "True"
 
+    target_attr_kwargs = {}
     if changed_settings:
         test_transition = analysis_test_transition(
             settings = changed_settings,
         )
-        attrs["target_under_test"] = attr.label(
-            aspects = [_action_retrieving_aspect],
-            cfg = test_transition,
-            mandatory = True,
-        )
-    else:
-        attrs["target_under_test"] = attr.label(
-            aspects = [_action_retrieving_aspect],
-            mandatory = True,
-        )
+        target_attr_kwargs["cfg"] = test_transition
+
+    attrs["target_under_test"] = attr.label(
+        aspects = [_action_retrieving_aspect],
+        mandatory = True,
+        **target_attr_kwargs
+    )
 
     return rule(
         impl,
         attrs = attrs,
+        fragments = fragments,
         test = True,
         toolchains = [TOOLCHAIN_TYPE],
         analysis_test = True,
@@ -398,24 +407,6 @@ def _assert_set_equals(env, expected, actual, msg = None):
       msg: An optional message that will be printed that describes the failure.
           If omitted, a default will be used.
     """
-    if type(actual) != type(depset()) or not sets.is_equal(expected, actual):
-        expectation_msg = "Expected %r, but got %r" % (expected, actual)
-        if msg:
-            full_msg = "%s (%s)" % (msg, expectation_msg)
-        else:
-            full_msg = expectation_msg
-        _fail(env, full_msg)
-
-def _assert_new_set_equals(env, expected, actual, msg = None):
-    """Asserts that the given `expected` and `actual` sets are equal.
-
-    Args:
-      env: The test environment returned by `unittest.begin`.
-      expected: The expected set resulting from some computation.
-      actual: The actual set returned by some computation.
-      msg: An optional message that will be printed that describes the failure.
-          If omitted, a default will be used.
-    """
     if not new_sets.is_equal(expected, actual):
         expectation_msg = "Expected %r, but got %r" % (expected, actual)
         if msg:
@@ -423,6 +414,8 @@ def _assert_new_set_equals(env, expected, actual, msg = None):
         else:
             full_msg = expectation_msg
         _fail(env, full_msg)
+
+_assert_new_set_equals = _assert_set_equals
 
 def _expect_failure(env, expected_failure_msg = ""):
     """Asserts that the target under test has failed with a given error message.
@@ -457,8 +450,18 @@ def _target_actions(env):
     """
 
     # Validate?
-    dep = _target_under_test(env)
-    return dep[_ActionInfo].actions
+    return _target_under_test(env)[_ActionInfo].actions
+
+def _target_bin_dir_path(env):
+    """Returns ctx.bin_dir.path for the target under test.
+
+    Args:
+      env: The test environment returned by `analysistest.begin`.
+
+    Returns:
+      Output bin dir path string.
+    """
+    return _target_under_test(env)[_ActionInfo].bin_path
 
 def _target_under_test(env):
     """Returns the target under test.
@@ -500,5 +503,6 @@ analysistest = struct(
     end = _end_analysis_test,
     fail = _fail,
     target_actions = _target_actions,
+    target_bin_dir_path = _target_bin_dir_path,
     target_under_test = _target_under_test,
 )

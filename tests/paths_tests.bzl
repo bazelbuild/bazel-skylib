@@ -78,11 +78,17 @@ def _is_absolute_test(ctx):
     asserts.false(env, paths.is_absolute("foo/"))
     asserts.false(env, paths.is_absolute("foo/bar"))
 
-    # Try some absolute paths.
+    # Try some Linux absolute paths.
     asserts.true(env, paths.is_absolute("/"))
     asserts.true(env, paths.is_absolute("/foo"))
     asserts.true(env, paths.is_absolute("/foo/"))
     asserts.true(env, paths.is_absolute("/foo/bar"))
+
+    # Try some Windows absolute paths.
+    asserts.true(env, paths.is_absolute("D:\\"))
+    asserts.true(env, paths.is_absolute("C:\\"))
+    asserts.true(env, paths.is_absolute("C:\\foo"))
+    asserts.true(env, paths.is_absolute("C:\\foo\\bar"))
 
     return unittest.end(env)
 

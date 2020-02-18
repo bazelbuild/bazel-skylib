@@ -60,9 +60,18 @@ filegroup(
 # The files needed for distribution
 filegroup(
     name = "distribution",
-    srcs = glob(["*"]),
+    srcs = [
+        "BUILD",
+    ] + glob(["*.bzl"]),
     visibility = [
         "//:__pkg__",
-        "//distribution:__pkg__",
+    ],
+)
+
+filegroup(
+    name = "bins",
+    srcs = glob(["*.sh"]),
+    visibility = [
+        "//:__pkg__",
     ],
 )
