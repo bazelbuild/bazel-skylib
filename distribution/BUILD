@@ -1,10 +1,10 @@
-package(
-    default_visibility = ["//visibility:private"],
-)
-
 load("@bazel_skylib//:version.bzl", "version")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_pkg//releasing:defs.bzl", "print_rel_notes")
+
+package(
+    default_visibility = ["//visibility:private"],
+)
 
 pkg_tar(
     name = "srcs",
