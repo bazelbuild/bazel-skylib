@@ -36,6 +36,7 @@ def _make(elements = None):
     Returns:
       A set containing the passed in values.
     """
+
     # If you change the structure of a set, you need to also update the _is_set method
     # in types.bzl.
     elements = elements if elements else []

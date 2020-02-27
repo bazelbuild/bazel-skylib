@@ -344,6 +344,7 @@ def _fail(env, msg):
       msg: The message to log describing the failure.
     """
     full_msg = "In test %s: %s" % (env.ctx.attr._impl_name, msg)
+
     # There isn't a better way to output the message in Starlark, so use print.
     # buildifier: disable=print
     print(full_msg)
