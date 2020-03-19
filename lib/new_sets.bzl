@@ -182,10 +182,10 @@ def _union(*args):
     """Returns the union of several sets.
 
     Args:
-      *args: An arbitrary number of sets or lists.
+      *args: An arbitrary number of sets.
 
     Returns:
-      The set union of all sets or lists in `*args`.
+      The set union of all sets in `*args`.
     """
     return struct(_values = dicts.add(*[s._values for s in args]))
 
