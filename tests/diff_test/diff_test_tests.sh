@@ -50,10 +50,12 @@ function import_diff_test() {
 function assert_simple_diff_test() {
   local -r flag="$1"
   local -r ws="${TEST_TMPDIR}/$2"
+  local -r subdir="$3"
 
   import_diff_test "$ws"
   touch "$ws/WORKSPACE"
-  cat >"$ws/BUILD" <<'eof'
+  mkdir -p "$ws/$subdir"
+  cat >"$ws/${subdir}BUILD" <<'eof'
 load("//rules:diff_test.bzl", "diff_test")
 
 diff_test(
@@ -68,17 +70,17 @@ diff_test(
     file2 = "b.txt",
 )
 eof
-  echo foo > "$ws/a.txt"
-  echo bar > "$ws/b.txt"
+  echo foo > "$ws/$subdir/a.txt"
+  echo bar > "$ws/$subdir/b.txt"
 
   (cd "$ws" && \
-   bazel test "$flag" //:same --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test "$flag" "//${subdir%/}:same" --test_output=errors 1>"$TEST_log" 2>&1 \
      || fail "expected success")
 
   (cd "$ws" && \
-   bazel test "$flag" //:different --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test "$flag" "//${subdir%/}:different" --test_output=errors 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
-  expect_log 'FAIL: files "a.txt" and "b.txt" differ'
+  expect_log "FAIL: files \"${subdir}a.txt\" and \"${subdir}b.txt\" differ"
 }
 
 function assert_from_ext_repo() {
@@ -187,11 +189,19 @@ eof
 }
 
 function test_simple_diff_test_with_legacy_external_runfiles() {
-  assert_simple_diff_test "--legacy_external_runfiles" "${FUNCNAME[0]}"
+  assert_simple_diff_test "--legacy_external_runfiles" "${FUNCNAME[0]}" ""
 }
 
 function test_simple_diff_test_without_legacy_external_runfiles() {
-  assert_simple_diff_test "--nolegacy_external_runfiles" "${FUNCNAME[0]}"
+  assert_simple_diff_test "--nolegacy_external_runfiles" "${FUNCNAME[0]}" ""
+}
+
+function test_directory_named_external_with_legacy_external_runfiles() {
+  assert_simple_diff_test "--legacy_external_runfiles" "${FUNCNAME[0]}" "path/to/direcotry/external/in/name/"
+}
+
+function test_directory_named_external_without_legacy_external_runfiles() {
+  assert_simple_diff_test "--nolegacy_external_runfiles" "${FUNCNAME[0]}" "path/to/direcotry/external/in/name/"
 }
 
 function test_from_ext_repo_with_legacy_external_runfiles() {
