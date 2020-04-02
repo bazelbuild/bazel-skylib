@@ -75,3 +75,9 @@ filegroup(
         "//:__pkg__",
     ],
 )
+
+# export bzl files for the documentation
+exports_files(
+    glob(["*.bzl"]),
+    visibility = ["//:__subpackages__"],
+)
