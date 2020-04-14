@@ -4,6 +4,12 @@ licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
+# export bzl files for the documentation
+exports_files(
+    glob(["*.bzl"]),
+    visibility = ["//:__subpackages__"],
+)
+
 bzl_library(
     name = "collections",
     srcs = ["collections.bzl"],

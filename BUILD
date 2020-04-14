@@ -4,10 +4,7 @@ licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
-exports_files([
-    "LICENSE",
-    "lib.bzl",
-])
+exports_files(["LICENSE"])
 
 filegroup(
     name = "test_deps",
