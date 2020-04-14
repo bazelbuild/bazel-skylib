@@ -79,8 +79,8 @@ if %ERRORLEVEL% neq 0 (
 set -euo pipefail
 F1="{file1}"
 F2="{file2}"
-[[ "$F1" =~ external/* ]] && F1="${{F1#external/}}" || F1="$TEST_WORKSPACE/$F1"
-[[ "$F2" =~ external/* ]] && F2="${{F2#external/}}" || F2="$TEST_WORKSPACE/$F2"
+[[ "$F1" =~ ^external/* ]] && F1="${{F1#external/}}" || F1="$TEST_WORKSPACE/$F1"
+[[ "$F2" =~ ^external/* ]] && F2="${{F2#external/}}" || F2="$TEST_WORKSPACE/$F2"
 if [[ -d "${{RUNFILES_DIR:-/dev/null}}" && "${{RUNFILES_MANIFEST_ONLY:-}}" != 1 ]]; then
   RF1="$RUNFILES_DIR/$F1"
   RF2="$RUNFILES_DIR/$F2"
