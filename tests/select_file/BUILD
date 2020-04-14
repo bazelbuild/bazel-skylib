@@ -1,6 +1,8 @@
 load("//rules:select_file.bzl", "select_file")
 load("//rules:diff_test.bzl", "diff_test")
 
+licenses(["notice"])
+
 filegroup(
     name = "fg",
     srcs = [
