@@ -132,6 +132,6 @@ stardoc(
 stardoc(
     name = "common_settings_docs",
     out = "common_settings_doc_gen.md",
-    input = "//rules:common_settings.bzl"
+    input = "//rules:common_settings.bzl",
     deps = ["//rules:common_settings"],
 )
