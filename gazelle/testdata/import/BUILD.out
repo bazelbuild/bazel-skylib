@@ -1,0 +1,12 @@
+bzl_library(
+    name = "bar",
+    srcs = ["bar.bzl"],
+    visibility = ["//visibility:public"],
+)
+
+bzl_library(
+    name = "foo",
+    srcs = ["foo.bzl"],
+    visibility = ["//visibility:public"],
+    deps = ["//:bar"],
+)

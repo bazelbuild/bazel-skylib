@@ -1,0 +1,13 @@
+# Some comment to be preserved
+
+filegroup(
+    name = "allfiles",
+    srcs = glob(["**"]),
+)
+
+bzl_library(
+    name = "foo",
+    srcs = ["foo.bzl"],
+    visibility = ["//visibility:public"],
+    deps = ["@external_repo//path/to:file"],
+)

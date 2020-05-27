@@ -1,0 +1,5 @@
+bzl_library(
+    name = "foo",
+    srcs = ["foo.bzl"],
+    visibility = ["//visibility:public"],
+)

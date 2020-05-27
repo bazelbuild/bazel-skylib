@@ -40,3 +40,38 @@ maybe(
         "https://github.com/bazelbuild/rules_cc/archive/cb2dfba6746bfa3c3705185981f3109f0ae1b893.zip",
     ],
 )
+
+# Below are dependencies for the generator.
+
+load("@bazel_federation//:repositories.bzl", "rules_go")
+
+rules_go()
+# Provide a repository hint for Gazelle to inform it that the go package
+# github.com/bazelbuild/rules_go is available from io_bazel_rules_go and it
+# doesn't need to duplicatively fetch it.
+# gazelle:repository go_repository name=io_bazel_rules_go importpath=github.com/bazelbuild/rules_go
+
+load("@bazel_federation//setup:rules_go.bzl", "rules_go_setup")
+
+rules_go_setup()
+
+http_archive(
+    name = "bazel_gazelle",
+    sha256 = "bfd86b3cbe855d6c16c6fce60d76bd51f5c8dbc9cfcaef7a2bb5c1aafd0710e8",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.21.0/bazel-gazelle-v0.21.0.tar.gz",
+        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.21.0/bazel-gazelle-v0.21.0.tar.gz",
+    ],
+)
+# Another Gazelle repository hint.
+# gazelle:repository go_repository name=bazel_gazelle importpath=github.com/bazelbuild/bazel-gazelle/testtools
+
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
+
+gazelle_dependencies()
+
+go_repository(
+    name = "net_starlark_go",
+    commit = "0aa95694c76801c1528349fb86033b9098d634fc",
+    importpath = "go.starlark.net",
+)

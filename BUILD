@@ -4,6 +4,10 @@ licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
+# gazelle:exclude internal_deps.bzl
+# gazelle:exclude internal_setup.bzl
+# gazelle:exclude skylark_library.bzl
+
 exports_files(["LICENSE"])
 
 filegroup(
@@ -45,6 +49,16 @@ bzl_library(
     srcs = ["bzl_library.bzl"],
 )
 
+bzl_library(
+    name = "version",
+    srcs = ["version.bzl"],
+)
+
+bzl_library(
+    name = "workspace",
+    srcs = ["workspace.bzl"],
+)
+
 # The files needed for distribution.
 # TODO(aiuto): We should strip this from the release, but there is no
 # capability now to generate BUILD.foo from BUILD and have it appear in the
@@ -68,4 +82,15 @@ filegroup(
     srcs = [
         "//rules:bins",
     ],
+)
+
+# Below this line is for development purposes only and should thus not be
+# included by dependencies on bazel-skylib nor packaged in the distribution
+# release.
+
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+gazelle(
+    name = "gazelle",
+    gazelle = "//gazelle:gazelle-skylib",
 )

@@ -1,0 +1,1 @@
+load("//:bar.bzl", "asdf")

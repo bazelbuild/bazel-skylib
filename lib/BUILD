@@ -93,3 +93,8 @@ filegroup(
         "//distribution:__pkg__",
     ],
 )
+
+bzl_library(
+    name = "old_sets",
+    srcs = ["old_sets.bzl"],
+)

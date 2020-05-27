@@ -1,0 +1,7 @@
+package(default_visibility = ["//:__pkg__"])
+
+bzl_library(
+    name = "bar",
+    srcs = ["bar.bzl"],
+)
+
