@@ -1,2 +1,6 @@
-def asdf():
+"""
+Doc string
+"""
+
+def func():
     pass

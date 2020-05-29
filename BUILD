@@ -1,4 +1,5 @@
 load("//:bzl_library.bzl", "bzl_library")
+load("@bazel_gazelle//:def.bzl", "gazelle")
 
 licenses(["notice"])
 
@@ -87,8 +88,6 @@ filegroup(
 # Below this line is for development purposes only and should thus not be
 # included by dependencies on bazel-skylib nor packaged in the distribution
 # release.
-
-load("@bazel_gazelle//:def.bzl", "gazelle")
 
 gazelle(
     name = "gazelle",

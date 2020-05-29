@@ -3,4 +3,3 @@ bzl_library(
     srcs = ["bar.bzl"],
     visibility = ["//visibility:public"],
 )
-

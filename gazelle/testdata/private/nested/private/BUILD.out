@@ -2,4 +2,3 @@ bzl_library(
     name = "bar",
     srcs = ["bar.bzl"],
 )
-

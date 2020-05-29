@@ -69,9 +69,3 @@ http_archive(
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 
 gazelle_dependencies()
-
-go_repository(
-    name = "net_starlark_go",
-    commit = "0aa95694c76801c1528349fb86033b9098d634fc",
-    importpath = "go.starlark.net",
-)

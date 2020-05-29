@@ -1,2 +1,6 @@
-def asdf():
+"""
+Test sample code.
+"""
+
+def func():
     pass

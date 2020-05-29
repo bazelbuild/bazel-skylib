@@ -1,1 +1,7 @@
-load("//nested/dir:bar.bzl", "asdf")
+"""
+Doc string
+"""
+
+load("//nested/dir:bar.bzl", "func")
+
+func()

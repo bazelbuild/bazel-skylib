@@ -27,6 +27,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -38,7 +39,7 @@ import (
 	"github.com/bazelbuild/bazel-gazelle/resolve"
 	"github.com/bazelbuild/bazel-gazelle/rule"
 
-	"go.starlark.net/syntax"
+	"github.com/bazelbuild/buildtools/build"
 )
 
 const languageName = "starlark"
@@ -154,10 +155,9 @@ func (*bzlLibraryLang) Resolve(c *config.Config, ix *resolve.RuleIndex, rc *repo
 				Imp:  imp,
 			}
 			matches := ix.FindRulesByImport(res, languageName)
-			fmt.Printf("ix: %v\n", ix)
 
 			if len(matches) == 0 {
-				fmt.Printf("Didn't find match for %q\n", imp)
+				log.Printf("%s: %q was not found in dependency index. Skipping. This may result in an incomplete deps section and require manual BUILD file intervention.\n", from.String(), imp)
 			}
 
 			for _, m := range matches {
@@ -220,10 +220,10 @@ func (*bzlLibraryLang) GenerateRules(args language.GenerateArgs) language.Genera
 			fullPath := filepath.Join(args.Dir, f)
 			loads, err := getBzlFileLoads(fullPath)
 			if err != nil {
-				fmt.Printf("Error getting getBzlFileLoads(%q, %q): %v", args.Dir, f, err)
-				// Don't `continue` since it is reasonable to create a target even without deps.
+				log.Printf("%s: contains symtax errors: %v", fullPath, err)
+				// Don't `continue` since it is reasonable to create a target even
+				// without deps.
 			}
-			fmt.Printf("loads: %v\n", loads)
 
 			rules = append(rules, r)
 			imports = append(imports, loads)
@@ -240,22 +240,17 @@ func getBzlFileLoads(path string) ([]string, error) {
 	if err != nil {
 		return nil, fmt.Errorf("ioutil.ReadFile(%q) error: %v", path, err)
 	}
-	ast, err := syntax.Parse(path, f, 0644)
+	ast, err := build.ParseBuild(path, f)
 	if err != nil {
-		return nil, fmt.Errorf("syntax.Parse(%q) error: %v", f, err)
+		return nil, fmt.Errorf("build.Parse(%q) error: %v", f, err)
 	}
 
 	var loads []string
-	syntax.Walk(ast, func(n syntax.Node) bool {
-		if l, ok := n.(*syntax.LoadStmt); ok {
-			val, ok := l.Module.Value.(string)
-			if !ok {
-				fmt.Printf("The load statement at %s:%s is not a simple string. Therefore, bazel targets can not be generated automatically for it.", path, l.Module.TokenPos)
-				return true
-			}
-			loads = append(loads, val)
+	build.WalkOnce(ast, func(expr *build.Expr) {
+		n := *expr
+		if l, ok := n.(*build.LoadStmt); ok {
+			loads = append(loads, l.Module.Value)
 		}
-		return true
 	})
 	sort.Strings(loads)
 

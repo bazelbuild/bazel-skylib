@@ -1,1 +1,7 @@
-load("//:bar.bzl", "asdf")
+"""
+Doc string
+"""
+
+load("//:bar.bzl", "func")
+
+func()

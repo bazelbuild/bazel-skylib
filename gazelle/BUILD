@@ -1,5 +1,5 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
-load("@bazel_gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle_binary")
+load("@bazel_gazelle//:def.bzl", "gazelle_binary")
 
 # gazelle:exclude testdata
 
@@ -15,7 +15,7 @@ go_library(
         "@bazel_gazelle//repo:go_default_library",
         "@bazel_gazelle//resolve:go_default_library",
         "@bazel_gazelle//rule:go_default_library",
-        "@net_starlark_go//syntax:go_default_library",
+        "@com_github_bazelbuild_buildtools//build:go_default_library",
     ],
 )
 

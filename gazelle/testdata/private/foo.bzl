@@ -1,1 +1,7 @@
-load("//nested/private:bar.bzl", "asdf")
+"""
+Test sample code.
+"""
+
+load("//nested/private:bar.bzl", "func")
+
+func()
