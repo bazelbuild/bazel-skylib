@@ -38,6 +38,9 @@ bzl_library(
 bzl_library(
     name = "sets",
     srcs = ["sets.bzl"],
+    deps = [
+        ":new_sets",
+    ],
 )
 
 bzl_library(
