@@ -59,10 +59,17 @@ def copy_bash(ctx, src, dst):
     )
 
 def _common_impl(ctx, is_executable):
-    if ctx.attr.is_windows:
-        copy_cmd(ctx, ctx.file.src, ctx.outputs.out)
+    if ctx.attr.allow_symlink:
+        ctx.actions.symlink(
+            output = ctx.outputs.out,
+            target_file = ctx.file.src,
+            is_executable = is_executable,
+        )
     else:
-        copy_bash(ctx, ctx.file.src, ctx.outputs.out)
+        if ctx.attr.is_windows:
+            copy_cmd(ctx, ctx.file.src, ctx.outputs.out)
+        else:
+            copy_bash(ctx, ctx.file.src, ctx.outputs.out)
 
     files = depset(direct = [ctx.outputs.out])
     runfiles = ctx.runfiles(files = [ctx.outputs.out])
@@ -81,6 +88,7 @@ _ATTRS = {
     "src": attr.label(mandatory = True, allow_single_file = True),
     "out": attr.output(mandatory = True),
     "is_windows": attr.bool(mandatory = True),
+    "allow_symlink": attr.bool(mandatory = True),
 }
 
 _copy_file = rule(
@@ -96,7 +104,7 @@ _copy_xfile = rule(
     attrs = _ATTRS,
 )
 
-def copy_file(name, src, out, is_executable = False, **kwargs):
+def copy_file(name, src, out, is_executable = False, allow_symlink = False, **kwargs):
     """Copies a file to another location.
 
     `native.genrule()` is sometimes used to copy files (often wishing to rename them). The 'copy_file' rule does this with a simpler interface than genrule.
@@ -111,6 +119,13 @@ def copy_file(name, src, out, is_executable = False, **kwargs):
       is_executable: A boolean. Whether to make the output file executable. When
           True, the rule's output can be executed using `bazel run` and can be
           in the srcs of binary and test rules that require executable sources.
+          WARNING: If `allow_symlink` is True, `src` must also be executable.
+      allow_symlink: A boolean. Whether to allow symlinking instead of copying.
+          When False, the output is always a hard copy. When True, the output
+          *can* be a symlink, but there is no guarantee that a symlink is
+          created (i.e., at the time of writing, we don't create symlinks on
+          Windows). Set this to True if you need fast copying and your tools can
+          handle symlinks (which most UNIX tools can).
       **kwargs: further keyword arguments, e.g. `visibility`
     """
     if is_executable:
@@ -122,6 +137,7 @@ def copy_file(name, src, out, is_executable = False, **kwargs):
                 "@bazel_tools//src/conditions:host_windows": True,
                 "//conditions:default": False,
             }),
+            allow_symlink = allow_symlink,
             **kwargs
         )
     else:
@@ -133,5 +149,6 @@ def copy_file(name, src, out, is_executable = False, **kwargs):
                 "@bazel_tools//src/conditions:host_windows": True,
                 "//conditions:default": False,
             }),
+            allow_symlink = allow_symlink,
             **kwargs
         )
