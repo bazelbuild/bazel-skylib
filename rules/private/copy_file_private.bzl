@@ -58,12 +58,12 @@ def copy_bash(ctx, src, dst):
         use_default_shell_env = True,
     )
 
-def _common_impl(ctx, is_executable):
+def _impl(ctx):
     if ctx.attr.allow_symlink:
         ctx.actions.symlink(
             output = ctx.outputs.out,
             target_file = ctx.file.src,
-            is_executable = is_executable,
+            is_executable = ctx.attr.is_executable,
         )
     else:
         if ctx.attr.is_windows:
@@ -73,21 +73,16 @@ def _common_impl(ctx, is_executable):
 
     files = depset(direct = [ctx.outputs.out])
     runfiles = ctx.runfiles(files = [ctx.outputs.out])
-    if is_executable:
+    if ctx.attr.is_executable:
         return [DefaultInfo(files = files, runfiles = runfiles, executable = ctx.outputs.out)]
     else:
         return [DefaultInfo(files = files, runfiles = runfiles)]
-
-def _impl(ctx):
-    return _common_impl(ctx, False)
-
-def _ximpl(ctx):
-    return _common_impl(ctx, True)
 
 _ATTRS = {
     "src": attr.label(mandatory = True, allow_single_file = True),
     "out": attr.output(mandatory = True),
     "is_windows": attr.bool(mandatory = True),
+    "is_executable": attr.bool(mandatory = True),
     "allow_symlink": attr.bool(mandatory = True),
 }
 
@@ -128,27 +123,20 @@ def copy_file(name, src, out, is_executable = False, allow_symlink = False, **kw
           handle symlinks (which most UNIX tools can).
       **kwargs: further keyword arguments, e.g. `visibility`
     """
+
+    copy_file_impl = _copy_file
     if is_executable:
-        _copy_xfile(
-            name = name,
-            src = src,
-            out = out,
-            is_windows = select({
-                "@bazel_tools//src/conditions:host_windows": True,
-                "//conditions:default": False,
-            }),
-            allow_symlink = allow_symlink,
-            **kwargs
-        )
-    else:
-        _copy_file(
-            name = name,
-            src = src,
-            out = out,
-            is_windows = select({
-                "@bazel_tools//src/conditions:host_windows": True,
-                "//conditions:default": False,
-            }),
-            allow_symlink = allow_symlink,
-            **kwargs
-        )
+        copy_file_impl = _copy_xfile
+
+    copy_file_impl(
+        name = name,
+        src = src,
+        out = out,
+        is_windows = select({
+            "@bazel_tools//src/conditions:host_windows": True,
+            "//conditions:default": False,
+        }),
+        is_executable = is_executable,
+        allow_symlink = allow_symlink,
+        **kwargs
+    )
