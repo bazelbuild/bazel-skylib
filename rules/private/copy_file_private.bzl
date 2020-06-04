@@ -93,7 +93,7 @@ _copy_file = rule(
 )
 
 _copy_xfile = rule(
-    implementation = _ximpl,
+    implementation = _impl,
     executable = True,
     provides = [DefaultInfo],
     attrs = _ATTRS,
