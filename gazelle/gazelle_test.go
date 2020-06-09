@@ -29,19 +29,18 @@ import (
 
 var gazellePath = findGazelle()
 
-const base = "gazelle/testdata"
-
 // TestGazelleBinary runs a gazelle binary with starlib installed on each
 // directory in `testdata/*`. Please see `testdata/README.md` for more
 // information on each test.
 func TestGazelleBinary(t *testing.T) {
-	testdata, err := bazel.Runfile(base)
+	runfilesPath, err := bazel.RunfilesPath()
 	if err != nil {
-		t.Errorf("bazel.Runfile(%q) error: %v", base, err)
+		t.Fatalf("bazel.RunfilesPath() error: %v", err)
 	}
+	testdata := filepath.Join(runfilesPath, "gazelle", "testdata")
 	ds, err := ioutil.ReadDir(testdata)
 	if err != nil {
-		t.Errorf("ioutil.ReadDir(%q) error: %v", testdata, err)
+		t.Fatalf("ioutil.ReadDir(%q) error: %v", testdata, err)
 	}
 	for _, d := range ds {
 		if d.IsDir() {
