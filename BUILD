@@ -1,5 +1,4 @@
 load("//:bzl_library.bzl", "bzl_library")
-load("@bazel_gazelle//:def.bzl", "gazelle")
 
 licenses(["notice"])
 
@@ -83,13 +82,4 @@ filegroup(
     srcs = [
         "//rules:bins",
     ],
-)
-
-# Below this line is for development purposes only and should thus not be
-# included by dependencies on bazel-skylib nor packaged in the distribution
-# release.
-
-gazelle(
-    name = "gazelle",
-    gazelle = "//gazelle:gazelle-skylib",
 )

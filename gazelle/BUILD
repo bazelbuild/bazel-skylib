@@ -1,5 +1,5 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
-load("@bazel_gazelle//:def.bzl", "gazelle_binary")
+load("@bazel_gazelle//:def.bzl", "gazelle", "gazelle_binary")
 
 # gazelle:exclude testdata
 
@@ -12,6 +12,7 @@ go_library(
         "@bazel_gazelle//config:go_default_library",
         "@bazel_gazelle//label:go_default_library",
         "@bazel_gazelle//language:go_default_library",
+        "@bazel_gazelle//pathtools:go_default_library",
         "@bazel_gazelle//repo:go_default_library",
         "@bazel_gazelle//resolve:go_default_library",
         "@bazel_gazelle//rule:go_default_library",
@@ -39,13 +40,14 @@ go_test(
 gazelle_binary(
     name = "gazelle-skylib",
     languages = [":go_default_library"],
-    msan = "off",
-    pure = "off",
-    race = "off",
-    static = "off",
     visibility = [
         # Also make the binary available in the root of the repo for use, but
         # not externally.
         "//:__pkg__",
     ],
+)
+
+gazelle(
+    name = "gazelle",
+    gazelle = "//gazelle:gazelle-skylib",
 )

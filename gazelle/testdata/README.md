@@ -50,3 +50,7 @@ should not set its own `visibility`.
 
 This test demonstrates that if you load from another repo, it is able to
 generate a `deps` entry for the dependency.
+
+## `empty`
+
+Gazelle has the ability to remove old and unused targets. Test that.
