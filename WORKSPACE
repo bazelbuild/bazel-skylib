@@ -10,13 +10,19 @@ maybe(
     url = "https://github.com/bazelbuild/bazel-federation/releases/download/0.0.1/bazel_federation-0.0.1.tar.gz",
 )
 
-load("@bazel_federation//:repositories.bzl", "bazel_skylib_deps")
+load("@bazel_federation//:repositories.bzl", "bazel_skylib_deps", "rules_go")
 
 bazel_skylib_deps()
+
+rules_go()
 
 load("@bazel_federation//setup:bazel_skylib.bzl", "bazel_skylib_setup")
 
 bazel_skylib_setup()
+
+load("@bazel_federation//setup:rules_go.bzl", "rules_go_setup")
+
+rules_go_setup()
 
 # Below this line is for documentation generation only,
 # and should thus not be included by dependencies on
@@ -41,20 +47,10 @@ maybe(
     ],
 )
 
-# Below are dependencies for the generator.
-
-load("@bazel_federation//:repositories.bzl", "rules_go")
-
-rules_go()
 # Provide a repository hint for Gazelle to inform it that the go package
 # github.com/bazelbuild/rules_go is available from io_bazel_rules_go and it
 # doesn't need to duplicatively fetch it.
 # gazelle:repository go_repository name=io_bazel_rules_go importpath=github.com/bazelbuild/rules_go
-
-load("@bazel_federation//setup:rules_go.bzl", "rules_go_setup")
-
-rules_go_setup()
-
 http_archive(
     name = "bazel_gazelle",
     sha256 = "bfd86b3cbe855d6c16c6fce60d76bd51f5c8dbc9cfcaef7a2bb5c1aafd0710e8",

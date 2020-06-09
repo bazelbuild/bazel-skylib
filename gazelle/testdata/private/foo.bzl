@@ -2,6 +2,6 @@
 Test sample code.
 """
 
-load("//nested/private:bar.bzl", "func")
+load("//private:bar.bzl", "func")
 
 func()

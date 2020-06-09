@@ -29,7 +29,7 @@ import (
 
 var gazellePath = findGazelle()
 
-const base = "testdata"
+const base = "gazelle/testdata"
 
 // TestGazelleBinary runs a gazelle binary with starlib installed on each
 // directory in `testdata/*`. Please see `testdata/README.md` for more
@@ -45,17 +45,17 @@ func TestGazelleBinary(t *testing.T) {
 	}
 	for _, d := range ds {
 		if d.IsDir() {
-			t.Run(d.Name(), testPath(d.Name()))
+			t.Run(d.Name(), testPath(testdata, d.Name()))
 		}
 	}
 }
 
-func testPath(dir string) func(t *testing.T) {
+func testPath(testdata string, dir string) func(t *testing.T) {
 	return func(t *testing.T) {
 		var inputs []testtools.FileSpec
 		var goldens []testtools.FileSpec
 
-		if err := filepath.Walk(filepath.Join(base, dir), func(path string, info os.FileInfo, err error) error {
+		if err := filepath.Walk(filepath.Join(testdata, dir), func(path string, info os.FileInfo, err error) error {
 			// If you were called with an error, don't try to recover, just fail.
 			if err != nil {
 				return err
@@ -72,7 +72,7 @@ func testPath(dir string) func(t *testing.T) {
 			}
 
 			// Now trim the common prefix off.
-			newPath := strings.TrimPrefix(path, filepath.Join(base, dir)+"/")
+			newPath := strings.TrimPrefix(path, filepath.Join(testdata, dir)+"/")
 
 			if strings.HasSuffix(newPath, ".in") {
 				inputs = append(inputs, testtools.FileSpec{
@@ -97,7 +97,7 @@ func testPath(dir string) func(t *testing.T) {
 
 			return nil
 		}); err != nil {
-			t.Errorf("filepath.Walk(%q) error: %v", filepath.Join(base, dir), err)
+			t.Errorf("filepath.Walk(%q) error: %v", filepath.Join(testdata, dir), err)
 		}
 
 		dir, cleanup := testtools.CreateFiles(t, inputs)
