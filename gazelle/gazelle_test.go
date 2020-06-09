@@ -41,7 +41,7 @@ func TestGazelleBinary(t *testing.T) {
 	}
 	ds, err := ioutil.ReadDir(testdata)
 	if err != nil {
-		t.Errorf("ioutil.ReadDir(%q) error: %v", base, err)
+		t.Errorf("ioutil.ReadDir(%q) error: %v", testdata, err)
 	}
 	for _, d := range ds {
 		if d.IsDir() {
