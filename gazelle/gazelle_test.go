@@ -35,7 +35,11 @@ const base = "testdata"
 // directory in `testdata/*`. Please see `testdata/README.md` for more
 // information on each test.
 func TestGazelleBinary(t *testing.T) {
-	ds, err := ioutil.ReadDir(base)
+	testdata, err := bazel.Runfile(base)
+	if err != nil {
+		t.Errorf("bazel.Runfile(%q) error: %v", base, err)
+	}
+	ds, err := ioutil.ReadDir(testdata)
 	if err != nil {
 		t.Errorf("ioutil.ReadDir(%q) error: %v", base, err)
 	}
