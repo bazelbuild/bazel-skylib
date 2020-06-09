@@ -203,30 +203,31 @@ func (*bzlLibraryLang) GenerateRules(args language.GenerateArgs) language.Genera
 	var rules []*rule.Rule
 	var imports []interface{}
 	for _, f := range append(args.RegularFiles, args.GenFiles...) {
-		if isBzlSourceFile(f) {
-			name := strings.TrimSuffix(f, fileType)
-			r := rule.NewRule("bzl_library", name)
-
-			r.SetAttr("srcs", []string{f})
-
-			if args.File == nil || !args.File.HasDefaultVisibility() {
-				inPrivateDir := pathtools.Index(args.Rel, "private") >= 0
-				if !inPrivateDir {
-					r.SetAttr("visibility", []string{"//visibility:public"})
-				}
-			}
-
-			fullPath := filepath.Join(args.Dir, f)
-			loads, err := getBzlFileLoads(fullPath)
-			if err != nil {
-				log.Printf("%s: contains syntax errors: %v", fullPath, err)
-				// Don't `continue` since it is reasonable to create a target even
-				// without deps.
-			}
-
-			rules = append(rules, r)
-			imports = append(imports, loads)
+		if !isBzlSourceFile(f) {
+			continue
 		}
+		name := strings.TrimSuffix(f, fileType)
+		r := rule.NewRule("bzl_library", name)
+
+		r.SetAttr("srcs", []string{f})
+
+		if args.File == nil || !args.File.HasDefaultVisibility() {
+			inPrivateDir := pathtools.Index(args.Rel, "private") >= 0
+			if !inPrivateDir {
+				r.SetAttr("visibility", []string{"//visibility:public"})
+			}
+		}
+
+		fullPath := filepath.Join(args.Dir, f)
+		loads, err := getBzlFileLoads(fullPath)
+		if err != nil {
+			log.Printf("%s: contains syntax errors: %v", fullPath, err)
+			// Don't `continue` since it is reasonable to create a target even
+			// without deps.
+		}
+
+		rules = append(rules, r)
+		imports = append(imports, loads)
 	}
 
 	return language.GenerateResult{
@@ -278,20 +279,26 @@ func generateEmpty(args language.GenerateArgs) []*rule.Rule {
 			continue
 		}
 		name := r.AttrString("name")
-		srcs := srcsList(r.AttrStrings("srcs"))
 
+		exists := make(map[string]bool)
 		for _, f := range args.RegularFiles {
-			if srcs.Contains(f) {
-				continue
-			}
+			exists[f] = true
 		}
 		for _, f := range args.GenFiles {
-			if srcs.Contains(f) {
-				continue
+			exists[f] = true
+		}
+		for _, r := range args.File.Rules {
+			srcsExist := false
+			for _, f := range r.AttrStrings("srcs") {
+				if exists[f] {
+					srcsExist = true
+					break
+				}
+			}
+			if !srcsExist {
+				ret = append(ret, rule.NewRule("bzl_library", name))
 			}
 		}
-
-		ret = append(ret, rule.NewRule("bzl_library", name))
 	}
 	return ret
 }

@@ -29,74 +29,82 @@ import (
 
 var gazellePath = findGazelle()
 
+const testDataPath = "gazelle/testdata/"
+
 // TestGazelleBinary runs a gazelle binary with starlib installed on each
 // directory in `testdata/*`. Please see `testdata/README.md` for more
 // information on each test.
 func TestGazelleBinary(t *testing.T) {
-	runfilesPath, err := bazel.RunfilesPath()
+	tests := map[string][]bazel.RunfileEntry{}
+
+	files, err := bazel.ListRunfiles()
 	if err != nil {
-		t.Fatalf("bazel.RunfilesPath() error: %v", err)
+		t.Fatalf("bazel.ListRunfiles() error: %v", err)
 	}
-	testdata := filepath.Join(runfilesPath, "gazelle", "testdata")
-	ds, err := ioutil.ReadDir(testdata)
-	if err != nil {
-		t.Fatalf("ioutil.ReadDir(%q) error: %v", testdata, err)
-	}
-	for _, d := range ds {
-		if d.IsDir() {
-			t.Run(d.Name(), testPath(testdata, d.Name()))
+	for _, f := range files {
+		if strings.HasPrefix(f.ShortPath, testDataPath) {
+			relativePath := strings.TrimPrefix(f.ShortPath, testDataPath)
+			parts := strings.SplitN(relativePath, "/", 2)
+			if len(parts) < 2 {
+				// This file is not a part of a testcase since it must be in a dir that
+				// is the test case and then have a path inside of that.
+				continue
+			}
+
+			tests[parts[0]] = append(tests[parts[0]], f)
 		}
+	}
+
+	for testName, files := range tests {
+		testPath(t, testName, files)
 	}
 }
 
-func testPath(testdata string, dir string) func(t *testing.T) {
-	return func(t *testing.T) {
+func testPath(t *testing.T, name string, files []bazel.RunfileEntry) {
+	t.Run(name, func(t *testing.T) {
 		var inputs []testtools.FileSpec
 		var goldens []testtools.FileSpec
 
-		if err := filepath.Walk(filepath.Join(testdata, dir), func(path string, info os.FileInfo, err error) error {
-			// If you were called with an error, don't try to recover, just fail.
+		for _, f := range files {
+			path := f.Path
+			trim := testDataPath + name + "/"
+			shortPath := strings.TrimPrefix(f.ShortPath, trim)
+			info, err := os.Stat(path)
 			if err != nil {
-				return err
+				t.Fatalf("os.Stat(%q) error: %v", path, err)
 			}
 
 			// Skip dirs.
 			if info.IsDir() {
-				return nil
+				continue
 			}
 
 			content, err := ioutil.ReadFile(path)
 			if err != nil {
-				return err
+				t.Errorf("ioutil.ReadFile(%q) error: %v", path, err)
 			}
 
 			// Now trim the common prefix off.
-			newPath := strings.TrimPrefix(path, filepath.Join(testdata, dir)+"/")
-
-			if strings.HasSuffix(newPath, ".in") {
+			if strings.HasSuffix(shortPath, ".in") {
 				inputs = append(inputs, testtools.FileSpec{
-					Path:    strings.TrimSuffix(newPath, ".in"),
+					Path:    strings.TrimSuffix(shortPath, ".in"),
 					Content: string(content),
 				})
-			} else if strings.HasSuffix(newPath, ".out") {
+			} else if strings.HasSuffix(shortPath, ".out") {
 				goldens = append(goldens, testtools.FileSpec{
-					Path:    strings.TrimSuffix(newPath, ".out"),
+					Path:    strings.TrimSuffix(shortPath, ".out"),
 					Content: string(content),
 				})
 			} else {
 				inputs = append(inputs, testtools.FileSpec{
-					Path:    newPath,
+					Path:    shortPath,
 					Content: string(content),
 				})
 				goldens = append(goldens, testtools.FileSpec{
-					Path:    newPath,
+					Path:    shortPath,
 					Content: string(content),
 				})
 			}
-
-			return nil
-		}); err != nil {
-			t.Errorf("filepath.Walk(%q) error: %v", filepath.Join(testdata, dir), err)
 		}
 
 		dir, cleanup := testtools.CreateFiles(t, inputs)
@@ -120,7 +128,7 @@ func testPath(testdata string, dir string) func(t *testing.T) {
 				return nil
 			})
 		}
-	}
+	})
 }
 
 func findGazelle() string {
