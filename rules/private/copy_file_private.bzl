@@ -58,7 +58,7 @@ def copy_bash(ctx, src, dst):
         use_default_shell_env = True,
     )
 
-def _impl(ctx):
+def _copy_file_impl(ctx):
     if ctx.attr.allow_symlink:
         ctx.actions.symlink(
             output = ctx.outputs.out,
@@ -87,13 +87,13 @@ _ATTRS = {
 }
 
 _copy_file = rule(
-    implementation = _impl,
+    implementation = _copy_file_impl,
     provides = [DefaultInfo],
     attrs = _ATTRS,
 )
 
 _copy_xfile = rule(
-    implementation = _impl,
+    implementation = _copy_file_impl,
     executable = True,
     provides = [DefaultInfo],
     attrs = _ATTRS,
