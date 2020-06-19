@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# buildifier: disable=skylark-docstring
-# buildifier: disable=skylark-comment
 """Common build setting rules
 
 These rules return a BuildSettingInfo with the value of the build setting.
