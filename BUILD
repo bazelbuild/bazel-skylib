@@ -6,6 +6,7 @@ package(default_visibility = ["//visibility:public"])
 
 # gazelle:exclude internal_deps.bzl
 # gazelle:exclude internal_setup.bzl
+# buildifier: disable=skylark-comment
 # gazelle:exclude skylark_library.bzl
 
 exports_files(["LICENSE"])
