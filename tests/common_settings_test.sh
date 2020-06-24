@@ -133,7 +133,7 @@ function test_can_set_flags() {
   local -r pkg="${FUNCNAME[0]}"
   create_volcano_pkg "$pkg"
 
-  bazel build volcano:mt-st-helens --experimental_build_setting_api --//volcano:height-flag=8366 \
+  bazel build volcano:mt-st-helens --//volcano:height-flag=8366 \
     --//volcano:active-flag=False --//volcano:namer-flag=puyallup-tribe \
     --//volcano:nicknames-flag=volcano-mc-volcanoface \
     >"$TEST_log" 2>&1 || fail "Expected test to pass"
@@ -148,7 +148,7 @@ function test_cannot_set_settings() {
   local -r pkg="${FUNCNAME[0]}"
   create_volcano_pkg "$pkg"
 
-  bazel build volcano:mt-st-helens --experimental_build_setting_api --//volcano:height-setting=8366 \
+  bazel build volcano:mt-st-helens --//volcano:height-setting=8366 \
     >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
 
   expect_log "Unrecognized option: //volcano:height-setting"
@@ -158,7 +158,7 @@ function test_not_allowed_value() {
   local -r pkg="${FUNCNAME[0]}"
   create_volcano_pkg "$pkg"
 
-  bazel build volcano:mt-st-helens --experimental_build_setting_api --//volcano:namer-flag=me \
+  bazel build volcano:mt-st-helens --//volcano:namer-flag=me \
     >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
 
   expect_log "Error setting //volcano:namer-flag: invalid value 'me'. Allowed values are"
