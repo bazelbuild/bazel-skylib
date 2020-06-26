@@ -81,3 +81,8 @@ exports_files(
     glob(["*.bzl"]),
     visibility = ["//:__subpackages__"],
 )
+
+bzl_library(
+    name = "select_file",
+    srcs = ["select_file.bzl"],
+)

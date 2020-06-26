@@ -10,13 +10,19 @@ maybe(
     url = "https://github.com/bazelbuild/bazel-federation/releases/download/0.0.1/bazel_federation-0.0.1.tar.gz",
 )
 
-load("@bazel_federation//:repositories.bzl", "bazel_skylib_deps")
+load("@bazel_federation//:repositories.bzl", "bazel_skylib_deps", "rules_go")
 
 bazel_skylib_deps()
+
+rules_go()
 
 load("@bazel_federation//setup:bazel_skylib.bzl", "bazel_skylib_setup")
 
 bazel_skylib_setup()
+
+load("@bazel_federation//setup:rules_go.bzl", "rules_go_setup")
+
+rules_go_setup()
 
 # Below this line is for documentation generation only,
 # and should thus not be included by dependencies on
@@ -40,3 +46,22 @@ maybe(
         "https://github.com/bazelbuild/rules_cc/archive/cb2dfba6746bfa3c3705185981f3109f0ae1b893.zip",
     ],
 )
+
+# Provide a repository hint for Gazelle to inform it that the go package
+# github.com/bazelbuild/rules_go is available from io_bazel_rules_go and it
+# doesn't need to duplicatively fetch it.
+# gazelle:repository go_repository name=io_bazel_rules_go importpath=github.com/bazelbuild/rules_go
+http_archive(
+    name = "bazel_gazelle",
+    sha256 = "bfd86b3cbe855d6c16c6fce60d76bd51f5c8dbc9cfcaef7a2bb5c1aafd0710e8",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.21.0/bazel-gazelle-v0.21.0.tar.gz",
+        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.21.0/bazel-gazelle-v0.21.0.tar.gz",
+    ],
+)
+# Another Gazelle repository hint.
+# gazelle:repository go_repository name=bazel_gazelle importpath=github.com/bazelbuild/bazel-gazelle/testtools
+
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+
+gazelle_dependencies()

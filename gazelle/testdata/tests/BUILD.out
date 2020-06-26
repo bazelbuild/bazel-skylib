@@ -1,0 +1,14 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
+# Some comment to be preserved
+
+filegroup(
+    name = "allfiles",
+    srcs = glob(["**"]),
+)
+
+bzl_library(
+    name = "foo",
+    srcs = ["foo.bzl"],
+    visibility = ["//visibility:public"],
+)

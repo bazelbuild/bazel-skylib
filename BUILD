@@ -4,6 +4,11 @@ licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
+# gazelle:exclude internal_deps.bzl
+# gazelle:exclude internal_setup.bzl
+# buildifier: disable=skylark-comment
+# gazelle:exclude skylark_library.bzl
+
 exports_files(["LICENSE"])
 
 filegroup(
@@ -43,6 +48,16 @@ bzl_library(
 bzl_library(
     name = "bzl_library",
     srcs = ["bzl_library.bzl"],
+)
+
+bzl_library(
+    name = "version",
+    srcs = ["version.bzl"],
+)
+
+bzl_library(
+    name = "workspace",
+    srcs = ["workspace.bzl"],
 )
 
 # The files needed for distribution.
