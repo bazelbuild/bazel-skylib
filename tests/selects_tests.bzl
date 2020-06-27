@@ -607,6 +607,7 @@ def _always_true_match_any_test():
 
 ###################################################
 
+# buildifier: disable=unnamed-macro
 def selects_test_suite():
     """Creates the test targets and test suite for selects.bzl tests."""
     unittest.suite(

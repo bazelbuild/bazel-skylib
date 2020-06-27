@@ -223,6 +223,7 @@ inspect_output_dirs_test = analysistest.make(
 
 #########################################
 
+# buildifier: disable=unnamed-macro
 def unittest_passing_tests_suite():
     """Creates the test targets and test suite for passing unittest.bzl tests.
 
