@@ -1,20 +1,23 @@
+#include <chrono>
 #include <fstream>
 #include <iostream>
-#include <streambuf>
 #include <string>
+#include <thread>
 
 int main(int argc, const char *argv[], const char *envp[]) {
   std::ofstream env_file(argv[1]);
-  env_file << "Envs:" << std::endl;
   for (int i = 0; envp[i] != nullptr; ++i) {
     env_file << envp[i] << std::endl;
   }
 
   std::ofstream arg_file(argv[2]);
-  arg_file << "Args:" << std::endl;
   for (int i = 3; i < argc; ++i) {
     arg_file << argv[i] << std::endl;
   }
 
-  std::cout << "Child process to stdout" << std::endl;
+  std::this_thread::sleep_for(std::chrono::seconds(10));
+
+  for (int i = 0; i < 10000; ++i) {
+    std::cout << "Child process to stdout : " << i << std::endl;
+  }
 }

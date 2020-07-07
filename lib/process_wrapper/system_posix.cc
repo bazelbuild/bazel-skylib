@@ -20,10 +20,6 @@ System::StrType System::GetWorkingDirectory() {
   return System::StrType{cwd};
 }
 
-System::StrType System::JoinPaths(const StrType& path1, const StrType& path2) {
-  return path1 + "/" + path2;
-}
-
 int System::Exec(const System::StrType& executable,
                  const System::Arguments& arguments,
                  const System::EnvironmentBlock& environment_block) {

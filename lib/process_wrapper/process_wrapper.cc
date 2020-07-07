@@ -8,17 +8,19 @@
 using System = process_wrapper::System;
 using StrType = System::StrType;
 
-void ReplaceToken(StrType& str, StrType& token, const StrType& content) {
+void ReplaceToken(StrType& str, const StrType& token,
+                  const StrType& replacement) {
   std::size_t pos = str.find(token);
   if (pos != std::string::npos) {
-    str.replace(pos, token.size(), content);
+    str.replace(pos, token.size(), replacement);
   }
 }
 
 bool ReadFileToArray(const StrType& file_path, System::StrVecType& vec) {
   std::ifstream file(file_path);
   if (file.fail()) {
-    std::cerr << "Failed to open env file: " << System::ToUtf8(file_path) << std::endl;
+    std::cerr << "Failed to open env file: " << System::ToUtf8(file_path)
+              << std::endl;
     return false;
   }
   std::string line;
@@ -52,7 +54,7 @@ int main(int argc, const char* argv[], const char* envp[]) {
   System::Arguments arguments;
   System::Arguments file_arguments;
   bool subst_pwd = false;
-  // Processing current process argument lists until -- is encountered
+  // Processing current process argument list until -- is encountered
   // everthing after gets sent down to the child process
   for (int i = 1; i < argc; ++i) {
     StrType arg = argv[i];
@@ -60,8 +62,8 @@ int main(int argc, const char* argv[], const char* envp[]) {
       subst_pwd = true;
     } else {
       if (++i == argc) {
-        std::cerr << "Argument \"" << System::ToUtf8(arg) << "\" missing parameter."
-                  << std::endl;
+        std::cerr << "Argument \"" << System::ToUtf8(arg)
+                  << "\" missing parameter." << std::endl;
         return -1;
       }
       if (arg == RTW_SYS_STR_LITERAL("--env-file")) {
@@ -89,7 +91,20 @@ int main(int argc, const char* argv[], const char* envp[]) {
     }
   }
 
-  int exit_code = System::Exec(exec_path, arguments, environment_block);
+  if (subst_pwd) {
+    const StrType token = RTW_SYS_STR_LITERAL("$pwd");
+    const StrType replacement = System::GetWorkingDirectory();
+    for (StrType& arg : arguments) {
+      ReplaceToken(arg, token, replacement);
+    }
+
+    for (StrType& env : environment_block) {
+      ReplaceToken(env, token, replacement);
+    }
+  }
+
+  int exit_code =
+      System::Exec(exec_path, arguments, environment_block, stdout_file);
   if (exit_code == 0) {
     if (!touch_file.empty()) {
       std::ofstream file(touch_file);

@@ -23,12 +23,4 @@ std::string System::ToUtf8(const System::StrType& string) {
 #endif  // defined(RTW_WIN_UNICODE)
 }
 
-System::StrType System::ComposeEnvironmentVariable(const StrType& key,
-                                                   const StrType& value) {
-  StrType env = key;
-  env.push_back(RTW_SYS_STR_LITERAL('='));
-  env += value;
-  return env;
-}
-
 }  // namespace process_wrapper
