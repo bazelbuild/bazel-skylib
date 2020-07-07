@@ -59,8 +59,8 @@ process_wrapper_tester(
 
 process_wrapper_tester(
     name = "process_wrapper_arg_files",
-    env_files = [
-        ":env_files",
+    arg_files = [
+        ":arg_files",
     ],
     test_config = "arg-files",
 )

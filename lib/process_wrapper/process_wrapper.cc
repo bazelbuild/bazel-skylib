@@ -7,7 +7,7 @@
 #include "lib/process_wrapper/utils.h"
 
 // Simple process wrapper allowing us to not depend on the shell to run a
-// process.
+// process and perform basic operations.
 #if defined(RTW_WIN_UNICODE)
 int wmain(int argc, const wchar_t* argv[], const wchar_t* envp[]) {
 #else
