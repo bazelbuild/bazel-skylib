@@ -20,29 +20,29 @@ System::StrType System::GetWorkingDirectory() {
   return System::StrType{cwd};
 }
 
-System::StrType System::JoinPaths(const StrType &path1, const StrType &path2) {
+System::StrType System::JoinPaths(const StrType& path1, const StrType& path2) {
   return path1 + "/" + path2;
 }
 
-int System::Exec(const System::StrType &executable,
-                 const System::Arguments &arguments,
-                 const System::EnvironmentBlock &environment_block) {
+int System::Exec(const System::StrType& executable,
+                 const System::Arguments& arguments,
+                 const System::EnvironmentBlock& environment_block) {
   pid_t child_pid = fork();
   if (child_pid < 0) {
     std::cerr << "error: Failed to fork the current process." << std::endl;
     return -1;
   } else if (child_pid == 0) {
-    std::vector<char *> argv;
+    std::vector<char*> argv;
     std::string argv0 = JoinPaths(GetWorkingDirectory(), executable);
     argv.push_back(&argv0[0]);
-    for (const StrType &argument : arguments) {
-      argv.push_back(const_cast<char *>(argument.c_str()));
+    for (const StrType& argument : arguments) {
+      argv.push_back(const_cast<char*>(argument.c_str()));
     }
     argv.push_back(nullptr);
 
-    std::vector<char *> envp;
-    for (const StrType &ev : environment_block) {
-      envp.push_back(const_cast<char *>(ev.c_str()));
+    std::vector<char*> envp;
+    for (const StrType& ev : environment_block) {
+      envp.push_back(const_cast<char*>(ev.c_str()));
     }
     envp.push_back(nullptr);
 

@@ -5,91 +5,100 @@
 
 #include "lib/process_wrapper/system.h"
 
-// Simple rust tools wrapper allowing us to prepare the context to call rustc or
-// clippy. Since it's only used as a private implementation detail of a rule and
-// not user invoked we don't bother with error checking.
+using System = process_wrapper::System;
+using StrType = System::StrType;
+
+void ReplaceToken(StrType& str, StrType& token, const StrType& content) {
+  std::size_t pos = str.find(token);
+  if (pos != std::string::npos) {
+    str.replace(pos, token.size(), content);
+  }
+}
+
+bool ReadFileToArray(const StrType& file_path, System::StrVecType& vec) {
+  std::ifstream file(file_path);
+  if (file.fail()) {
+    std::cerr << "Failed to open env file: " << System::ToUtf8(file_path) << std::endl;
+    return false;
+  }
+  std::string line;
+  while (std::getline(file, line)) {
+    if (line.empty()) {
+      continue;
+    }
+    vec.push_back(System::FromUtf8(line));
+  }
+  return true;
+}
+
+// Simple process wrapper allowing us to not depend on the shell to run a
+// process.
 #if defined(RTW_WIN_UNICODE)
 int wmain(int argc, const wchar_t* argv[], const wchar_t* envp[]) {
 #else
 int main(int argc, const char* argv[], const char* envp[]) {
 #endif  // defined(RTW_WIN_UNICODE)
 
-  using namespace process_wrapper;
-
-  // Parse args.
-  System::StrType tool_path;
-  System::StrType out_dir;
-  System::StrType rename_from;
-  System::StrType rename_to;
-  System::StrType maker_path;
-  System::Arguments arguments;
   System::EnvironmentBlock environment_block;
-
-  for (int i = 1; i < argc; ++i) {
-    System::StrType arg = argv[i];
-    if (arg == RTW_SYS_STR_LITERAL("--tool-path")) {
-      tool_path = argv[++i];
-    } else if (arg == RTW_SYS_STR_LITERAL("--out-dir")) {
-      out_dir = System::JoinPaths(System::GetWorkingDirectory(), argv[++i]);
-      environment_block.push_back(System::ComposeEnvironmentVariable(
-          RTW_SYS_STR_LITERAL("OUT_DIR"), out_dir));
-    } else if (arg == RTW_SYS_STR_LITERAL("--build-env-file")) {
-      std::ifstream env_file(argv[++i]);
-      std::string line;
-      while (std::getline(env_file, line)) {
-        environment_block.push_back(System::ToStrType(line));
-      }
-    } else if (arg == RTW_SYS_STR_LITERAL("--build-flags-file")) {
-      std::ifstream env_file(argv[++i]);
-      std::string line;
-      while (std::getline(env_file, line)) {
-        // replace <EXEC_ROOT> by the exec root
-        const System::StrType token = RTW_SYS_STR_LITERAL("<EXEC_ROOT>");
-        System::StrType sys_line = System::ToStrType(line);
-        std::size_t pos = sys_line.find(token);
-        if (pos != std::string::npos) {
-          sys_line.replace(pos, token.size(), System::GetWorkingDirectory());
-        }
-        arguments.push_back(sys_line);
-      }
-    } else if (arg == RTW_SYS_STR_LITERAL("--package-dir")) {
-      environment_block.push_back(System::ComposeEnvironmentVariable(
-          RTW_SYS_STR_LITERAL("CARGO_MANIFEST_DIR"),
-          System::JoinPaths(System::GetWorkingDirectory(), argv[++i])));
-    } else if (arg == RTW_SYS_STR_LITERAL("--maker-path")) {
-      maker_path = argv[++i];
-    } else if (arg == RTW_SYS_STR_LITERAL("--rename")) {
-      rename_from = argv[++i];
-      rename_to = argv[++i];
-    } else if (arg == RTW_SYS_STR_LITERAL("--")) {
-      for (++i; i < argc; ++i) {
-        arguments.push_back(argv[i]);
-      }
-    }
-  }
-
+  // Taking all environment variables from the current process
+  // and sending them down to the child process
   for (int i = 0; envp[i] != nullptr; ++i) {
     environment_block.push_back(envp[i]);
   }
 
-  // This is to be able to benefit from caching when using RBE
-  arguments.push_back(RTW_SYS_STR_LITERAL("--remap-path-prefix=") +
-                      System::GetWorkingDirectory() +
-                      RTW_SYS_STR_LITERAL("=."));
-
-  int exit_code = System::Exec(tool_path, arguments, environment_block);
-  if (exit_code == 0) {
-    if (!maker_path.empty()) {
-      std::ofstream file(maker_path);
-    }
-
-    // we perform a rename if necessary
-    if (!rename_from.empty() && !rename_to.empty()) {
-      std::ifstream source(rename_from, std::ios::binary);
-      std::ofstream dest(rename_to, std::ios::binary);
-      dest << source.rdbuf();
+  StrType exec_path;
+  StrType touch_file;
+  StrType stdout_file;
+  System::Arguments arguments;
+  System::Arguments file_arguments;
+  bool subst_pwd = false;
+  // Processing current process argument lists until -- is encountered
+  // everthing after gets sent down to the child process
+  for (int i = 1; i < argc; ++i) {
+    StrType arg = argv[i];
+    if (arg == RTW_SYS_STR_LITERAL("--subst-pwd")) {
+      subst_pwd = true;
+    } else {
+      if (++i == argc) {
+        std::cerr << "Argument \"" << System::ToUtf8(arg) << "\" missing parameter."
+                  << std::endl;
+        return -1;
+      }
+      if (arg == RTW_SYS_STR_LITERAL("--env-file")) {
+        if (!ReadFileToArray(argv[i], environment_block)) {
+          return -1;
+        }
+      } else if (arg == RTW_SYS_STR_LITERAL("--arg-file")) {
+        if (!ReadFileToArray(argv[i], file_arguments)) {
+          return -1;
+        }
+      } else if (arg == RTW_SYS_STR_LITERAL("--touch-file")) {
+        touch_file = argv[i];
+      } else if (arg == RTW_SYS_STR_LITERAL("--stdout-file")) {
+        stdout_file = argv[i];
+      } else if (arg == RTW_SYS_STR_LITERAL("--")) {
+        exec_path = argv[i];
+        for (++i; i < argc; ++i) {
+          arguments.push_back(argv[i]);
+        }
+        // after we consume all arguments we append the files arguments
+        for (const StrType& file_arg : file_arguments) {
+          arguments.push_back(file_arg);
+        }
+      }
     }
   }
 
+  int exit_code = System::Exec(exec_path, arguments, environment_block);
+  if (exit_code == 0) {
+    if (!touch_file.empty()) {
+      std::ofstream file(touch_file);
+      if (file.fail()) {
+        std::cerr << "Touch file \"" << touch_file.c_str()
+                  << "\" creation failed" << std::endl;
+        return -1;
+      }
+    }
+  }
   return exit_code;
 }

@@ -24,12 +24,14 @@ class System {
   using StrType = std::string;
 #endif  // defined(RTW_WIN_UNICODE)
 
-  using Arguments = std::vector<StrType>;
-  using EnvironmentBlock = std::vector<StrType>;
+  using StrVecType = std::vector<StrType>; 
+  using Arguments = StrVecType;
+  using EnvironmentBlock = StrVecType;
 
  public:
   // Converts to the system string format
-  static StrType ToStrType(const std::string& string);
+  static StrType FromUtf8(const std::string& string);
+  static std::string ToUtf8(const StrType& string);
 
   // Joins an environment variable in a single string
   static StrType ComposeEnvironmentVariable(const StrType& key,
@@ -38,7 +40,7 @@ class System {
   // Gets the working directory of the current process
   static StrType GetWorkingDirectory();
 
-  // Joins paths using the system convention 
+  // Joins paths using the system convention
   static StrType JoinPaths(const StrType& path1, const StrType& path2);
 
   // Simple function to execute a process that inherits all the current

@@ -1,21 +1,23 @@
 def _impl(ctx):
-    output = ctx.actions.declare_file(ctx.label.name + ".o")
+    arg_output = ctx.actions.declare_file(ctx.label.name + ".args")
+    env_output = ctx.actions.declare_file(ctx.label.name + ".envs")
 
     args = ctx.actions.args()
-
     #args.add("--expand_args", args_file)
     #args.add("--env_vars", env_file)
     args.add("--")
     args.add(ctx.executable._process_wrapper_tester.path)
+    args.add(arg_output.path)
+    args.add(env_output.path)
 
     ctx.actions.run(
         executable = ctx.executable._process_wrapper,
         inputs = ctx.files.arg_files + ctx.files.env_files,
-        outputs = [output],
+        outputs = [arg_output, env_output],
         arguments = [args],
         tools = [ctx.executable._process_wrapper_tester],
     )
-    return [DefaultInfo(files = depset([output]))]
+    return [DefaultInfo(files = depset([arg_output, env_output]))]
 
 process_wrapper_tester = rule(
     implementation = _impl,
