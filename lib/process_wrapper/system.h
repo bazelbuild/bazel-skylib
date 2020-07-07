@@ -1,5 +1,5 @@
-#ifndef RUST_PRIVATE_RUSTC_WRAPPER_SYSTEM_H_
-#define RUST_PRIVATE_RUSTC_WRAPPER_SYSTEM_H_
+#ifndef LIB_PROCESS_WRAPPER_SYSTEM_H_
+#define LIB_PROCESS_WRAPPER_SYSTEM_H_
 
 #include <string>
 #include <vector>
@@ -29,10 +29,6 @@ class System {
   using EnvironmentBlock = StrVecType;
 
  public:
-  // Converts to the system string format
-  static StrType FromUtf8(const std::string& string);
-  static std::string ToUtf8(const StrType& string);
-
   // Gets the working directory of the current process
   static StrType GetWorkingDirectory();
 
@@ -47,4 +43,4 @@ class System {
 
 }  // namespace process_wrapper
 
-#endif  // RUST_PRIVATE_RUSTC_WRAPPER_SYSTEM_H_
+#endif  // LIB_PROCESS_WRAPPER_SYSTEM_H_

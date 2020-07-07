@@ -4,34 +4,7 @@
 #include <string>
 
 #include "lib/process_wrapper/system.h"
-
-using System = process_wrapper::System;
-using StrType = System::StrType;
-
-void ReplaceToken(StrType& str, const StrType& token,
-                  const StrType& replacement) {
-  std::size_t pos = str.find(token);
-  if (pos != std::string::npos) {
-    str.replace(pos, token.size(), replacement);
-  }
-}
-
-bool ReadFileToArray(const StrType& file_path, System::StrVecType& vec) {
-  std::ifstream file(file_path);
-  if (file.fail()) {
-    std::cerr << "Failed to open env file: " << System::ToUtf8(file_path)
-              << std::endl;
-    return false;
-  }
-  std::string line;
-  while (std::getline(file, line)) {
-    if (line.empty()) {
-      continue;
-    }
-    vec.push_back(System::FromUtf8(line));
-  }
-  return true;
-}
+#include "lib/process_wrapper/utils.h"
 
 // Simple process wrapper allowing us to not depend on the shell to run a
 // process.
@@ -41,6 +14,8 @@ int wmain(int argc, const wchar_t* argv[], const wchar_t* envp[]) {
 int main(int argc, const char* argv[], const char* envp[]) {
 #endif  // defined(RTW_WIN_UNICODE)
 
+  using namespace process_wrapper;
+
   System::EnvironmentBlock environment_block;
   // Taking all environment variables from the current process
   // and sending them down to the child process
@@ -48,22 +23,22 @@ int main(int argc, const char* argv[], const char* envp[]) {
     environment_block.push_back(envp[i]);
   }
 
-  StrType exec_path;
-  StrType touch_file;
-  StrType stdout_file;
+  System::StrType exec_path;
+  System::StrType touch_file;
+  System::StrType stdout_file;
   System::Arguments arguments;
   System::Arguments file_arguments;
   bool subst_pwd = false;
   // Processing current process argument list until -- is encountered
   // everthing after gets sent down to the child process
   for (int i = 1; i < argc; ++i) {
-    StrType arg = argv[i];
+    System::StrType arg = argv[i];
     if (arg == RTW_SYS_STR_LITERAL("--subst-pwd")) {
       subst_pwd = true;
     } else {
       if (++i == argc) {
-        std::cerr << "Argument \"" << System::ToUtf8(arg)
-                  << "\" missing parameter." << std::endl;
+        std::cerr << "Argument \"" << ToUtf8(arg) << "\" missing parameter."
+                  << std::endl;
         return -1;
       }
       if (arg == RTW_SYS_STR_LITERAL("--env-file")) {
@@ -84,7 +59,7 @@ int main(int argc, const char* argv[], const char* envp[]) {
           arguments.push_back(argv[i]);
         }
         // after we consume all arguments we append the files arguments
-        for (const StrType& file_arg : file_arguments) {
+        for (const System::StrType& file_arg : file_arguments) {
           arguments.push_back(file_arg);
         }
       }
@@ -92,13 +67,13 @@ int main(int argc, const char* argv[], const char* envp[]) {
   }
 
   if (subst_pwd) {
-    const StrType token = RTW_SYS_STR_LITERAL("$pwd");
-    const StrType replacement = System::GetWorkingDirectory();
-    for (StrType& arg : arguments) {
+    const System::StrType token = RTW_SYS_STR_LITERAL("<pwd>");
+    const System::StrType replacement = System::GetWorkingDirectory();
+    for (System::StrType& arg : arguments) {
       ReplaceToken(arg, token, replacement);
     }
 
-    for (StrType& env : environment_block) {
+    for (System::StrType& env : environment_block) {
       ReplaceToken(env, token, replacement);
     }
   }

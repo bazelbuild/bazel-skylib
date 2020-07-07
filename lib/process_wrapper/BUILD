@@ -5,7 +5,8 @@ cc_binary(
     srcs = [
         "process_wrapper.cc",
         "system.h",
-        "system.cc",
+        "utils.h",
+        "utils.cc",
     ] + select({
         "@bazel_tools//src/conditions:host_windows": [
             "system_windows.cc",

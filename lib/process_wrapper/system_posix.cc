@@ -1,4 +1,5 @@
 #include "lib/process_wrapper/system.h"
+#include "lib/process_wrapper/utils.h"
 
 // posix headers
 #include <sys/stat.h>

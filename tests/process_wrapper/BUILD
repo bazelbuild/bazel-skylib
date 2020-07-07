@@ -1,6 +1,7 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary")
+load("//rules:build_test.bzl", "build_test")
+load("//rules:diff_test.bzl", "diff_test")
 load("//tests/process_wrapper:process_wrapper_tester.bzl", "process_wrapper_tester")
-load("@bazel_skylib//rules:build_test.bzl", "build_test")
 
 cc_binary(
     name = "process_wrapper_tester",
@@ -8,6 +9,14 @@ cc_binary(
         "process_wrapper_tester.cc",
     ],
     visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "env_files",
+    srcs = [
+        "test_files/env_file1",
+        "test_files/env_file2",
+    ],
 )
 
 filegroup(
@@ -19,46 +28,91 @@ filegroup(
 )
 
 filegroup(
-    name = "env_files",
+    name = "stdout_file",
     srcs = [
-        "test_files/env_file1",
-        "test_files/env_file2",
+        "test_files/stdout",
     ],
 )
 
 process_wrapper_tester(
-    name = "process_wrapper_tester_no_arg",
+    name = "process_wrapper_basic",
+    test_config = "basic",
 )
 
 process_wrapper_tester(
-    name = "process_wrapper_tester_stdout",
-    capture_stdout = True,
+    name = "process_wrapper_subst_pwd",
+    test_config = "subst-pwd",
 )
 
 process_wrapper_tester(
-    name = "process_wrapper_tester_input_files",
+    name = "process_wrapper_stdout",
+    test_config = "stdout",
+)
+
+process_wrapper_tester(
+    name = "process_wrapper_env_files",
+    env_files = [
+        ":env_files",
+    ],
+    test_config = "env-files",
+)
+
+process_wrapper_tester(
+    name = "process_wrapper_arg_files",
+    env_files = [
+        ":env_files",
+    ],
+    test_config = "arg-files",
+)
+
+process_wrapper_tester(
+    name = "process_wrapper_combined",
     arg_files = [
         ":arg_files",
     ],
     env_files = [
         ":env_files",
     ],
+    test_config = "combined",
 )
 
-process_wrapper_tester(
-    name = "process_wrapper_tester_all_features",
-    arg_files = [
-        ":arg_files",
-    ],
-    capture_stdout = True,
-    env_files = [
-        ":env_files",
+build_test(
+    name = "no_arg_test",
+    targets = [
+        ":process_wrapper_no_arg",
     ],
 )
 
 build_test(
-      name = "my_build_test",
-      targets = [
-          ":process_wrapper_tester_no_arg",
-      ],
-  )
+    name = "subst_pwd_test",
+    targets = [
+        ":process_wrapper_subst_pwd",
+    ],
+)
+
+diff_test(
+    name = "stdout_test",
+    file1 = ":stdout_file",
+    file2 = ":process_wrapper_stdout",
+)
+
+build_test(
+    name = "env_files_test",
+    targets = [
+        ":process_wrapper_env_files",
+    ],
+)
+
+build_test(
+    name = "arg_files_test",
+    targets = [
+        ":process_wrapper_arg_files",
+    ],
+)
+
+build_test(
+    name = "combined_test",
+    targets = [
+        ":process_wrapper_combined",
+    ],
+)
