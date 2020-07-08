@@ -126,15 +126,6 @@ It is meant to be used in rules implementations like such:
         </p>
       </td>
     </tr>
-    <tr id="process_wrapper-touch-file">
-      <td><code>--touch-file file_path</code></td>
-      <td>
-        optional.
-        <p>
-          Touches the file specified in file_path.
-        </p>
-      </td>
-    </tr>
   </tbody>
 </table>
 
