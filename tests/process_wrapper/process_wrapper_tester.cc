@@ -97,6 +97,9 @@ void arg_files_test(int argc, const char* argv[]) {
 
 void test_stdout() {
   for (int i = 0; i < 10000; ++i) {
+// On windows writing LF to any stream in text mode gets changed to CRLF
+// Since the test file is saved using CRLF, we are forcing the same on 
+// non windows systems
 #if defined(_WIN32)
     std::cout << "Child process to stdout : " << i << "\n";
 #else
