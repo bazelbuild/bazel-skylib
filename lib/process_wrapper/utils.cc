@@ -4,27 +4,27 @@
 #include <iostream>
 #include <streambuf>
 
-#if defined(RTW_WIN_UNICODE)
+#if defined(PW_WIN_UNICODE)
 #include <codecvt>
 #include <locale>
-#endif  // defined(RTW_WIN_UNICODE)
+#endif  // defined(PW_WIN_UNICODE)
 
 namespace process_wrapper {
 
 System::StrType FromUtf8(const std::string& string) {
-#if defined(RTW_WIN_UNICODE)
+#if defined(PW_WIN_UNICODE)
   return std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(string);
 #else
   return string;
-#endif  // defined(RTW_WIN_UNICODE)
+#endif  // defined(PW_WIN_UNICODE)
 }
 
 std::string ToUtf8(const System::StrType& string) {
-#if defined(RTW_WIN_UNICODE)
+#if defined(PW_WIN_UNICODE)
   return std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(string);
 #else
   return string;
-#endif  // defined(RTW_WIN_UNICODE)
+#endif  // defined(PW_WIN_UNICODE)
 }
 
 void ReplaceToken(System::StrType& str, const System::StrType& token,
@@ -44,12 +44,18 @@ bool ReadFileToArray(const System::StrType& file_path,
   }
   std::string line;
   while (std::getline(file, line)) {
-    if (line.empty()) {
+    // handle CRLF files when as they might be
+    // written on windows and read from linux
+    if (line.empty() || line == "\r") {
       continue;
     }
+    if (line.back() == '\r') {
+      line.pop_back();
+    }
+
     vec.push_back(FromUtf8(line));
   }
   return true;
-}
+}  // namespace process_wrapper
 
 }  // namespace process_wrapper

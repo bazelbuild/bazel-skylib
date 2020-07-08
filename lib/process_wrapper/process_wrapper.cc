@@ -6,14 +6,12 @@
 #include "lib/process_wrapper/system.h"
 #include "lib/process_wrapper/utils.h"
 
-// Simple process wrapper allowing us to not depend on the shell to run a
-// process and perform basic operations.
-#if defined(RTW_WIN_UNICODE)
-int wmain(int argc, const wchar_t* argv[], const wchar_t* envp[]) {
-#else
-int main(int argc, const char* argv[], const char* envp[]) {
-#endif  // defined(RTW_WIN_UNICODE)
+using CharType = process_wrapper::System::StrType::value_type;
 
+// Simple process wrapper allowing us to not depend on the shell to run a
+// process to perform basic operations like capturing the output or having
+// the $pwd used in command line arguments or environment variables
+int PW_MAIN(int argc, const CharType* argv[], const CharType* envp[]) {
   using namespace process_wrapper;
 
   System::EnvironmentBlock environment_block;
@@ -33,7 +31,7 @@ int main(int argc, const char* argv[], const char* envp[]) {
   // everthing after gets sent down to the child process
   for (int i = 1; i < argc; ++i) {
     System::StrType arg = argv[i];
-    if (arg == RTW_SYS_STR_LITERAL("--subst-pwd")) {
+    if (arg == PW_SYS_STR("--subst-pwd")) {
       subst_pwd = true;
     } else {
       if (++i == argc) {
@@ -41,19 +39,19 @@ int main(int argc, const char* argv[], const char* envp[]) {
                   << std::endl;
         return -1;
       }
-      if (arg == RTW_SYS_STR_LITERAL("--env-file")) {
+      if (arg == PW_SYS_STR("--env-file")) {
         if (!ReadFileToArray(argv[i], environment_block)) {
           return -1;
         }
-      } else if (arg == RTW_SYS_STR_LITERAL("--arg-file")) {
+      } else if (arg == PW_SYS_STR("--arg-file")) {
         if (!ReadFileToArray(argv[i], file_arguments)) {
           return -1;
         }
-      } else if (arg == RTW_SYS_STR_LITERAL("--touch-file")) {
+      } else if (arg == PW_SYS_STR("--touch-file")) {
         touch_file = argv[i];
-      } else if (arg == RTW_SYS_STR_LITERAL("--stdout-file")) {
+      } else if (arg == PW_SYS_STR("--stdout-file")) {
         stdout_file = argv[i];
-      } else if (arg == RTW_SYS_STR_LITERAL("--")) {
+      } else if (arg == PW_SYS_STR("--")) {
         exec_path = argv[i];
         for (++i; i < argc; ++i) {
           arguments.push_back(argv[i]);
@@ -67,7 +65,7 @@ int main(int argc, const char* argv[], const char* envp[]) {
   }
 
   if (subst_pwd) {
-    const System::StrType token = RTW_SYS_STR_LITERAL("<pwd>");
+    const System::StrType token = PW_SYS_STR("<pwd>");
     const System::StrType replacement = System::GetWorkingDirectory();
     for (System::StrType& arg : arguments) {
       ReplaceToken(arg, token, replacement);

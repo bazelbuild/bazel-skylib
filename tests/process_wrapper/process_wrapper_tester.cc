@@ -97,7 +97,7 @@ void arg_files_test(int argc, const char* argv[]) {
 
 void test_stdout() {
   for (int i = 0; i < 10000; ++i) {
-    std::cout << "Child process to stdout : " << i << std::endl;
+    std::cout << "Child process to stdout : " << i << "\n";
   }
 }
 

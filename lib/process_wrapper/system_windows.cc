@@ -18,40 +18,39 @@ namespace {
 
 void ArgumentQuote(const System::StrType& argument,
                    System::StrType& command_line) {
-  if (argument.empty() == false && argument.find_first_of(RTW_SYS_STR_LITERAL(
-                                       " \t\n\v\"")) == argument.npos) {
+  if (argument.empty() == false &&
+      argument.find_first_of(PW_SYS_STR(" \t\n\v\"")) == argument.npos) {
     command_line.append(argument);
   } else {
-    command_line.push_back(RTW_SYS_STR_LITERAL('"'));
+    command_line.push_back(PW_SYS_STR('"'));
 
     for (auto it = argument.begin();; ++it) {
       unsigned number_backslashes = 0;
 
-      while (it != argument.end() && *it == RTW_SYS_STR_LITERAL('\\')) {
+      while (it != argument.end() && *it == PW_SYS_STR('\\')) {
         ++it;
         ++number_backslashes;
       }
 
       if (it == argument.end()) {
-        command_line.append(number_backslashes * 2, RTW_SYS_STR_LITERAL('\\'));
+        command_line.append(number_backslashes * 2, PW_SYS_STR('\\'));
         break;
       } else if (*it == L'"') {
-        command_line.append(number_backslashes * 2 + 1,
-                            RTW_SYS_STR_LITERAL('\\'));
+        command_line.append(number_backslashes * 2 + 1, PW_SYS_STR('\\'));
         command_line.push_back(*it);
       } else {
-        command_line.append(number_backslashes, RTW_SYS_STR_LITERAL('\\'));
+        command_line.append(number_backslashes, PW_SYS_STR('\\'));
         command_line.push_back(*it);
       }
     }
-    command_line.push_back(RTW_SYS_STR_LITERAL('"'));
+    command_line.push_back(PW_SYS_STR('"'));
   }
 }
 
 void MakeCommandLine(const System::Arguments& arguments,
                      System::StrType& command_line) {
   for (const System::StrType& argument : arguments) {
-    command_line.push_back(RTW_SYS_STR_LITERAL(' '));
+    command_line.push_back(PW_SYS_STR(' '));
     ArgumentQuote(argument, command_line);
   }
 }
@@ -60,9 +59,9 @@ void MakeEnvironmentBlock(const System::EnvironmentBlock& environment_block,
                           System::StrType& environment_block_win) {
   for (const System::StrType& ev : environment_block) {
     environment_block_win += ev;
-    environment_block_win.push_back(RTW_SYS_STR_LITERAL('\0'));
+    environment_block_win.push_back(PW_SYS_STR('\0'));
   }
-  environment_block_win.push_back(RTW_SYS_STR_LITERAL('\0'));
+  environment_block_win.push_back(PW_SYS_STR('\0'));
 }
 
 }  // namespace
@@ -154,17 +153,26 @@ int System::Exec(const System::StrType& executable,
       return -1;
     }
 
-    DWORD dwRead, dwWritten;
-    constexpr DWORD kMaxBufferLength = 4096;
-    CHAR chBuf[kMaxBufferLength];
-    BOOL bSuccess = FALSE;
-    for (;;) {
-      bSuccess =
-          ReadFile(child_stdout_reader, chBuf, kMaxBufferLength, &dwRead, NULL);
-      if (!bSuccess || dwRead == 0) break;
+    constexpr DWORD kBufferSize = 4096;
+    CHAR buffer[kBufferSize];
+    while (1) {
+      DWORD read;
+      bool success =
+          ReadFile(child_stdout_reader, buffer, kBufferSize, &read, NULL);
+      if (!success) {
+        std::cerr << "error: failed to read child process stdout." << std::endl;
+        return -1;
+      } else if (read == 0) {
+        break;
+      }
 
-      bSuccess = WriteFile(stdout_file_handle, chBuf, dwRead, &dwWritten, NULL);
-      if (!bSuccess) break;
+      DWORD written;
+      success = WriteFile(stdout_file_handle, buffer, read, &written, NULL);
+      if (!success) {
+        std::cerr << "error: failed to write to stdout capture file."
+                  << std::endl;
+        return -1;
+      }
     }
   }
 

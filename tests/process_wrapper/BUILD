@@ -77,9 +77,9 @@ process_wrapper_tester(
 )
 
 build_test(
-    name = "no_arg_test",
+    name = "basic_test",
     targets = [
-        ":process_wrapper_no_arg",
+        ":process_wrapper_basic",
     ],
 )
 

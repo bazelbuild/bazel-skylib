@@ -5,24 +5,26 @@
 #include <vector>
 
 #if defined(_WIN32) && defined(UNICODE)
-#define RTW_WIN_UNICODE
+#define PW_WIN_UNICODE
 #endif  // defined(_WIN32) && defined(UNICODE)
 
-#if defined(RTW_WIN_UNICODE)
-#define RTW_SYS_STR_LITERAL(str) L##str
+#if defined(PW_WIN_UNICODE)
+#define PW_SYS_STR(str) L##str
+#define PW_MAIN wmain
 #else
-#define RTW_SYS_STR_LITERAL(str) str
+#define PW_SYS_STR(str) str
+#define PW_MAIN main
 #endif
 
 namespace process_wrapper {
 
 class System {
  public:
-#if defined(RTW_WIN_UNICODE)
+#if defined(PW_WIN_UNICODE)
   using StrType = std::wstring;
 #else
   using StrType = std::string;
-#endif  // defined(RTW_WIN_UNICODE)
+#endif  // defined(PW_WIN_UNICODE)
 
   using StrVecType = std::vector<StrType>;
   using Arguments = StrVecType;
