@@ -13,9 +13,10 @@
 namespace process_wrapper {
 
 namespace {
-// Algorithm used:
-// https://docs.microsoft.com/en-us/archive/blogs/twistylittlepassagesallalike/everyone-quotes-command-line-arguments-the-wrong-way
 
+// We need to follow specific quoting rules for maximum compatibility as
+// explained here:
+// https://docs.microsoft.com/en-us/archive/blogs/twistylittlepassagesallalike/everyone-quotes-command-line-arguments-the-wrong-way
 void ArgumentQuote(const System::StrType& argument,
                    System::StrType& command_line) {
   if (argument.empty() == false &&
@@ -47,6 +48,7 @@ void ArgumentQuote(const System::StrType& argument,
   }
 }
 
+// Arguments needs to be quoted and space separated
 void MakeCommandLine(const System::Arguments& arguments,
                      System::StrType& command_line) {
   for (const System::StrType& argument : arguments) {
@@ -55,6 +57,7 @@ void MakeCommandLine(const System::Arguments& arguments,
   }
 }
 
+// Environment variables are \0 separated
 void MakeEnvironmentBlock(const System::EnvironmentBlock& environment_block,
                           System::StrType& environment_block_win) {
   for (const System::StrType& ev : environment_block) {
@@ -104,6 +107,50 @@ class StdoutPipe {
     return stdout_pipe_handles_[kWriteEndHandle];
   }
 
+  bool WriteToFile(const System::StrType& stdout_file) {
+    CloseWriteEnd();
+    HANDLE stdout_file_handle = CreateFile(
+        /*lpFileName*/ stdout_file.c_str(),
+        /*dwDesiredAccess*/ GENERIC_WRITE,
+        /*dwShareMode*/ FILE_SHARE_WRITE,
+        /*lpSecurityAttributes*/ NULL,
+        /*dwCreationDisposition*/ CREATE_ALWAYS,
+        /*dwFlagsAndAttributes*/ FILE_ATTRIBUTE_NORMAL,
+        /*hTemplateFile*/ NULL);
+
+    if (stdout_file_handle == INVALID_HANDLE_VALUE) {
+      std::cerr << "process wrapper error: failed to open the stdout file."
+                << std::endl;
+      return false;
+    }
+
+    constexpr DWORD kBufferSize = 4096;
+    CHAR buffer[kBufferSize];
+    while (1) {
+      DWORD read;
+      bool success =
+          ReadFile(ReadEndHandle(), buffer, kBufferSize, &read, NULL);
+      if (read == 0) {
+        break;
+      } else if (!success) {
+        std::cerr
+            << "process wrapper error: failed to read child process stdout."
+            << std::endl;
+        return false;
+      }
+
+      DWORD written;
+      success = WriteFile(stdout_file_handle, buffer, read, &written, NULL);
+      if (!success) {
+        std::cerr
+            << "process wrapper error: failed to write to stdout capture file."
+            << std::endl;
+        return false;
+      }
+    }
+    return true;
+  }
+
  private:
   void Close(size_t idx) {
     if (stdout_pipe_handles_[idx] != nullptr) {
@@ -129,17 +176,15 @@ int System::Exec(const System::StrType& executable,
                  const System::Arguments& arguments,
                  const System::EnvironmentBlock& environment_block,
                  const StrType& stdout_file) {
-  PROCESS_INFORMATION process_info;
-  ZeroMemory(&process_info, sizeof(PROCESS_INFORMATION));
-
   STARTUPINFO startup_info;
   ZeroMemory(&startup_info, sizeof(STARTUPINFO));
   startup_info.cb = sizeof(STARTUPINFO);
 
   StdoutPipe stdout_pipe;
   if (!stdout_file.empty() && !stdout_pipe.CreateEnds(startup_info)) {
-      std::cerr << "process wrapper error: failed to create stdout pipe." << std::endl;
-      return -1;
+    std::cerr << "process wrapper error: failed to create stdout pipe."
+              << std::endl;
+    return -1;
   }
 
   System::StrType command_line;
@@ -148,6 +193,9 @@ int System::Exec(const System::StrType& executable,
 
   System::StrType environment_block_win;
   MakeEnvironmentBlock(environment_block, environment_block_win);
+
+  PROCESS_INFORMATION process_info;
+  ZeroMemory(&process_info, sizeof(PROCESS_INFORMATION));
 
   BOOL success = ::CreateProcess(
       /*lpApplicationName*/ nullptr,
@@ -167,46 +215,14 @@ int System::Exec(const System::StrType& executable,
       /*lpProcessInformation*/ &process_info);
 
   if (success == FALSE) {
-    std::cerr << "process wrapper error: Failed to launch a new process." << std::endl;
+    std::cerr << "process wrapper error: Failed to launch a new process."
+              << std::endl;
     return -1;
   }
 
   if (!stdout_file.empty()) {
-    stdout_pipe.CloseWriteEnd();
-    HANDLE stdout_file_handle = CreateFile(
-        /*lpFileName*/ stdout_file.c_str(),
-        /*dwDesiredAccess*/ GENERIC_WRITE,
-        /*dwShareMode*/ FILE_SHARE_WRITE,
-        /*lpSecurityAttributes*/ NULL,
-        /*dwCreationDisposition*/ CREATE_ALWAYS,
-        /*dwFlagsAndAttributes*/ FILE_ATTRIBUTE_NORMAL,
-        /*hTemplateFile*/ NULL);
-
-    if (stdout_file_handle == INVALID_HANDLE_VALUE) {
-      std::cerr << "process wrapper error: failed to open the stdout file." << std::endl;
+    if (!stdout_pipe.WriteToFile(stdout_file)) {
       return -1;
-    }
-
-    constexpr DWORD kBufferSize = 4096;
-    CHAR buffer[kBufferSize];
-    while (1) {
-      DWORD read;
-      bool success =
-          ReadFile(stdout_pipe.ReadEndHandle(), buffer, kBufferSize, &read, NULL);
-      if (read == 0) {
-        break;
-      } else if (!success) {
-        std::cerr << "process wrapper error: failed to read child process stdout." << std::endl;
-        return -1;
-      }
-
-      DWORD written;
-      success = WriteFile(stdout_file_handle, buffer, read, &written, NULL);
-      if (!success) {
-        std::cerr << "process wrapper error: failed to write to stdout capture file."
-                  << std::endl;
-        return -1;
-      }
     }
   }
 

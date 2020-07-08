@@ -1,9 +1,9 @@
 ## process_wrapper
 
-Process wrapper is a helper that allows you in a platform independent way,
-to not depend on run_shell to perform basic operations like capturing 
+Process wrapper is a helper that allows you, in a platform independent way,
+to not depend on run_shell to perform basic operations like capturing
 the output or having $pwd used in command line arguments or environment
-variables 
+variables
 
 It is meant to be used in rules implementations like such:
 
@@ -49,7 +49,6 @@ It is meant to be used in rules implementations like such:
 
 ```
 
-
 ### Parameters
 
 <table class="params-table">
@@ -91,7 +90,7 @@ It is meant to be used in rules implementations like such:
           Can appear multiple times.
         </p>
         <p>
-          The file consists of new line serparated environment variables under the form VAR=VALUE
+          The file consists of new line separated environment variables under the form of VAR=VALUE.
         </p>
       </td>
     </tr>
@@ -104,7 +103,7 @@ It is meant to be used in rules implementations like such:
           Can appear multiple times.
         </p>
         <p>
-          The file consists of  new line serparated arguments.
+          The file consists of  new line separated arguments.
         </p>
       </td>
     </tr>
@@ -113,7 +112,7 @@ It is meant to be used in rules implementations like such:
       <td>
         optional.
         <p>
-          Writes the standart output of the child process to a file.
+          Writes the standard output of the child process to a file.
           Can appear once.
         </p>
       </td>

@@ -34,6 +34,7 @@ int PW_MAIN(int argc, const CharType* argv[], const CharType* envp[]) {
     if (arg == PW_SYS_STR("--subst-pwd")) {
       subst_pwd = true;
     } else {
+      // All argument in the else block have a parameter
       if (++i == argc) {
         std::cerr << "process wrapper error: argument \"" << ToUtf8(arg)
                   << "\" missing parameter." << std::endl;
