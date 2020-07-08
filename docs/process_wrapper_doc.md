@@ -128,5 +128,3 @@ It is meant to be used in rules implementations like such:
     </tr>
   </tbody>
 </table>
-
-
