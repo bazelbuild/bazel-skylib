@@ -51,7 +51,8 @@ class StdoutPipe {
     constexpr size_t kBufferSize = 4096;
     char buffer[kBufferSize];
     int stdout_file_desc =
-        open(stdout_file.c_str(), O_WRONLY | O_CREAT | O_TRUNC);
+        open(stdout_file.c_str(), O_WRONLY | O_CREAT | O_TRUNC,
+             S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
     if (stdout_file_desc == -1) {
       std::cerr << "process wrapper error: failed to open redirection file."
                 << std::endl;
@@ -108,7 +109,7 @@ int System::Exec(const System::StrType& executable,
   if (!stdout_file.empty() && !stdout_pipe.CreateEnds()) {
     return -1;
   }
-  
+
   pid_t child_pid = fork();
   if (child_pid < 0) {
     std::cerr << "process wrapper error: failed to fork the current process."

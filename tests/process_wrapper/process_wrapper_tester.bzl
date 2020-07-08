@@ -1,8 +1,27 @@
+# Copyright 2020 The Bazel Authors. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Process wrapper test.
+
+This rule unit tests the different process_wrapper functionality
+"""
+
 def _impl(ctx):
     args = ctx.actions.args()
     outputs = []
     combined = ctx.attr.test_config == "combined"
-    
+
     if combined or ctx.attr.test_config == "stdout":
         stdout_output = ctx.actions.declare_file(ctx.label.name + ".stdout")
         outputs.append(stdout_output)
