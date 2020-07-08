@@ -49,7 +49,7 @@ bool ReadFileToArray(const System::StrType& file_path,
     if (!line.empty() && line.back() == '\r') {
       line.pop_back();
     }
-    
+
     // Skip empty lines if any
     if (line.empty()) {
       continue;

@@ -64,6 +64,56 @@ void MakeEnvironmentBlock(const System::EnvironmentBlock& environment_block,
   environment_block_win.push_back(PW_SYS_STR('\0'));
 }
 
+class StdoutPipe {
+ public:
+  static constexpr size_t kReadEndHandle = 0;
+  static constexpr size_t kWriteEndHandle = 1;
+
+  ~StdoutPipe() {
+    CloseReadEnd();
+    CloseWriteEnd();
+  }
+
+  bool CreateEnds(STARTUPINFO& startup_info) {
+    SECURITY_ATTRIBUTES saAttr;
+    ZeroMemory(&saAttr, sizeof(SECURITY_ATTRIBUTES));
+    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+    saAttr.bInheritHandle = TRUE;
+    saAttr.lpSecurityDescriptor = NULL;
+    if (!::CreatePipe(&stdout_pipe_handles_[kReadEndHandle],
+                      &stdout_pipe_handles_[kWriteEndHandle], &saAttr, 0)) {
+      return false;
+    }
+
+    if (!::SetHandleInformation(stdout_pipe_handles_[kReadEndHandle],
+                                HANDLE_FLAG_INHERIT, 0)) {
+      return false;
+    }
+
+    startup_info.hStdOutput = stdout_pipe_handles_[kWriteEndHandle];
+    startup_info.dwFlags |= STARTF_USESTDHANDLES;
+
+    return true;
+  }
+
+  void CloseReadEnd() { Close(kReadEndHandle); }
+  void CloseWriteEnd() { Close(kWriteEndHandle); }
+
+  HANDLE ReadEndHandle() const { return stdout_pipe_handles_[kReadEndHandle]; }
+  HANDLE WriteEndHandle() const {
+    return stdout_pipe_handles_[kWriteEndHandle];
+  }
+
+ private:
+  void Close(size_t idx) {
+    if (stdout_pipe_handles_[idx] != nullptr) {
+      ::CloseHandle(stdout_pipe_handles_[idx]);
+    }
+    stdout_pipe_handles_[idx] = nullptr;
+  }
+  HANDLE stdout_pipe_handles_[2] = {nullptr};
+};
+
 }  // namespace
 
 System::StrType System::GetWorkingDirectory() {
@@ -86,27 +136,10 @@ int System::Exec(const System::StrType& executable,
   ZeroMemory(&startup_info, sizeof(STARTUPINFO));
   startup_info.cb = sizeof(STARTUPINFO);
 
-  HANDLE child_stdout_reader = NULL;
-  HANDLE child_stdout_writer = NULL;
-
-  if (!stdout_file.empty()) {
-    SECURITY_ATTRIBUTES saAttr;
-    ZeroMemory(&saAttr, sizeof(SECURITY_ATTRIBUTES));
-    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
-    saAttr.bInheritHandle = TRUE;
-    saAttr.lpSecurityDescriptor = NULL;
-    if (!CreatePipe(&child_stdout_reader, &child_stdout_writer, &saAttr, 0)) {
-      std::cerr << "error: failed to create stdout pipe." << std::endl;
+  StdoutPipe stdout_pipe;
+  if (!stdout_file.empty() && !stdout_pipe.CreateEnds(startup_info)) {
+      std::cerr << "process wrapper error: failed to create stdout pipe." << std::endl;
       return -1;
-    }
-
-    if (!SetHandleInformation(child_stdout_reader, HANDLE_FLAG_INHERIT, 0)) {
-      std::cerr << "error: failed to set handle informations." << std::endl;
-      return -1;
-    }
-
-    startup_info.hStdOutput = child_stdout_writer;
-    startup_info.dwFlags |= STARTF_USESTDHANDLES;
   }
 
   System::StrType command_line;
@@ -134,12 +167,12 @@ int System::Exec(const System::StrType& executable,
       /*lpProcessInformation*/ &process_info);
 
   if (success == FALSE) {
-    std::cerr << "error: Failed to launch a new process." << std::endl;
+    std::cerr << "process wrapper error: Failed to launch a new process." << std::endl;
     return -1;
   }
 
   if (!stdout_file.empty()) {
-    CloseHandle(child_stdout_writer);
+    stdout_pipe.CloseWriteEnd();
     HANDLE stdout_file_handle = CreateFile(
         /*lpFileName*/ stdout_file.c_str(),
         /*dwDesiredAccess*/ GENERIC_WRITE,
@@ -150,6 +183,7 @@ int System::Exec(const System::StrType& executable,
         /*hTemplateFile*/ NULL);
 
     if (stdout_file_handle == INVALID_HANDLE_VALUE) {
+      std::cerr << "process wrapper error: failed to open the stdout file." << std::endl;
       return -1;
     }
 
@@ -158,18 +192,18 @@ int System::Exec(const System::StrType& executable,
     while (1) {
       DWORD read;
       bool success =
-          ReadFile(child_stdout_reader, buffer, kBufferSize, &read, NULL);
+          ReadFile(stdout_pipe.ReadEndHandle(), buffer, kBufferSize, &read, NULL);
       if (read == 0) {
         break;
       } else if (!success) {
-        std::cerr << "error: failed to read child process stdout." << std::endl;
+        std::cerr << "process wrapper error: failed to read child process stdout." << std::endl;
         return -1;
       }
 
       DWORD written;
       success = WriteFile(stdout_file_handle, buffer, read, &written, NULL);
       if (!success) {
-        std::cerr << "error: failed to write to stdout capture file."
+        std::cerr << "process wrapper error: failed to write to stdout capture file."
                   << std::endl;
         return -1;
       }

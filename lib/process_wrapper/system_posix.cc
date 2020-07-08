@@ -59,13 +59,13 @@ int System::Exec(const System::StrType& executable,
   StdoutPipe stdout_pipe;
   if (!stdout_file.empty()) {
     if (stdout_pipe.CreateEnds() != 0) {
-      std::cerr << "error: failed to open the stdout pipes." << std::endl;
+      std::cerr << "process wrapper error: failed to open the stdout pipes." << std::endl;
       return -1;
     }
   }
   pid_t child_pid = fork();
   if (child_pid < 0) {
-    std::cerr << "error: failed to fork the current process." << std::endl;
+    std::cerr << "process wrapper error: failed to fork the current process." << std::endl;
     return -1;
   } else if (child_pid == 0) {
     if (!stdout_file.empty()) {
@@ -89,7 +89,7 @@ int System::Exec(const System::StrType& executable,
     umask(022);
 
     execve(executable.c_str(), argv.data(), envp.data());
-    std::cerr << "error: failed to exec the new process." << std::endl;
+    std::cerr << "process wrapper error: failed to exec the new process." << std::endl;
     return -1;
   }
 
@@ -100,20 +100,20 @@ int System::Exec(const System::StrType& executable,
     int stdout_file_desc =
         open(stdout_file.c_str(), O_WRONLY | O_CREAT | O_TRUNC);
     if (stdout_file_desc == -1) {
-      std::cerr << "error: failed to open redirection file." << std::endl;
+      std::cerr << "process wrapper error: failed to open redirection file." << std::endl;
       return -1;
     }
     while (1) {
       ssize_t read_bytes = read(stdout_pipe.ReadEndDesc(), buffer, kBufferSize);
       if (read_bytes < 0) {
-        std::cerr << "error: failed child process stdout." << std::endl;
+        std::cerr << "process wrapper error: failed child process stdout." << std::endl;
         return -1;
       } else if (read_bytes == 0) {
         break;
       }
       ssize_t written_bytes = write(stdout_file_desc, buffer, read_bytes);
       if (written_bytes < 0 || written_bytes != read_bytes) {
-        std::cerr << "error: failed to write to stdout file." << std::endl;
+        std::cerr << "process wrapper error: failed to write to stdout file." << std::endl;
         return -1;
       }
     }

@@ -1,6 +1,5 @@
 #include <fstream>
 #include <iostream>
-#include <streambuf>
 #include <string>
 
 #include "lib/process_wrapper/system.h"
@@ -27,6 +26,7 @@ int PW_MAIN(int argc, const CharType* argv[], const CharType* envp[]) {
   System::Arguments arguments;
   System::Arguments file_arguments;
   bool subst_pwd = false;
+
   // Processing current process argument list until -- is encountered
   // everthing after gets sent down to the child process
   for (int i = 1; i < argc; ++i) {
@@ -35,8 +35,8 @@ int PW_MAIN(int argc, const CharType* argv[], const CharType* envp[]) {
       subst_pwd = true;
     } else {
       if (++i == argc) {
-        std::cerr << "Argument \"" << ToUtf8(arg) << "\" missing parameter."
-                  << std::endl;
+        std::cerr << "process wrapper error: argument \"" << ToUtf8(arg)
+                  << "\" missing parameter." << std::endl;
         return -1;
       }
       if (arg == PW_SYS_STR("--env-file")) {
@@ -48,8 +48,20 @@ int PW_MAIN(int argc, const CharType* argv[], const CharType* envp[]) {
           return -1;
         }
       } else if (arg == PW_SYS_STR("--touch-file")) {
+        if (!touch_file.empty()) {
+          std::cerr << "process wrapper error: \"--touch-file\" appears more "
+                       "than once"
+                    << std::endl;
+          return -1;
+        }
         touch_file = argv[i];
       } else if (arg == PW_SYS_STR("--stdout-file")) {
+        if (!stdout_file.empty()) {
+          std::cerr << "process wrapper error: \"--stdout-file\" appears more "
+                       "than once"
+                    << std::endl;
+          return -1;
+        }
         stdout_file = argv[i];
       } else if (arg == PW_SYS_STR("--")) {
         exec_path = argv[i];
@@ -60,6 +72,10 @@ int PW_MAIN(int argc, const CharType* argv[], const CharType* envp[]) {
         for (const System::StrType& file_arg : file_arguments) {
           arguments.push_back(file_arg);
         }
+      } else {
+        std::cerr << "process wrapper error: unknow argument \"" << ToUtf8(arg)
+                  << "\"." << std::endl;
+        return -1;
       }
     }
   }

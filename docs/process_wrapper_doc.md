@@ -1,28 +1,52 @@
 ## process_wrapper
 
-<pre>
-build_test(<a href="#build_test-name">name</a>, <a href="#build_test-targets">targets</a>, <a href="#build_test-kwargs">kwargs</a>)
-</pre>
+Process wrapper is a helper that allows you in a platform independent way,
+to not depend on run_shell to perform basic operations like capturing 
+the output or having $pwd used in command line arguments or environment
+variables 
 
-Test rule checking that other targets build.
+It is meant to be used in rules implementations like such:
 
-This works not by an instance of this test failing, but instead by
-the targets it depends on failing to build, and hence failing
-the attempt to run this test.
+```python
+  def _impl(ctx):
+    stdout_output = ctx.actions.declare_file(ctx.label.name + ".stdout")
+    args = ctx.actions.args()
+    args.add("--stdout-file", stdout_output.path)
+    args.add("--subst-pwd")
+    args.add("--")
+    args.add(ctx.executable._compiler.path)
+    args.add(ctx.attr.test_config)
+    args.add("--current-dir", "<pwd>")
+    env = {"CURRENT_DIR": "<pwd>/test_path"}
 
-NOTE: At the moment, this won't work on Windows; but someone adding
-support would be welcomed.
+    ctx.actions.run(
+        executable = ctx.executable._process_wrapper,
+        inputs = ctx.files.env_files + ctx.files.arg_files,
+        outputs = [stdout_output],
+        arguments = [args],
+        env = env,
+        tools = [ctx.executable._process_wrapper_tester],
+    )
 
-Typical usage:
+    return [DefaultInfo(files = depset([stdout_output]))]
 
-```
-  load("@bazel_skylib//rules:build_test.bzl", "build_test")
-  build_test(
-      name = "my_build_test",
-      targets = [
-          "//some/package:rule",
-      ],
+  process_wrapper_tester = rule(
+      implementation = _impl,
+      attrs = {
+          "_compiler": attr.label(
+              default = "//compiler/label",
+              executable = True,
+              cfg = "exec",
+          ),
+          "_process_wrapper": attr.label(
+              default = "@bazel_skylib//lib:process_wrapper",
+              executable = True,
+              allow_single_file = True,
+              cfg = "exec",
+          ),
+      },
   )
+
 ```
 
 
@@ -34,30 +58,81 @@ Typical usage:
     <col class="col-description" />
   </colgroup>
   <tbody>
-    <tr id="build_test-name">
-      <td><code>name</code></td>
+    <tr id="process_wrapper---">
+      <td><code>-- executable_path [args]</code></td>
       <td>
         required.
         <p>
-          The name of the test rule.
+          Everything after -- is used as command line arguments to the child process.
         </p>
-      </td>
-    </tr>
-    <tr id="build_test-targets">
-      <td><code>targets</code></td>
-      <td>
-        required.
         <p>
-          A list of targets to ensure build.
+          executable_path: path to the executable that is going to be launched as a child process.
+        </p>
+        <p>
+          [args]: Arguments to be passed on to the child process.
         </p>
       </td>
     </tr>
-    <tr id="build_test-kwargs">
-      <td><code>kwargs</code></td>
+    <tr id="process_wrapper-subst-pwd">
+      <td><code>--subst-pwd</code></td>
       <td>
         optional.
         <p>
-          The <a href="https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
+          Replaces &lt;pwd&gt; in arguments and environment variables.
+        </p>
+      </td>
+    </tr>
+    <tr id="process_wrapper-env-file">
+      <td><code>--env-file file_path</code></td>
+      <td>
+        optional.
+        <p>
+          Loads an environment variables file form "file_path".
+          Can appear multiple times.
+        </p>
+        <p>
+          The file consists of new line serparated environment variables under the form VAR=VALUE
+        </p>
+      </td>
+    </tr>
+    <tr id="process_wrapper-arg-file">
+      <td><code>--arg-file file_path</code></td>
+      <td>
+        optional.
+        <p>
+          Loads a command line arguments file form "file_path".
+          Can appear multiple times.
+        </p>
+        <p>
+          The file consists of  new line serparated arguments.
+        </p>
+      </td>
+    </tr>
+    <tr id="process_wrapper-stdout-file">
+      <td><code>--stdout-file file_path</code></td>
+      <td>
+        optional.
+        <p>
+          Writes the standart output of the child process to a file.
+          Can appear once.
+        </p>
+      </td>
+    </tr>
+    <tr id="process_wrapper-touch-file">
+      <td><code>--touch-file file_path</code></td>
+      <td>
+        optional.
+        <p>
+          Touches the file specified in file_path.
+        </p>
+      </td>
+    </tr>
+    <tr id="process_wrapper-touch-file">
+      <td><code>--touch-file file_path</code></td>
+      <td>
+        optional.
+        <p>
+          Touches the file specified in file_path.
         </p>
       </td>
     </tr>
