@@ -159,11 +159,11 @@ int System::Exec(const System::StrType& executable,
       DWORD read;
       bool success =
           ReadFile(child_stdout_reader, buffer, kBufferSize, &read, NULL);
-      if (!success) {
+      if (read == 0) {
+        break;
+      } else if (!success) {
         std::cerr << "error: failed to read child process stdout." << std::endl;
         return -1;
-      } else if (read == 0) {
-        break;
       }
 
       DWORD written;

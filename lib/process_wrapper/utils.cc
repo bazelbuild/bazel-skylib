@@ -46,11 +46,13 @@ bool ReadFileToArray(const System::StrType& file_path,
   while (std::getline(file, line)) {
     // handle CRLF files when as they might be
     // written on windows and read from linux
-    if (line.empty() || line == "\r") {
-      continue;
-    }
-    if (line.back() == '\r') {
+    if (!line.empty() && line.back() == '\r') {
       line.pop_back();
+    }
+    
+    // Skip empty lines if any
+    if (line.empty()) {
+      continue;
     }
 
     vec.push_back(FromUtf8(line));
