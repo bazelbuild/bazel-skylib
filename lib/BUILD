@@ -1,4 +1,5 @@
 load("//:bzl_library.bzl", "bzl_library")
+load("@rules_cc//cc:defs.bzl", "cc_binary")
 
 package(
     default_applicable_licenses = ["//:license"],
