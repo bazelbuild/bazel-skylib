@@ -39,7 +39,7 @@ bool ReadFileToArray(const System::StrType& file_path,
                      System::StrVecType& vec) {
   std::ifstream file(file_path);
   if (file.fail()) {
-    std::cerr << "Failed to open env file: " << ToUtf8(file_path) << std::endl;
+    std::cerr << "process wrapper error: failed to open file: " << ToUtf8(file_path) << std::endl;
     return false;
   }
   std::string line;

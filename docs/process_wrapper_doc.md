@@ -5,6 +5,8 @@ to not depend on run_shell to perform basic operations like capturing
 the output or having $pwd used in command line arguments or environment
 variables
 
+Note: This wrapper adds a dependency on a C++ toolchain
+
 It is meant to be used in rules implementations like such:
 
 ```python
@@ -25,7 +27,7 @@ It is meant to be used in rules implementations like such:
         outputs = [stdout_output],
         arguments = [args],
         env = env,
-        tools = [ctx.executable._process_wrapper_tester],
+        tools = [ctx.executable._compiler],
     )
 
     return [DefaultInfo(files = depset([stdout_output]))]
@@ -122,7 +124,7 @@ It is meant to be used in rules implementations like such:
       <td>
         optional.
         <p>
-          Touches the file specified in file_path.
+          Touches the file specified in file_path. The touch file only gets created if the child process exists successfully.
         </p>
       </td>
     </tr>
