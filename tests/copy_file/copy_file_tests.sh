@@ -44,8 +44,20 @@ function test_copy_src() {
   expect_log '^echo aaa$'
 }
 
+function test_copy_src_symlink() {
+  cat "$(rlocation bazel_skylib/tests/copy_file/out/a-out-symlink.txt)" >"$TEST_log"
+  expect_log '^#!/bin/bash$'
+  expect_log '^echo aaa$'
+}
+
 function test_copy_gen() {
   cat "$(rlocation bazel_skylib/tests/copy_file/out/gen-out.txt)" >"$TEST_log"
+  expect_log '^#!/bin/bash$'
+  expect_log '^echo potato$'
+}
+
+function test_copy_gen_symlink() {
+  cat "$(rlocation bazel_skylib/tests/copy_file/out/gen-out-symlink.txt)" >"$TEST_log"
   expect_log '^#!/bin/bash$'
   expect_log '^echo potato$'
 }
@@ -55,8 +67,18 @@ function test_copy_xsrc() {
   expect_log '^aaa$'
 }
 
+function test_copy_xsrc_symlink() {
+  cat "$(rlocation bazel_skylib/tests/copy_file/xsrc-out-symlink.txt)" >"$TEST_log"
+  expect_log '^aaa$'
+}
+
 function test_copy_xgen() {
   cat "$(rlocation bazel_skylib/tests/copy_file/xgen-out.txt)" >"$TEST_log"
+  expect_log '^potato$'
+}
+
+function test_copy_xgen_symlink() {
+  cat "$(rlocation bazel_skylib/tests/copy_file/xgen-out-symlink.txt)" >"$TEST_log"
   expect_log '^potato$'
 }
 

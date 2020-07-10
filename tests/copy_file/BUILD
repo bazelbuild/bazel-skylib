@@ -46,6 +46,7 @@ sh_test(
         ":file_deps",
         # Use DefaultInfo.runfiles from 'copy_gen'.
         ":copy_gen",
+        ":copy_gen_symlink",
         "//tests:unittest.bash",
     ],
     deps = ["@bazel_tools//tools/bash/runfiles"],
@@ -56,6 +57,7 @@ filegroup(
     # Use DefaultInfo.files from 'copy_src'.
     srcs = [
         ":copy_src",
+        ":copy_src_symlink",
     ],
 )
 
@@ -64,15 +66,23 @@ filegroup(
 genrule(
     name = "run_executables",
     outs = [
+        "xsrc-out-symlink.txt",
+        "xgen-out-symlink.txt",
         "xsrc-out.txt",
         "xgen-out.txt",
     ],
-    cmd = ("$(location :bin_src) > $(location xsrc-out.txt) && " +
-           "$(location :bin_gen) > $(location xgen-out.txt)"),
+    cmd = " && ".join([
+        "$(location :bin_src_symlink) > $(location xsrc-out-symlink.txt)",
+        "$(location :bin_gen_symlink) > $(location xgen-out-symlink.txt)",
+        "$(location :bin_src) > $(location xsrc-out.txt)",
+        "$(location :bin_gen) > $(location xgen-out.txt)",
+    ]),
     output_to_bindir = 1,
     tools = [
         ":bin_gen",
         ":bin_src",
+        ":bin_gen_symlink",
+        ":bin_src_symlink",
     ],
 )
 
@@ -82,10 +92,22 @@ sh_binary(
     srcs = [":copy_xsrc"],
 )
 
+# If 'bin_src' is built, then 'copy_xsrc' made its output executable.
+sh_binary(
+    name = "bin_src_symlink",
+    srcs = [":copy_xsrc_symlink"],
+)
+
 # If 'bin_gen' is built, then 'copy_xgen' made its output executable.
 sh_binary(
     name = "bin_gen",
     srcs = [":copy_xgen"],
+)
+
+# If 'bin_gen' is built, then 'copy_xgen' made its output executable.
+sh_binary(
+    name = "bin_gen_symlink",
+    srcs = [":copy_xgen_symlink"],
 )
 
 copy_file(
@@ -95,9 +117,23 @@ copy_file(
 )
 
 copy_file(
+    name = "copy_src_symlink",
+    src = "a.txt",
+    out = "out/a-out-symlink.txt",
+    allow_symlink = True,
+)
+
+copy_file(
     name = "copy_gen",
     src = ":gen",
     out = "out/gen-out.txt",
+    allow_symlink = True,
+)
+
+copy_file(
+    name = "copy_gen_symlink",
+    src = ":gen",
+    out = "out/gen-out-symlink.txt",
 )
 
 copy_file(
@@ -108,10 +144,26 @@ copy_file(
 )
 
 copy_file(
+    name = "copy_xsrc_symlink",
+    src = "a_with_exec_bit.txt",
+    out = "xout/a-out-symlink.sh",
+    is_executable = True,
+    allow_symlink = True,
+)
+
+copy_file(
     name = "copy_xgen",
     src = ":gen",
     out = "xout/gen-out.sh",
     is_executable = True,
+)
+
+copy_file(
+    name = "copy_xgen_symlink",
+    src = ":gen",
+    out = "xout/gen-out-symlink.sh",
+    is_executable = True,
+    allow_symlink = True,
 )
 
 genrule(
