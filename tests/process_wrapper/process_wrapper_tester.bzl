@@ -27,7 +27,12 @@ def _impl(ctx):
         outputs.append(stdout_output)
         args.add("--stdout-file", stdout_output.path)
 
-    if combined or ctx.attr.test_config != "stdout":
+    if combined or ctx.attr.test_config == "stderr":
+        stderr_output = ctx.actions.declare_file(ctx.label.name + ".stderr")
+        outputs.append(stderr_output)
+        args.add("--stderr-file", stderr_output.path)
+
+    if combined or (ctx.attr.test_config != "stdout" and ctx.attr.test_config != "stderr"):
         touch_output = ctx.actions.declare_file(ctx.label.name + ".touch")
         outputs.append(touch_output)
         args.add("--touch-file", touch_output.path)
@@ -39,14 +44,16 @@ def _impl(ctx):
         args.add_all(ctx.files.arg_files, before_each = "--arg-file")
 
     if combined or ctx.attr.test_config == "subst-pwd":
-        args.add("--subst-pwd")
+        args.add("--subst", "pwd=${pwd}")
+        args.add("--subst", "key=value")
 
     args.add("--")
 
     args.add(ctx.executable._process_wrapper_tester.path)
     args.add(ctx.attr.test_config)
-    args.add("--current-dir", "<pwd>")
-    env = {"CURRENT_DIR": "<pwd>/test_path"}
+    args.add("--current-dir", "${pwd}")
+    args.add("--test-subst", "subst key to ${key}")
+    env = {"CURRENT_DIR": "${pwd}/test_path"}
 
     ctx.actions.run(
         executable = ctx.executable._process_wrapper,

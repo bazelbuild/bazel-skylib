@@ -40,7 +40,7 @@ class System {
   // It is meant to be called once during the lifetime of the parent process
   static int Exec(const StrType& executable, const Arguments& arguments,
                   const EnvironmentBlock& environment_block,
-                  const StrType& stdout_file);
+                  const StrType& stdout_file,const StrType& stderr_file);
 };
 
 }  // namespace process_wrapper

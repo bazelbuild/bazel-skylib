@@ -67,33 +67,37 @@ void MakeEnvironmentBlock(const System::EnvironmentBlock& environment_block,
   environment_block_win.push_back(PW_SYS_STR('\0'));
 }
 
-class StdoutPipe {
+class OutputPipe {
  public:
   static constexpr size_t kReadEndHandle = 0;
   static constexpr size_t kWriteEndHandle = 1;
 
-  ~StdoutPipe() {
+  ~OutputPipe() {
     CloseReadEnd();
     CloseWriteEnd();
   }
 
-  bool CreateEnds(STARTUPINFO& startup_info) {
+  bool CreateEnds(STARTUPINFO& startup_info, bool err) {
     SECURITY_ATTRIBUTES saAttr;
     ZeroMemory(&saAttr, sizeof(SECURITY_ATTRIBUTES));
     saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
     saAttr.bInheritHandle = TRUE;
     saAttr.lpSecurityDescriptor = NULL;
-    if (!::CreatePipe(&stdout_pipe_handles_[kReadEndHandle],
-                      &stdout_pipe_handles_[kWriteEndHandle], &saAttr, 0)) {
+    if (!::CreatePipe(&output_pipe_handles_[kReadEndHandle],
+                      &output_pipe_handles_[kWriteEndHandle], &saAttr, 0)) {
       return false;
     }
 
-    if (!::SetHandleInformation(stdout_pipe_handles_[kReadEndHandle],
+    if (!::SetHandleInformation(output_pipe_handles_[kReadEndHandle],
                                 HANDLE_FLAG_INHERIT, 0)) {
       return false;
     }
 
-    startup_info.hStdOutput = stdout_pipe_handles_[kWriteEndHandle];
+    if (err) {
+      startup_info.hStdError = output_pipe_handles_[kWriteEndHandle];
+    } else {
+      startup_info.hStdOutput = output_pipe_handles_[kWriteEndHandle];
+    }
     startup_info.dwFlags |= STARTF_USESTDHANDLES;
 
     return true;
@@ -102,14 +106,14 @@ class StdoutPipe {
   void CloseReadEnd() { Close(kReadEndHandle); }
   void CloseWriteEnd() { Close(kWriteEndHandle); }
 
-  HANDLE ReadEndHandle() const { return stdout_pipe_handles_[kReadEndHandle]; }
+  HANDLE ReadEndHandle() const { return output_pipe_handles_[kReadEndHandle]; }
   HANDLE WriteEndHandle() const {
-    return stdout_pipe_handles_[kWriteEndHandle];
+    return output_pipe_handles_[kWriteEndHandle];
   }
 
   bool WriteToFile(const System::StrType& stdout_file) {
     CloseWriteEnd();
-    HANDLE stdout_file_handle = CreateFile(
+    HANDLE output_file_handle = CreateFile(
         /*lpFileName*/ stdout_file.c_str(),
         /*dwDesiredAccess*/ GENERIC_WRITE,
         /*dwShareMode*/ FILE_SHARE_WRITE,
@@ -118,9 +122,8 @@ class StdoutPipe {
         /*dwFlagsAndAttributes*/ FILE_ATTRIBUTE_NORMAL,
         /*hTemplateFile*/ NULL);
 
-    if (stdout_file_handle == INVALID_HANDLE_VALUE) {
-      std::cerr << "process wrapper error: failed to open the stdout file."
-                << std::endl;
+    if (output_file_handle == INVALID_HANDLE_VALUE) {
+      std::cerr << "process wrapper error: failed to open the output file.\n";
       return false;
     }
 
@@ -134,17 +137,15 @@ class StdoutPipe {
         break;
       } else if (!success) {
         std::cerr
-            << "process wrapper error: failed to read child process stdout."
-            << std::endl;
+            << "process wrapper error: failed to read child process output.\n";
         return false;
       }
 
       DWORD written;
-      success = WriteFile(stdout_file_handle, buffer, read, &written, NULL);
+      success = WriteFile(output_file_handle, buffer, read, &written, NULL);
       if (!success) {
-        std::cerr
-            << "process wrapper error: failed to write to stdout capture file."
-            << std::endl;
+        std::cerr << "process wrapper error: failed to write to output capture "
+                     "file.\n";
         return false;
       }
     }
@@ -153,12 +154,12 @@ class StdoutPipe {
 
  private:
   void Close(size_t idx) {
-    if (stdout_pipe_handles_[idx] != nullptr) {
-      ::CloseHandle(stdout_pipe_handles_[idx]);
+    if (output_pipe_handles_[idx] != nullptr) {
+      ::CloseHandle(output_pipe_handles_[idx]);
     }
-    stdout_pipe_handles_[idx] = nullptr;
+    output_pipe_handles_[idx] = nullptr;
   }
-  HANDLE stdout_pipe_handles_[2] = {nullptr};
+  HANDLE output_pipe_handles_[2] = {nullptr};
 };
 
 }  // namespace
@@ -175,15 +176,21 @@ System::StrType System::GetWorkingDirectory() {
 int System::Exec(const System::StrType& executable,
                  const System::Arguments& arguments,
                  const System::EnvironmentBlock& environment_block,
-                 const StrType& stdout_file) {
+                 const StrType& stdout_file, const StrType& stderr_file) {
   STARTUPINFO startup_info;
   ZeroMemory(&startup_info, sizeof(STARTUPINFO));
   startup_info.cb = sizeof(STARTUPINFO);
 
-  StdoutPipe stdout_pipe;
-  if (!stdout_file.empty() && !stdout_pipe.CreateEnds(startup_info)) {
-    std::cerr << "process wrapper error: failed to create stdout pipe."
-              << std::endl;
+  OutputPipe stdout_pipe;
+  if (!stdout_file.empty() &&
+      !stdout_pipe.CreateEnds(startup_info, /*err*/ false)) {
+    std::cerr << "process wrapper error: failed to create stdout pipe.\n";
+    return -1;
+  }
+  OutputPipe stderr_pipe;
+  if (!stderr_file.empty() &&
+      !stderr_pipe.CreateEnds(startup_info, /*err*/ true)) {
+    std::cerr << "process wrapper error: failed to create stderr pipe.\n";
     return -1;
   }
 
@@ -215,13 +222,17 @@ int System::Exec(const System::StrType& executable,
       /*lpProcessInformation*/ &process_info);
 
   if (success == FALSE) {
-    std::cerr << "process wrapper error: Failed to launch a new process."
-              << std::endl;
+    std::cerr << "process wrapper error: Failed to launch a new process.\n";
     return -1;
   }
 
   if (!stdout_file.empty()) {
     if (!stdout_pipe.WriteToFile(stdout_file)) {
+      return -1;
+    }
+  }
+  if (!stderr_file.empty()) {
+    if (!stderr_pipe.WriteToFile(stderr_file)) {
       return -1;
     }
   }

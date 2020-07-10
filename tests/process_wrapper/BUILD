@@ -16,6 +16,7 @@ filegroup(
     srcs = [
         "test_files/env_file1",
         "test_files/env_file2",
+        "test_files/env_file3",
     ],
 )
 
@@ -24,6 +25,7 @@ filegroup(
     srcs = [
         "test_files/arg_file1",
         "test_files/arg_file2",
+        "test_files/arg_file3",
     ],
 )
 
@@ -33,6 +35,14 @@ filegroup(
         "test_files/stdout",
     ],
 )
+
+filegroup(
+    name = "stderr_file",
+    srcs = [
+        "test_files/stderr",
+    ],
+)
+
 
 process_wrapper_tester(
     name = "process_wrapper_basic",
@@ -47,6 +57,11 @@ process_wrapper_tester(
 process_wrapper_tester(
     name = "process_wrapper_stdout",
     test_config = "stdout",
+)
+
+process_wrapper_tester(
+    name = "process_wrapper_stderr",
+    test_config = "stderr",
 )
 
 process_wrapper_tester(
@@ -94,6 +109,12 @@ diff_test(
     name = "stdout_test",
     file1 = ":stdout_file",
     file2 = ":process_wrapper_stdout",
+)
+
+diff_test(
+    name = "stderr_test",
+    file1 = ":stderr_file",
+    file2 = ":process_wrapper_stderr",
 )
 
 build_test(

@@ -39,23 +39,49 @@ bool ReadFileToArray(const System::StrType& file_path,
                      System::StrVecType& vec) {
   std::ifstream file(file_path);
   if (file.fail()) {
-    std::cerr << "process wrapper error: failed to open file: " << ToUtf8(file_path) << std::endl;
+    std::cerr << "process wrapper error: failed to open file: "
+              << ToUtf8(file_path) << '\n';
     return false;
   }
-  std::string line;
-  while (std::getline(file, line)) {
+  std::string read_line, escaped_line;
+  while (std::getline(file, read_line)) {
     // handle CRLF files when as they might be
     // written on windows and read from linux
-    if (!line.empty() && line.back() == '\r') {
-      line.pop_back();
+    if (!read_line.empty() && read_line.back() == '\r') {
+      read_line.pop_back();
     }
-
     // Skip empty lines if any
-    if (line.empty()) {
+    if (read_line.empty()) {
       continue;
     }
 
-    vec.push_back(FromUtf8(line));
+    // a \ at the end of a line allows us to escape the new line break, \\ 
+    // yields a single \, so \\\ translates to a single \ and a new line escape
+    int end_backslash_count = 0;
+    for (std::string::reverse_iterator rit = read_line.rbegin();
+         rit != read_line.rend() && *rit == '\\'; ++rit) {
+      end_backslash_count++;
+    }
+
+    // a 0 or pair number of backslashes do not lead to a new line escape
+    bool escape = false;
+    if (end_backslash_count & 1) {
+      escape = true;
+    }
+
+    // remove backslashes
+    while (end_backslash_count > 0) {
+      end_backslash_count -= 2;
+      read_line.pop_back();
+    }
+
+    if (escape) {
+      read_line.push_back('\n');
+      escaped_line += read_line;
+    } else {
+      vec.push_back(FromUtf8(escaped_line + read_line));
+      escaped_line.clear();
+    }
   }
   return true;
 }  // namespace process_wrapper

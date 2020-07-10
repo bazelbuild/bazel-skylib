@@ -4,17 +4,17 @@
 
 void basic_part1_test(std::string current_dir_arg) {
   if (current_dir_arg != "--current-dir") {
-    std::cerr << "error: argument \"--current-dir\" not found." << std::endl;
+    std::cerr << "error: argument \"--current-dir\" not found.\n";
     std::exit(1);
   }
 }
 
 void basic_part2_test(std::string current_dir, const char* envp[]) {
-  if (current_dir != "<pwd>") {
-    std::cerr << "error: Unsubsituted <pwd> not found." << std::endl;
+  if (current_dir != "${pwd}") {
+    std::cerr << "error: unsubsituted ${pwd} not found.\n";
     std::exit(1);
   }
-  const std::string current_dir_env = "CURRENT_DIR=<pwd>/test_path";
+  const std::string current_dir_env = "CURRENT_DIR=${pwd}/test_path";
   bool found = false;
   for (int i = 0; envp[i] != nullptr; ++i) {
     if (current_dir_env == envp[i]) {
@@ -23,14 +23,14 @@ void basic_part2_test(std::string current_dir, const char* envp[]) {
     }
   }
   if (!found) {
-    std::cerr << "Unsubsituted CURRENT_DIR not found." << std::endl;
+    std::cerr << "unsubsituted CURRENT_DIR not found.\n";
     std::exit(1);
   }
 }
 
 void subst_pwd_test(std::string current_dir, const char* envp[]) {
-  if (current_dir == "<pwd>") {
-    std::cerr << "error: argument <pwd> substitution failed." << std::endl;
+  if (current_dir == "${pwd}") {
+    std::cerr << "error: argument ${pwd} substitution failed.\n";
     std::exit(1);
   }
   bool found = false;
@@ -38,16 +38,15 @@ void subst_pwd_test(std::string current_dir, const char* envp[]) {
     const std::string env = envp[i];
     if (env.rfind("CURRENT_DIR", 0) == 0) {
       found = true;
-      if (env.find("<pwd>") == 0) {
-        std::cerr << "error: environment variable <pwd> substitution failed"
-                  << std::endl;
+      if (env.find("${pwd}") == 0) {
+        std::cerr << "error: environment variable ${pwd} substitution failed.\n";
         std::exit(1);
       }
       break;
     }
   }
   if (!found) {
-    std::cerr << "CURRENT_DIR not found." << std::endl;
+    std::cerr << "CURRENT_DIR not found.\n";
     std::exit(1);
   }
 }
@@ -57,8 +56,13 @@ void env_files_test(const char* envp[]) {
       "FOO=BAR",
       "FOOBAR=BARFOO",
       "BAR=FOO",
+      "ENV_ESCAPE=with\nnew line",
+      "ENV_NO_ESCAPE=with no new line\\",
+      "ENV_ESCAPE_WITH_BACKSLASH=new line\\\nhere",
   };
-
+  for (int i = 0; envp[i] != nullptr; ++i) {
+    std::cout << envp[i] << std::endl;
+  }
   for (const std::string& env : must_exist) {
     bool found = false;
     for (int i = 0; envp[i] != nullptr; ++i) {
@@ -68,8 +72,7 @@ void env_files_test(const char* envp[]) {
       }
     }
     if (!found) {
-      std::cerr << "Environment variable \"" << env << "\" not found."
-                << std::endl;
+      std::cerr << "error: environment variable \"" << env << "\" not found.\n";
       std::exit(1);
     }
   }
@@ -77,7 +80,16 @@ void env_files_test(const char* envp[]) {
 
 void arg_files_test(int argc, const char* argv[]) {
   const std::string must_exist[] = {
-      "--arg1=foo", "--arg2", "foo bar", "--arg2=bar", "--arg3", "foobar",
+      "--arg1=foo",
+      "--arg2",
+      "foo bar",
+      "--arg2=bar",
+      "--arg3",
+      "foobar",
+      "arg with\nnew line",
+      "arg with\\",
+      "no new line",
+      "arg with\\\nnew line and a trailing backslash",
   };
 
   for (const std::string& arg : must_exist) {
@@ -89,7 +101,7 @@ void arg_files_test(int argc, const char* argv[]) {
       }
     }
     if (!found) {
-      std::cerr << "Argument \"" << arg << "\" not found." << std::endl;
+      std::cerr << "error: argument \"" << arg << "\" not found.\n";
       std::exit(1);
     }
   }
@@ -98,20 +110,24 @@ void arg_files_test(int argc, const char* argv[]) {
 void test_stdout() {
   for (int i = 0; i < 10000; ++i) {
 // On windows writing LF to any stream in text mode gets changed to CRLF
-// Since the test file is saved using CRLF, we are forcing the same on 
+// Since the test file is saved using CRLF, we are forcing the same on
 // non windows systems
 #if defined(_WIN32)
     std::cout << "Child process to stdout : " << i << "\n";
 #else
     std::cout << "Child process to stdout : " << i << "\r\n";
-#endif // defined(_WIN32)
+#endif  // defined(_WIN32)
   }
+}
+
+void test_stderr() {
+  std::cerr << "This is the stderr output";
 }
 
 int main(int argc, const char* argv[], const char* envp[]) {
   if (argc < 4) {
     std::cerr << "error: Invalid number of args exected at least 4 got " << argc
-              << "." << std::endl;
+              << ".\n";
     return 1;
   }
   std::string test_config = argv[1];
@@ -136,5 +152,9 @@ int main(int argc, const char* argv[], const char* envp[]) {
 
   if (combined || test_config == "stdout") {
     test_stdout();
+  }
+
+  if (combined || test_config == "stderr") {
+    test_stderr();
   }
 }

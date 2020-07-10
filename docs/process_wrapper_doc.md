@@ -48,7 +48,6 @@ It is meant to be used in rules implementations like such:
           ),
       },
   )
-
 ```
 
 ### Parameters
@@ -75,11 +74,14 @@ It is meant to be used in rules implementations like such:
       </td>
     </tr>
     <tr id="process_wrapper-subst-pwd">
-      <td><code>--subst-pwd</code></td>
+      <td><code>--subst var=val</code></td>
       <td>
         optional.
         <p>
-          Replaces &lt;pwd&gt; in arguments and environment variables.
+          Allows to substitute ${key} by value in all environment variables and arguments passed to the child process.
+          If value is equal to ${pwd} the actual working directory of the process is substituted.
+          ${key} doesn’t have a corresponding value it is left as is.
+          If key matches a an existing key there is no escaping mechanism.
         </p>
       </td>
     </tr>
@@ -93,6 +95,10 @@ It is meant to be used in rules implementations like such:
         </p>
         <p>
           The file consists of new line separated environment variables under the form of VAR=VALUE.
+          \ at the end of of a line allows you to escape the new line splitting.
+        </p>
+        <p>
+          file_path is subject to system limitations regarding maximum number of characters, which is 260 on windows.
         </p>
       </td>
     </tr>
@@ -105,7 +111,11 @@ It is meant to be used in rules implementations like such:
           Can appear multiple times.
         </p>
         <p>
-          The file consists of  new line separated arguments.
+          The file consists of new line separated arguments.
+          \ at the end of of a line allows you to escape the new line splitting.
+        </p>
+        <p>
+          file_path is subject to system limitations regarding maximum number of characters, which is 260 on windows.
         </p>
       </td>
     </tr>
@@ -117,6 +127,22 @@ It is meant to be used in rules implementations like such:
           Writes the standard output of the child process to a file.
           Can appear once.
         </p>
+        <p>
+          file_path is subject to system limitations regarding maximum number of characters, which is 260 on windows.
+        </p>
+      </td>
+    </tr>
+    <tr id="process_wrapper-stderr-file">
+      <td><code>--stderr-file file_path</code></td>
+      <td>
+        optional.
+        <p>
+          Writes the standard error output of the child process to a file.
+          Can appear once.
+        </p>
+        <p>
+          file_path is subject to system limitations regarding maximum number of characters, which is 260 on windows.
+        </p>
       </td>
     </tr>
     <tr id="process_wrapper-touch-file">
@@ -125,6 +151,9 @@ It is meant to be used in rules implementations like such:
         optional.
         <p>
           Touches the file specified in file_path. The touch file only gets created if the child process exists successfully.
+        </p>
+        <p>
+          file_path is subject to system limitations regarding maximum number of characters, which is 260 on windows.
         </p>
       </td>
     </tr>
