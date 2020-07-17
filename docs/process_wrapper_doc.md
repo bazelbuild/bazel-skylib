@@ -14,12 +14,12 @@ It is meant to be used in rules implementations like such:
     stdout_output = ctx.actions.declare_file(ctx.label.name + ".stdout")
     args = ctx.actions.args()
     args.add("--stdout-file", stdout_output.path)
-    args.add("--subst-pwd")
+    args.add("--subst", "pwd=${pwd}")
     args.add("--")
     args.add(ctx.executable._compiler.path)
     args.add(ctx.attr.test_config)
-    args.add("--current-dir", "<pwd>")
-    env = {"CURRENT_DIR": "<pwd>/test_path"}
+    args.add("--test-dir", "${pwd}")
+    env = {"TEST_DIR": "${pwd}/test_path"}
 
     ctx.actions.run(
         executable = ctx.executable._process_wrapper,
@@ -41,7 +41,7 @@ It is meant to be used in rules implementations like such:
               cfg = "exec",
           ),
           "_process_wrapper": attr.label(
-              default = "@bazel_skylib//lib:process_wrapper",
+              default = "@bazel_skylib//lib/process_wrapper",
               executable = True,
               allow_single_file = True,
               cfg = "exec",
