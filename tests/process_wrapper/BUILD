@@ -81,6 +81,11 @@ process_wrapper_tester(
 )
 
 process_wrapper_tester(
+    name = "process_wrapper_copy_output",
+    test_config = "copy-output",
+)
+
+process_wrapper_tester(
     name = "process_wrapper_combined",
     arg_files = [
         ":arg_files",
@@ -128,6 +133,13 @@ build_test(
     name = "arg_files_test",
     targets = [
         ":process_wrapper_arg_files",
+    ],
+)
+
+build_test(
+    name = "copy_output_test",
+    targets = [
+        ":process_wrapper_copy_output",
     ],
 )
 

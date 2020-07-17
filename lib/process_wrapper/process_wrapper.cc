@@ -28,6 +28,8 @@ int PW_MAIN(int argc, const CharType* argv[], const CharType* envp[]) {
   System::StrType stdout_file;
   System::StrType stderr_file;
   System::StrType touch_file;
+  System::StrType copy_source;
+  System::StrType copy_dest;
   System::Arguments arguments;
   System::Arguments file_arguments;
 
@@ -69,22 +71,42 @@ int PW_MAIN(int argc, const CharType* argv[], const CharType* envp[]) {
       }
     } else if (arg == PW_SYS_STR("--touch-file")) {
       if (!touch_file.empty()) {
-        std::cerr << "process wrapper error: \"--touch-file\" appears more "
-                     "than once\n";
+        std::cerr << "process wrapper error: \"--touch-file\" can only appear "
+                     "once.\n";
         return -1;
       }
       touch_file = argv[i];
+    } else if (arg == PW_SYS_STR("--copy-output")) {
+      // i is already at the first arg position, accountint we need another arg
+      // and then -- executable_name.
+      if (i + 1 > argc) {
+        std::cerr
+            << "process wrapper error: \"--copy-output\" needs 2 parameters.\n";
+        return -1;
+      }
+      if (!copy_source.empty() || !copy_dest.empty()) {
+        std::cerr << "process wrapper error: \"--copy-output\" can only appear "
+                     "once.\n";
+        return -1;
+      }
+      copy_source = argv[i];
+      copy_dest = argv[++i];
+      if (copy_source == copy_dest) {
+        std::cerr << "process wrapper error: \"--copy-output\" source and dest "
+                     "need to be different.\n";
+        return -1;
+      }
     } else if (arg == PW_SYS_STR("--stdout-file")) {
       if (!stdout_file.empty()) {
-        std::cerr << "process wrapper error: \"--stdout-file\" appears more "
-                     "than once\n";
+        std::cerr << "process wrapper error: \"--stdout-file\" can only appear "
+                     "once.\n";
         return -1;
       }
       stdout_file = argv[i];
     } else if (arg == PW_SYS_STR("--stderr-file")) {
       if (!stderr_file.empty()) {
-        std::cerr << "process wrapper error: \"--stderr-file\" appears more "
-                     "than once\n";
+        std::cerr << "process wrapper error: \"--stderr-file\" can only appear "
+                     "once.\n";
         return -1;
       }
       stderr_file = argv[i];
@@ -119,16 +141,34 @@ int PW_MAIN(int argc, const CharType* argv[], const CharType* envp[]) {
     }
   }
 
-  int exit_code =
-      System::Exec(exec_path, arguments, environment_block, stdout_file, stderr_file);
+  int exit_code = System::Exec(exec_path, arguments, environment_block,
+                               stdout_file, stderr_file);
   if (exit_code == 0) {
     if (!touch_file.empty()) {
       std::ofstream file(touch_file);
       if (file.fail()) {
-        std::cerr << "Touch file \"" << touch_file.c_str()
-                  << "\" creation failed" << '\n';
+        std::cerr << "process wrapper error: failed to create touch file: \""
+                  << ToUtf8(touch_file) << "\"\n";
         return -1;
       }
+      file.close();
+    }
+
+    // we perform a copy of the output if necessary
+    if (!copy_source.empty() && !copy_dest.empty()) {
+      std::ifstream source(copy_source, std::ios::binary);
+      if (source.fail()) {
+        std::cerr << "process wrapper error: failed to open copy source: \""
+                  << ToUtf8(copy_source) << "\"\n";
+        return -1;
+      }
+      std::ofstream dest(copy_dest, std::ios::binary);
+      if (dest.fail()) {
+        std::cerr << "process wrapper error: failed to open copy dest: \""
+                  << ToUtf8(copy_dest) << "\"\n";
+        return -1;
+      }
+      dest << source.rdbuf();
     }
   }
   return exit_code;

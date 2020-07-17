@@ -36,6 +36,10 @@ def _impl(ctx):
         touch_output = ctx.actions.declare_file(ctx.label.name + ".touch")
         outputs.append(touch_output)
         args.add("--touch-file", touch_output.path)
+        if ctx.attr.test_config == "copy-output":
+            copy_output = ctx.actions.declare_file(ctx.label.name + ".touch.copy")
+            outputs.append(copy_output)
+            args.add_all("--copy-output", [touch_output.path, copy_output.path])
 
     if combined or ctx.attr.test_config == "env-files":
         args.add_all(ctx.files.env_files, before_each = "--env-file")

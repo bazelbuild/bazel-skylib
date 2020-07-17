@@ -157,5 +157,17 @@ It is meant to be used in rules implementations like such:
         </p>
       </td>
     </tr>
+    <tr id="process_wrapper-copy-ouptut">
+      <td><code>--copy-output source_path dest_path</code></td>
+      <td>
+        optional.
+        <p>
+          Copies the source file into destination. Both need to be output files declared in skylark. 
+        </p>
+        <p>
+          source_path and dest_path are subject to system limitations regarding maximum number of characters, which is 260 on windows.
+        </p>
+      </td>
+    </tr>
   </tbody>
 </table>

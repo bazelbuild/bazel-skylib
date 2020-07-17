@@ -60,9 +60,6 @@ void env_files_test(const char* envp[]) {
       "ENV_NO_ESCAPE=with no new line\\",
       "ENV_ESCAPE_WITH_BACKSLASH=new line\\\nhere",
   };
-  for (int i = 0; envp[i] != nullptr; ++i) {
-    std::cout << envp[i] << std::endl;
-  }
   for (const std::string& env : must_exist) {
     bool found = false;
     for (int i = 0; envp[i] != nullptr; ++i) {
