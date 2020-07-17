@@ -78,7 +78,7 @@ process_wrapper_tester = rule(
             cfg = "exec",
         ),
         "_process_wrapper": attr.label(
-            default = "@bazel_skylib//lib:process_wrapper",
+            default = "@bazel_skylib//lib/process_wrapper",
             executable = True,
             allow_single_file = True,
             cfg = "exec",
