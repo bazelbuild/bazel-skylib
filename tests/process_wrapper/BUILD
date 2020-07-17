@@ -91,49 +91,49 @@ process_wrapper_tester(
     test_config = "combined",
 )
 
-#build_test(
-#    name = "basic_test",
-#    targets = [
-#        ":process_wrapper_basic",
-#    ],
-#)
-#
-#build_test(
-#    name = "subst_pwd_test",
-#    targets = [
-#        ":process_wrapper_subst_pwd",
-#    ],
-#)
-#
-#diff_test(
-#    name = "stdout_test",
-#    file1 = ":stdout_file",
-#    file2 = ":process_wrapper_stdout",
-#)
-#
-#diff_test(
-#    name = "stderr_test",
-#    file1 = ":stderr_file",
-#    file2 = ":process_wrapper_stderr",
-#)
-#
-#build_test(
-#    name = "env_files_test",
-#    targets = [
-#        ":process_wrapper_env_files",
-#    ],
-#)
-#
-#build_test(
-#    name = "arg_files_test",
-#    targets = [
-#        ":process_wrapper_arg_files",
-#    ],
-#)
-#
-#build_test(
-#    name = "combined_test",
-#    targets = [
-#        ":process_wrapper_combined",
-#    ],
-#)
+build_test(
+    name = "basic_test",
+    targets = [
+        ":process_wrapper_basic",
+    ],
+)
+
+build_test(
+    name = "subst_pwd_test",
+    targets = [
+        ":process_wrapper_subst_pwd",
+    ],
+)
+
+diff_test(
+    name = "stdout_test",
+    file1 = ":stdout_file",
+    file2 = ":process_wrapper_stdout",
+)
+
+diff_test(
+    name = "stderr_test",
+    file1 = ":stderr_file",
+    file2 = ":process_wrapper_stderr",
+)
+
+build_test(
+    name = "env_files_test",
+    targets = [
+        ":process_wrapper_env_files",
+    ],
+)
+
+build_test(
+    name = "arg_files_test",
+    targets = [
+        ":process_wrapper_arg_files",
+    ],
+)
+
+build_test(
+    name = "combined_test",
+    targets = [
+        ":process_wrapper_combined",
+    ],
+)
