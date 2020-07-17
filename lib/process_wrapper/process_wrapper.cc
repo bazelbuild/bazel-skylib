@@ -56,7 +56,7 @@ int PW_MAIN(int argc, const CharType* argv[], const CharType* envp[]) {
                   << ToUtf8(subst) << "\".\n";
         return -1;
       }
-      System::StrType value = subst.substr(equal_pos, subst.size());
+      System::StrType value = subst.substr(equal_pos + 1, subst.size());
       if (value == PW_SYS_STR("${pwd}")) {
         value = System::GetWorkingDirectory();
       }
