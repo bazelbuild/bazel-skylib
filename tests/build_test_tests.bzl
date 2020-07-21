@@ -17,6 +17,7 @@
 load("//rules:build_test.bzl", "build_test")
 load("@rules_cc//cc:defs.bzl", "cc_library")
 
+# buildifier: disable=unnamed-macro
 def build_test_test_suite():
     # Since the rules doesn't do anything really, it just makes some targets
     # to get Bazel to build other targets via a `bazel test`, just make some

@@ -23,6 +23,7 @@ load(":new_sets.bzl", new_sets = "sets")
 load(":types.bzl", "types")
 
 # The following function should only be called from WORKSPACE files and workspace macros.
+# buildifier: disable=unnamed-macro
 def register_unittest_toolchains():
     """Registers the toolchains for unittest users."""
     native.register_toolchains(
@@ -282,7 +283,7 @@ def _begin(ctx):
     test.
 
     Args:
-      ctx: The Skylark context. Pass the implementation function's `ctx` argument
+      ctx: The Starlark context. Pass the implementation function's `ctx` argument
           in verbatim.
 
     Returns:
