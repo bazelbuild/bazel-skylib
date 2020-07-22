@@ -16,15 +16,44 @@
 
 load("//lib:new_sets.bzl", "sets")
 
+def _empty_test_impl(ctx):
+    is_windows = select({
+        "@bazel_tools//src/conditions:host_windows": True,
+        "//conditions:default": False,
+    })
+    extension = ".bat" if is_windows else ".sh"
+    executable = ctx.actions.declare_file(ctx.label.name + extension)
+    ctx.actions.write(
+        output = executable,
+        is_executable = True,
+        content = "exit 0",
+    )
+
+    runfiles = []
+    for entry in ctx.attr.data:
+        runfiles += entry.files.to_list()
+
+    return [DefaultInfo(
+        files = depset([executable]),
+        executable = executable,
+        runfiles = ctx.runfiles(files = runfiles),
+    )]
+
+
+_empty_test = rule(
+    implementation = _empty_test_impl,
+    attrs = {
+        "data": attr.label_list(),
+    },
+    test = True,
+)
+
 def build_test(name, targets, **kwargs):
     """Test rule checking that other targets build.
 
     This works not by an instance of this test failing, but instead by
     the targets it depends on failing to build, and hence failing
     the attempt to run this test.
-
-    NOTE: At the moment, this won't work on Windows; but someone adding
-    support would be welcomed.
 
     Typical usage:
 
@@ -75,15 +104,13 @@ def build_test(name, targets, **kwargs):
             outs = [full_name + ".out"],
             testonly = 1,
             visibility = ["//visibility:private"],
-            # TODO: Does this need something else for Windows?
             cmd = "touch $@",
-            **genrule_args
+            cmd_bat = "type nul > $@",
+            **genrule_args,
         )
 
-    native.sh_test(
+    _empty_test(
         name = name,
-        # TODO: Does this need something else for Windows?
-        srcs = ["@bazel_skylib//rules:empty_test.sh"],
         data = test_data,
         size = kwargs.pop("size", "small"),  # Default to small for test size
         **kwargs
