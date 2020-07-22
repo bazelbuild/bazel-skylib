@@ -106,7 +106,7 @@ def build_test(name, targets, **kwargs):
             visibility = ["//visibility:private"],
             cmd = "touch $@",
             cmd_bat = "type nul > $@",
-            **genrule_args,
+            **genrule_args
         )
 
     _empty_test(
