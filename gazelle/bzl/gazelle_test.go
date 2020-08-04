@@ -1,4 +1,4 @@
-package gazelle
+package bzl
 
 /* Copyright 2020 The Bazel Authors. All rights reserved.
 

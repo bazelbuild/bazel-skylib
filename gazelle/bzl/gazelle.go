@@ -21,7 +21,7 @@ limitations under the License.
 //
 // This extension is experimental and subject to change. It is not included
 // in the default Gazelle binary.
-package gazelle
+package bzl
 
 import (
 	"flag"
