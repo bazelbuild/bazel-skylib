@@ -5,6 +5,11 @@ licenses(["notice"])
 package(default_visibility = ["//visibility:public"])
 
 bzl_library(
+    name = "analysis_test",
+    srcs = ["analysis_test.bzl"],
+)
+
+bzl_library(
     name = "build_test",
     srcs = ["build_test.bzl"],
     deps = ["//lib:new_sets"],
