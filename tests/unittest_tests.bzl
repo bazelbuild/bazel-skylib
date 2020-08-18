@@ -217,7 +217,7 @@ inspect_output_dirs_test = analysistest.make(
     # The output directories differ between the test and target under test when
     # the target under test is under a config transition.
     config_settings = {
-        "//command_line_option:compilation_mode": "fastbuild",
+        "//command_line_option:compilation_mode": "dbg",
     },
 )
 
