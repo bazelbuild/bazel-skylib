@@ -410,7 +410,13 @@ def _assert_set_equals(env, expected, actual, msg = None):
           If omitted, a default will be used.
     """
     if not new_sets.is_equal(expected, actual):
-        expectation_msg = "Expected %r, but got %r" % (expected, actual)
+        missing = new_sets.difference(expected, actual)
+        unexpected = new_sets.difference(actual, expected)
+        expectation_msg = "Expected %s, but got %s" % (new_sets.str(expected), new_sets.str(actual))
+        if new_sets.length(missing) > 0:
+            expectation_msg += ", missing are %s" % (new_sets.str(missing))
+        if new_sets.length(unexpected) > 0:
+            expectation_msg += ", unexpected are %s" % (new_sets.str(unexpected))
         if msg:
             full_msg = "%s (%s)" % (msg, expectation_msg)
         else:
