@@ -4,7 +4,7 @@ load("@bazel_gazelle//:def.bzl", "gazelle", "gazelle_binary")
 # gazelle:exclude testdata
 
 go_library(
-    name = "go_default_library",
+    name = "bzl",
     srcs = ["gazelle.go"],
     importpath = "github.com/bazelbuild/bazel-skylib/gazelle",
     visibility = ["//visibility:public"],
@@ -21,14 +21,14 @@ go_library(
 )
 
 go_test(
-    name = "go_default_test",
+    name = "bzl_test",
     srcs = ["gazelle_test.go"],
     data = [
         ":gazelle-skylib",
     ] + glob([
         "testdata/**",
     ]),
-    embed = [":go_default_library"],
+    embed = [":bzl"],
     deps = [
         "@bazel_gazelle//testtools:go_default_library",
         "@io_bazel_rules_go//go/tools/bazel:go_default_library",
@@ -39,7 +39,7 @@ go_test(
 # extension and thus only has the skylib language installed.
 gazelle_binary(
     name = "gazelle-skylib",
-    languages = [":go_default_library"],
+    languages = [":bzl"],
     visibility = [
         # Also make the binary available in the root of the repo for use, but
         # not externally.
