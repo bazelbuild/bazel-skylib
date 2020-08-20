@@ -196,7 +196,7 @@ def _inspect_output_dirs_test(ctx):
     asserts.false(
         env,
         bin_path == ctx.bin_dir.path,
-        "bin dir path expected to differ between test and target_under_test.",
+        "test bin dir (%s) expected to differ with target_under_test bin dir (%s)." % (bin_path, ctx.bin_dir.path),
     )
     asserts.equals(env, bin_path, target_under_test[_OutputDirInfo].bin_path)
     return analysistest.end(env)
@@ -217,7 +217,7 @@ inspect_output_dirs_test = analysistest.make(
     # The output directories differ between the test and target under test when
     # the target under test is under a config transition.
     config_settings = {
-        "//command_line_option:compilation_mode": "fastbuild",
+        "//command_line_option:minimum_os_version": "1234.5678",
     },
 )
 
