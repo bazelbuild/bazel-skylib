@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package gazelle generates a `bzl_library` target for every `.bzl` file in
+// Package bzl generates a `bzl_library` target for every `.bzl` file in
 // each package.
 //
 // The `bzl_library` rule is provided by
@@ -21,7 +21,7 @@ limitations under the License.
 //
 // This extension is experimental and subject to change. It is not included
 // in the default Gazelle binary.
-package gazelle
+package bzl
 
 import (
 	"flag"
