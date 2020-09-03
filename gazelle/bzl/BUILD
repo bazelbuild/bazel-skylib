@@ -49,5 +49,5 @@ gazelle_binary(
 
 gazelle(
     name = "gazelle",
-    gazelle = "//gazelle:gazelle-skylib",
+    gazelle = ":gazelle-skylib",
 )
