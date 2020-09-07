@@ -152,23 +152,34 @@ func (*bzlLibraryLang) Resolve(c *config.Config, ix *resolve.RuleIndex, rc *repo
 
 	deps := make([]string, 0, len(imports))
 	for _, imp := range imports {
-		if strings.HasPrefix(imp, "@") || !c.IndexLibraries {
+		impLabel, err := label.Parse(imp)
+		if err != nil {
+			log.Printf("%s: import of %q is invalid: %v", from.String(), imp, err)
+			continue
+		}
+
+		// the index only contains absolute labels, not relative
+		impLabel = impLabel.Abs(from.Repo, from.Pkg)
+
+		if impLabel.Repo != "" || !c.IndexLibraries {
 			// This is a dependency that is external to the current repo, or indexing
 			// is disabled so take a guess at what hte target name should be.
 			deps = append(deps, strings.TrimSuffix(imp, fileType))
 		} else {
 			res := resolve.ImportSpec{
 				Lang: languageName,
-				Imp:  imp,
+				Imp:  impLabel.String(),
 			}
 			matches := ix.FindRulesByImport(res, languageName)
 
 			if len(matches) == 0 {
-				log.Printf("%s: %q was not found in dependency index. Skipping. This may result in an incomplete deps section and require manual BUILD file intervention.\n", from.String(), imp)
+				log.Printf("%s: %q (%s) was not found in dependency index. Skipping. This may result in an incomplete deps section and require manual BUILD file intervention.\n", from.String(), imp, impLabel.String())
 			}
 
 			for _, m := range matches {
-				deps = append(deps, m.Label.String())
+				depLabel := m.Label
+				depLabel = depLabel.Rel(from.Repo, from.Pkg)
+				deps = append(deps, depLabel.String())
 			}
 		}
 	}
