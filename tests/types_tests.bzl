@@ -13,6 +13,7 @@
 # limitations under the License.
 """Unit tests for types.bzl."""
 
+load("//lib:partial.bzl", "partial")
 load("//lib:types.bzl", "types")
 load("//lib:unittest.bzl", "asserts", "unittest")
 load("//lib:new_sets.bzl", "sets")
@@ -231,6 +232,22 @@ def _is_set_test(ctx):
 
 is_set_test = unittest.make(_is_set_test)
 
+def _is_partial_test(ctx):
+    """Unit test for types.is_partial."""
+    env = unittest.begin(ctx)
+
+    asserts.true(env, types.is_partial(partial.make(is_set_test)))
+    asserts.true(env, types.is_partial(partial.make(is_set_test, timeout = "short")))
+    asserts.true(env, types.is_partial(partial.make(is_set_test, timeout = "short", tags = ["foo"])))
+    asserts.false(env, types.is_partial(None))
+    asserts.false(env, types.is_partial({}))
+    asserts.false(env, types.is_partial(struct(foo = 1)))
+    asserts.false(env, types.is_partial(struct(function = "not really function")))
+
+    return unittest.end(env)
+
+is_partial_test = unittest.make(_is_partial_test)
+
 def types_test_suite():
     """Creates the test targets and test suite for types.bzl tests."""
     unittest.suite(
@@ -245,4 +262,5 @@ def types_test_suite():
         is_function_test,
         is_depset_test,
         is_set_test,
+        is_partial_test,
     )

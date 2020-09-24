@@ -20,6 +20,7 @@ assertions used to within tests.
 """
 
 load(":new_sets.bzl", new_sets = "sets")
+load(":partial.bzl", "partial")
 load(":types.bzl", "types")
 
 # The following function should only be called from WORKSPACE files and workspace macros.
@@ -232,10 +233,10 @@ def _suite(name, *test_rules):
     writing a macro in your `.bzl` file to instantiate all targets, and calling
     that macro from your BUILD file so you only have to load one symbol.
 
-    For the case where your unit tests do not take any (non-default) attributes --
-    i.e., if your unit tests do not test rules -- you can use this function to
-    create the targets and wrap them in a single test_suite target. In your
-    `.bzl` file, write:
+    You can use this function to create the targets and wrap them in a single
+    test_suite target. If a test rule requires no arguments, you can simply list
+    it as an argument. If you wish to supply attributes explicitly, you can do so
+    using `partial.make()`. For instance, in your `.bzl` file, you could write:
 
     ```
     def your_test_suite():
@@ -243,7 +244,7 @@ def _suite(name, *test_rules):
           "your_test_suite",
           your_test,
           your_other_test,
-          yet_another_test,
+          partial.make(yet_another_test, timeout = "short"),
       )
     ```
 
@@ -269,7 +270,10 @@ def _suite(name, *test_rules):
     test_names = []
     for index, test_rule in enumerate(test_rules):
         test_name = "%s_test_%d" % (name, index)
-        test_rule(name = test_name)
+        if types.is_partial(test_rule):
+            partial.call(test_rule, name = test_name)
+        else:
+            test_rule(name = test_name)
         test_names.append(test_name)
 
     native.test_suite(

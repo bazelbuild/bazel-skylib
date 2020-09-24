@@ -71,6 +71,7 @@ bzl_library(
     srcs = ["unittest.bzl"],
     deps = [
         ":new_sets",
+        ":partial",
         ":sets",
         ":types",
     ],
