@@ -129,7 +129,10 @@ def _set_conditions(condition_list):
         ans["//command_line_option:features"] = ["notmyfeature"]
     return ans
 
-_BooleanInfo = provider()
+_BooleanInfo = provider(
+    doc = "value for boolean tests",
+    fields = ["value"],
+)
 
 def _boolean_attr_impl(ctx):
     return [_BooleanInfo(value = ctx.attr.myboolean)]
