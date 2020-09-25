@@ -54,7 +54,10 @@ def _change_setting_test(ctx):
 
     return analysistest.end(env)
 
-_ChangeSettingInfo = provider()
+_ChangeSettingInfo = provider(
+    doc = "min_os_version for change_setting_test",
+    fields = ["min_os_version"],
+)
 
 def _change_setting_fake_rule(ctx):
     return [_ChangeSettingInfo(min_os_version = ctx.fragments.cpp.minimum_os_version())]
@@ -180,7 +183,10 @@ inspect_actions_test = analysistest.make(
 ########################################
 ####### inspect_output_dirs_test #######
 ########################################
-_OutputDirInfo = provider(fields = ["bin_path"])
+_OutputDirInfo = provider(
+    doc = "bin_path for inspect_output_dirs_test",
+    fields = ["bin_path"],
+)
 
 def _inspect_output_dirs_test(ctx):
     """Test verifying output directories used by a test."""
