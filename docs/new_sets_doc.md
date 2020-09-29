@@ -343,7 +343,7 @@ Returns the union of several sets.
       <td>
         optional.
         <p>
-          An arbitrary number of sets or lists.
+          An arbitrary number of sets.
         </p>
       </td>
     </tr>
