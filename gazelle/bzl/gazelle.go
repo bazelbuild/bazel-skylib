@@ -161,26 +161,37 @@ func (*bzlLibraryLang) Resolve(c *config.Config, ix *resolve.RuleIndex, rc *repo
 		// the index only contains absolute labels, not relative
 		impLabel = impLabel.Abs(from.Repo, from.Pkg)
 
+		if impLabel.Repo == "bazel_tools" {
+			// The @bazel_tools repo is tricky because it is a part of the "shipped
+			// with bazel" core library for interacting with the outside world.
+			// This means that it can not depend on skylib. Fortunately there is a
+			// fairly simple workaround for this, which is that you can add those
+			// bzl files as `deps` entries.
+			deps = append(deps, imp)
+			continue
+		}
+
 		if impLabel.Repo != "" || !c.IndexLibraries {
 			// This is a dependency that is external to the current repo, or indexing
 			// is disabled so take a guess at what hte target name should be.
 			deps = append(deps, strings.TrimSuffix(imp, fileType))
-		} else {
-			res := resolve.ImportSpec{
-				Lang: languageName,
-				Imp:  impLabel.String(),
-			}
-			matches := ix.FindRulesByImport(res, languageName)
+			continue
+		}
 
-			if len(matches) == 0 {
-				log.Printf("%s: %q (%s) was not found in dependency index. Skipping. This may result in an incomplete deps section and require manual BUILD file intervention.\n", from.String(), imp, impLabel.String())
-			}
+		res := resolve.ImportSpec{
+			Lang: languageName,
+			Imp:  impLabel.String(),
+		}
+		matches := ix.FindRulesByImport(res, languageName)
 
-			for _, m := range matches {
-				depLabel := m.Label
-				depLabel = depLabel.Rel(from.Repo, from.Pkg)
-				deps = append(deps, depLabel.String())
-			}
+		if len(matches) == 0 {
+			log.Printf("%s: %q (%s) was not found in dependency index. Skipping. This may result in an incomplete deps section and require manual BUILD file intervention.\n", from.String(), imp, impLabel.String())
+		}
+
+		for _, m := range matches {
+			depLabel := m.Label
+			depLabel = depLabel.Rel(from.Repo, from.Pkg)
+			deps = append(deps, depLabel.String())
 		}
 	}
 
