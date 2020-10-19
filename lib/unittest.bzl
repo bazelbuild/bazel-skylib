@@ -126,7 +126,10 @@ def _make(impl, attrs = {}):
         toolchains = [TOOLCHAIN_TYPE],
     )
 
-_ActionInfo = provider(fields = ["actions", "bin_path"])
+_ActionInfo = provider(
+    doc = "Information relating to the target under test.",
+    fields = ["actions", "bin_path"],
+)
 
 def _action_retrieving_aspect_impl(target, ctx):
     return [

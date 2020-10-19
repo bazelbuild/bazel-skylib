@@ -1,5 +1,5 @@
 # More details on syntax here: https://help.github.com/articles/about-codeowners/
-* @c-parsons @laurentlb @jin @aiuto
+* @c-parsons @jin @aiuto
 /distribution/ @aiuto @fwe
 /rules/ @juliexxia
 /gazelle/ @achew22 @jayconrod
