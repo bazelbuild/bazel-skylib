@@ -140,9 +140,11 @@ def _is_instance(v):
     """
     # Note that in bazel 3.7.0 and earlier, type(v.function) is the same
     # as the type of a function even if v.function is a rule. But we
-    # cannot rely on this in later bazels. Since this check is heuristic
-    # anyway, we simply check for the presence of a "function" attribute
-    # without checking its type.
+    # cannot rely on this in later bazels due to breaking change
+    # https://github.com/bazelbuild/bazel/commit/e379ece1908aafc852f9227175dd3283312b4b82
+    #
+    # Since this check is heuristic anyway, we simply check for the
+    # presence of a "function" attribute without checking its type.
     return type(v) == _a_struct_type \
         and hasattr(v, "function") \
         and hasattr(v, "args") and type(v.args) == _a_tuple_type \
