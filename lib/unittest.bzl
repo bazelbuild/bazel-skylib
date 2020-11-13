@@ -270,7 +270,7 @@ def _suite(name, *test_rules):
     test_names = []
     for index, test_rule in enumerate(test_rules):
         test_name = "%s_test_%d" % (name, index)
-        if types.is_partial(test_rule):
+        if partial.is_instance(test_rule):
             partial.call(test_rule, name = test_name)
         else:
             test_rule(name = test_name)

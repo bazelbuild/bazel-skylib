@@ -138,20 +138,6 @@ def _is_set(v):
     """
     return type(v) == _a_struct_type and hasattr(v, "_values") and _is_dict(v._values)
 
-def _is_partial(v):
-    """Returns True if v is a partial function object created by partial.make().
-
-    Args:
-      v: The value whose type should be checked.
-
-    Returns:
-      True if v was created by partial.make(), False otherwise.
-    """
-    return type(v) == _a_struct_type \
-        and hasattr(v, "function") \
-        and hasattr(v, "args") and _is_tuple(v.args) \
-        and hasattr(v, "kwargs") and _is_dict(v.kwargs)
-
 types = struct(
     is_list = _is_list,
     is_string = _is_string,
@@ -163,5 +149,4 @@ types = struct(
     is_function = _is_function,
     is_depset = _is_depset,
     is_set = _is_set,
-    is_partial = _is_partial,
 )
