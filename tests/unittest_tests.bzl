@@ -14,6 +14,7 @@
 
 """Unit tests for unittest.bzl."""
 
+load("//lib:partial.bzl", "partial")
 load("//lib:unittest.bzl", "analysistest", "asserts", "unittest")
 
 ###################################
@@ -41,6 +42,19 @@ def _basic_passing_test(ctx):
     return unittest.end(env)
 
 basic_passing_test = unittest.make(_basic_passing_test)
+
+#################################################
+####### basic_passing_short_timeout_test ########
+#################################################
+def _basic_passing_short_timeout_test(ctx):
+    """Unit tests for a basic library verification test."""
+    env = unittest.begin(ctx)
+
+    asserts.equals(env, ctx.attr.timeout, "short")
+
+    return unittest.end(env)
+
+basic_passing_short_timeout_test = unittest.make(_basic_passing_short_timeout_test)
 
 ###################################
 ####### change_setting_test #######
@@ -240,6 +254,7 @@ def unittest_passing_tests_suite():
     unittest.suite(
         "unittest_tests",
         basic_passing_test,
+        partial.make(basic_passing_short_timeout_test, timeout = "short"),
     )
 
     change_setting_test(

@@ -73,6 +73,7 @@ exports_files(["*.bzl"])
 EOF
   ln -sf "$(rlocation bazel_skylib/lib/dicts.bzl)" lib/dicts.bzl
   ln -sf "$(rlocation bazel_skylib/lib/new_sets.bzl)" lib/new_sets.bzl
+  ln -sf "$(rlocation bazel_skylib/lib/partial.bzl)" lib/partial.bzl
   ln -sf "$(rlocation bazel_skylib/lib/sets.bzl)" lib/sets.bzl
   ln -sf "$(rlocation bazel_skylib/lib/types.bzl)" lib/types.bzl
   ln -sf "$(rlocation bazel_skylib/lib/unittest.bzl)" lib/unittest.bzl

@@ -76,9 +76,27 @@ def _make_call_test(ctx):
 
 make_call_test = unittest.make(_make_call_test)
 
+def _is_instance_test(ctx):
+    """Unit test for partial.is_instance."""
+    env = unittest.begin(ctx)
+
+    # We happen to use make_call_test here, but it could be any valid test rule.
+    asserts.true(env, partial.is_instance(partial.make(make_call_test)))
+    asserts.true(env, partial.is_instance(partial.make(make_call_test, timeout = "short")))
+    asserts.true(env, partial.is_instance(partial.make(make_call_test, timeout = "short", tags = ["foo"])))
+    asserts.false(env, partial.is_instance(None))
+    asserts.false(env, partial.is_instance({}))
+    asserts.false(env, partial.is_instance(struct(foo = 1)))
+    asserts.false(env, partial.is_instance(struct(function = "not really function")))
+
+    return unittest.end(env)
+
+is_instance_test = unittest.make(_is_instance_test)
+
 def partial_test_suite():
     """Creates the test targets and test suite for partial.bzl tests."""
     unittest.suite(
         "partial_tests",
         make_call_test,
+        is_instance_test,
     )
