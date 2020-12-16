@@ -67,6 +67,53 @@ included, unless omitting them would make the dirname empty.
 </table>
 
 
+## paths.globmatch
+
+<pre>
+paths.globmatch(<a href="#paths.globmatch-path">path</a>, <a href="#paths.globmatch-pattern">pattern</a>)
+</pre>
+
+Returns True if `path` matches `pattern`.
+
+The "*" wildcard in `pattern` matches zero or more characters.
+
+Examples:
+
+    globmatch("foo", "foo") == True
+    globmatch("foobar", "foo") == False
+    globmatch("foobar", "foo*") == True
+    globmatch("foobar", "f*b*") == True
+
+### Parameters
+
+<table class="params-table">
+  <colgroup>
+    <col class="col-param" />
+    <col class="col-description" />
+  </colgroup>
+  <tbody>
+    <tr id="paths.globmatch-path">
+      <td><code>path</code></td>
+      <td>
+        required.
+        <p>
+          Any string that should be matched against `pattern`
+        </p>
+      </td>
+    </tr>
+    <tr id="paths.dirname-pattern">
+      <td><code>pattern</code></td>
+      <td>
+        required.
+        <p>
+          String with optional '*' wildcards.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
 ## paths.is_absolute
 
 <pre>

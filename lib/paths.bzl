@@ -56,6 +56,43 @@ def _dirname(p):
         # os.path.dirname does.
         return prefix.rstrip("/")
 
+def _globmatch(path, pattern):
+    """Returns True if `path` matches `pattern`
+
+    The "*" wildcard in `pattern` matches zero or more characters.
+
+    Examples:
+      globmatch("foo", "foo") == True
+      globmatch("foobar", "foo") == False
+      globmatch("foobar", "foo*") == True
+      globmatch("foobar", "f*b*") == True
+
+    Args:
+      path: Any string that should be matched against `pattern`
+      pattern: string with optional "*" wildcards.
+
+    Returns:
+      True if `path` matches `pattern`
+    """
+    states = [(0,0)]
+
+    for state_idx in range(0, len(path)*len(pattern)+1):
+        if state_idx >= len(states):
+          break
+        i, j = states[state_idx]
+        for j in range(j, len(pattern)):
+            if pattern[j] == "*":
+                if i < len(path):
+                    states.append((i+1, j))
+            else:
+                if i >= len(path) or pattern[j] != path[i]:
+                    i = -1
+                    break
+                i += 1
+        if i == len(path):
+            return True
+    return False
+
 def _is_absolute(path):
     """Returns `True` if `path` is an absolute path.
 
@@ -233,6 +270,7 @@ def _split_extension(p):
 paths = struct(
     basename = _basename,
     dirname = _dirname,
+    globmatch = _globmatch,
     is_absolute = _is_absolute,
     join = _join,
     normalize = _normalize,

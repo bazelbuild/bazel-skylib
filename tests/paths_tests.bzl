@@ -66,6 +66,31 @@ def _dirname_test(ctx):
 
 dirname_test = unittest.make(_dirname_test)
 
+def _globmatch_test(ctx):
+    """Unit tests for paths.globmatch."""
+    env = unittest.begin(ctx)
+
+    asserts.true(env, paths.globmatch("", ""))
+    asserts.true(env, paths.globmatch("", "*"))
+    asserts.true(env, paths.globmatch("foobar", "f*o*bar"))
+    asserts.true(env, paths.globmatch("foo", "foo"))
+    asserts.true(env, paths.globmatch("foo", "foo*"))
+    asserts.true(env, paths.globmatch("foo", "foo****"))
+    asserts.true(env, paths.globmatch("foo", "f*o*"))
+    asserts.true(env, paths.globmatch("foobar", "f*o*bar"))
+    asserts.true(env, paths.globmatch("fofofofofofo", "f*f*f*f*f*fo"))
+    asserts.true(env, paths.globmatch("foooooooooooooooooof", "f*f"))
+
+    asserts.false(env, paths.globmatch("fofofofofofog", "f*f*f*f*f*f*f"))
+    asserts.false(env, paths.globmatch("foooooooooooooooooog", "f*f"))
+    asserts.false(env, paths.globmatch("foo", ""))
+    asserts.false(env, paths.globmatch("ba", "*b"))
+    asserts.false(env, paths.globmatch("foobar", "f*o*ba"))
+
+    return unittest.end(env)
+
+globmatch_test = unittest.make(_globmatch_test)
+
 def _is_absolute_test(ctx):
     """Unit tests for paths.is_absolute."""
     env = unittest.begin(ctx)
@@ -282,6 +307,7 @@ def paths_test_suite():
         "paths_tests",
         basename_test,
         dirname_test,
+        globmatch_test,
         is_absolute_test,
         join_test,
         normalize_test,
