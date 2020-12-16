@@ -2,12 +2,11 @@
 
 [![Build status](https://badge.buildkite.com/921dc61e2d3a350ec40efb291914360c0bfa9b6196fa357420.svg?branch=master)](https://buildkite.com/bazel/bazel-skylib)
 
-Skylib is a standard library that provides functions useful for manipulating
-collections, file paths, and other features that are useful when writing custom
-build rules in Bazel.
+Skylib is a library of Starlark functions for manipulating collections, file paths,
+and various other data types in the domain of Bazel build rules.
 
-> This library is currently under early development. Be aware that the APIs
-> in these modules may change during this time.
+This library is currently under early development. Be aware that the APIs
+in these modules may change during this time.
 
 Each of the `.bzl` files in the `lib` directory defines a "module"&mdash;a
 `struct` that contains a set of related functions and/or other symbols that can
@@ -66,6 +65,21 @@ s = shell.quote(p)
 
 ## Writing a new module
 
+The criteria for adding a new function or module to this repository are:
+
+1. Is it widely needed? The new code must solve a problem that occurs often during the development of Bazel build rules. It is not sufficient that the new code is merely useful.  Candidate code should generally have been proven to be indispensible in the repository in which it was developed, or across several projects.
+
+1. Is its interface simpler than its implementation? A good abstraction provides a simple interface to a complex implementation, relieving the user from the burden of understanding. By contrast, a shallow abstraction provides  little that the user could not easily have written out for themselves. If a function's doc comment is longer than its function body, it's a good sign that the abstraction is too shallow.
+
+1. Is its interface unimpeachable? Given the problem it tries to solve, does it have sufficient parameters or generality to address all reasonable cases, or does it make arbitrary policy choices that limit its usefulness? If the function is not general, it likely does not belong here. Conversely, if it is general thanks only to a bewildering number of parameters, it also does not belong here.
+
+1. Is it efficient? Does it solve the problem using the asymptotically optimal algorithm, without using excessive looping, allocation, or other high constant factors? Starlark is an interpreted language with relatively expensive basic operations, and an approach that might make sense in C++ may not in Starlark.
+
+If your new module meets all these criteria, then you should consider sending us a pull request. It is always better to discuss your plans before executing them.
+
+Many of the declarations already in this repository do not meet this bar.
+
+
 Steps to add a module to Skylib:
 
 1. Create a new `.bzl` file in the `lib` directory.
@@ -88,7 +102,7 @@ Steps to add a module to Skylib:
    ```
 
 1. Add unit tests for your module in the `tests` directory.
-
+w
 ## `bzl_library`
 
 The `bzl_library.bzl` rule can be used to aggregate a set of
