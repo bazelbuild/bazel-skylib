@@ -99,6 +99,6 @@ string_setting = rule(
     doc = "A string-typed build setting that cannot be set on the command line",
 )
 
-# Extracts the value from an attribute that returns BuildSettingInfo
+# Extracts the value from an attribute that provides BuildSettingInfo
 def get_build_setting_value(build_setting_attr):
     return build_setting_attr[BuildSettingInfo].value
