@@ -10,11 +10,30 @@ exports_files(
     visibility = ["//:__subpackages__"],
 )
 
+load(":compatibility.bzl", "compatibility")
+
+cc_library(
+    name = "foo",
+    srcs = ["foo.cc"],
+    target_compatible_with = compatibility.all_of([":must_set"])
+)
+
+cc_test(
+    name = "foo_test",
+    srcs = ["foo_test.cc"],
+    deps = [":foo"],
+)
+
+
 bzl_library(
     name = "collections",
     srcs = ["collections.bzl"],
 )
 
+bzl_library(
+    name = "compatibility",
+    srcs = ["compatibility.bzl"],
+)
 bzl_library(
     name = "dicts",
     srcs = ["dicts.bzl"],
