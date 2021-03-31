@@ -15,23 +15,15 @@ bzl_library(
 )
 
 bzl_library(
-    name = "maprule",
-    srcs = ["maprule.bzl"],
-    visibility = ["//tests:__pkg__"],
-    deps = [":maprule_private"],
-)
-
-bzl_library(
-    name = "maprule_private",
-    srcs = ["maprule_private.bzl"],
-    deps = [
-        ":maprule_util",
-        "//lib:dicts",
-        "//lib:paths",
-    ],
-)
-
-bzl_library(
     name = "maprule_util",
     srcs = ["maprule_util.bzl"],
+)
+
+# The files needed for distribution
+filegroup(
+    name = "distribution",
+    srcs = glob(["*"]),
+    visibility = [
+        "//:__subpackages__",
+    ],
 )

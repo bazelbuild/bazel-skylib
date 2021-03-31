@@ -15,4 +15,4 @@
 """Setup function that must be invoked before running skylib tests."""
 
 def bazel_skylib_internal_setup():
-    pass # placeholder function for the federation
+    pass  # placeholder function for the federation

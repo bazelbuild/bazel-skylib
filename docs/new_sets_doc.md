@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#sets.make"></a>
+
 ## sets.make
 
 <pre>
@@ -9,26 +13,15 @@ Creates a new set.
 All elements must be hashable.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.make-elements">
-      <td><code>elements</code></td>
-      <td>
-        optional. default is <code>None</code>
-        <p>
-          Optional sequence to construct the set out of.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| elements |  Optional sequence to construct the set out of.   |  <code>None</code> |
+
+
+<a name="#sets.copy"></a>
 
 ## sets.copy
 
@@ -38,26 +31,15 @@ sets.copy(<a href="#sets.copy-s">s</a>)
 
 Creates a new set from another set.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.copy-s">
-      <td><code>s</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| s |  A set, as returned by <code>sets.make()</code>.   |  none |
+
+
+<a name="#sets.to_list"></a>
 
 ## sets.to_list
 
@@ -67,26 +49,15 @@ sets.to_list(<a href="#sets.to_list-s">s</a>)
 
 Creates a list from the values in the set.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.to_list-s">
-      <td><code>s</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| s |  A set, as returned by <code>sets.make()</code>.   |  none |
+
+
+<a name="#sets.insert"></a>
 
 ## sets.insert
 
@@ -99,35 +70,16 @@ Inserts an element into the set.
 Element must be hashable.  This mutates the original set.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.insert-s">
-      <td><code>s</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-    <tr id="sets.insert-e">
-      <td><code>e</code></td>
-      <td>
-        required.
-        <p>
-          The element to be inserted.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| s |  A set, as returned by <code>sets.make()</code>.   |  none |
+| e |  The element to be inserted.   |  none |
+
+
+<a name="#sets.contains"></a>
 
 ## sets.contains
 
@@ -137,35 +89,16 @@ sets.contains(<a href="#sets.contains-a">a</a>, <a href="#sets.contains-e">e</a>
 
 Checks for the existence of an element in a set.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.contains-a">
-      <td><code>a</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-    <tr id="sets.contains-e">
-      <td><code>e</code></td>
-      <td>
-        required.
-        <p>
-          The element to look for.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| a |  A set, as returned by <code>sets.make()</code>.   |  none |
+| e |  The element to look for.   |  none |
+
+
+<a name="#sets.is_equal"></a>
 
 ## sets.is_equal
 
@@ -175,35 +108,16 @@ sets.is_equal(<a href="#sets.is_equal-a">a</a>, <a href="#sets.is_equal-b">b</a>
 
 Returns whether two sets are equal.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.is_equal-a">
-      <td><code>a</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-    <tr id="sets.is_equal-b">
-      <td><code>b</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| a |  A set, as returned by <code>sets.make()</code>.   |  none |
+| b |  A set, as returned by <code>sets.make()</code>.   |  none |
+
+
+<a name="#sets.is_subset"></a>
 
 ## sets.is_subset
 
@@ -213,35 +127,16 @@ sets.is_subset(<a href="#sets.is_subset-a">a</a>, <a href="#sets.is_subset-b">b<
 
 Returns whether `a` is a subset of `b`.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.is_subset-a">
-      <td><code>a</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-    <tr id="sets.is_subset-b">
-      <td><code>b</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| a |  A set, as returned by <code>sets.make()</code>.   |  none |
+| b |  A set, as returned by <code>sets.make()</code>.   |  none |
+
+
+<a name="#sets.disjoint"></a>
 
 ## sets.disjoint
 
@@ -254,35 +149,16 @@ Returns whether two sets are disjoint.
 Two sets are disjoint if they have no elements in common.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.disjoint-a">
-      <td><code>a</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-    <tr id="sets.disjoint-b">
-      <td><code>b</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| a |  A set, as returned by <code>sets.make()</code>.   |  none |
+| b |  A set, as returned by <code>sets.make()</code>.   |  none |
+
+
+<a name="#sets.intersection"></a>
 
 ## sets.intersection
 
@@ -292,35 +168,16 @@ sets.intersection(<a href="#sets.intersection-a">a</a>, <a href="#sets.intersect
 
 Returns the intersection of two sets.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.intersection-a">
-      <td><code>a</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-    <tr id="sets.intersection-b">
-      <td><code>b</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| a |  A set, as returned by <code>sets.make()</code>.   |  none |
+| b |  A set, as returned by <code>sets.make()</code>.   |  none |
+
+
+<a name="#sets.union"></a>
 
 ## sets.union
 
@@ -330,26 +187,15 @@ sets.union(<a href="#sets.union-args">args</a>)
 
 Returns the union of several sets.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.union-args">
-      <td><code>args</code></td>
-      <td>
-        optional.
-        <p>
-          An arbitrary number of sets or lists.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| args |  An arbitrary number of sets.   |  none |
+
+
+<a name="#sets.difference"></a>
 
 ## sets.difference
 
@@ -359,35 +205,16 @@ sets.difference(<a href="#sets.difference-a">a</a>, <a href="#sets.difference-b"
 
 Returns the elements in `a` that are not in `b`.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.difference-a">
-      <td><code>a</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-    <tr id="sets.difference-b">
-      <td><code>b</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| a |  A set, as returned by <code>sets.make()</code>.   |  none |
+| b |  A set, as returned by <code>sets.make()</code>.   |  none |
+
+
+<a name="#sets.length"></a>
 
 ## sets.length
 
@@ -397,26 +224,15 @@ sets.length(<a href="#sets.length-s">s</a>)
 
 Returns the number of elements in a set.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.length-s">
-      <td><code>s</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| s |  A set, as returned by <code>sets.make()</code>.   |  none |
+
+
+<a name="#sets.remove"></a>
 
 ## sets.remove
 
@@ -429,35 +245,16 @@ Removes an element from the set.
 Element must be hashable.  This mutates the original set.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.remove-s">
-      <td><code>s</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-    <tr id="sets.remove-e">
-      <td><code>e</code></td>
-      <td>
-        required.
-        <p>
-          The element to be removed.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| s |  A set, as returned by <code>sets.make()</code>.   |  none |
+| e |  The element to be removed.   |  none |
+
+
+<a name="#sets.repr"></a>
 
 ## sets.repr
 
@@ -467,26 +264,15 @@ sets.repr(<a href="#sets.repr-s">s</a>)
 
 Returns a string value representing the set.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.repr-s">
-      <td><code>s</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| s |  A set, as returned by <code>sets.make()</code>.   |  none |
+
+
+<a name="#sets.str"></a>
 
 ## sets.str
 
@@ -496,24 +282,11 @@ sets.str(<a href="#sets.str-s">s</a>)
 
 Returns a string value representing the set.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="sets.str-s">
-      <td><code>s</code></td>
-      <td>
-        required.
-        <p>
-          A set, as returned by `sets.make()`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| s |  A set, as returned by <code>sets.make()</code>.   |  none |
 
 

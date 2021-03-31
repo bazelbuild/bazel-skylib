@@ -134,5 +134,4 @@ stardoc(
     out = "common_settings_doc_gen.md",
     input = "//rules:common_settings.bzl",
     deps = ["//rules:common_settings"],
-    semantic_flags = ["--experimental_build_setting_api=True"],
 )

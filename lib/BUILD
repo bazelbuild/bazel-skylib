@@ -4,6 +4,12 @@ licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
+# export bzl files for the documentation
+exports_files(
+    glob(["*.bzl"]),
+    visibility = ["//:__subpackages__"],
+)
+
 bzl_library(
     name = "collections",
     srcs = ["collections.bzl"],
@@ -31,9 +37,9 @@ bzl_library(
 
 bzl_library(
     name = "sets",
-    srcs = [
-        "old_sets.bzl",
-        "sets.bzl",
+    srcs = ["sets.bzl"],
+    deps = [
+        ":new_sets",
     ],
 )
 
@@ -66,6 +72,7 @@ bzl_library(
     srcs = ["unittest.bzl"],
     deps = [
         ":new_sets",
+        ":partial",
         ":sets",
         ":types",
     ],
@@ -90,4 +97,9 @@ filegroup(
         "//:__pkg__",
         "//distribution:__pkg__",
     ],
+)
+
+bzl_library(
+    name = "old_sets",
+    srcs = ["old_sets.bzl"],
 )

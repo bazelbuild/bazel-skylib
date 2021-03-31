@@ -1,3 +1,38 @@
+Release 1.0.3
+
+**Significant Changes**
+
+-   Move Gazelle extension to //gazelle/bzl and change package name
+-   Stop depending on rules_pkg through the federation. (#259)
+-   copy_file: Add parameter to allow symlinks (#252)
+-   Create Gazelle language for Starlark (#251)
+-   Create a helper rule (`select_file`) for selecting a file from outputs of another rule (#233)
+
+
+**Incompatible Changes**
+-   Remove links to maprules (#213)
+-   Remove old_sets.bzl (#231)
+    It has been deprecated for a while, the code is not really compatible with Bazel depset-related changes.
+
+**Contributors**
+Andrew Z Allen, Bocete, Bor Kae Hwang, irengrig, Jay Conrod, Jonathan B Coe, Marc Plano-Lesay, Robbert van Ginkel, Thomas Van Lenten, Yannic
+
+
+Release 1.0.0
+
+**Incompatible Changes**
+
+-   @bazel_skylib//:lib.bzl is removed. You now must specify specific modules
+    via @bazel_skylib//lib:<file>.bzl.
+-   maprule.bzl is removed.
+
+**New Features**
+
+-   Added types.is_set() to test whether an arbitrary object is a set as defined by sets.bzl.
+
+
+Release 0.9.0
+
 **New Features**
 
 -   common_settings.bzl: Standard data types for user defined build

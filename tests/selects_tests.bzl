@@ -117,13 +117,22 @@ def _set_conditions(condition_list):
     ans = {}
     if condition_list[0]:
         ans["//command_line_option:cpu"] = "ppc"
+    else:
+        ans["//command_line_option:cpu"] = "k8"
     if condition_list[1]:
         ans["//command_line_option:compilation_mode"] = "opt"
+    else:
+        ans["//command_line_option:compilation_mode"] = "dbg"
     if condition_list[2]:
         ans["//command_line_option:features"] = ["myfeature"]
+    else:
+        ans["//command_line_option:features"] = ["notmyfeature"]
     return ans
 
-_BooleanInfo = provider()
+_BooleanInfo = provider(
+    doc = "value for boolean tests",
+    fields = ["value"],
+)
 
 def _boolean_attr_impl(ctx):
     return [_BooleanInfo(value = ctx.attr.myboolean)]
@@ -535,6 +544,54 @@ def _or_config_setting_group_single_setting_fails_test():
     )
 
 ###################################################
+# always_true_match_all_test
+###################################################
+always_true_match_all_test = analysistest.make(_expect_matches)
+
+def _always_true_match_all_test():
+    """Tests that "match_all=['//conditions:default']" always matches."""
+    selects.config_setting_group(
+        name = "all_always_match",
+        match_all = ["//conditions:default"],
+    )
+    boolean_attr_rule(
+        name = "match_always_true_rule",
+        myboolean = select(
+            {
+                ":all_always_match": True,
+            },
+        ),
+    )
+    always_true_match_all_test(
+        name = "always_true_match_all_test",
+        target_under_test = ":match_always_true_rule",
+    )
+
+###################################################
+# always_true_match_any_test
+###################################################
+always_true_match_any_test = analysistest.make(_expect_matches)
+
+def _always_true_match_any_test():
+    """Tests that "match_any=['//conditions:default']" always matches."""
+    selects.config_setting_group(
+        name = "any_always_match",
+        match_any = ["//conditions:default"],
+    )
+    boolean_attr_rule(
+        name = "match_any_always_true_rule",
+        myboolean = select(
+            {
+                ":any_always_match": True,
+            },
+        ),
+    )
+    always_true_match_any_test(
+        name = "always_true_match_any_test",
+        target_under_test = ":match_any_always_true_rule",
+    )
+
+###################################################
 # empty_config_setting_group_not_allowed_test
 ###################################################
 
@@ -553,6 +610,7 @@ def _or_config_setting_group_single_setting_fails_test():
 
 ###################################################
 
+# buildifier: disable=unnamed-macro
 def selects_test_suite():
     """Creates the test targets and test suite for selects.bzl tests."""
     unittest.suite(
@@ -580,6 +638,9 @@ def selects_test_suite():
     _or_config_setting_group_all_conds_match_test()
     _or_config_setting_group_single_setting_matches_test()
     _or_config_setting_group_single_setting_fails_test()
+
+    _always_true_match_all_test()
+    _always_true_match_any_test()
 
     # _empty_config_setting_group_not_allowed_test()
     # _and_and_or_not_allowed_together_test()

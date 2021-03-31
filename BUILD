@@ -1,13 +1,15 @@
 load("//:bzl_library.bzl", "bzl_library")
 
-licenses(["notice"])  # Apache 2.0
+licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
-exports_files([
-    "LICENSE",
-    "lib.bzl",
-])
+# gazelle:exclude internal_deps.bzl
+# gazelle:exclude internal_setup.bzl
+# buildifier: disable=skylark-comment
+# gazelle:exclude skylark_library.bzl
+
+exports_files(["LICENSE"])
 
 filegroup(
     name = "test_deps",
@@ -48,6 +50,16 @@ bzl_library(
     srcs = ["bzl_library.bzl"],
 )
 
+bzl_library(
+    name = "version",
+    srcs = ["version.bzl"],
+)
+
+bzl_library(
+    name = "workspace",
+    srcs = ["workspace.bzl"],
+)
+
 # The files needed for distribution.
 # TODO(aiuto): We should strip this from the release, but there is no
 # capability now to generate BUILD.foo from BUILD and have it appear in the
@@ -61,5 +73,14 @@ filegroup(
         "CONTRIBUTORS",
         "//lib:distribution",
         "//rules:distribution",
+        "//rules/private:distribution",
+        "//toolchains/unittest:distribution",
     ] + glob(["*.bzl"]),
+)
+
+filegroup(
+    name = "bins",
+    srcs = [
+        "//rules:bins",
+    ],
 )
