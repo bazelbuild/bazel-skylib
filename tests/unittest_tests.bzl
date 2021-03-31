@@ -100,7 +100,7 @@ def _failure_testing_test(ctx):
     return analysistest.end(env)
 
 def _failure_testing_fake_rule(ctx):
-    ignore = [ctx]
+    _ignore = [ctx]
     fail("This rule should never work")
 
 failure_testing_fake_rule = rule(
