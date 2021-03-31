@@ -1,7 +1,7 @@
 ## dicts.add
 
 <pre>
-dicts.add(<a href="#dicts.add-dictionaries">dictionaries</a>)
+dicts.add(<a href="#dicts.add-dictionaries">dictionaries</a>, <a href="#dicts.add-kwargs">kwargs</a>)
 </pre>
 
 Returns a new `dict` that has all the entries of the given dictionaries.
@@ -29,6 +29,15 @@ dictionary, and the sum of a single dictionary is a copy of itself.
         optional.
         <p>
           Zero or more dictionaries to be added.
+        </p>
+      </td>
+    </tr>
+    <tr id="dicts.add-kwargs">
+      <td><code>kwargs</code></td>
+      <td>
+        optional.
+        <p>
+          Additional dictionary passed as keyword args.
         </p>
       </td>
     </tr>

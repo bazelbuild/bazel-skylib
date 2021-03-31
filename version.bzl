@@ -11,14 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""The version of bazel-skylib."""
 
-"""Maprule implementation in Starlark.
-
-This module exports:
-
-This module exports the maprule_testing struct. This should only be used by maprule's own unittests.
-"""
-
-load(":maprule_private.bzl", _maprule_testing = "maprule_testing")
-
-maprule_testing = _maprule_testing
+version = "1.0.3"

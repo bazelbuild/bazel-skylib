@@ -14,6 +14,7 @@
 
 """Unit tests for unittest.bzl."""
 
+load("//lib:partial.bzl", "partial")
 load("//lib:unittest.bzl", "analysistest", "asserts", "unittest")
 
 ###################################
@@ -42,6 +43,19 @@ def _basic_passing_test(ctx):
 
 basic_passing_test = unittest.make(_basic_passing_test)
 
+#################################################
+####### basic_passing_short_timeout_test ########
+#################################################
+def _basic_passing_short_timeout_test(ctx):
+    """Unit tests for a basic library verification test."""
+    env = unittest.begin(ctx)
+
+    asserts.equals(env, ctx.attr.timeout, "short")
+
+    return unittest.end(env)
+
+basic_passing_short_timeout_test = unittest.make(_basic_passing_short_timeout_test)
+
 ###################################
 ####### change_setting_test #######
 ###################################
@@ -54,7 +68,10 @@ def _change_setting_test(ctx):
 
     return analysistest.end(env)
 
-_ChangeSettingInfo = provider()
+_ChangeSettingInfo = provider(
+    doc = "min_os_version for change_setting_test",
+    fields = ["min_os_version"],
+)
 
 def _change_setting_fake_rule(ctx):
     return [_ChangeSettingInfo(min_os_version = ctx.fragments.cpp.minimum_os_version())]
@@ -177,8 +194,56 @@ inspect_actions_test = analysistest.make(
     _inspect_actions_test,
 )
 
+########################################
+####### inspect_output_dirs_test #######
+########################################
+_OutputDirInfo = provider(
+    doc = "bin_path for inspect_output_dirs_test",
+    fields = ["bin_path"],
+)
+
+def _inspect_output_dirs_test(ctx):
+    """Test verifying output directories used by a test."""
+    env = analysistest.begin(ctx)
+
+    # Assert that the output bin dir observed by the aspect added by analysistest
+    # is the same as those observed by the rule directly, even when that's
+    # under a config transition and therefore not the same as the bin dir
+    # used by the test rule.
+    bin_path = analysistest.target_bin_dir_path(env)
+    target_under_test = analysistest.target_under_test(env)
+    asserts.false(env, not bin_path, "bin dir path not found.")
+    asserts.false(
+        env,
+        bin_path == ctx.bin_dir.path,
+        "test bin dir (%s) expected to differ with target_under_test bin dir (%s)." % (bin_path, ctx.bin_dir.path),
+    )
+    asserts.equals(env, bin_path, target_under_test[_OutputDirInfo].bin_path)
+    return analysistest.end(env)
+
+def _inspect_output_dirs_fake_rule(ctx):
+    return [
+        _OutputDirInfo(
+            bin_path = ctx.bin_dir.path,
+        ),
+    ]
+
+inspect_output_dirs_fake_rule = rule(
+    implementation = _inspect_output_dirs_fake_rule,
+)
+
+inspect_output_dirs_test = analysistest.make(
+    _inspect_output_dirs_test,
+    # The output directories differ between the test and target under test when
+    # the target under test is under a config transition.
+    config_settings = {
+        "//command_line_option:minimum_os_version": "1234.5678",
+    },
+)
+
 #########################################
 
+# buildifier: disable=unnamed-macro
 def unittest_passing_tests_suite():
     """Creates the test targets and test suite for passing unittest.bzl tests.
 
@@ -189,6 +254,7 @@ def unittest_passing_tests_suite():
     unittest.suite(
         "unittest_tests",
         basic_passing_test,
+        partial.make(basic_passing_short_timeout_test, timeout = "short"),
     )
 
     change_setting_test(
@@ -224,5 +290,14 @@ def unittest_passing_tests_suite():
     )
     inspect_actions_fake_rule(
         name = "inspect_actions_fake_target",
+        tags = ["manual"],
+    )
+
+    inspect_output_dirs_test(
+        name = "inspect_output_dirs_test",
+        target_under_test = ":inspect_output_dirs_fake_target",
+    )
+    inspect_output_dirs_fake_rule(
+        name = "inspect_output_dirs_fake_target",
         tags = ["manual"],
     )

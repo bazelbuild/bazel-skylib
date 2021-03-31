@@ -20,10 +20,11 @@ assertions used to within tests.
 """
 
 load(":new_sets.bzl", new_sets = "sets")
-load(":sets.bzl", "sets")
+load(":partial.bzl", "partial")
 load(":types.bzl", "types")
 
 # The following function should only be called from WORKSPACE files and workspace macros.
+# buildifier: disable=unnamed-macro
 def register_unittest_toolchains():
     """Registers the toolchains for unittest users."""
     native.register_toolchains(
@@ -80,7 +81,7 @@ def _impl_function_name(impl):
     impl_name = impl_name.partition("<function ")[-1]
     return impl_name.rpartition(">")[0]
 
-def _make(impl, attrs = None):
+def _make(impl, attrs = {}):
     """Creates a unit test rule from its implementation function.
 
     Each unit test is defined in an implementation function that must then be
@@ -115,7 +116,7 @@ def _make(impl, attrs = None):
       A rule definition that should be stored in a global whose name ends in
       `_test`.
     """
-    attrs = dict(attrs) if attrs else {}
+    attrs = dict(attrs)
     attrs["_impl_name"] = attr.string(default = _impl_function_name(impl))
 
     return rule(
@@ -126,11 +127,18 @@ def _make(impl, attrs = None):
         toolchains = [TOOLCHAIN_TYPE],
     )
 
-_ActionInfo = provider(fields = ["actions"])
+_ActionInfo = provider(
+    doc = "Information relating to the target under test.",
+    fields = ["actions", "bin_path"],
+)
 
 def _action_retrieving_aspect_impl(target, ctx):
-    _ignore = [ctx]
-    return [_ActionInfo(actions = target.actions)]
+    return [
+        _ActionInfo(
+            actions = target.actions,
+            bin_path = ctx.bin_dir.path,
+        ),
+    ]
 
 _action_retrieving_aspect = aspect(
     attr_aspects = [],
@@ -138,7 +146,12 @@ _action_retrieving_aspect = aspect(
 )
 
 # TODO(cparsons): Provide more full documentation on analysis testing in README.
-def _make_analysis_test(impl, expect_failure = False, config_settings = {}):
+def _make_analysis_test(
+        impl,
+        expect_failure = False,
+        attrs = {},
+        fragments = [],
+        config_settings = {}):
     """Creates an analysis test rule from its implementation function.
 
     An analysis test verifies the behavior of a "real" rule target by examining
@@ -168,6 +181,10 @@ def _make_analysis_test(impl, expect_failure = False, config_settings = {}):
       impl: The implementation function of the unit test.
       expect_failure: If true, the analysis test will expect the target_under_test
           to fail. Assertions can be made on the underlying failure using asserts.expect_failure
+      attrs: An optional dictionary to supplement the attrs passed to the
+          unit test's `rule()` constructor.
+      fragments: An optional list of fragment names that can be used to give rules access to
+          language-specific parts of configuration.
       config_settings: A dictionary of configuration settings to change for the target under
           test and its dependencies. This may be used to essentially change 'build flags' for
           the target under test, and may thus be utilized to test multiple targets with different
@@ -177,31 +194,30 @@ def _make_analysis_test(impl, expect_failure = False, config_settings = {}):
       A rule definition that should be stored in a global whose name ends in
       `_test`.
     """
-    attrs = {}
+    attrs = dict(attrs)
     attrs["_impl_name"] = attr.string(default = _impl_function_name(impl))
 
     changed_settings = dict(config_settings)
     if expect_failure:
         changed_settings["//command_line_option:allow_analysis_failures"] = "True"
 
+    target_attr_kwargs = {}
     if changed_settings:
         test_transition = analysis_test_transition(
             settings = changed_settings,
         )
-        attrs["target_under_test"] = attr.label(
-            aspects = [_action_retrieving_aspect],
-            cfg = test_transition,
-            mandatory = True,
-        )
-    else:
-        attrs["target_under_test"] = attr.label(
-            aspects = [_action_retrieving_aspect],
-            mandatory = True,
-        )
+        target_attr_kwargs["cfg"] = test_transition
+
+    attrs["target_under_test"] = attr.label(
+        aspects = [_action_retrieving_aspect],
+        mandatory = True,
+        **target_attr_kwargs
+    )
 
     return rule(
         impl,
         attrs = attrs,
+        fragments = fragments,
         test = True,
         toolchains = [TOOLCHAIN_TYPE],
         analysis_test = True,
@@ -217,10 +233,10 @@ def _suite(name, *test_rules):
     writing a macro in your `.bzl` file to instantiate all targets, and calling
     that macro from your BUILD file so you only have to load one symbol.
 
-    For the case where your unit tests do not take any (non-default) attributes --
-    i.e., if your unit tests do not test rules -- you can use this function to
-    create the targets and wrap them in a single test_suite target. In your
-    `.bzl` file, write:
+    You can use this function to create the targets and wrap them in a single
+    test_suite target. If a test rule requires no arguments, you can simply list
+    it as an argument. If you wish to supply attributes explicitly, you can do so
+    using `partial.make()`. For instance, in your `.bzl` file, you could write:
 
     ```
     def your_test_suite():
@@ -228,7 +244,7 @@ def _suite(name, *test_rules):
           "your_test_suite",
           your_test,
           your_other_test,
-          yet_another_test,
+          partial.make(yet_another_test, timeout = "short"),
       )
     ```
 
@@ -254,7 +270,10 @@ def _suite(name, *test_rules):
     test_names = []
     for index, test_rule in enumerate(test_rules):
         test_name = "%s_test_%d" % (name, index)
-        test_rule(name = test_name)
+        if partial.is_instance(test_rule):
+            partial.call(test_rule, name = test_name)
+        else:
+            test_rule(name = test_name)
         test_names.append(test_name)
 
     native.test_suite(
@@ -271,7 +290,7 @@ def _begin(ctx):
     test.
 
     Args:
-      ctx: The Skylark context. Pass the implementation function's `ctx` argument
+      ctx: The Starlark context. Pass the implementation function's `ctx` argument
           in verbatim.
 
     Returns:
@@ -333,6 +352,9 @@ def _fail(env, msg):
       msg: The message to log describing the failure.
     """
     full_msg = "In test %s: %s" % (env.ctx.attr._impl_name, msg)
+
+    # There isn't a better way to output the message in Starlark, so use print.
+    # buildifier: disable=print
     print(full_msg)
     env.failures.append(full_msg)
 
@@ -394,31 +416,21 @@ def _assert_set_equals(env, expected, actual, msg = None):
       msg: An optional message that will be printed that describes the failure.
           If omitted, a default will be used.
     """
-    if type(actual) != type(depset()) or not sets.is_equal(expected, actual):
-        expectation_msg = "Expected %r, but got %r" % (expected, actual)
-        if msg:
-            full_msg = "%s (%s)" % (msg, expectation_msg)
-        else:
-            full_msg = expectation_msg
-        _fail(env, full_msg)
-
-def _assert_new_set_equals(env, expected, actual, msg = None):
-    """Asserts that the given `expected` and `actual` sets are equal.
-
-    Args:
-      env: The test environment returned by `unittest.begin`.
-      expected: The expected set resulting from some computation.
-      actual: The actual set returned by some computation.
-      msg: An optional message that will be printed that describes the failure.
-          If omitted, a default will be used.
-    """
     if not new_sets.is_equal(expected, actual):
-        expectation_msg = "Expected %r, but got %r" % (expected, actual)
+        missing = new_sets.difference(expected, actual)
+        unexpected = new_sets.difference(actual, expected)
+        expectation_msg = "Expected %s, but got %s" % (new_sets.str(expected), new_sets.str(actual))
+        if new_sets.length(missing) > 0:
+            expectation_msg += ", missing are %s" % (new_sets.str(missing))
+        if new_sets.length(unexpected) > 0:
+            expectation_msg += ", unexpected are %s" % (new_sets.str(unexpected))
         if msg:
             full_msg = "%s (%s)" % (msg, expectation_msg)
         else:
             full_msg = expectation_msg
         _fail(env, full_msg)
+
+_assert_new_set_equals = _assert_set_equals
 
 def _expect_failure(env, expected_failure_msg = ""):
     """Asserts that the target under test has failed with a given error message.
@@ -453,8 +465,18 @@ def _target_actions(env):
     """
 
     # Validate?
-    dep = _target_under_test(env)
-    return dep[_ActionInfo].actions
+    return _target_under_test(env)[_ActionInfo].actions
+
+def _target_bin_dir_path(env):
+    """Returns ctx.bin_dir.path for the target under test.
+
+    Args:
+      env: The test environment returned by `analysistest.begin`.
+
+    Returns:
+      Output bin dir path string.
+    """
+    return _target_under_test(env)[_ActionInfo].bin_path
 
 def _target_under_test(env):
     """Returns the target under test.
@@ -496,5 +518,6 @@ analysistest = struct(
     end = _end_analysis_test,
     fail = _fail,
     target_actions = _target_actions,
+    target_bin_dir_path = _target_bin_dir_path,
     target_under_test = _target_under_test,
 )

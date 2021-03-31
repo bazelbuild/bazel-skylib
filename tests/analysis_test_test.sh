@@ -44,19 +44,23 @@ fi
 source "$(rlocation bazel_skylib/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
 
-function set_up() {
-  touch WORKSPACE
+function create_pkg() {
+  local -r pkg="$1"
+  mkdir -p "$pkg"
+  cd "$pkg"
+
   cat > WORKSPACE <<EOF
 workspace(name = 'bazel_skylib')
 EOF
 
-  touch rules/BUILD
+  mkdir -p rules
   cat > rules/BUILD <<EOF
 exports_files(["*.bzl"])
 EOF
 
+  ln -sf "$(rlocation bazel_skylib/rules/analysis_test.bzl)" rules/analysis_test.bzl
+
   mkdir -p fakerules
-  touch fakerules/rules.bzl
   cat > fakerules/rules.bzl <<EOF
 load("//rules:analysis_test.bzl", "analysis_test")
 
@@ -76,7 +80,6 @@ fake_depending_rule = rule(
 )
 EOF
 
-  touch fakerules/BUILD
   cat > fakerules/BUILD <<EOF
 exports_files(["*.bzl"])
 EOF
@@ -118,29 +121,34 @@ analysis_test(
 EOF
 }
 
-function tear_down() {
-  rm -rf testdir
-  rm -rf fakerules
-}
-
 function test_target_succeeds() {
-  bazel test //testdir:target_succeeds >"$TEST_log" 2>&1 || fail "Expected test to pass"
+  local -r pkg="${FUNCNAME[0]}"
+  create_pkg "$pkg"
+
+  bazel test testdir:target_succeeds >"$TEST_log" 2>&1 || fail "Expected test to pass"
 
   expect_log "PASSED"
 }
 
 function test_direct_target_fails() {
-  ! bazel test //testdir:direct_target_fails --test_output=all --verbose_failures \
-      >"$TEST_log" 2>&1 || fail "Expected test to fail"
+  local -r pkg="${FUNCNAME[0]}"
+  create_pkg "$pkg"
+
+  bazel test testdir:direct_target_fails --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
 
   expect_log "This rule should never work"
 }
 
 function test_transitive_target_fails() {
-  ! bazel test //testdir:transitive_target_fails --test_output=all --verbose_failures \
-      >"$TEST_log" 2>&1 || fail "Expected test to fail"
+  local -r pkg="${FUNCNAME[0]}"
+  create_pkg "$pkg"
+
+  bazel test testdir:transitive_target_fails --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
 
   expect_log "This rule should never work"
 }
 
+cd "$TEST_TMPDIR"
 run_suite "analysis_test test suite"

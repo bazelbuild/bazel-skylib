@@ -1,1 +1,3 @@
-* @c-parsons @laurentlb
+# More details on syntax here: https://help.github.com/articles/about-codeowners/
+* @brandjon @tetromino
+/gazelle/ @achew22 @jayconrod

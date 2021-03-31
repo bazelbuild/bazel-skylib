@@ -4,10 +4,10 @@ licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
-filegroup(
-    name = "test_deps",
-    testonly = True,
-    srcs = ["BUILD"] + glob(["*.bzl"]),
+# export bzl files for the documentation
+exports_files(
+    glob(["*.bzl"]),
+    visibility = ["//:__subpackages__"],
 )
 
 bzl_library(
@@ -37,16 +37,18 @@ bzl_library(
 
 bzl_library(
     name = "sets",
-    srcs = [
-        "old_sets.bzl",
-        "sets.bzl",
+    srcs = ["sets.bzl"],
+    deps = [
+        ":new_sets",
     ],
 )
 
 bzl_library(
     name = "new_sets",
     srcs = ["new_sets.bzl"],
-    deps = [":dicts"],
+    deps = [
+        ":dicts",
+    ],
 )
 
 bzl_library(
@@ -69,6 +71,7 @@ bzl_library(
     srcs = ["unittest.bzl"],
     deps = [
         ":new_sets",
+        ":partial",
         ":sets",
         ":types",
     ],
@@ -77,4 +80,25 @@ bzl_library(
 bzl_library(
     name = "versions",
     srcs = ["versions.bzl"],
+)
+
+filegroup(
+    name = "test_deps",
+    testonly = True,
+    srcs = ["BUILD"] + glob(["*.bzl"]),
+)
+
+# The files needed for distribution
+filegroup(
+    name = "distribution",
+    srcs = glob(["*"]),
+    visibility = [
+        "//:__pkg__",
+        "//distribution:__pkg__",
+    ],
+)
+
+bzl_library(
+    name = "old_sets",
+    srcs = ["old_sets.bzl"],
 )

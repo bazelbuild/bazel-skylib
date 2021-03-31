@@ -52,6 +52,5 @@ analysis_test = rule(
 
     Args:
       name: The name of the test rule.
-      targets: A list of targets to ensure build.
-    """,
+      targets: A list of targets to ensure build.""",
 )

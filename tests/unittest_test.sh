@@ -45,8 +45,11 @@ fi
 source "$(rlocation bazel_skylib/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
 
-function set_up() {
-  touch WORKSPACE
+function create_pkg() {
+  local -r pkg="$1"
+  mkdir -p "$pkg"
+  cd "$pkg"
+
   cat > WORKSPACE <<EOF
 workspace(name = 'bazel_skylib')
 
@@ -55,16 +58,30 @@ load("//lib:unittest.bzl", "register_unittest_toolchains")
 register_unittest_toolchains()
 EOF
 
+  # Copy relevant skylib sources into the current workspace.
+  mkdir -p tests
   touch tests/BUILD
   cat > tests/BUILD <<EOF
 exports_files(["*.bzl"])
 EOF
+  ln -sf "$(rlocation bazel_skylib/tests/unittest_tests.bzl)" tests/unittest_tests.bzl
 
+  mkdir -p lib
   touch lib/BUILD
   cat > lib/BUILD <<EOF
 exports_files(["*.bzl"])
 EOF
+  ln -sf "$(rlocation bazel_skylib/lib/dicts.bzl)" lib/dicts.bzl
+  ln -sf "$(rlocation bazel_skylib/lib/new_sets.bzl)" lib/new_sets.bzl
+  ln -sf "$(rlocation bazel_skylib/lib/partial.bzl)" lib/partial.bzl
+  ln -sf "$(rlocation bazel_skylib/lib/sets.bzl)" lib/sets.bzl
+  ln -sf "$(rlocation bazel_skylib/lib/types.bzl)" lib/types.bzl
+  ln -sf "$(rlocation bazel_skylib/lib/unittest.bzl)" lib/unittest.bzl
 
+  mkdir -p toolchains/unittest
+  ln -sf "$(rlocation bazel_skylib/toolchains/unittest/BUILD)" toolchains/unittest/BUILD
+
+  # Create test files.
   mkdir -p testdir
   cat > testdir/BUILD <<EOF
 load("//tests:unittest_tests.bzl",
@@ -87,28 +104,34 @@ fail_unexpected_passing_fake_rule(
 EOF
 }
 
-function tear_down() {
-  rm -rf testdir
-}
-
 function test_basic_passing_test() {
-  bazel test //testdir:basic_passing_test >"$TEST_log" 2>&1 || fail "Expected test to pass"
+  local -r pkg="${FUNCNAME[0]}"
+  create_pkg "$pkg"
+
+  bazel test testdir:basic_passing_test >"$TEST_log" 2>&1 || fail "Expected test to pass"
 
   expect_log "PASSED"
 }
 
 function test_basic_failing_test() {
-  ! bazel test //testdir:basic_failing_test --test_output=all --verbose_failures \
-      >"$TEST_log" 2>&1 || fail "Expected test to fail"
+  local -r pkg="${FUNCNAME[0]}"
+  create_pkg "$pkg"
+
+  bazel test testdir:basic_failing_test --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
 
   expect_log "In test _basic_failing_test from //tests:unittest_tests.bzl: Expected \"1\", but got \"2\""
 }
 
 function test_fail_unexpected_passing_test() {
-  ! bazel test //testdir:fail_unexpected_passing_test --test_output=all --verbose_failures \
-      >"$TEST_log" 2>&1 || fail "Expected test to fail"
+  local -r pkg="${FUNCNAME[0]}"
+  create_pkg "$pkg"
+
+  bazel test testdir:fail_unexpected_passing_test --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
 
   expect_log "Expected failure of target_under_test, but found success"
 }
 
+cd "$TEST_TMPDIR"
 run_suite "unittest test suite"

@@ -14,6 +14,6 @@
 
 """Skylib module reexporting deprecated set algorithms."""
 
-load(":old_sets.bzl", _sets = "sets")
+load(":new_sets.bzl", _sets = "sets")
 
 sets = _sets
