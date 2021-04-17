@@ -1,6 +1,6 @@
 # Skylib
 
-[![Build status](https://badge.buildkite.com/921dc61e2d3a350ec40efb291914360c0bfa9b6196fa357420.svg?branch=master)](https://buildkite.com/bazel/bazel-skylib)
+[![Build status](https://badge.buildkite.com/921dc61e2d3a350ec40efb291914360c0bfa9b6196fa357420.svg?branch=main)](https://buildkite.com/bazel/bazel-skylib)
 
 Skylib is a library of Starlark functions for manipulating collections, file paths,
 and various other data types in the domain of Bazel build rules.
