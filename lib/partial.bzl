@@ -138,6 +138,7 @@ def _is_instance(v):
     Returns:
       True if v was created by `make`, False otherwise.
     """
+
     # Note that in bazel 3.7.0 and earlier, type(v.function) is the same
     # as the type of a function even if v.function is a rule. But we
     # cannot rely on this in later bazels due to breaking change
@@ -145,10 +146,10 @@ def _is_instance(v):
     #
     # Since this check is heuristic anyway, we simply check for the
     # presence of a "function" attribute without checking its type.
-    return type(v) == _a_struct_type \
-        and hasattr(v, "function") \
-        and hasattr(v, "args") and type(v.args) == _a_tuple_type \
-        and hasattr(v, "kwargs") and type(v.kwargs) == _a_dict_type
+    return type(v) == _a_struct_type and \
+           hasattr(v, "function") and \
+           hasattr(v, "args") and type(v.args) == _a_tuple_type and \
+           hasattr(v, "kwargs") and type(v.kwargs) == _a_dict_type
 
 partial = struct(
     make = _make,
