@@ -25,6 +25,8 @@ def _to_dict(s):
       transformation is only applied to the struct's fields and not to any
       nested values.
     """
+    # to_json()/to_proto() are disabled by --incompatible_struct_has_no_methods
+    # and will be removed entirely in a future Bazel release.
     return {
         key: getattr(s, key)
         for key in dir(s)
