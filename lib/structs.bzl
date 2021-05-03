@@ -25,10 +25,14 @@ def _to_dict(s):
       transformation is only applied to the struct's fields and not to any
       nested values.
     """
-    attributes = dir(s)
-    attributes.remove("to_json")
-    attributes.remove("to_proto")
-    return {key: getattr(s, key) for key in attributes}
+
+    # to_json()/to_proto() are disabled by --incompatible_struct_has_no_methods
+    # and will be removed entirely in a future Bazel release.
+    return {
+        key: getattr(s, key)
+        for key in dir(s)
+        if key != "to_json" and key != "to_proto"
+    }
 
 structs = struct(
     to_dict = _to_dict,

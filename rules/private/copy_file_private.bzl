@@ -65,11 +65,10 @@ def _copy_file_impl(ctx):
             target_file = ctx.file.src,
             is_executable = ctx.attr.is_executable,
         )
+    elif ctx.attr.is_windows:
+        copy_cmd(ctx, ctx.file.src, ctx.outputs.out)
     else:
-        if ctx.attr.is_windows:
-            copy_cmd(ctx, ctx.file.src, ctx.outputs.out)
-        else:
-            copy_bash(ctx, ctx.file.src, ctx.outputs.out)
+        copy_bash(ctx, ctx.file.src, ctx.outputs.out)
 
     files = depset(direct = [ctx.outputs.out])
     runfiles = ctx.runfiles(files = [ctx.outputs.out])
