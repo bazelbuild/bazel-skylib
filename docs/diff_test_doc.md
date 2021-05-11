@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#diff_test"></a>
+
 ## diff_test
 
 <pre>
@@ -9,51 +13,14 @@ A test that compares two files.
 The test succeeds if the files' contents match.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="diff_test-name">
-      <td><code>name</code></td>
-      <td>
-        required.
-        <p>
-          The name of the test rule.
-        </p>
-      </td>
-    </tr>
-    <tr id="diff_test-file1">
-      <td><code>file1</code></td>
-      <td>
-        required.
-        <p>
-          Label of the file to compare to <code>file2</code>.
-        </p>
-      </td>
-    </tr>
-    <tr id="diff_test-file2">
-      <td><code>file2</code></td>
-      <td>
-        required.
-        <p>
-          Label of the file to compare to <code>file1</code>.
-        </p>
-      </td>
-    </tr>
-    <tr id="diff_test-kwargs">
-      <td><code>kwargs</code></td>
-      <td>
-        optional.
-        <p>
-          The <a href="https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| name |  The name of the test rule.   |  none |
+| file1 |  Label of the file to compare to &lt;code&gt;file2&lt;/code&gt;.   |  none |
+| file2 |  Label of the file to compare to &lt;code&gt;file1&lt;/code&gt;.   |  none |
+| kwargs |  The &lt;a href="https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes-tests"&gt;common attributes for tests&lt;/a&gt;.   |  none |
 
 
