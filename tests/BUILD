@@ -1,4 +1,5 @@
 load("//:bzl_library.bzl", "bzl_library")
+load(":analysis_failure_test_tests.bzl", "analysis_failure_test_test_suite")
 load(":build_test_tests.bzl", "build_test_test_suite")
 load(":collections_tests.bzl", "collections_test_suite")
 load(":dicts_tests.bzl", "dicts_test_suite")
@@ -46,6 +47,8 @@ unittest_passing_tests_suite()
 
 versions_test_suite()
 
+analysis_failure_test_test_suite()
+
 bzl_library(
     name = "unittest_tests_bzl",
     srcs = ["unittest_tests.bzl"],
@@ -76,6 +79,19 @@ sh_test(
     data = [
         ":unittest.bash",
         "//rules:analysis_test.bzl",
+        "@bazel_tools//tools/bash/runfiles",
+    ],
+    tags = ["local"],
+)
+
+sh_test(
+    name = "analysis_failure_test_e2e_test",
+    srcs = ["analysis_failure_test_test.sh"],
+    data = [
+        ":unittest.bash",
+        "//lib:unittest",
+        "//rules:analysis_failure_test.bzl",
+        "//toolchains/unittest:test_deps",
         "@bazel_tools//tools/bash/runfiles",
     ],
     tags = ["local"],
