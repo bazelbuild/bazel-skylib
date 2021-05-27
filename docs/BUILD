@@ -11,6 +11,12 @@ stardoc_with_diff_test(
 )
 
 stardoc_with_diff_test(
+    name = "analysis_failure_test",
+    bzl_library_target = "//rules:analysis_failure_test",
+    out_label = "//docs:analysis_failure_test_doc.md",
+)
+
+stardoc_with_diff_test(
     name = "build_test",
     bzl_library_target = "//rules:build_test",
     out_label = "//docs:build_test_doc.md",
