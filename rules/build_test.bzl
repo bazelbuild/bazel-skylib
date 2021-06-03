@@ -29,20 +29,16 @@ def _empty_test_impl(ctx):
         content = "exit 0",
     )
 
-    runfiles = []
-    for entry in ctx.attr.data:
-        runfiles += entry.files.to_list()
-
     return [DefaultInfo(
         files = depset([executable]),
         executable = executable,
-        runfiles = ctx.runfiles(files = runfiles),
+        runfiles = ctx.runfiles(files = ctx.files.data),
     )]
 
 _empty_test = rule(
     implementation = _empty_test_impl,
     attrs = {
-        "data": attr.label_list(),
+        "data": attr.label_list(allow_files = True),
     },
     test = True,
 )
