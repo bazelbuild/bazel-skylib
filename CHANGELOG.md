@@ -41,7 +41,7 @@ Release 0.9.0
     https://docs.google.com/document/d/1vc8v-kXjvgZOdQdnxPTaV0rrLxtP2XwnD2tAZlYJOqw/edit#bookmark=id.iiumwic0jphr
 -   selects.bzl: Add config_setting_group for config_setting AND/OR-chaining
     Implements
-    https://github.com/bazelbuild/proposals/blob/master/designs/2018-11-09-config-setting-chaining.md.
+    https://github.com/bazelbuild/proposals/blob/HEAD/designs/2018-11-09-config-setting-chaining.md.
 -   Make sets.bzl point to new_sets.bzl instead of old_sets.bzl. new_sets.bzl
     and old_sets.bzl should be removed in the following skylib release.
 
