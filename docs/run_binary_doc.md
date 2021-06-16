@@ -29,7 +29,7 @@ Runs a binary as a build action.<br/><br/>This rule does not require Bash (unlik
       <td>
         List of strings; optional
         <p>
-          Command line arguments of the binary.<br/><br/>Subject to<code><a href="https://docs.bazel.build/versions/master/be/make-variables.html#location">$(location)</a></code> expansion.
+          Command line arguments of the binary.<br/><br/>Subject to<code><a href="https://docs.bazel.build/versions/main/be/make-variables.html#location">$(location)</a></code> expansion.
         </p>
       </td>
     </tr>
@@ -38,7 +38,7 @@ Runs a binary as a build action.<br/><br/>This rule does not require Bash (unlik
       <td>
         <a href="https://bazel.build/docs/skylark/lib/dict.html">Dictionary: String -> String</a>; optional
         <p>
-          Environment variables of the action.<br/><br/>Subject to  <code><a href="https://docs.bazel.build/versions/master/be/make-variables.html#location">$(location)</a></code> expansion.
+          Environment variables of the action.<br/><br/>Subject to  <code><a href="https://docs.bazel.build/versions/main/be/make-variables.html#location">$(location)</a></code> expansion.
         </p>
       </td>
     </tr>

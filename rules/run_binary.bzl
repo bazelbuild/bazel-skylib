@@ -76,7 +76,7 @@ run_binary = rule(
         ),
         "env": attr.string_dict(
             doc = "Environment variables of the action.<br/><br/>Subject to " +
-                  " <code><a href=\"https://docs.bazel.build/versions/master/be/make-variables.html#location\">$(location)</a></code>" +
+                  " <code><a href=\"https://docs.bazel.build/versions/main/be/make-variables.html#location\">$(location)</a></code>" +
                   " expansion.",
         ),
         "srcs": attr.label_list(
@@ -91,7 +91,7 @@ run_binary = rule(
         ),
         "args": attr.string_list(
             doc = "Command line arguments of the binary.<br/><br/>Subject to" +
-                  "<code><a href=\"https://docs.bazel.build/versions/master/be/make-variables.html#location\">$(location)</a></code>" +
+                  "<code><a href=\"https://docs.bazel.build/versions/main/be/make-variables.html#location\">$(location)</a></code>" +
                   " expansion.",
         ),
     },
