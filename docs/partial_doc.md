@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#partial.make"></a>
+
 ## partial.make
 
 <pre>
@@ -76,13 +80,13 @@ call site kwarg:
   func = partial.make(_foo, "Ben", make_location="Hollywood")
   partial.call(func, "Jennifer", call_location="Denver")
   ```
-  
+
 Prints "Ben is from Hollywood and Jennifer is from Denver!".
 
   ```
   partial.call(func, "Jennifer", make_location="LA", call_location="Denver")
   ```
-  
+
 Prints "Ben is from LA and Jennifer is from Denver!".
 
 Note that keyword args may not overlap with positional args, regardless of
@@ -97,45 +101,18 @@ func = partial.make(foo, 1)
 partial.call(func, x=2)
 ```
 
-### Parameters
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="partial.make-func">
-      <td><code>func</code></td>
-      <td>
-        required.
-        <p>
-          The function to be called.
-        </p>
-      </td>
-    </tr>
-    <tr id="partial.make-args">
-      <td><code>args</code></td>
-      <td>
-        optional.
-        <p>
-          Positional arguments to be passed to function.
-        </p>
-      </td>
-    </tr>
-    <tr id="partial.make-kwargs">
-      <td><code>kwargs</code></td>
-      <td>
-        optional.
-        <p>
-          Keyword arguments to be passed to function. Note that these can
-          be overridden at the call sites.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+**PARAMETERS**
 
+
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| func |  The function to be called.   |  none |
+| args |  Positional arguments to be passed to function.   |  none |
+| kwargs |  Keyword arguments to be passed to function. Note that these can           be overridden at the call sites.   |  none |
+
+
+<a name="#partial.call"></a>
 
 ## partial.call
 
@@ -145,44 +122,31 @@ partial.call(<a href="#partial.call-partial">partial</a>, <a href="#partial.call
 
 Calls a partial created using `make`.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="partial.call-partial">
-      <td><code>partial</code></td>
-      <td>
-        required.
-        <p>
-          The partial to be called.
-        </p>
-      </td>
-    </tr>
-    <tr id="partial.call-args">
-      <td><code>args</code></td>
-      <td>
-        optional.
-        <p>
-          Additional positional arguments to be appended to the ones given to
-       make.
-        </p>
-      </td>
-    </tr>
-    <tr id="partial.call-kwargs">
-      <td><code>kwargs</code></td>
-      <td>
-        optional.
-        <p>
-          Additional keyword arguments to augment and override the ones
-          given to make.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| partial |  The partial to be called.   |  none |
+| args |  Additional positional arguments to be appended to the ones given to        make.   |  none |
+| kwargs |  Additional keyword arguments to augment and override the ones           given to make.   |  none |
+
+
+<a name="#partial.is_instance"></a>
+
+## partial.is_instance
+
+<pre>
+partial.is_instance(<a href="#partial.is_instance-v">v</a>)
+</pre>
+
+Returns True if v is a partial created using `make`.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| v |  The value to check.   |  none |
 
 
