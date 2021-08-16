@@ -44,16 +44,26 @@ for /F "tokens=2* usebackq" %%i in (`findstr.exe /l /c:"!F1! " "%MF%"`) do (
   set RF1=!RF1:/=\\!
 )
 if "!RF1!" equ "" (
-  echo>&2 ERROR: !F1! not found
-  exit /b 1
+  if exist "{file1}" (
+    set RF1="{file1}"
+    set RF1=!RF1:/=\\!
+  ) else (
+    echo>&2 ERROR: !F1! not found
+    exit /b 1
+  )
 )
 for /F "tokens=2* usebackq" %%i in (`findstr.exe /l /c:"!F2! " "%MF%"`) do (
   set RF2=%%i
   set RF2=!RF2:/=\\!
 )
 if "!RF2!" equ "" (
-  echo>&2 ERROR: !F2! not found
-  exit /b 1
+  if exist "{file2}" (
+    set RF2="{file2}"
+    set RF2=!RF2:/=\\!
+  ) else (
+    echo>&2 ERROR: !F2! not found
+    exit /b 1
+  )
 )
 fc.exe 2>NUL 1>NUL /B "!RF1!" "!RF2!"
 if %ERRORLEVEL% neq 0 (
