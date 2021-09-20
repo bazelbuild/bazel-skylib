@@ -194,6 +194,50 @@ inspect_actions_test = analysistest.make(
     _inspect_actions_test,
 )
 
+####################################
+####### inspect_aspect_test #######
+####################################
+_AddedByAspectInfo = provider(
+    doc = "Example provider added by example aspect",
+    fields = {
+        "value": "(str)",
+    },
+)
+
+def _example_aspect_impl(target, ctx):
+    return [
+        _AddedByAspectInfo(value = "attached by aspect"),
+    ]
+
+example_aspect = aspect(
+    implementation = _example_aspect_impl,
+)
+
+def _inspect_aspect_test(ctx):
+    """Test verifying aspect run on a target."""
+    env = analysistest.begin(ctx)
+
+    tut = env.ctx.attr.target_under_test
+    asserts.equals(env, "attached by aspect", tut[_AddedByAspectInfo].value)
+    return analysistest.end(env)
+
+def _inspect_aspect_fake_rule(ctx):
+    out_file = ctx.actions.declare_file("out.txt")
+    ctx.actions.run_shell(
+        command = "echo 'hello' > %s" % out_file.basename,
+        outputs = [out_file],
+    )
+    return [DefaultInfo(files = depset([out_file]))]
+
+inspect_aspect_fake_rule = rule(
+    implementation = _inspect_aspect_fake_rule,
+)
+
+inspect_aspect_test = analysistest.make(
+    _inspect_aspect_test,
+    extra_target_under_test_aspects = [example_aspect],
+)
+
 ########################################
 ####### inspect_output_dirs_test #######
 ########################################
@@ -290,6 +334,15 @@ def unittest_passing_tests_suite():
     )
     inspect_actions_fake_rule(
         name = "inspect_actions_fake_target",
+        tags = ["manual"],
+    )
+
+    inspect_aspect_test(
+        name = "inspect_aspect_test",
+        target_under_test = ":inspect_aspect_fake_target",
+    )
+    inspect_aspect_fake_rule(
+        name = "inspect_aspect_fake_target",
         tags = ["manual"],
     )
 
