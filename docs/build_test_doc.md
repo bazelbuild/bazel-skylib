@@ -57,7 +57,7 @@ Typical usage:
       <td>
         optional.
         <p>
-          The <a href="https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
+          The <a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
         </p>
       </td>
     </tr>

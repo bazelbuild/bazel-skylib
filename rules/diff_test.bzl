@@ -58,7 +58,7 @@ if "!RF2!" equ "" (
 fc.exe 2>NUL 1>NUL /B "!RF1!" "!RF2!"
 if %ERRORLEVEL% neq 0 (
   if %ERRORLEVEL% equ 1 (
-    echo>&2 FAIL: files "{file1}" and "{file2}" differ
+    echo>&2 FAIL: files "{file1}" and "{file2}" differ. {fail_msg}
     exit /b 1
   ) else (
     fc.exe /B "!RF1!" "!RF2!"
@@ -66,6 +66,7 @@ if %ERRORLEVEL% neq 0 (
   )
 )
 """.format(
+                fail_msg = ctx.attr.failure_message,
                 file1 = _runfiles_path(ctx.file.file1),
                 file2 = _runfiles_path(ctx.file.file2),
             ),
@@ -95,10 +96,11 @@ else
   exit 1
 fi
 if ! diff "$RF1" "$RF2"; then
-  echo >&2 "FAIL: files \"{file1}\" and \"{file2}\" differ"
+  echo >&2 "FAIL: files \"{file1}\" and \"{file2}\" differ. {fail_msg}"
   exit 1
 fi
 """.format(
+                fail_msg = ctx.attr.failure_message,
                 file1 = _runfiles_path(ctx.file.file1),
                 file2 = _runfiles_path(ctx.file.file2),
             ),
@@ -112,6 +114,7 @@ fi
 
 _diff_test = rule(
     attrs = {
+        "failure_message": attr.string(),
         "file1": attr.label(
             allow_single_file = True,
             mandatory = True,
@@ -135,7 +138,7 @@ def diff_test(name, file1, file2, **kwargs):
       name: The name of the test rule.
       file1: Label of the file to compare to <code>file2</code>.
       file2: Label of the file to compare to <code>file1</code>.
-      **kwargs: The <a href="https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
+      **kwargs: The <a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
     """
     _diff_test(
         name = name,
