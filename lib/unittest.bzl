@@ -151,7 +151,8 @@ def _make_analysis_test(
         expect_failure = False,
         attrs = {},
         fragments = [],
-        config_settings = {}):
+        config_settings = {},
+        extra_target_under_test_aspects = []):
     """Creates an analysis test rule from its implementation function.
 
     An analysis test verifies the behavior of a "real" rule target by examining
@@ -189,6 +190,8 @@ def _make_analysis_test(
           test and its dependencies. This may be used to essentially change 'build flags' for
           the target under test, and may thus be utilized to test multiple targets with different
           flags in a single build
+      extra_target_under_test_aspects: An optional list of aspects to apply to the target_under_test
+          in addition to those set up by default for the test harness itself.
 
     Returns:
       A rule definition that should be stored in a global whose name ends in
@@ -209,7 +212,7 @@ def _make_analysis_test(
         target_attr_kwargs["cfg"] = test_transition
 
     attrs["target_under_test"] = attr.label(
-        aspects = [_action_retrieving_aspect],
+        aspects = [_action_retrieving_aspect] + extra_target_under_test_aspects,
         mandatory = True,
         **target_attr_kwargs
     )

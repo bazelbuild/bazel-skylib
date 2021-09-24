@@ -68,7 +68,7 @@ if "!RF2!" equ "" (
 fc.exe 2>NUL 1>NUL /B "!RF1!" "!RF2!"
 if %ERRORLEVEL% neq 0 (
   if %ERRORLEVEL% equ 1 (
-    echo>&2 FAIL: files "{file1}" and "{file2}" differ
+    echo>&2 FAIL: files "{file1}" and "{file2}" differ. {fail_msg}
     exit /b 1
   ) else (
     fc.exe /B "!RF1!" "!RF2!"
@@ -76,6 +76,7 @@ if %ERRORLEVEL% neq 0 (
   )
 )
 """.format(
+                fail_msg = ctx.attr.failure_message,
                 file1 = _runfiles_path(ctx.file.file1),
                 file2 = _runfiles_path(ctx.file.file2),
             ),
@@ -105,10 +106,11 @@ else
   exit 1
 fi
 if ! diff "$RF1" "$RF2"; then
-  echo >&2 "FAIL: files \"{file1}\" and \"{file2}\" differ"
+  echo >&2 "FAIL: files \"{file1}\" and \"{file2}\" differ. {fail_msg}"
   exit 1
 fi
 """.format(
+                fail_msg = ctx.attr.failure_message,
                 file1 = _runfiles_path(ctx.file.file1),
                 file2 = _runfiles_path(ctx.file.file2),
             ),
@@ -122,6 +124,7 @@ fi
 
 _diff_test = rule(
     attrs = {
+        "failure_message": attr.string(),
         "file1": attr.label(
             allow_single_file = True,
             mandatory = True,
