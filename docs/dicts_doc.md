@@ -1,3 +1,7 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+<a name="#dicts.add"></a>
+
 ## dicts.add
 
 <pre>
@@ -15,33 +19,12 @@ special cases for their inputs: the sum of zero dictionaries is the empty
 dictionary, and the sum of a single dictionary is a copy of itself.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="dicts.add-dictionaries">
-      <td><code>dictionaries</code></td>
-      <td>
-        optional.
-        <p>
-          Zero or more dictionaries to be added.
-        </p>
-      </td>
-    </tr>
-    <tr id="dicts.add-kwargs">
-      <td><code>kwargs</code></td>
-      <td>
-        optional.
-        <p>
-          Additional dictionary passed as keyword args.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Default Value |
+| :-------------: | :-------------: | :-------------: |
+| dictionaries |  Zero or more dictionaries to be added.   |  none |
+| kwargs |  Additional dictionary passed as keyword args.   |  none |
 
 

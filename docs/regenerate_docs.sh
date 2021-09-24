@@ -19,7 +19,7 @@
 
 set -euo pipefail
 
-bazel build docs:all --experimental_remap_main_repo
+bazel build docs:all
 
 for filename in bazel-bin/docs/*_gen.md; do
     target_filename="$(echo $filename | sed -En "s/bazel-bin\/(.*)_gen.md/\1/p").md"

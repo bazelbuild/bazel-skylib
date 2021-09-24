@@ -10,25 +10,12 @@ bool_flag(<a href="#bool_flag-name">name</a>)
 
 A bool-typed build setting that can be set on the command line
 
-### Attributes
+**ATTRIBUTES**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="bool_flag-name">
-      <td><code>name</code></td>
-      <td>
-        <a href="https://bazel.build/docs/build-ref.html#name">Name</a>; required
-        <p>
-          A unique name for this target.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Type | Mandatory | Default |
+| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
+| name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 
 
 <a name="#bool_setting"></a>
@@ -41,25 +28,12 @@ bool_setting(<a href="#bool_setting-name">name</a>)
 
 A bool-typed build setting that cannot be set on the command line
 
-### Attributes
+**ATTRIBUTES**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="bool_setting-name">
-      <td><code>name</code></td>
-      <td>
-        <a href="https://bazel.build/docs/build-ref.html#name">Name</a>; required
-        <p>
-          A unique name for this target.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Type | Mandatory | Default |
+| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
+| name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 
 
 <a name="#int_flag"></a>
@@ -72,25 +46,12 @@ int_flag(<a href="#int_flag-name">name</a>)
 
 An int-typed build setting that can be set on the command line
 
-### Attributes
+**ATTRIBUTES**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="int_flag-name">
-      <td><code>name</code></td>
-      <td>
-        <a href="https://bazel.build/docs/build-ref.html#name">Name</a>; required
-        <p>
-          A unique name for this target.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Type | Mandatory | Default |
+| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
+| name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 
 
 <a name="#int_setting"></a>
@@ -103,25 +64,12 @@ int_setting(<a href="#int_setting-name">name</a>)
 
 An int-typed build setting that cannot be set on the command line
 
-### Attributes
+**ATTRIBUTES**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="int_setting-name">
-      <td><code>name</code></td>
-      <td>
-        <a href="https://bazel.build/docs/build-ref.html#name">Name</a>; required
-        <p>
-          A unique name for this target.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Type | Mandatory | Default |
+| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
+| name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 
 
 <a name="#string_flag"></a>
@@ -134,34 +82,13 @@ string_flag(<a href="#string_flag-name">name</a>, <a href="#string_flag-values">
 
 A string-typed build setting that can be set on the command line
 
-### Attributes
+**ATTRIBUTES**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="string_flag-name">
-      <td><code>name</code></td>
-      <td>
-        <a href="https://bazel.build/docs/build-ref.html#name">Name</a>; required
-        <p>
-          A unique name for this target.
-        </p>
-      </td>
-    </tr>
-    <tr id="string_flag-values">
-      <td><code>values</code></td>
-      <td>
-        List of strings; optional
-        <p>
-          The list of allowed values for this setting. An error is raised if any other value is given.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Type | Mandatory | Default |
+| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
+| name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
+| values |  The list of allowed values for this setting. An error is raised if any other value is given.   | List of strings | optional | [] |
 
 
 <a name="#string_list_flag"></a>
@@ -174,25 +101,12 @@ string_list_flag(<a href="#string_list_flag-name">name</a>)
 
 A string list-typed build setting that can be set on the command line
 
-### Attributes
+**ATTRIBUTES**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="string_list_flag-name">
-      <td><code>name</code></td>
-      <td>
-        <a href="https://bazel.build/docs/build-ref.html#name">Name</a>; required
-        <p>
-          A unique name for this target.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Type | Mandatory | Default |
+| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
+| name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 
 
 <a name="#string_list_setting"></a>
@@ -205,25 +119,12 @@ string_list_setting(<a href="#string_list_setting-name">name</a>)
 
 A string list-typed build setting that cannot be set on the command line
 
-### Attributes
+**ATTRIBUTES**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="string_list_setting-name">
-      <td><code>name</code></td>
-      <td>
-        <a href="https://bazel.build/docs/build-ref.html#name">Name</a>; required
-        <p>
-          A unique name for this target.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Type | Mandatory | Default |
+| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
+| name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 
 
 <a name="#string_setting"></a>
@@ -236,34 +137,13 @@ string_setting(<a href="#string_setting-name">name</a>, <a href="#string_setting
 
 A string-typed build setting that cannot be set on the command line
 
-### Attributes
+**ATTRIBUTES**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="string_setting-name">
-      <td><code>name</code></td>
-      <td>
-        <a href="https://bazel.build/docs/build-ref.html#name">Name</a>; required
-        <p>
-          A unique name for this target.
-        </p>
-      </td>
-    </tr>
-    <tr id="string_setting-values">
-      <td><code>values</code></td>
-      <td>
-        List of strings; optional
-        <p>
-          The list of allowed values for this setting. An error is raised if any other value is given.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Type | Mandatory | Default |
+| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
+| name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
+| values |  The list of allowed values for this setting. An error is raised if any other value is given.   | List of strings | optional | [] |
 
 
 <a name="#BuildSettingInfo"></a>
@@ -276,21 +156,11 @@ BuildSettingInfo(<a href="#BuildSettingInfo-value">value</a>)
 
 A singleton provider that contains the raw value of a build setting
 
-### Fields
+**FIELDS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="BuildSettingInfo-value">
-      <td><code>value</code></td>
-      <td>
-        <p>The value of the build setting in the current configuration. This value may come from the command line or an upstream transition, or else it will be the build setting's default.</p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description |
+| :-------------: | :-------------: |
+| value |  The value of the build setting in the current configuration. This value may come from the command line or an upstream transition, or else it will be the build setting's default.    |
 
 
