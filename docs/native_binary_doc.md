@@ -22,7 +22,7 @@ You can "bazel run" this rule like any other binary rule, and use it as a tool i
 | src |  label; path of the pre-built executable   |  none |
 | out |  output; an output name for the copy of the binary. (Bazel requires that this rule make a copy of 'src'.)   |  none |
 | data |  list of labels; data dependencies   |  <code>None</code> |
-| kwargs |  The &lt;a href="https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes-binaries"&gt;common attributes for binaries&lt;/a&gt;.   |  none |
+| kwargs |  The &lt;a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-binaries"&gt;common attributes for binaries&lt;/a&gt;.   |  none |
 
 
 <a name="#native_test"></a>
@@ -48,6 +48,5 @@ runfiles.
 | src |  label; path of the pre-built executable   |  none |
 | out |  output; an output name for the copy of the binary. (Bazel requires that this rule make a copy of 'src'.)   |  none |
 | data |  list of labels; data dependencies   |  <code>None</code> |
-| kwargs |  The &lt;a href="https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes-tests"&gt;common attributes for tests&lt;/a&gt;.   |  none |
-
+| kwargs |  The &lt;a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-tests"&gt;common attributes for tests&lt;/a&gt;.   |  none |
 

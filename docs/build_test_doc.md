@@ -14,9 +14,6 @@ This works not by an instance of this test failing, but instead by
 the targets it depends on failing to build, and hence failing
 the attempt to run this test.
 
-NOTE: At the moment, this won't work on Windows; but someone adding
-support would be welcomed.
-
 Typical usage:
 
 ```
@@ -37,6 +34,5 @@ Typical usage:
 | :-------------: | :-------------: | :-------------: |
 | name |  The name of the test rule.   |  none |
 | targets |  A list of targets to ensure build.   |  none |
-| kwargs |  The &lt;a href="https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes-tests"&gt;common attributes for tests&lt;/a&gt;.   |  none |
-
+| kwargs |  The &lt;a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-tests"&gt;common attributes for tests&lt;/a&gt;.   |  none |
 
