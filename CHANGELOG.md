@@ -1,4 +1,4 @@
-Release 1.1.0
+Release 1.1.1 (initially tagged as 1.1.0)
 
 **New Features**
 
