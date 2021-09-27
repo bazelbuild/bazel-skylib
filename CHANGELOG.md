@@ -1,3 +1,27 @@
+Release 1.1.0
+
+**New Features**
+
+-   Gazelle: support relative imports (#271) and imports from `@bazel_tools`
+    (#273)
+-   Add partial.is_instance() (#276)
+-   Allow unittest.suite() to accept partial calls of test rules (#276)
+-   Allow specifying additional aspects to target under test in
+    analysistest.make() (#299)
+-   Add Windows support for build_test (#302)
+
+**Incompatible Changes**
+
+-   structs.to_dict() ignores deprecated to_json()/to_proto() methods (#295)
+
+**Contributors**
+
+aiuto, alandonovan, Alex Eagle, Alexandre Rostovtsev, Andrew Z Allen, c-parsons,
+Christopher Sauer, Daniel Wagner-Hall, David Sanderson, dmaclach, Laurent Le
+Brun, Mansur, Olek Wojnar, Philipp Wollermann, River, Samuel Giddins, Thaler
+Benedek
+
+
 Release 1.0.3
 
 **Significant Changes**
