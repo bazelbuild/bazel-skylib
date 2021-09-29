@@ -36,7 +36,14 @@ TOOLCHAIN_TYPE = "@bazel_skylib//toolchains/unittest:toolchain_type"
 
 _UnittestToolchainInfo = provider(
     doc = "Execution platform information for rules in the bazel_skylib repository.",
-    fields = ["file_ext", "success_templ", "failure_templ", "join_on"],
+    fields = [
+        "file_ext",
+        "success_templ",
+        "failure_templ",
+        "join_on",
+        "escape_chars_with",
+        "escape_other_chars_with",
+    ],
 )
 
 def _unittest_toolchain_impl(ctx):
@@ -47,6 +54,8 @@ def _unittest_toolchain_impl(ctx):
                 success_templ = ctx.attr.success_templ,
                 failure_templ = ctx.attr.failure_templ,
                 join_on = ctx.attr.join_on,
+                escape_chars_with = ctx.attr.escape_chars_with,
+                escape_other_chars_with = ctx.attr.escape_other_chars_with,
             ),
         ),
     ]
@@ -58,6 +67,8 @@ unittest_toolchain = rule(
         "file_ext": attr.string(mandatory = True),
         "join_on": attr.string(mandatory = True),
         "success_templ": attr.string(mandatory = True),
+        "escape_chars_with": attr.string_dict(),
+        "escape_other_chars_with": attr.string(default = ""),
     },
 )
 
@@ -336,7 +347,15 @@ def _end(env):
     tc = env.ctx.toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
     testbin = env.ctx.actions.declare_file(env.ctx.label.name + tc.file_ext)
     if env.failures:
-        cmd = tc.failure_templ % tc.join_on.join(env.failures)
+        failure_message_lines = "\n".join(env.failures).split("\n")
+        escaped_failure_message_lines = [
+            "".join([
+                tc.escape_chars_with.get(c, tc.escape_other_chars_with) + c
+                for c in line.elems()
+            ])
+            for line in failure_message_lines
+        ]
+        cmd = tc.failure_templ % tc.join_on.join(escaped_failure_message_lines)
     else:
         cmd = tc.success_templ
 

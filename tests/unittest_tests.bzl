@@ -18,8 +18,9 @@ load("//lib:partial.bzl", "partial")
 load("//lib:unittest.bzl", "analysistest", "asserts", "unittest")
 
 ###################################
-####### fail_basic_test ###########
+####### basic_failing_test ########
 ###################################
+
 def _basic_failing_test(ctx):
     """Unit tests for a basic library verification test that fails."""
     env = unittest.begin(ctx)
@@ -29,6 +30,27 @@ def _basic_failing_test(ctx):
     return unittest.end(env)
 
 basic_failing_test = unittest.make(_basic_failing_test)
+
+###################################
+####### failure_message_test ######
+###################################
+
+def _failure_message_test(ctx):
+    """Failing unit test with arbitrary content in the message."""
+    env = unittest.begin(ctx)
+
+    if not ctx.attr.message:
+        unittest.fail(env, "Message must be non-empty.")
+    asserts.equals(env, "", ctx.attr.message)
+
+    return unittest.end(env)
+
+failure_message_test = unittest.make(
+    _failure_message_test,
+    attrs = {
+        "message": attr.string(),
+    },
+)
 
 ###################################
 ####### basic_passing_test ########
