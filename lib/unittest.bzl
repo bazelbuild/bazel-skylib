@@ -36,7 +36,14 @@ TOOLCHAIN_TYPE = "@bazel_skylib//toolchains/unittest:toolchain_type"
 
 _UnittestToolchainInfo = provider(
     doc = "Execution platform information for rules in the bazel_skylib repository.",
-    fields = ["file_ext", "success_templ", "failure_templ", "join_on"],
+    fields = [
+        "file_ext",
+        "success_templ",
+        "failure_templ",
+        "join_on",
+        "escape_chars_with",
+        "escape_other_chars_with",
+    ],
 )
 
 def _unittest_toolchain_impl(ctx):
@@ -47,6 +54,8 @@ def _unittest_toolchain_impl(ctx):
                 success_templ = ctx.attr.success_templ,
                 failure_templ = ctx.attr.failure_templ,
                 join_on = ctx.attr.join_on,
+                escape_chars_with = ctx.attr.escape_chars_with,
+                escape_other_chars_with = ctx.attr.escape_other_chars_with,
             ),
         ),
     ]
@@ -54,10 +63,59 @@ def _unittest_toolchain_impl(ctx):
 unittest_toolchain = rule(
     implementation = _unittest_toolchain_impl,
     attrs = {
-        "failure_templ": attr.string(mandatory = True),
-        "file_ext": attr.string(mandatory = True),
-        "join_on": attr.string(mandatory = True),
-        "success_templ": attr.string(mandatory = True),
+        "failure_templ": attr.string(
+            mandatory = True,
+            doc = (
+                "Test script template with a single `%s`. That " +
+                "placeholder is replaced with the lines in the " +
+                "failure message joined with the string " +
+                "specified in `join_with`. The resulting script " +
+                "should print the failure message and exit with " +
+                "non-zero status."
+            ),
+        ),
+        "file_ext": attr.string(
+            mandatory = True,
+            doc = (
+                "File extension for test script, including leading dot."
+            ),
+        ),
+        "join_on": attr.string(
+            mandatory = True,
+            doc = (
+                "String used to join the lines in the failure " +
+                "message before including the resulting string " +
+                "in the script specified in `failure_templ`."
+            ),
+        ),
+        "success_templ": attr.string(
+            mandatory = True,
+            doc = (
+                "Test script generated when the test passes. " +
+                "Should exit with status 0."
+            ),
+        ),
+        "escape_chars_with": attr.string_dict(
+            doc = (
+                "Dictionary of characters that need escaping in " +
+                "test failure message to prefix appended to escape " +
+                "those characters. For example, " +
+                '`{"%": "%", ">": "^"}` would replace `%` with ' +
+                "`%%` and `>` with `^>` in the failure message " +
+                "before that is included in `success_templ`."
+            ),
+        ),
+        "escape_other_chars_with": attr.string(
+            default = "",
+            doc = (
+                "String to prefix every character in test failure " +
+                "message which is not a key in `escape_chars_with` " +
+                "before including that in `success_templ`. For " +
+                'example, `"\"` would prefix every character in ' +
+                "the failure message (except those in the keys of " +
+                "`escape_chars_with`) with `\\`."
+            ),
+        ),
     },
 )
 
@@ -336,7 +394,15 @@ def _end(env):
     tc = env.ctx.toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
     testbin = env.ctx.actions.declare_file(env.ctx.label.name + tc.file_ext)
     if env.failures:
-        cmd = tc.failure_templ % tc.join_on.join(env.failures)
+        failure_message_lines = "\n".join(env.failures).split("\n")
+        escaped_failure_message_lines = [
+            "".join([
+                tc.escape_chars_with.get(c, tc.escape_other_chars_with) + c
+                for c in line.elems()
+            ])
+            for line in failure_message_lines
+        ]
+        cmd = tc.failure_templ % tc.join_on.join(escaped_failure_message_lines)
     else:
         cmd = tc.success_templ
 

@@ -22,3 +22,4 @@ Runs a binary as a build action.<br/><br/>This rule does not require Bash (unlik
 | srcs |  Additional inputs of the action.&lt;br/&gt;&lt;br/&gt;These labels are available for &lt;code&gt;$(location)&lt;/code&gt; expansion in &lt;code&gt;args&lt;/code&gt; and &lt;code&gt;env&lt;/code&gt;.   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | optional | [] |
 | tool |  The tool to run in the action.&lt;br/&gt;&lt;br/&gt;Must be the label of a *_binary rule, of a rule that generates an executable file, or of a file that can be executed as a subprocess (e.g. an .exe or .bat file on Windows or a binary with executable permission on Linux). This label is available for &lt;code&gt;$(location)&lt;/code&gt; expansion in &lt;code&gt;args&lt;/code&gt; and &lt;code&gt;env&lt;/code&gt;.   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | required |  |
 
+

@@ -5,7 +5,8 @@
 ## unittest_toolchain
 
 <pre>
-unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unittest_toolchain-failure_templ">failure_templ</a>, <a href="#unittest_toolchain-file_ext">file_ext</a>, <a href="#unittest_toolchain-join_on">join_on</a>, <a href="#unittest_toolchain-success_templ">success_templ</a>)
+unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unittest_toolchain-escape_chars_with">escape_chars_with</a>, <a href="#unittest_toolchain-escape_other_chars_with">escape_other_chars_with</a>, <a href="#unittest_toolchain-failure_templ">failure_templ</a>, <a href="#unittest_toolchain-file_ext">file_ext</a>,
+                   <a href="#unittest_toolchain-join_on">join_on</a>, <a href="#unittest_toolchain-success_templ">success_templ</a>)
 </pre>
 
 
@@ -16,10 +17,12 @@ unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unitte
 | Name  | Description | Type | Mandatory | Default |
 | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
 | name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
-| failure_templ |  -   | String | required |  |
-| file_ext |  -   | String | required |  |
-| join_on |  -   | String | required |  |
-| success_templ |  -   | String | required |  |
+| escape_chars_with |  Dictionary of characters that need escaping in test failure message to prefix appended to escape those characters. For example, <code>{"%": "%", "&gt;": "^"}</code> would replace <code>%</code> with <code>%%</code> and <code>&gt;</code> with <code>^&gt;</code> in the failure message before that is included in <code>success_templ</code>.   | <a href="https://bazel.build/docs/skylark/lib/dict.html">Dictionary: String -> String</a> | optional | {} |
+| escape_other_chars_with |  String to prefix every character in test failure message which is not a key in <code>escape_chars_with</code> before including that in <code>success_templ</code>. For example, <code>""</code> would prefix every character in the failure message (except those in the keys of <code>escape_chars_with</code>) with <code>\</code>.   | String | optional | "" |
+| failure_templ |  Test script template with a single <code>%s</code>. That placeholder is replaced with the lines in the failure message joined with the string specified in <code>join_with</code>. The resulting script should print the failure message and exit with non-zero status.   | String | required |  |
+| file_ext |  File extension for test script, including leading dot.   | String | required |  |
+| join_on |  String used to join the lines in the failure message before including the resulting string in the script specified in <code>failure_templ</code>.   | String | required |  |
+| success_templ |  Test script generated when the test passes. Should exit with status 0.   | String | required |  |
 
 
 <a name="#analysistest.make"></a>
@@ -27,7 +30,8 @@ unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unitte
 ## analysistest.make
 
 <pre>
-analysistest.make(<a href="#analysistest.make-impl">impl</a>, <a href="#analysistest.make-expect_failure">expect_failure</a>, <a href="#analysistest.make-attrs">attrs</a>, <a href="#analysistest.make-fragments">fragments</a>, <a href="#analysistest.make-config_settings">config_settings</a>)
+analysistest.make(<a href="#analysistest.make-impl">impl</a>, <a href="#analysistest.make-expect_failure">expect_failure</a>, <a href="#analysistest.make-attrs">attrs</a>, <a href="#analysistest.make-fragments">fragments</a>, <a href="#analysistest.make-config_settings">config_settings</a>,
+                  <a href="#analysistest.make-extra_target_under_test_aspects">extra_target_under_test_aspects</a>)
 </pre>
 
 Creates an analysis test rule from its implementation function.
@@ -66,6 +70,7 @@ Recall that names of test rules must end in `_test`.
 | attrs |  An optional dictionary to supplement the attrs passed to the     unit test's <code>rule()</code> constructor.   |  <code>{}</code> |
 | fragments |  An optional list of fragment names that can be used to give rules access to     language-specific parts of configuration.   |  <code>[]</code> |
 | config_settings |  A dictionary of configuration settings to change for the target under     test and its dependencies. This may be used to essentially change 'build flags' for     the target under test, and may thus be utilized to test multiple targets with different     flags in a single build   |  <code>{}</code> |
+| extra_target_under_test_aspects |  An optional list of aspects to apply to the target_under_test     in addition to those set up by default for the test harness itself.   |  <code>[]</code> |
 
 
 <a name="#analysistest.begin"></a>
