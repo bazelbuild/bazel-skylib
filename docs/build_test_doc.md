@@ -36,3 +36,4 @@ Typical usage:
 | targets |  A list of targets to ensure build.   |  none |
 | kwargs |  The &lt;a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-tests"&gt;common attributes for tests&lt;/a&gt;.   |  none |
 
+
