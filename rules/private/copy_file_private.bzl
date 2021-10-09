@@ -19,13 +19,19 @@ cmd.exe (on Windows). '_copy_xfile' marks the resulting file executable,
 '_copy_file' does not.
 """
 
+def _hash_file(file):
+    return str(hash(file.path))
+
 def copy_cmd(ctx, src, dst):
     # Most Windows binaries built with MSVC use a certain argument quoting
     # scheme. Bazel uses that scheme too to quote arguments. However,
     # cmd.exe uses different semantics, so Bazel's quoting is wrong here.
     # To fix that we write the command to a .bat file so no command line
     # quoting or escaping is required.
-    bat = ctx.actions.declare_file(ctx.label.name + "-cmd.bat")
+    # Put a hash of the file name into the name of the generated batch file to
+    # make it unique within the package, so that users can define multiple copy_file's.
+    bat = ctx.actions.declare_file("%s-%s-cmd.bat" % (ctx.label.name, _hash_file(src)))
+
     ctx.actions.write(
         output = bat,
         # Do not use lib/shell.bzl's shell.quote() method, because that uses
