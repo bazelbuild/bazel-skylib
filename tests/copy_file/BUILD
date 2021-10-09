@@ -47,6 +47,7 @@ sh_test(
         # Use DefaultInfo.runfiles from 'copy_gen'.
         ":copy_gen",
         ":copy_gen_symlink",
+        ":copy_dir",
         "//tests:unittest.bash",
     ],
     deps = ["@bazel_tools//tools/bash/runfiles"],
@@ -164,6 +165,13 @@ copy_file(
     out = "xout/gen-out-symlink.sh",
     allow_symlink = True,
     is_executable = True,
+)
+
+copy_file(
+    name = "copy_dir",
+    src = ":subdir",
+    out = "out/subdir",
+    is_directory = True,
 )
 
 genrule(

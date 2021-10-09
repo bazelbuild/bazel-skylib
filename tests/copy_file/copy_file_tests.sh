@@ -84,4 +84,9 @@ function test_copy_xgen_symlink() {
   expect_log '^potato$'
 }
 
+function test_copy_xgen_symlink() {
+  cat "$(rlocation bazel_skylib/tests/copy_file/out/subdir)/b.txt" >"$TEST_log"
+  expect_log '^contents of b$'
+}
+
 run_suite "copy_file_tests test suite"
