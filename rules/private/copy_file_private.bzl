@@ -71,11 +71,10 @@ def _copy_file_impl(ctx):
         copy_bash(ctx, ctx.file.src, ctx.outputs.out)
 
     files = depset(direct = [ctx.outputs.out])
-    runfiles = ctx.runfiles(files = [ctx.outputs.out])
     if ctx.attr.is_executable:
-        return [DefaultInfo(files = files, runfiles = runfiles, executable = ctx.outputs.out)]
+        return [DefaultInfo(files = files, executable = ctx.outputs.out)]
     else:
-        return [DefaultInfo(files = files, runfiles = runfiles)]
+        return [DefaultInfo(files = files)]
 
 _ATTRS = {
     "src": attr.label(mandatory = True, allow_single_file = True),
