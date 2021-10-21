@@ -23,21 +23,44 @@ go_register_toolchains(version = "1.17.1")
 # and should thus not be included by dependencies on
 # bazel-skylib.
 
-load("//:internal_deps.bzl", "bazel_skylib_internal_deps")
-
-bazel_skylib_internal_deps()
+maybe(
+    http_archive,
+    name = "io_bazel_stardoc",
+    sha256 = "c9794dcc8026a30ff67cf7cf91ebe245ca294b20b071845d12c192afe243ad72",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/stardoc/releases/download/0.5.0/stardoc-0.5.0.tar.gz",
+        "https://github.com/bazelbuild/stardoc/releases/download/0.5.0/stardoc-0.5.0.tar.gz",
+    ],
+)
 
 load("@io_bazel_stardoc//:setup.bzl", "stardoc_repositories")
 
 stardoc_repositories()
 
+maybe(
+    http_archive,
+    name = "rules_pkg",
+    sha256 = "a89e203d3cf264e564fcb96b6e06dd70bc0557356eb48400ce4b5d97c2c3720d",
+    urls = [
+        "https://github.com/bazelbuild/rules_pkg/releases/download/0.5.1/rules_pkg-0.5.1.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.5.1/rules_pkg-0.5.1.tar.gz",
+    ],
+)
+
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 
 rules_pkg_dependencies()
 
-load("//:internal_setup.bzl", "bazel_skylib_internal_setup")
-
-bazel_skylib_internal_setup()
+maybe(
+    name = "rules_cc",
+    repo_rule = http_archive,
+    sha256 = "b4b2a2078bdb7b8328d843e8de07d7c13c80e6c89e86a09d6c4b424cfd1aaa19",
+    strip_prefix = "rules_cc-cb2dfba6746bfa3c3705185981f3109f0ae1b893",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_cc/archive/cb2dfba6746bfa3c3705185981f3109f0ae1b893.zip",
+        "https://github.com/bazelbuild/rules_cc/archive/cb2dfba6746bfa3c3705185981f3109f0ae1b893.zip",
+    ],
+)
 
 load("//lib:unittest.bzl", "register_unittest_toolchains")
 
