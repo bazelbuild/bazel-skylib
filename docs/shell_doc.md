@@ -1,6 +1,8 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
-<a name="#shell.array_literal"></a>
+Skylib module containing shell utility functions.
+
+<a id="#shell.array_literal"></a>
 
 ## shell.array_literal
 
@@ -22,11 +24,16 @@ safety, even if they do not need to be.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| iterable |  A sequence of elements. Elements that are not strings will be     converted to strings first, by calling <code>str()</code>.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="shell.array_literal-iterable"></a>iterable |  A sequence of elements. Elements that are not strings will be converted to strings first, by calling <code>str()</code>.   |  none |
+
+**RETURNS**
+
+A string that represents the sequence as a shell array; that is,
+parentheses containing the quoted elements.
 
 
-<a name="#shell.quote"></a>
+<a id="#shell.quote"></a>
 
 ## shell.quote
 
@@ -44,7 +51,11 @@ shell metacharacters.)
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| s |  The string to quote.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="shell.quote-s"></a>s |  The string to quote.   |  none |
+
+**RETURNS**
+
+A quoted version of the string that can be passed to a shell command.
 
 

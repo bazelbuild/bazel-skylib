@@ -1,6 +1,8 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
-<a name="#selects.with_or"></a>
+Skylib module containing convenience interfaces for select().
+
+<a id="#selects.with_or"></a>
 
 ## selects.with_or
 
@@ -28,12 +30,25 @@ Example:
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| input_dict |  The same dictionary <code>select()</code> takes, except keys may take     either the usual form <code>"//foo:config1"</code> or     <code>("//foo:config1", "//foo:config2", ...)</code> to signify     <code>//foo:config1</code> OR <code>//foo:config2</code> OR <code>...</code>.   |  none |
-| no_match_error |  Optional custom error to report if no condition matches.   |  <code>""</code> |
+| :------------- | :------------- | :------------- |
+| <a id="selects.with_or-input_dict"></a>input_dict |  The same dictionary <code>select()</code> takes, except keys may take either the usual form <code>"//foo:config1"</code> or <code>("//foo:config1", "//foo:config2", ...)</code> to signify <code>//foo:config1</code> OR <code>//foo:config2</code> OR <code>...</code>.   |  none |
+| <a id="selects.with_or-no_match_error"></a>no_match_error |  Optional custom error to report if no condition matches.   |  <code>""</code> |
+
+**RETURNS**
+
+A native `select()` that expands
+
+`("//configs:two", "//configs:three"): [":dep2or3"]`
+
+to
+
+```build
+"//configs:two": [":dep2or3"],
+"//configs:three": [":dep2or3"],
+```
 
 
-<a name="#selects.with_or_dict"></a>
+<a id="#selects.with_or_dict"></a>
 
 ## selects.with_or_dict
 
@@ -51,11 +66,15 @@ macros.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| input_dict |  Same as <code>with_or</code>.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="selects.with_or_dict-input_dict"></a>input_dict |  Same as <code>with_or</code>.   |  none |
+
+**RETURNS**
+
+A dictionary usable by a native `select()`.
 
 
-<a name="#selects.config_setting_group"></a>
+<a id="#selects.config_setting_group"></a>
 
 ## selects.config_setting_group
 
@@ -91,10 +110,10 @@ Example:
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| name |  The group's name. This is how <code>select()</code>s reference it.   |  none |
-| match_any |  A list of <code>config_settings</code>. This group matches if *any* member     in the list matches. If this is set, <code>match_all</code> must not be set.   |  <code>[]</code> |
-| match_all |  A list of <code>config_settings</code>. This group matches if *every*     member in the list matches. If this is set, <code>match_any</code> must be not     set.   |  <code>[]</code> |
-| visibility |  Visibility of the config_setting_group.   |  <code>None</code> |
+| :------------- | :------------- | :------------- |
+| <a id="selects.config_setting_group-name"></a>name |  The group's name. This is how <code>select()</code>s reference it.   |  none |
+| <a id="selects.config_setting_group-match_any"></a>match_any |  A list of <code>config_settings</code>. This group matches if *any* member in the list matches. If this is set, <code>match_all</code> must not be set.   |  <code>[]</code> |
+| <a id="selects.config_setting_group-match_all"></a>match_all |  A list of <code>config_settings</code>. This group matches if *every* member in the list matches. If this is set, <code>match_any</code> must be not set.   |  <code>[]</code> |
+| <a id="selects.config_setting_group-visibility"></a>visibility |  Visibility of the config_setting_group.   |  <code>None</code> |
 
 
