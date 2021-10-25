@@ -18,7 +18,7 @@ load("//lib:new_sets.bzl", "sets")
 
 def _empty_test_impl(ctx):
     extension = ".bat" if ctx.attr.is_windows else ".sh"
-    content = "exit 0" if ctx.attr.is_windows else "#!/bin/bash\nexit 0"
+    content = "exit 0" if ctx.attr.is_windows else "#!/usr/bin/env bash\nexit 0"
     executable = ctx.actions.declare_file(ctx.label.name + extension)
     ctx.actions.write(
         output = executable,

@@ -169,5 +169,5 @@ copy_file(
 genrule(
     name = "gen",
     outs = ["b.txt"],
-    cmd = "echo -e '#!/bin/bash\necho potato' > $@",
+    cmd = "echo -e '#!/usr/bin/env bash\necho potato' > $@",
 )

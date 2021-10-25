@@ -86,7 +86,7 @@ if %ERRORLEVEL% neq 0 (
         test_bin = ctx.actions.declare_file(ctx.label.name + "-test.sh")
         ctx.actions.write(
             output = test_bin,
-            content = r"""#!/bin/bash
+            content = r"""#!/usr/bin/env bash
 set -euo pipefail
 F1="{file1}"
 F2="{file2}"
