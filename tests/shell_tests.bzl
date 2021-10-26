@@ -69,7 +69,7 @@ def _shell_args_test_gen_impl(ctx):
         "back`echo q`uote",
     ]
     script_content = "\n".join([
-        "#!/bin/bash",
+        "#!/usr/bin/env bash",
         "myarray=" + shell.array_literal(args),
         'output=$(echo "${myarray[@]}")',
         # For logging:

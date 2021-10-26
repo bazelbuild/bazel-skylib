@@ -113,7 +113,7 @@ write_file(
     name = "write_nonempty_bin",
     out = "out/nonempty.sh",
     content = [
-        "#!/bin/bash",
+        "#!/usr/bin/env bash",
         "echo potato",
     ],
     is_executable = True,
