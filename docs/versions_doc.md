@@ -1,6 +1,8 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
-<a name="#versions.get"></a>
+Skylib module containing functions for checking Bazel versions.
+
+<a id="#versions.get"></a>
 
 ## versions.get
 
@@ -10,11 +12,9 @@ versions.get()
 
 Returns the current Bazel version
 
-**PARAMETERS**
 
 
-
-<a name="#versions.parse"></a>
+<a id="#versions.parse"></a>
 
 ## versions.parse
 
@@ -31,11 +31,15 @@ int tuples can be compared directly using binary operators (<, >).
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| bazel_version |  the Bazel version string   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="versions.parse-bazel_version"></a>bazel_version |  the Bazel version string   |  none |
+
+**RETURNS**
+
+An int 3-tuple of a (major, minor, patch) version.
 
 
-<a name="#versions.check"></a>
+<a id="#versions.check"></a>
 
 ## versions.check
 
@@ -49,13 +53,13 @@ Check that the version of Bazel is valid within the specified range.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| minimum_bazel_version |  minimum version of Bazel expected   |  none |
-| maximum_bazel_version |  maximum version of Bazel expected   |  <code>None</code> |
-| bazel_version |  the version of Bazel to check. Used for testing, defaults to native.bazel_version   |  <code>None</code> |
+| :------------- | :------------- | :------------- |
+| <a id="versions.check-minimum_bazel_version"></a>minimum_bazel_version |  minimum version of Bazel expected   |  none |
+| <a id="versions.check-maximum_bazel_version"></a>maximum_bazel_version |  maximum version of Bazel expected   |  <code>None</code> |
+| <a id="versions.check-bazel_version"></a>bazel_version |  the version of Bazel to check. Used for testing, defaults to native.bazel_version   |  <code>None</code> |
 
 
-<a name="#versions.is_at_most"></a>
+<a id="#versions.is_at_most"></a>
 
 ## versions.is_at_most
 
@@ -69,12 +73,16 @@ Check that a version is lower or equals to a threshold.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| threshold |  the maximum version string   |  none |
-| version |  the version string to be compared to the threshold   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="versions.is_at_most-threshold"></a>threshold |  the maximum version string   |  none |
+| <a id="versions.is_at_most-version"></a>version |  the version string to be compared to the threshold   |  none |
+
+**RETURNS**
+
+True if version <= threshold.
 
 
-<a name="#versions.is_at_least"></a>
+<a id="#versions.is_at_least"></a>
 
 ## versions.is_at_least
 
@@ -88,8 +96,12 @@ Check that a version is higher or equals to a threshold.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| threshold |  the minimum version string   |  none |
-| version |  the version string to be compared to the threshold   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="versions.is_at_least-threshold"></a>threshold |  the minimum version string   |  none |
+| <a id="versions.is_at_least-version"></a>version |  the version string to be compared to the threshold   |  none |
+
+**RETURNS**
+
+True if version >= threshold.
 
 

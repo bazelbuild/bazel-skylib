@@ -1,6 +1,8 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
-<a name="#analysis_test"></a>
+A test verifying other targets can be successfully analyzed as part of a `bazel test`
+
+<a id="#analysis_test"></a>
 
 ## analysis_test
 
@@ -39,8 +41,8 @@ Test rule checking that other targets can be successfully analyzed.
 
 
 | Name  | Description | Type | Mandatory | Default |
-| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
-| name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
-| targets |  -   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | required |  |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="analysis_test-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
+| <a id="analysis_test-targets"></a>targets |  -   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | required |  |
 
 

@@ -1,6 +1,13 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
-<a name="#partial.make"></a>
+Starlark module for working with partial function objects.
+
+Partial function objects allow some parameters are bound before the call.
+
+Similar to https://docs.python.org/3/library/functools.html#functools.partial.
+
+
+<a id="#partial.make"></a>
 
 ## partial.make
 
@@ -106,13 +113,17 @@ partial.call(func, x=2)
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| func |  The function to be called.   |  none |
-| args |  Positional arguments to be passed to function.   |  none |
-| kwargs |  Keyword arguments to be passed to function. Note that these can           be overridden at the call sites.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="partial.make-func"></a>func |  The function to be called.   |  none |
+| <a id="partial.make-args"></a>args |  Positional arguments to be passed to function.   |  none |
+| <a id="partial.make-kwargs"></a>kwargs |  Keyword arguments to be passed to function. Note that these can be overridden at the call sites.   |  none |
+
+**RETURNS**
+
+A new `partial` that can be called using `call`
 
 
-<a name="#partial.call"></a>
+<a id="#partial.call"></a>
 
 ## partial.call
 
@@ -126,13 +137,17 @@ Calls a partial created using `make`.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| partial |  The partial to be called.   |  none |
-| args |  Additional positional arguments to be appended to the ones given to        make.   |  none |
-| kwargs |  Additional keyword arguments to augment and override the ones           given to make.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="partial.call-partial"></a>partial |  The partial to be called.   |  none |
+| <a id="partial.call-args"></a>args |  Additional positional arguments to be appended to the ones given to make.   |  none |
+| <a id="partial.call-kwargs"></a>kwargs |  Additional keyword arguments to augment and override the ones given to make.   |  none |
+
+**RETURNS**
+
+Whatever the function in the partial returns.
 
 
-<a name="#partial.is_instance"></a>
+<a id="#partial.is_instance"></a>
 
 ## partial.is_instance
 
@@ -146,7 +161,11 @@ Returns True if v is a partial created using `make`.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| v |  The value to check.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="partial.is_instance-v"></a>v |  The value to check.   |  none |
+
+**RETURNS**
+
+True if v was created by `make`, False otherwise.
 
 

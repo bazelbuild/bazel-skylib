@@ -1,6 +1,13 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
-<a name="#paths.basename"></a>
+Skylib module containing file path manipulation functions.
+
+NOTE: The functions in this module currently only support paths with Unix-style
+path separators (forward slash, "/"); they do not handle Windows-style paths
+with backslash separators or drive letters.
+
+
+<a id="#paths.basename"></a>
 
 ## paths.basename
 
@@ -20,11 +27,15 @@ the final slash).
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| p |  The path whose basename should be returned.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="paths.basename-p"></a>p |  The path whose basename should be returned.   |  none |
+
+**RETURNS**
+
+The basename of the path, which includes the extension.
 
 
-<a name="#paths.dirname"></a>
+<a id="#paths.dirname"></a>
 
 ## paths.dirname
 
@@ -43,11 +54,15 @@ included, unless omitting them would make the dirname empty.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| p |  The path whose dirname should be returned.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="paths.dirname-p"></a>p |  The path whose dirname should be returned.   |  none |
+
+**RETURNS**
+
+The dirname of the path.
 
 
-<a name="#paths.is_absolute"></a>
+<a id="#paths.is_absolute"></a>
 
 ## paths.is_absolute
 
@@ -61,11 +76,15 @@ Returns `True` if `path` is an absolute path.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| path |  A path (which is a string).   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="paths.is_absolute-path"></a>path |  A path (which is a string).   |  none |
+
+**RETURNS**
+
+`True` if `path` is an absolute path.
 
 
-<a name="#paths.join"></a>
+<a id="#paths.join"></a>
 
 ## paths.join
 
@@ -88,12 +107,16 @@ If any component is an absolute path, all previous components are discarded.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| path |  A path segment.   |  none |
-| others |  Additional path segments.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="paths.join-path"></a>path |  A path segment.   |  none |
+| <a id="paths.join-others"></a>others |  Additional path segments.   |  none |
+
+**RETURNS**
+
+A string containing the joined paths.
 
 
-<a name="#paths.normalize"></a>
+<a id="#paths.normalize"></a>
 
 ## paths.normalize
 
@@ -122,11 +145,15 @@ POSIX platforms; specifically:
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| path |  A path.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="paths.normalize-path"></a>path |  A path.   |  none |
+
+**RETURNS**
+
+The normalized path.
 
 
-<a name="#paths.relativize"></a>
+<a id="#paths.relativize"></a>
 
 ## paths.relativize
 
@@ -149,12 +176,16 @@ the path both start with the same initial parent references.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| path |  The path to relativize.   |  none |
-| start |  The ancestor path against which to relativize.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="paths.relativize-path"></a>path |  The path to relativize.   |  none |
+| <a id="paths.relativize-start"></a>start |  The ancestor path against which to relativize.   |  none |
+
+**RETURNS**
+
+The portion of `path` that is relative to `start`.
 
 
-<a name="#paths.replace_extension"></a>
+<a id="#paths.replace_extension"></a>
 
 ## paths.replace_extension
 
@@ -171,12 +202,16 @@ If the path has no extension, the new extension is added to it.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| p |  The path whose extension should be replaced.   |  none |
-| new_extension |  The new extension for the file. The new extension should     begin with a dot if you want the new filename to have one.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="paths.replace_extension-p"></a>p |  The path whose extension should be replaced.   |  none |
+| <a id="paths.replace_extension-new_extension"></a>new_extension |  The new extension for the file. The new extension should begin with a dot if you want the new filename to have one.   |  none |
+
+**RETURNS**
+
+The path with the extension replaced (or added, if it did not have one).
 
 
-<a name="#paths.split_extension"></a>
+<a id="#paths.split_extension"></a>
 
 ## paths.split_extension
 
@@ -194,7 +229,14 @@ Leading periods on the basename are ignored, so
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| p |  The path whose root and extension should be split.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="paths.split_extension-p"></a>p |  The path whose root and extension should be split.   |  none |
+
+**RETURNS**
+
+A tuple `(root, ext)` such that the root is the path without the file
+extension, and `ext` is the file extension (which, if non-empty, contains
+the leading dot). The returned tuple always satisfies the relationship
+`root + ext == p`.
 
 

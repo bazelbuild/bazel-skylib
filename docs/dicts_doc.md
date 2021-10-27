@@ -1,6 +1,8 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
-<a name="#dicts.add"></a>
+Skylib module containing functions that operate on dictionaries.
+
+<a id="#dicts.add"></a>
 
 ## dicts.add
 
@@ -23,8 +25,12 @@ dictionary, and the sum of a single dictionary is a copy of itself.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| dictionaries |  Zero or more dictionaries to be added.   |  none |
-| kwargs |  Additional dictionary passed as keyword args.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="dicts.add-dictionaries"></a>dictionaries |  Zero or more dictionaries to be added.   |  none |
+| <a id="dicts.add-kwargs"></a>kwargs |  Additional dictionary passed as keyword args.   |  none |
+
+**RETURNS**
+
+A new `dict` that has all the entries of the given dictionaries.
 
 

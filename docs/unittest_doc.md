@@ -1,6 +1,13 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
-<a name="#unittest_toolchain"></a>
+Unit testing support.
+
+Unlike most Skylib files, this exports two modules: `unittest` which contains
+functions to declare and define unit tests, and `asserts` which contains the
+assertions used to within tests.
+
+
+<a id="#unittest_toolchain"></a>
 
 ## unittest_toolchain
 
@@ -15,17 +22,17 @@ unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unitte
 
 
 | Name  | Description | Type | Mandatory | Default |
-| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
-| name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
-| escape_chars_with |  Dictionary of characters that need escaping in test failure message to prefix appended to escape those characters. For example, <code>{"%": "%", "&gt;": "^"}</code> would replace <code>%</code> with <code>%%</code> and <code>&gt;</code> with <code>^&gt;</code> in the failure message before that is included in <code>success_templ</code>.   | <a href="https://bazel.build/docs/skylark/lib/dict.html">Dictionary: String -> String</a> | optional | {} |
-| escape_other_chars_with |  String to prefix every character in test failure message which is not a key in <code>escape_chars_with</code> before including that in <code>success_templ</code>. For example, <code>""</code> would prefix every character in the failure message (except those in the keys of <code>escape_chars_with</code>) with <code>\</code>.   | String | optional | "" |
-| failure_templ |  Test script template with a single <code>%s</code>. That placeholder is replaced with the lines in the failure message joined with the string specified in <code>join_with</code>. The resulting script should print the failure message and exit with non-zero status.   | String | required |  |
-| file_ext |  File extension for test script, including leading dot.   | String | required |  |
-| join_on |  String used to join the lines in the failure message before including the resulting string in the script specified in <code>failure_templ</code>.   | String | required |  |
-| success_templ |  Test script generated when the test passes. Should exit with status 0.   | String | required |  |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="unittest_toolchain-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
+| <a id="unittest_toolchain-escape_chars_with"></a>escape_chars_with |  Dictionary of characters that need escaping in test failure message to prefix appended to escape those characters. For example, <code>{"%": "%", "&gt;": "^"}</code> would replace <code>%</code> with <code>%%</code> and <code>&gt;</code> with <code>^&gt;</code> in the failure message before that is included in <code>success_templ</code>.   | <a href="https://bazel.build/docs/skylark/lib/dict.html">Dictionary: String -> String</a> | optional | {} |
+| <a id="unittest_toolchain-escape_other_chars_with"></a>escape_other_chars_with |  String to prefix every character in test failure message which is not a key in <code>escape_chars_with</code> before including that in <code>success_templ</code>. For example, <code>""</code> would prefix every character in the failure message (except those in the keys of <code>escape_chars_with</code>) with <code>\</code>.   | String | optional | "" |
+| <a id="unittest_toolchain-failure_templ"></a>failure_templ |  Test script template with a single <code>%s</code>. That placeholder is replaced with the lines in the failure message joined with the string specified in <code>join_with</code>. The resulting script should print the failure message and exit with non-zero status.   | String | required |  |
+| <a id="unittest_toolchain-file_ext"></a>file_ext |  File extension for test script, including leading dot.   | String | required |  |
+| <a id="unittest_toolchain-join_on"></a>join_on |  String used to join the lines in the failure message before including the resulting string in the script specified in <code>failure_templ</code>.   | String | required |  |
+| <a id="unittest_toolchain-success_templ"></a>success_templ |  Test script generated when the test passes. Should exit with status 0.   | String | required |  |
 
 
-<a name="#analysistest.make"></a>
+<a id="#analysistest.make"></a>
 
 ## analysistest.make
 
@@ -64,16 +71,21 @@ Recall that names of test rules must end in `_test`.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| impl |  The implementation function of the unit test.   |  none |
-| expect_failure |  If true, the analysis test will expect the target_under_test     to fail. Assertions can be made on the underlying failure using asserts.expect_failure   |  <code>False</code> |
-| attrs |  An optional dictionary to supplement the attrs passed to the     unit test's <code>rule()</code> constructor.   |  <code>{}</code> |
-| fragments |  An optional list of fragment names that can be used to give rules access to     language-specific parts of configuration.   |  <code>[]</code> |
-| config_settings |  A dictionary of configuration settings to change for the target under     test and its dependencies. This may be used to essentially change 'build flags' for     the target under test, and may thus be utilized to test multiple targets with different     flags in a single build   |  <code>{}</code> |
-| extra_target_under_test_aspects |  An optional list of aspects to apply to the target_under_test     in addition to those set up by default for the test harness itself.   |  <code>[]</code> |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.make-impl"></a>impl |  The implementation function of the unit test.   |  none |
+| <a id="analysistest.make-expect_failure"></a>expect_failure |  If true, the analysis test will expect the target_under_test to fail. Assertions can be made on the underlying failure using asserts.expect_failure   |  <code>False</code> |
+| <a id="analysistest.make-attrs"></a>attrs |  An optional dictionary to supplement the attrs passed to the unit test's <code>rule()</code> constructor.   |  <code>{}</code> |
+| <a id="analysistest.make-fragments"></a>fragments |  An optional list of fragment names that can be used to give rules access to language-specific parts of configuration.   |  <code>[]</code> |
+| <a id="analysistest.make-config_settings"></a>config_settings |  A dictionary of configuration settings to change for the target under test and its dependencies. This may be used to essentially change 'build flags' for the target under test, and may thus be utilized to test multiple targets with different flags in a single build   |  <code>{}</code> |
+| <a id="analysistest.make-extra_target_under_test_aspects"></a>extra_target_under_test_aspects |  An optional list of aspects to apply to the target_under_test in addition to those set up by default for the test harness itself.   |  <code>[]</code> |
+
+**RETURNS**
+
+A rule definition that should be stored in a global whose name ends in
+`_test`.
 
 
-<a name="#analysistest.begin"></a>
+<a id="#analysistest.begin"></a>
 
 ## analysistest.begin
 
@@ -93,11 +105,17 @@ test.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| ctx |  The Starlark context. Pass the implementation function's <code>ctx</code> argument     in verbatim.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.begin-ctx"></a>ctx |  The Starlark context. Pass the implementation function's <code>ctx</code> argument in verbatim.   |  none |
+
+**RETURNS**
+
+A test environment struct that must be passed to assertions and finally to
+`unittest.end`. Do not rely on internal details about the fields in this
+struct as it may change.
 
 
-<a name="#analysistest.end"></a>
+<a id="#analysistest.end"></a>
 
 ## analysistest.end
 
@@ -115,11 +133,15 @@ that the results are reported.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.end-env"></a>env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+
+**RETURNS**
+
+A list of providers needed to automatically register the analysis test result.
 
 
-<a name="#analysistest.fail"></a>
+<a id="#analysistest.fail"></a>
 
 ## analysistest.fail
 
@@ -133,12 +155,12 @@ Unconditionally causes the current test to fail.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| env |  The test environment returned by <code>unittest.begin</code>.   |  none |
-| msg |  The message to log describing the failure.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.fail-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| <a id="analysistest.fail-msg"></a>msg |  The message to log describing the failure.   |  none |
 
 
-<a name="#analysistest.target_actions"></a>
+<a id="#analysistest.target_actions"></a>
 
 ## analysistest.target_actions
 
@@ -152,11 +174,15 @@ Returns a list of actions registered by the target under test.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.target_actions-env"></a>env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+
+**RETURNS**
+
+A list of actions registered by the target under test
 
 
-<a name="#analysistest.target_bin_dir_path"></a>
+<a id="#analysistest.target_bin_dir_path"></a>
 
 ## analysistest.target_bin_dir_path
 
@@ -170,11 +196,15 @@ Returns ctx.bin_dir.path for the target under test.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.target_bin_dir_path-env"></a>env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+
+**RETURNS**
+
+Output bin dir path string.
 
 
-<a name="#analysistest.target_under_test"></a>
+<a id="#analysistest.target_under_test"></a>
 
 ## analysistest.target_under_test
 
@@ -188,11 +218,15 @@ Returns the target under test.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.target_under_test-env"></a>env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+
+**RETURNS**
+
+The target under test.
 
 
-<a name="#asserts.expect_failure"></a>
+<a id="#asserts.expect_failure"></a>
 
 ## asserts.expect_failure
 
@@ -210,12 +244,12 @@ This requires that the analysis test is created with `analysistest.make()` and
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
-| expected_failure_msg |  The error message to expect as a result of analysis failures.   |  <code>""</code> |
+| :------------- | :------------- | :------------- |
+| <a id="asserts.expect_failure-env"></a>env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+| <a id="asserts.expect_failure-expected_failure_msg"></a>expected_failure_msg |  The error message to expect as a result of analysis failures.   |  <code>""</code> |
 
 
-<a name="#asserts.equals"></a>
+<a id="#asserts.equals"></a>
 
 ## asserts.equals
 
@@ -229,14 +263,14 @@ Asserts that the given `expected` and `actual` values are equal.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| env |  The test environment returned by <code>unittest.begin</code>.   |  none |
-| expected |  The expected value of some computation.   |  none |
-| actual |  The actual value returned by some computation.   |  none |
-| msg |  An optional message that will be printed that describes the failure.     If omitted, a default will be used.   |  <code>None</code> |
+| :------------- | :------------- | :------------- |
+| <a id="asserts.equals-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| <a id="asserts.equals-expected"></a>expected |  The expected value of some computation.   |  none |
+| <a id="asserts.equals-actual"></a>actual |  The actual value returned by some computation.   |  none |
+| <a id="asserts.equals-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>None</code> |
 
 
-<a name="#asserts.false"></a>
+<a id="#asserts.false"></a>
 
 ## asserts.false
 
@@ -250,13 +284,13 @@ Asserts that the given `condition` is false.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| env |  The test environment returned by <code>unittest.begin</code>.   |  none |
-| condition |  A value that will be evaluated in a Boolean context.   |  none |
-| msg |  An optional message that will be printed that describes the failure.     If omitted, a default will be used.   |  <code>"Expected condition to be false, but was true."</code> |
+| :------------- | :------------- | :------------- |
+| <a id="asserts.false-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| <a id="asserts.false-condition"></a>condition |  A value that will be evaluated in a Boolean context.   |  none |
+| <a id="asserts.false-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>"Expected condition to be false, but was true."</code> |
 
 
-<a name="#asserts.set_equals"></a>
+<a id="#asserts.set_equals"></a>
 
 ## asserts.set_equals
 
@@ -270,14 +304,14 @@ Asserts that the given `expected` and `actual` sets are equal.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| env |  The test environment returned by <code>unittest.begin</code>.   |  none |
-| expected |  The expected set resulting from some computation.   |  none |
-| actual |  The actual set returned by some computation.   |  none |
-| msg |  An optional message that will be printed that describes the failure.     If omitted, a default will be used.   |  <code>None</code> |
+| :------------- | :------------- | :------------- |
+| <a id="asserts.set_equals-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| <a id="asserts.set_equals-expected"></a>expected |  The expected set resulting from some computation.   |  none |
+| <a id="asserts.set_equals-actual"></a>actual |  The actual set returned by some computation.   |  none |
+| <a id="asserts.set_equals-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>None</code> |
 
 
-<a name="#asserts.new_set_equals"></a>
+<a id="#asserts.new_set_equals"></a>
 
 ## asserts.new_set_equals
 
@@ -291,14 +325,14 @@ Asserts that the given `expected` and `actual` sets are equal.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| env |  The test environment returned by <code>unittest.begin</code>.   |  none |
-| expected |  The expected set resulting from some computation.   |  none |
-| actual |  The actual set returned by some computation.   |  none |
-| msg |  An optional message that will be printed that describes the failure.     If omitted, a default will be used.   |  <code>None</code> |
+| :------------- | :------------- | :------------- |
+| <a id="asserts.new_set_equals-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| <a id="asserts.new_set_equals-expected"></a>expected |  The expected set resulting from some computation.   |  none |
+| <a id="asserts.new_set_equals-actual"></a>actual |  The actual set returned by some computation.   |  none |
+| <a id="asserts.new_set_equals-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>None</code> |
 
 
-<a name="#asserts.true"></a>
+<a id="#asserts.true"></a>
 
 ## asserts.true
 
@@ -312,13 +346,13 @@ Asserts that the given `condition` is true.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| env |  The test environment returned by <code>unittest.begin</code>.   |  none |
-| condition |  A value that will be evaluated in a Boolean context.   |  none |
-| msg |  An optional message that will be printed that describes the failure.     If omitted, a default will be used.   |  <code>"Expected condition to be true, but was false."</code> |
+| :------------- | :------------- | :------------- |
+| <a id="asserts.true-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| <a id="asserts.true-condition"></a>condition |  A value that will be evaluated in a Boolean context.   |  none |
+| <a id="asserts.true-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>"Expected condition to be true, but was false."</code> |
 
 
-<a name="#register_unittest_toolchains"></a>
+<a id="#register_unittest_toolchains"></a>
 
 ## register_unittest_toolchains
 
@@ -328,11 +362,9 @@ register_unittest_toolchains()
 
 Registers the toolchains for unittest users.
 
-**PARAMETERS**
 
 
-
-<a name="#unittest.make"></a>
+<a id="#unittest.make"></a>
 
 ## unittest.make
 
@@ -370,12 +402,17 @@ Recall that names of test rules must end in `_test`.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| impl |  The implementation function of the unit test.   |  none |
-| attrs |  An optional dictionary to supplement the attrs passed to the     unit test's <code>rule()</code> constructor.   |  <code>{}</code> |
+| :------------- | :------------- | :------------- |
+| <a id="unittest.make-impl"></a>impl |  The implementation function of the unit test.   |  none |
+| <a id="unittest.make-attrs"></a>attrs |  An optional dictionary to supplement the attrs passed to the unit test's <code>rule()</code> constructor.   |  <code>{}</code> |
+
+**RETURNS**
+
+A rule definition that should be stored in a global whose name ends in
+`_test`.
 
 
-<a name="#unittest.suite"></a>
+<a id="#unittest.suite"></a>
 
 ## unittest.suite
 
@@ -426,12 +463,12 @@ name each target.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| name |  The name of the <code>test_suite</code> target, and the prefix of all the test     target names.   |  none |
-| test_rules |  A list of test rules defines by <code>unittest.test</code>.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="unittest.suite-name"></a>name |  The name of the <code>test_suite</code> target, and the prefix of all the test target names.   |  none |
+| <a id="unittest.suite-test_rules"></a>test_rules |  A list of test rules defines by <code>unittest.test</code>.   |  none |
 
 
-<a name="#unittest.begin"></a>
+<a id="#unittest.begin"></a>
 
 ## unittest.begin
 
@@ -451,11 +488,17 @@ test.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| ctx |  The Starlark context. Pass the implementation function's <code>ctx</code> argument     in verbatim.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="unittest.begin-ctx"></a>ctx |  The Starlark context. Pass the implementation function's <code>ctx</code> argument in verbatim.   |  none |
+
+**RETURNS**
+
+A test environment struct that must be passed to assertions and finally to
+`unittest.end`. Do not rely on internal details about the fields in this
+struct as it may change.
 
 
-<a name="#unittest.end"></a>
+<a id="#unittest.end"></a>
 
 ## unittest.end
 
@@ -473,11 +516,15 @@ that the results are reported.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="unittest.end-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+
+**RETURNS**
+
+A list of providers needed to automatically register the test result.
 
 
-<a name="#unittest.fail"></a>
+<a id="#unittest.fail"></a>
 
 ## unittest.fail
 
@@ -491,8 +538,8 @@ Unconditionally causes the current test to fail.
 
 
 | Name  | Description | Default Value |
-| :-------------: | :-------------: | :-------------: |
-| env |  The test environment returned by <code>unittest.begin</code>.   |  none |
-| msg |  The message to log describing the failure.   |  none |
+| :------------- | :------------- | :------------- |
+| <a id="unittest.fail-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| <a id="unittest.fail-msg"></a>msg |  The message to log describing the failure.   |  none |
 
 
