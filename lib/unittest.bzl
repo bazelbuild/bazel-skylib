@@ -211,7 +211,8 @@ def _make_analysis_test(
         fragments = [],
         config_settings = {},
         extra_target_under_test_aspects = [],
-        doc = ""):
+        doc = "",
+        name = None):
     """Creates an analysis test rule from its implementation function.
 
     An analysis test verifies the behavior of a "real" rule target by examining
@@ -252,6 +253,7 @@ def _make_analysis_test(
       extra_target_under_test_aspects: An optional list of aspects to apply to the target_under_test
           in addition to those set up by default for the test harness itself.
       doc: A description of the rule that can be extracted by documentation generating tools.
+      name: If set, the rule class will be exported with this name
 
     Returns:
       A rule definition that should be stored in a global whose name ends in
@@ -285,6 +287,7 @@ def _make_analysis_test(
         test = True,
         toolchains = [TOOLCHAIN_TYPE],
         analysis_test = True,
+        name = name,
     )
 
 def _suite(name, *test_rules):
