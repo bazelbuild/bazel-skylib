@@ -20,14 +20,13 @@ do, but they run the wrapped binary directly, instead of through Bash, so they
 don't depend on Bash and work with --shell_exectuable="".
 """
 
-load("//rules/private:copy_file_private.bzl", "copy_bash", "copy_cmd")
-
-def _impl_rule(ctx, is_windows):
+def _impl_rule(ctx):
     out = ctx.actions.declare_file(ctx.attr.out)
-    if is_windows:
-        copy_cmd(ctx, ctx.file.src, out)
-    else:
-        copy_bash(ctx, ctx.file.src, out)
+    ctx.actions.symlink(
+        target_file = ctx.file.src,
+        output = out,
+        is_executable = True,
+    )
     runfiles = ctx.runfiles(files = ctx.files.data)
 
     # Bazel 4.x LTS does not support `merge_all`.
@@ -48,79 +47,39 @@ def _impl_rule(ctx, is_windows):
         runfiles = runfiles,
     )
 
-def _impl(ctx):
-    return _impl_rule(ctx, ctx.attr.is_windows)
-
 _ATTRS = {
     "src": attr.label(
         executable = True,
         allow_single_file = True,
         mandatory = True,
         cfg = "host",
+        doc = "path of the pre-built executable",
     ),
     "data": attr.label_list(allow_files = True),
     # "out" is attr.string instead of attr.output, so that it is select()'able.
-    "out": attr.string(mandatory = True),
-    "is_windows": attr.bool(mandatory = True),
+    "out": attr.string(mandatory = True, doc = "An output name for the copy of the binary"),
 }
 
-_native_binary = rule(
-    implementation = _impl,
+native_binary = rule(
+    implementation = _impl_rule,
     attrs = _ATTRS,
     executable = True,
+    doc = """
+Wraps a pre-built binary or script with a binary rule.
+
+You can "bazel run" this rule like any other binary rule, and use it as a tool
+in genrule.tools for example. You can also augment the binary with runfiles.
+""",
 )
 
-_native_test = rule(
-    implementation = _impl,
+native_test = rule(
+    implementation = _impl_rule,
     attrs = _ATTRS,
     test = True,
+    doc = """
+Wraps a pre-built binary or script with a test rule.
+
+You can "bazel test" this rule like any other test rule. You can also augment
+the binary with runfiles.
+""",
 )
-
-def native_binary(name, src, out, data = None, **kwargs):
-    """Wraps a pre-built binary or script with a binary rule.
-
-    You can "bazel run" this rule like any other binary rule, and use it as a tool in genrule.tools for example. You can also augment the binary with runfiles.
-
-    Args:
-      name: The name of the rule.
-      src: label; path of the pre-built executable
-      out: output; an output name for the copy of the binary. (Bazel requires that this rule make a copy of 'src'.)
-      data: list of labels; data dependencies
-      **kwargs: The <a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-binaries">common attributes for binaries</a>.
-    """
-    _native_binary(
-        name = name,
-        src = src,
-        out = out,
-        data = data,
-        is_windows = select({
-            "@bazel_tools//src/conditions:host_windows": True,
-            "//conditions:default": False,
-        }),
-        **kwargs
-    )
-
-def native_test(name, src, out, data = None, **kwargs):
-    """Wraps a pre-built binary or script with a test rule.
-
-    You can "bazel test" this rule like any other test rule. You can also augment the binary with
-    runfiles.
-
-    Args:
-      name: The name of the test rule.
-      src: label; path of the pre-built executable
-      out: output; an output name for the copy of the binary. (Bazel requires that this rule make a copy of 'src'.)
-      data: list of labels; data dependencies
-      **kwargs: The <a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
-    """
-    _native_test(
-        name = name,
-        src = src,
-        out = out,
-        data = data,
-        is_windows = select({
-            "@bazel_tools//src/conditions:host_windows": True,
-            "//conditions:default": False,
-        }),
-        **kwargs
-    )
