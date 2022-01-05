@@ -31,10 +31,8 @@ def _impl_rule(ctx, is_windows):
     return DefaultInfo(
         executable = out,
         files = depset([out]),
-        runfiles = ctx.runfiles(
-            files = [out],
-            collect_data = True,
-            collect_default = True,
+        runfiles = ctx.runfiles(files = ctx.files.data).merge(
+            ctx.attr.src[DefaultInfo].default_runfiles,
         ),
     )
 
