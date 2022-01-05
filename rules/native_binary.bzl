@@ -28,12 +28,16 @@ def _impl_rule(ctx, is_windows):
         copy_cmd(ctx, ctx.file.src, out)
     else:
         copy_bash(ctx, ctx.file.src, out)
+    runfiles = ctx.runfiles(files = ctx.files.data)
+    # Not using merge_all because it is not available in Bazel LTS 4.x
+    for d in ctx.attr.data:
+        runfiles = runfiles.merge(d[DefaultInfo].default_runfiles)
+    runfiles = runfiles.merge(ctx.attr.src[DefaultInfo].default_runfiles)
+
     return DefaultInfo(
         executable = out,
         files = depset([out]),
-        runfiles = ctx.runfiles(files = ctx.files.data).merge(
-            ctx.attr.src[DefaultInfo].default_runfiles,
-        ),
+        runfiles = runfiles,
     )
 
 def _impl(ctx):
