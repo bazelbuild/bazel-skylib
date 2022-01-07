@@ -206,6 +206,7 @@ _action_retrieving_aspect = aspect(
 # TODO(cparsons): Provide more full documentation on analysis testing in README.
 def _make_analysis_test(
         impl,
+        doc = "",
         expect_failure = False,
         attrs = {},
         fragments = [],
@@ -238,6 +239,7 @@ def _make_analysis_test(
 
     Args:
       impl: The implementation function of the unit test.
+      doc: A description of the rule that can be extracted by documentation generating tools.
       expect_failure: If true, the analysis test will expect the target_under_test
           to fail. Assertions can be made on the underlying failure using asserts.expect_failure
       attrs: An optional dictionary to supplement the attrs passed to the
@@ -277,6 +279,7 @@ def _make_analysis_test(
 
     return rule(
         impl,
+        doc = doc,
         attrs = attrs,
         fragments = fragments,
         test = True,
