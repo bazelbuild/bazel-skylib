@@ -72,7 +72,7 @@ def native_binary(name, src, out, data = None, **kwargs):
     You can "bazel run" this rule like any other binary rule, and use it as a tool in genrule.tools for example. You can also augment the binary with runfiles.
 
     Args:
-      name: The name of the test rule.
+      name: The name of the rule.
       src: label; path of the pre-built executable
       out: output; an output name for the copy of the binary. (Bazel requires that this rule make a copy of 'src'.)
       data: list of labels; data dependencies
