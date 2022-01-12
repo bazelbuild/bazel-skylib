@@ -109,9 +109,9 @@ native_test(
 
 native_test(
     name = "data_from_binary_test",
+    src = ":assertdata_with_runfiles",
     # On Windows we need the ".exe" extension.
     # On other platforms the extension doesn't matter.
     # Therefore we can use ".exe" on every platform.
     out = "data_from_binary_test.exe",
-    src = ":assertdata_with_runfiles",
 )
