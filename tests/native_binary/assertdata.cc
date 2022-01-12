@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <stdio.h>
-#include <unistd.h>
 
 #include <memory>
 #include <string>
@@ -35,12 +34,12 @@ int main(int argc, char **argv) {
   // native_test.
   std::string path =
       runfiles->Rlocation("bazel_skylib/tests/native_binary/testdata.txt");
-  if (access(path.c_str(), F_OK) != 0) {
+  FILE *f = fopen(path.c_str(), "rt");
+  if (!f) {
     fprintf(stderr, "ERROR(" __FILE__ ":%d): Could not find runfile '%s'\n",
             __LINE__, path.c_str());
   }
 
-  FILE *f = fopen(path.c_str(), "rt");
   char buf[6];
   size_t s = fread(buf, 1, 5, f);
   fclose(f);
