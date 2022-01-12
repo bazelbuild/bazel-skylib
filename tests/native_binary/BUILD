@@ -21,6 +21,15 @@ cc_binary(
     # rule.
 )
 
+cc_binary(
+    name = "assertdata_with_runfiles",
+    srcs = ["assertdata.cc"],
+    # This version depends on runfiles directly, to ensure runfiles from the
+    # binary are picked up by native_test/native_binary
+    data = ["testdata.txt"],
+    deps = ["@bazel_tools//tools/cpp/runfiles"],
+)
+
 # A rule that copies "assertarg"'s output as an opaque executable, simulating a
 # binary that's not built from source and needs to be wrapped in native_binary.
 copy_file(
@@ -51,11 +60,7 @@ _ARGS = [
     "$(location testdata.txt) $$(location testdata.txt) $(location testdata.txt)",
     "'$(location testdata.txt) $$(location testdata.txt) $(location testdata.txt)'",
     "$$TEST_SRCDIR",
-
-    # TODO(laszlocsomor): uncomment this (and its counterpart in assertarg.cc)
-    # after https://github.com/bazelbuild/bazel/issues/6622 is resolved and the
-    # Bash-less test wrapper is the default on Windows.
-    # "$${TEST_SRCDIR}",
+    "$${TEST_SRCDIR}",
 ]
 
 native_binary(
@@ -100,4 +105,13 @@ native_test(
     # Therefore we can use ".exe" on every platform.
     out = "data_test.exe",
     data = ["testdata.txt"],
+)
+
+native_test(
+    name = "data_from_binary_test",
+    # On Windows we need the ".exe" extension.
+    # On other platforms the extension doesn't matter.
+    # Therefore we can use ".exe" on every platform.
+    out = "data_from_binary_test.exe",
+    src = ":assertdata_with_runfiles",
 )

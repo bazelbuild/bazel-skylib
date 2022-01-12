@@ -25,12 +25,7 @@ int main(int argc, char** argv) {
     "tests/native_binary/testdata.txt",
     "tests/native_binary/testdata.txt $(location testdata.txt) tests/native_binary/testdata.txt",
     "$TEST_SRCDIR",
-
-    // TODO(laszlocsomor): uncomment this (and its counterpart in the BUILD
-    // file) after https://github.com/bazelbuild/bazel/issues/6622 is resolved
-    // and the Bash-less test wrapper is the default on Windows.
-    // "${TEST_SRCDIR}",
-
+    "${TEST_SRCDIR}",
     "",
   };
 
