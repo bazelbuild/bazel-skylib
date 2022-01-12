@@ -26,7 +26,7 @@ You can "bazel run" this rule like any other binary rule, and use it as a tool i
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="native_binary-name"></a>name |  The name of the test rule.   |  none |
+| <a id="native_binary-name"></a>name |  The name of the rule.   |  none |
 | <a id="native_binary-src"></a>src |  label; path of the pre-built executable   |  none |
 | <a id="native_binary-out"></a>out |  output; an output name for the copy of the binary. (Bazel requires that this rule make a copy of 'src'.)   |  none |
 | <a id="native_binary-data"></a>data |  list of labels; data dependencies   |  <code>None</code> |
