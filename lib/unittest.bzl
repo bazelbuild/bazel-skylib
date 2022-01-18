@@ -564,6 +564,78 @@ def _target_under_test(env):
             fail("test rule does not have a target_under_test")
     return result
 
+def _loading_test_impl(ctx):
+    tc = ctx.toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
+    content = tc.success_templ
+    if ctx.attr.failure_message:
+        content = tc.failure_templ % ctx.attr.failure_message
+
+    testbin = ctx.actions.declare_file("loading_test_" + ctx.label.name + tc.file_ext)
+    ctx.actions.write(
+        output = testbin,
+        content = content,
+        is_executable = True,
+    )
+    return [DefaultInfo(executable = testbin)]
+
+_loading_test = rule(
+    implementation = _loading_test_impl,
+    attrs = {
+        "failure_message": attr.string(),
+    },
+    toolchains = [TOOLCHAIN_TYPE],
+    test = True,
+)
+
+def _loading_make(name):
+    """Creates a loading phase test environment and test_suite.
+
+    Args:
+       name: name of the suite of tests to create
+
+    Returns:
+       loading phase environment passed to other loadingtest functions
+    """
+    native.test_suite(
+        name = name + "_tests",
+        tags = [name + "_test_case"],
+    )
+    return struct(name = name)
+
+def _loading_suite(env):
+    """Creates a test suite for loading phase tests.
+
+    Args:
+       env: env created with loadingtest.make
+
+    Returns:
+       None, creates test_suite
+    """
+    pass
+
+def _loading_asserts(env, test_case, expected, actual):
+    """Creates a test case for asserting state at LOADING phase.
+
+    Args:
+      env:       Loading test env created from loadingtest.make
+      test_case: Name of the test case
+      expected:  Expected value to test
+      actual:    Actual value received.
+
+    Returns:
+      None, creates test case
+    """
+
+    msg = None
+    if expected != actual:
+        msg = 'Expected "%s", but got "%s"' % (expected, actual)
+
+    _loading_test(
+        name = "%s_%s" % (env.name, test_case),
+        failure_message = msg,
+        tags = [env.name + "_test_case"],
+    )
+
 asserts = struct(
     expect_failure = _expect_failure,
     equals = _assert_equals,
@@ -589,4 +661,10 @@ analysistest = struct(
     target_actions = _target_actions,
     target_bin_dir_path = _target_bin_dir_path,
     target_under_test = _target_under_test,
+)
+
+loadingtest = struct(
+    make = _loading_make,
+    asserts = _loading_asserts,
+    suite = _loading_suite,
 )

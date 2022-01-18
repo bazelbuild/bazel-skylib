@@ -15,7 +15,7 @@
 """Unit tests for unittest.bzl."""
 
 load("//lib:partial.bzl", "partial")
-load("//lib:unittest.bzl", "analysistest", "asserts", "unittest")
+load("//lib:unittest.bzl", "analysistest", "asserts", "loadingtest", "unittest")
 
 ###################################
 ####### basic_failing_test ########
@@ -307,6 +307,13 @@ inspect_output_dirs_test = analysistest.make(
     },
 )
 
+def _loading_phase_test(env):
+    loadingtest.asserts(env, "self_glob", ["unittest_tests.bzl"], native.glob(["unittest_tests.bzl"]))
+
+    # now use our own calls to assert we created a test case rule and test_suite for it.
+    loadingtest.asserts(env, "test_exists", True, native.existing_rule(env.name + "_self_glob") != None)
+    loadingtest.asserts(env, "suite_exists", True, native.existing_rule(env.name + "_tests") != None)
+
 #########################################
 
 # buildifier: disable=unnamed-macro
@@ -376,3 +383,6 @@ def unittest_passing_tests_suite():
         name = "inspect_output_dirs_fake_target",
         tags = ["manual"],
     )
+
+    loading_env = loadingtest.make("selftest")
+    _loading_phase_test(loading_env)
