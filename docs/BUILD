@@ -74,6 +74,13 @@ stardoc(
 )
 
 stardoc(
+    name = "subpackages_docs",
+    out = "subpackages_doc_gen.md",
+    input = "//lib:subpackages.bzl",
+    deps = ["//lib:subpackages"],
+)
+
+stardoc(
     name = "types_docs",
     out = "types_doc_gen.md",
     input = "//lib:types.bzl",
