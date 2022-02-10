@@ -156,9 +156,6 @@ def _expect_doesnt_match(ctx):
     asserts.equals(env, False, attrval)
     return analysistest.end(env)
 
-def _config_setting_group_test(name, config_settings):
-    return analysistest.make()
-
 ###################################################
 # and_config_setting_group_matches_test
 ###################################################

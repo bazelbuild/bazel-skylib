@@ -15,7 +15,7 @@
 """Unit tests for unittest.bzl."""
 
 load("//lib:partial.bzl", "partial")
-load("//lib:unittest.bzl", "analysistest", "asserts", "unittest")
+load("//lib:unittest.bzl", "analysistest", "asserts", "loadingtest", "unittest")
 
 ###################################
 ####### basic_failing_test ########
@@ -122,7 +122,7 @@ def _failure_testing_test(ctx):
     return analysistest.end(env)
 
 def _failure_testing_fake_rule(ctx):
-    _ignore = [ctx]
+    _ignore = [ctx]  # @unused
     fail("This rule should never work")
 
 failure_testing_fake_rule = rule(
@@ -146,7 +146,7 @@ def _fail_unexpected_passing_test(ctx):
     return analysistest.end(env)
 
 def _fail_unexpected_passing_fake_rule(ctx):
-    _ignore = [ctx]
+    _ignore = [ctx]  # @unused
     return []
 
 fail_unexpected_passing_fake_rule = rule(
@@ -227,6 +227,7 @@ _AddedByAspectInfo = provider(
 )
 
 def _example_aspect_impl(target, ctx):
+    _ignore = [target, ctx]  # @unused
     return [
         _AddedByAspectInfo(value = "attached by aspect"),
     ]
@@ -307,6 +308,13 @@ inspect_output_dirs_test = analysistest.make(
     },
 )
 
+def _loading_phase_test(env):
+    loadingtest.equals(env, "self_glob", ["unittest_tests.bzl"], native.glob(["unittest_tests.bzl"]))
+
+    # now use our own calls to assert we created a test case rule and test_suite for it.
+    loadingtest.equals(env, "test_exists", True, native.existing_rule(env.name + "_self_glob") != None)
+    loadingtest.equals(env, "suite_exists", True, native.existing_rule(env.name + "_tests") != None)
+
 #########################################
 
 # buildifier: disable=unnamed-macro
@@ -376,3 +384,6 @@ def unittest_passing_tests_suite():
         name = "inspect_output_dirs_fake_target",
         tags = ["manual"],
     )
+
+    loading_env = loadingtest.make("selftest")
+    _loading_phase_test(loading_env)
