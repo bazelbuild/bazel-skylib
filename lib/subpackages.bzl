@@ -14,13 +14,13 @@
 
 """Skylib module containing common functions for working with native.subpackages()
 """
-_SUBACKAGES_SUPPORTED = "subpackages" in dir(native)
+_SUBPACKAGES_SUPPORTED = hasattr(native, "subpackages")
 
 def _supported():
-    return _SUBACKAGES_SUPPORTED
+    return _SUBPACKAGES_SUPPORTED
 
 def _check_supported():
-    if not _SUBACKAGES_SUPPORTED:
+    if not _SUBPACKAGES_SUPPORTED:
         fail("native.subpackages not supported.")
 
 def _all(exclude = [], allow_empty = False, fully_qualified = True):
@@ -31,13 +31,13 @@ def _all(exclude = [], allow_empty = False, fully_qualified = True):
     Example:
     Assuming the following BUILD files exist:
 
-    BUILD
-    foo/BUILD
-    foo/sub/BUILD
-    bar/BUILD
-    baz/deep/dir/BUILD
+        BUILD
+        foo/BUILD
+        foo/sub/BUILD
+        bar/BUILD
+        baz/deep/dir/BUILD
 
-    If the current package is 'BUILD' all() will return ['//foo', '//bar',
+    If the current package is '//' all() will return ['//foo', '//bar',
     '//baz/deep/dir'].  //foo/sub is not included because it is a direct
     subpackage of '//foo' not '//'
 

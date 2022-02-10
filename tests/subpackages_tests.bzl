@@ -41,8 +41,11 @@ def _all_test(env):
         "write_file",
     ]
 
+    # subpackages is always in sorted order:
+    all_pkgs = sorted(all_pkgs)
+
     # test defaults
-    loadingtest.asserts(
+    loadingtest.equals(
         env,
         "all",
         all_pkgs,
@@ -50,7 +53,7 @@ def _all_test(env):
     )
 
     # test exclusion
-    loadingtest.asserts(
+    loadingtest.equals(
         env,
         "all_w_exclude",
         filtered_pkgs,
@@ -59,8 +62,8 @@ def _all_test(env):
 
 def _exists_test(env):
     """Unit tests for subpackages.exists."""
-    loadingtest.asserts(env, "exists_yes", True, subpackages.exists("copy_file"))
-    loadingtest.asserts(env, "exists_no", False, subpackages.exists("never_existed"))
+    loadingtest.equals(env, "exists_yes", True, subpackages.exists("copy_file"))
+    loadingtest.equals(env, "exists_no", False, subpackages.exists("never_existed"))
 
 def subpackages_test_suite():
     """Creates the test targets and test suite for subpackages.bzl tests."""
