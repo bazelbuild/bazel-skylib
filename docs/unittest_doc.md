@@ -37,7 +37,7 @@ unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unitte
 ## analysistest.make
 
 <pre>
-analysistest.make(<a href="#analysistest.make-impl">impl</a>, <a href="#analysistest.make-expect_failure">expect_failure</a>, <a href="#analysistest.make-attrs">attrs</a>, <a href="#analysistest.make-fragments">fragments</a>, <a href="#analysistest.make-config_settings">config_settings</a>,
+analysistest.make(<a href="#analysistest.make-impl">impl</a>, <a href="#analysistest.make-doc">doc</a>, <a href="#analysistest.make-expect_failure">expect_failure</a>, <a href="#analysistest.make-attrs">attrs</a>, <a href="#analysistest.make-fragments">fragments</a>, <a href="#analysistest.make-config_settings">config_settings</a>,
                   <a href="#analysistest.make-extra_target_under_test_aspects">extra_target_under_test_aspects</a>)
 </pre>
 
@@ -73,6 +73,7 @@ Recall that names of test rules must end in `_test`.
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="analysistest.make-impl"></a>impl |  The implementation function of the unit test.   |  none |
+| <a id="analysistest.make-doc"></a>doc |  A description of the rule that can be extracted by documentation generating tools.   |  <code>""</code> |
 | <a id="analysistest.make-expect_failure"></a>expect_failure |  If true, the analysis test will expect the target_under_test to fail. Assertions can be made on the underlying failure using asserts.expect_failure   |  <code>False</code> |
 | <a id="analysistest.make-attrs"></a>attrs |  An optional dictionary to supplement the attrs passed to the unit test's <code>rule()</code> constructor.   |  <code>{}</code> |
 | <a id="analysistest.make-fragments"></a>fragments |  An optional list of fragment names that can be used to give rules access to language-specific parts of configuration.   |  <code>[]</code> |
