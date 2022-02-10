@@ -374,12 +374,12 @@ Creates a loading phase test environment and test_suite.
 loading phase environment passed to other loadingtest functions
 
 
-<a id="#loadingtest.asserts"></a>
+<a id="#loadingtest.equals"></a>
 
-## loadingtest.asserts
+## loadingtest.equals
 
 <pre>
-loadingtest.asserts(<a href="#loadingtest.asserts-env">env</a>, <a href="#loadingtest.asserts-test_case">test_case</a>, <a href="#loadingtest.asserts-expected">expected</a>, <a href="#loadingtest.asserts-actual">actual</a>)
+loadingtest.equals(<a href="#loadingtest.equals-env">env</a>, <a href="#loadingtest.equals-test_case">test_case</a>, <a href="#loadingtest.equals-expected">expected</a>, <a href="#loadingtest.equals-actual">actual</a>)
 </pre>
 
 Creates a test case for asserting state at LOADING phase.
@@ -389,36 +389,14 @@ Creates a test case for asserting state at LOADING phase.
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="loadingtest.asserts-env"></a>env |  Loading test env created from loadingtest.make   |  none |
-| <a id="loadingtest.asserts-test_case"></a>test_case |  Name of the test case   |  none |
-| <a id="loadingtest.asserts-expected"></a>expected |  Expected value to test   |  none |
-| <a id="loadingtest.asserts-actual"></a>actual |  Actual value received.   |  none |
+| <a id="loadingtest.equals-env"></a>env |  Loading test env created from loadingtest.make   |  none |
+| <a id="loadingtest.equals-test_case"></a>test_case |  Name of the test case   |  none |
+| <a id="loadingtest.equals-expected"></a>expected |  Expected value to test   |  none |
+| <a id="loadingtest.equals-actual"></a>actual |  Actual value received.   |  none |
 
 **RETURNS**
 
 None, creates test case
-
-
-<a id="#loadingtest.suite"></a>
-
-## loadingtest.suite
-
-<pre>
-loadingtest.suite(<a href="#loadingtest.suite-env">env</a>)
-</pre>
-
-Creates a test suite for loading phase tests.
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="loadingtest.suite-env"></a>env |  env created with loadingtest.make   |  none |
-
-**RETURNS**
-
-None, creates test_suite
 
 
 <a id="#register_unittest_toolchains"></a>
