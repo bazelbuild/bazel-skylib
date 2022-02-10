@@ -206,12 +206,12 @@ _action_retrieving_aspect = aspect(
 # TODO(cparsons): Provide more full documentation on analysis testing in README.
 def _make_analysis_test(
         impl,
-        doc = "",
         expect_failure = False,
         attrs = {},
         fragments = [],
         config_settings = {},
-        extra_target_under_test_aspects = []):
+        extra_target_under_test_aspects = [],
+        doc = ""):
     """Creates an analysis test rule from its implementation function.
 
     An analysis test verifies the behavior of a "real" rule target by examining
@@ -239,7 +239,6 @@ def _make_analysis_test(
 
     Args:
       impl: The implementation function of the unit test.
-      doc: A description of the rule that can be extracted by documentation generating tools.
       expect_failure: If true, the analysis test will expect the target_under_test
           to fail. Assertions can be made on the underlying failure using asserts.expect_failure
       attrs: An optional dictionary to supplement the attrs passed to the
@@ -252,6 +251,7 @@ def _make_analysis_test(
           flags in a single build
       extra_target_under_test_aspects: An optional list of aspects to apply to the target_under_test
           in addition to those set up by default for the test harness itself.
+      doc: A description of the rule that can be extracted by documentation generating tools.
 
     Returns:
       A rule definition that should be stored in a global whose name ends in
