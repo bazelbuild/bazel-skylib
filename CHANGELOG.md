@@ -2,8 +2,8 @@ Release 1.2.0
 
 **New Features**
 
--   The unittest toolchain has has better support for special characters in
-    failure messages (#320)
+-   The unittest toolchain has better support for special characters in failure
+    messages (#320)
 -   Use portable Bash shebangs for BSD compatibility (#329)
 -   Add loadingtest - tests which evaluate during the loading phase (#347)
 
