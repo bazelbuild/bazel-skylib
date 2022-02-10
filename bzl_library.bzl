@@ -45,10 +45,6 @@ def _bzl_library_impl(ctx):
 bzl_library = rule(
     implementation = _bzl_library_impl,
     attrs = {
-        "srcs": attr.label_list(
-            allow_files = [".bzl"],
-            doc = "List of `.bzl` files that are processed to create this target.",
-        ),
         "deps": attr.label_list(
             allow_files = [".bzl"],
             providers = [
@@ -56,6 +52,10 @@ bzl_library = rule(
             ],
             doc = """List of other `bzl_library` targets that are required by the
 Starlark files listed in `srcs`.""",
+        ),
+        "srcs": attr.label_list(
+            allow_files = [".bzl"],
+            doc = "List of `.bzl` files that are processed to create this target.",
         ),
     },
     doc = """Creates a logical collection of Starlark .bzl files.

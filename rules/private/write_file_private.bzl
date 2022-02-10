@@ -46,10 +46,10 @@ def _ximpl(ctx):
     return _common_impl(ctx, ctx.attr.is_windows, True)
 
 _ATTRS = {
-    "out": attr.output(mandatory = True),
     "content": attr.string_list(mandatory = False, allow_empty = True),
-    "newline": attr.string(values = ["unix", "windows", "auto"], default = "auto"),
     "is_windows": attr.bool(mandatory = True),
+    "newline": attr.string(values = ["unix", "windows", "auto"], default = "auto"),
+    "out": attr.output(mandatory = True),
 }
 
 _write_file = rule(

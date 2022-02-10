@@ -14,8 +14,8 @@
 
 """Unit tests for build_test.bzl."""
 
-load("//rules:build_test.bzl", "build_test")
 load("@rules_cc//cc:defs.bzl", "cc_library")
+load("//rules:build_test.bzl", "build_test")
 
 # buildifier: disable=unnamed-macro
 def build_test_test_suite():

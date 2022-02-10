@@ -13,9 +13,9 @@
 # limitations under the License.
 """Unit tests for types.bzl."""
 
+load("//lib:new_sets.bzl", "sets")
 load("//lib:types.bzl", "types")
 load("//lib:unittest.bzl", "asserts", "unittest")
-load("//lib:new_sets.bzl", "sets")
 
 def _a_function():
     """A dummy function for testing."""

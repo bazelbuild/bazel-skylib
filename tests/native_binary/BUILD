@@ -1,6 +1,6 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
 load("//rules:copy_file.bzl", "copy_file")
 load("//rules:native_binary.bzl", "native_binary", "native_test")
-load("@rules_cc//cc:defs.bzl", "cc_binary")
 
 package(
     default_testonly = 1,

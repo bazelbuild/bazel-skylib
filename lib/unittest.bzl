@@ -63,6 +63,27 @@ def _unittest_toolchain_impl(ctx):
 unittest_toolchain = rule(
     implementation = _unittest_toolchain_impl,
     attrs = {
+        "escape_chars_with": attr.string_dict(
+            doc = (
+                "Dictionary of characters that need escaping in " +
+                "test failure message to prefix appended to escape " +
+                "those characters. For example, " +
+                '`{"%": "%", ">": "^"}` would replace `%` with ' +
+                "`%%` and `>` with `^>` in the failure message " +
+                "before that is included in `success_templ`."
+            ),
+        ),
+        "escape_other_chars_with": attr.string(
+            default = "",
+            doc = (
+                "String to prefix every character in test failure " +
+                "message which is not a key in `escape_chars_with` " +
+                "before including that in `success_templ`. For " +
+                'example, `"\"` would prefix every character in ' +
+                "the failure message (except those in the keys of " +
+                "`escape_chars_with`) with `\\`."
+            ),
+        ),
         "failure_templ": attr.string(
             mandatory = True,
             doc = (
@@ -93,27 +114,6 @@ unittest_toolchain = rule(
             doc = (
                 "Test script generated when the test passes. " +
                 "Should exit with status 0."
-            ),
-        ),
-        "escape_chars_with": attr.string_dict(
-            doc = (
-                "Dictionary of characters that need escaping in " +
-                "test failure message to prefix appended to escape " +
-                "those characters. For example, " +
-                '`{"%": "%", ">": "^"}` would replace `%` with ' +
-                "`%%` and `>` with `^>` in the failure message " +
-                "before that is included in `success_templ`."
-            ),
-        ),
-        "escape_other_chars_with": attr.string(
-            default = "",
-            doc = (
-                "String to prefix every character in test failure " +
-                "message which is not a key in `escape_chars_with` " +
-                "before including that in `success_templ`. For " +
-                'example, `"\"` would prefix every character in ' +
-                "the failure message (except those in the keys of " +
-                "`escape_chars_with`) with `\\`."
             ),
         ),
     },

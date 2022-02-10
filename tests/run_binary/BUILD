@@ -1,7 +1,7 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
 load("//rules:diff_test.bzl", "diff_test")
 load("//rules:run_binary.bzl", "run_binary")
 load("//rules:write_file.bzl", "write_file")
-load("@rules_cc//cc:defs.bzl", "cc_binary")
 
 package(
     default_testonly = 1,
@@ -52,12 +52,12 @@ run_binary(
     # Bash-tokenized, and should appear the same for Windows .bat files and Bash
     # .sh scripts.
     env = {
+        "ENV_COMPLEX": "xx/yy \\\"zz",
         # Testing $(location) expansion only on source files so the result is
         # predictable. The path of generated files depends on the target
         # platform.
         "ENV_LOCATION": "a $(location BUILD)",
         "ENV_LOCATIONS": "b\\ $(locations :dummy_srcs)",
-        "ENV_COMPLEX": "xx/yy \\\"zz",
         "ENV_PATH_BASH": "$PATH",
         "ENV_PATH_CMD": "%PATH%",
         "OUT": "$(location run_script.out)",

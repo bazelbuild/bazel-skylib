@@ -78,11 +78,11 @@ def _copy_file_impl(ctx):
         return [DefaultInfo(files = files, runfiles = runfiles)]
 
 _ATTRS = {
-    "src": attr.label(mandatory = True, allow_single_file = True),
-    "out": attr.output(mandatory = True),
-    "is_windows": attr.bool(mandatory = True),
-    "is_executable": attr.bool(mandatory = True),
     "allow_symlink": attr.bool(mandatory = True),
+    "is_executable": attr.bool(mandatory = True),
+    "is_windows": attr.bool(mandatory = True),
+    "out": attr.output(mandatory = True),
+    "src": attr.label(mandatory = True, allow_single_file = True),
 }
 
 _copy_file = rule(

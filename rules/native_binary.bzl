@@ -42,16 +42,16 @@ def _impl(ctx):
     return _impl_rule(ctx, ctx.attr.is_windows)
 
 _ATTRS = {
+    "data": attr.label_list(allow_files = True),
+    "is_windows": attr.bool(mandatory = True),
+    # "out" is attr.string instead of attr.output, so that it is select()'able.
+    "out": attr.string(mandatory = True),
     "src": attr.label(
         executable = True,
         allow_single_file = True,
         mandatory = True,
         cfg = "host",
     ),
-    "data": attr.label_list(allow_files = True),
-    # "out" is attr.string instead of attr.output, so that it is select()'able.
-    "out": attr.string(mandatory = True),
-    "is_windows": attr.bool(mandatory = True),
 }
 
 _native_binary = rule(
