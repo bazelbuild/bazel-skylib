@@ -352,6 +352,53 @@ Asserts that the given `condition` is true.
 | <a id="asserts.true-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>"Expected condition to be true, but was false."</code> |
 
 
+<a id="#loadingtest.make"></a>
+
+## loadingtest.make
+
+<pre>
+loadingtest.make(<a href="#loadingtest.make-name">name</a>)
+</pre>
+
+Creates a loading phase test environment and test_suite.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="loadingtest.make-name"></a>name |  name of the suite of tests to create   |  none |
+
+**RETURNS**
+
+loading phase environment passed to other loadingtest functions
+
+
+<a id="#loadingtest.equals"></a>
+
+## loadingtest.equals
+
+<pre>
+loadingtest.equals(<a href="#loadingtest.equals-env">env</a>, <a href="#loadingtest.equals-test_case">test_case</a>, <a href="#loadingtest.equals-expected">expected</a>, <a href="#loadingtest.equals-actual">actual</a>)
+</pre>
+
+Creates a test case for asserting state at LOADING phase.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="loadingtest.equals-env"></a>env |  Loading test env created from loadingtest.make   |  none |
+| <a id="loadingtest.equals-test_case"></a>test_case |  Name of the test case   |  none |
+| <a id="loadingtest.equals-expected"></a>expected |  Expected value to test   |  none |
+| <a id="loadingtest.equals-actual"></a>actual |  Actual value received.   |  none |
+
+**RETURNS**
+
+None, creates test case
+
+
 <a id="#register_unittest_toolchains"></a>
 
 ## register_unittest_toolchains
