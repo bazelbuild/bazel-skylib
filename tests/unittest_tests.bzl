@@ -308,11 +308,11 @@ inspect_output_dirs_test = analysistest.make(
 )
 
 def _loading_phase_test(env):
-    loadingtest.asserts(env, "self_glob", ["unittest_tests.bzl"], native.glob(["unittest_tests.bzl"]))
+    loadingtest.equals(env, "self_glob", ["unittest_tests.bzl"], native.glob(["unittest_tests.bzl"]))
 
     # now use our own calls to assert we created a test case rule and test_suite for it.
-    loadingtest.asserts(env, "test_exists", True, native.existing_rule(env.name + "_self_glob") != None)
-    loadingtest.asserts(env, "suite_exists", True, native.existing_rule(env.name + "_tests") != None)
+    loadingtest.equals(env, "test_exists", True, native.existing_rule(env.name + "_self_glob") != None)
+    loadingtest.equals(env, "suite_exists", True, native.existing_rule(env.name + "_tests") != None)
 
 #########################################
 

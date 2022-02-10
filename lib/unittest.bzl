@@ -602,18 +602,7 @@ def _loading_make(name):
     )
     return struct(name = name)
 
-def _loading_suite(env):
-    """Creates a test suite for loading phase tests.
-
-    Args:
-       env: env created with loadingtest.make
-
-    Returns:
-       None, creates test_suite
-    """
-    pass
-
-def _loading_asserts(env, test_case, expected, actual):
+def _loading_assert_equals(env, test_case, expected, actual):
     """Creates a test case for asserting state at LOADING phase.
 
     Args:
@@ -665,6 +654,5 @@ analysistest = struct(
 
 loadingtest = struct(
     make = _loading_make,
-    asserts = _loading_asserts,
-    suite = _loading_suite,
+    equals = _loading_assert_equals,
 )
