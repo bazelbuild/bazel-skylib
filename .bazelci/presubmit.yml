@@ -94,4 +94,6 @@ tasks:
     # https://github.com/bazelbuild/bazel/issues/7761 is fixed
     - "--test_env=LOCALAPPDATA"
 
-buildifier: latest
+buildifier:
+  version: "latest"
+  warnings: "all"
