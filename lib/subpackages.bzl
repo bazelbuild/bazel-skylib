@@ -21,7 +21,7 @@ def _supported():
 
 def _check_supported():
     if not _SUBPACKAGES_SUPPORTED:
-        fail("native.subpackages not supported.")
+        fail("native.subpackages not supported in this version of Bazel.")
 
 def _all(exclude = [], allow_empty = False, fully_qualified = True):
     """List all direct subpackages of the current package regardless of directory depth.
@@ -69,16 +69,16 @@ def _exists(relative_path):
 
     Example:
 
-    BUILD
-    foo/BUILD
-    foo/sub/BUILD
+        BUILD
+        foo/BUILD
+        foo/sub/BUILD
 
-    If the current package is 'BUILD':
-    subpackages.exists("foo") == True
-    subpackages.exists("foo/sub") == False
-    subpackages.exists("bar") == False
+    If the current package is '//' (the top-level BUILD file):
+        subpackages.exists("foo") == True
+        subpackages.exists("foo/sub") == False
+        subpackages.exists("bar") == False
 
-    NOTE: fail()s if native.subpackages() is not supported.
+    NOTE: fail()s if native.subpackages() is not supported in the current Bazel version.
 
     Args:
       relative_path: a path to a subpackage to test, must not be an absolute Label.
