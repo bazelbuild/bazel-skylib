@@ -210,7 +210,8 @@ def _make_analysis_test(
         attrs = {},
         fragments = [],
         config_settings = {},
-        extra_target_under_test_aspects = []):
+        extra_target_under_test_aspects = [],
+        doc = ""):
     """Creates an analysis test rule from its implementation function.
 
     An analysis test verifies the behavior of a "real" rule target by examining
@@ -250,6 +251,7 @@ def _make_analysis_test(
           flags in a single build
       extra_target_under_test_aspects: An optional list of aspects to apply to the target_under_test
           in addition to those set up by default for the test harness itself.
+      doc: A description of the rule that can be extracted by documentation generating tools.
 
     Returns:
       A rule definition that should be stored in a global whose name ends in
@@ -277,6 +279,7 @@ def _make_analysis_test(
 
     return rule(
         impl,
+        doc = doc,
         attrs = attrs,
         fragments = fragments,
         test = True,
