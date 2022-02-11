@@ -58,16 +58,16 @@ Checks to see if relative_path is a direct subpackage of the current package.
 
 Example:
 
-BUILD
-foo/BUILD
-foo/sub/BUILD
+    BUILD
+    foo/BUILD
+    foo/sub/BUILD
 
-If the current package is 'BUILD':
-subpackages.exists("foo") == True
-subpackages.exists("foo/sub") == False
-subpackages.exists("bar") == False
+If the current package is '//' (the top-level BUILD file):
+    subpackages.exists("foo") == True
+    subpackages.exists("foo/sub") == False
+    subpackages.exists("bar") == False
 
-NOTE: fail()s if native.subpackages() is not supported.
+NOTE: fail()s if native.subpackages() is not supported in the current Bazel version.
 
 
 **PARAMETERS**
