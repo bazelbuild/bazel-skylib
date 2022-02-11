@@ -1,3 +1,20 @@
+Release 1.2.0
+
+**New Features**
+
+-   The unittest toolchain has better support for special characters in failure
+    messages (#320)
+-   Use portable Bash shebangs for BSD compatibility (#329)
+-   Add loadingtest - tests which evaluate during the loading phase (#347)
+-   Add doc parameter to analysistest.make, allowing analysis tests to be
+    documented in a Stardoc-friendly way (#343, #352)
+
+**Contributors**
+
+Alexandre Rostovtsev, Geoffrey Martin-Noble, Kevin Kress, Samuel Freilich,
+UebelAndre, Yesudeep Mangalapilly
+
+
 Release 1.1.1 (initially tagged as 1.1.0)
 
 **New Features**
