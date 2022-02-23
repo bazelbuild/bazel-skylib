@@ -14,7 +14,8 @@
     features were piled on in a rather haphazard manner. For any new additions,
     we want to be more conservative: add a feature only if it is widely needed
     (or was already independently implemented in multiple rule sets), if the
-    interface is unimpeachable, and the implementation is efficient.
+    interface is unimpeachable, if level of abstraction is not shallow, and the
+    implementation is efficient.
 
 ## PR Review Standards
 
@@ -23,7 +24,7 @@ widespread pain, and shouldn't be done lightly. Therefore:
 
 1.  In the first place, avoid adding insufficiently thought out, insufficiently
     tested features which will later need to be replaced in a
-    backwards-incompatible manner.
+    backwards-incompatible manner. See the criteria in README.md.
 2.  Given a choice between breaking backwards compatibilty and keeping it, try
     to keep backwards compatibility. For example, if adding a new argument to a
     function, add it to the end of the argument list, so that existing callers'
