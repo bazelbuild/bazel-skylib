@@ -33,7 +33,7 @@ widespread pain, and shouldn't be done lightly. Therefore:
     *   For example, when adding a new function which calls the new
         `native.foobar()` method which was introduced in the latest Bazel
         pre-release or is gated behind an `--incompatible` flag, use an `if
-        hasattr(native, foobar)` check to keep the rest of your module (which
+        hasattr(native, "foobar")` check to keep the rest of your module (which
         doesn't need `native.foobar()`) working even when `native.foobar()` is
         not available.
 
