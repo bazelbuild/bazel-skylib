@@ -119,3 +119,8 @@ ERROR: Analysis of target '//foo:bar' failed; build aborted: no matching toolcha
 
 then you probably forgot to load and call `bazel_skylib_workspace()` in your
 `WORKSPACE` file.
+
+### Maintainer's guide
+
+See the [maintaner's guide](docs/maintainers_guide.md) for instructions for
+cutting a new release.
