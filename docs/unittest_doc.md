@@ -38,7 +38,7 @@ unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unitte
 
 <pre>
 analysistest.make(<a href="#analysistest.make-impl">impl</a>, <a href="#analysistest.make-expect_failure">expect_failure</a>, <a href="#analysistest.make-attrs">attrs</a>, <a href="#analysistest.make-fragments">fragments</a>, <a href="#analysistest.make-config_settings">config_settings</a>,
-                  <a href="#analysistest.make-extra_target_under_test_aspects">extra_target_under_test_aspects</a>)
+                  <a href="#analysistest.make-extra_target_under_test_aspects">extra_target_under_test_aspects</a>, <a href="#analysistest.make-doc">doc</a>)
 </pre>
 
 Creates an analysis test rule from its implementation function.
@@ -78,6 +78,7 @@ Recall that names of test rules must end in `_test`.
 | <a id="analysistest.make-fragments"></a>fragments |  An optional list of fragment names that can be used to give rules access to language-specific parts of configuration.   |  <code>[]</code> |
 | <a id="analysistest.make-config_settings"></a>config_settings |  A dictionary of configuration settings to change for the target under test and its dependencies. This may be used to essentially change 'build flags' for the target under test, and may thus be utilized to test multiple targets with different flags in a single build   |  <code>{}</code> |
 | <a id="analysistest.make-extra_target_under_test_aspects"></a>extra_target_under_test_aspects |  An optional list of aspects to apply to the target_under_test in addition to those set up by default for the test harness itself.   |  <code>[]</code> |
+| <a id="analysistest.make-doc"></a>doc |  A description of the rule that can be extracted by documentation generating tools.   |  <code>""</code> |
 
 **RETURNS**
 
@@ -350,6 +351,53 @@ Asserts that the given `condition` is true.
 | <a id="asserts.true-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
 | <a id="asserts.true-condition"></a>condition |  A value that will be evaluated in a Boolean context.   |  none |
 | <a id="asserts.true-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>"Expected condition to be true, but was false."</code> |
+
+
+<a id="#loadingtest.make"></a>
+
+## loadingtest.make
+
+<pre>
+loadingtest.make(<a href="#loadingtest.make-name">name</a>)
+</pre>
+
+Creates a loading phase test environment and test_suite.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="loadingtest.make-name"></a>name |  name of the suite of tests to create   |  none |
+
+**RETURNS**
+
+loading phase environment passed to other loadingtest functions
+
+
+<a id="#loadingtest.equals"></a>
+
+## loadingtest.equals
+
+<pre>
+loadingtest.equals(<a href="#loadingtest.equals-env">env</a>, <a href="#loadingtest.equals-test_case">test_case</a>, <a href="#loadingtest.equals-expected">expected</a>, <a href="#loadingtest.equals-actual">actual</a>)
+</pre>
+
+Creates a test case for asserting state at LOADING phase.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="loadingtest.equals-env"></a>env |  Loading test env created from loadingtest.make   |  none |
+| <a id="loadingtest.equals-test_case"></a>test_case |  Name of the test case   |  none |
+| <a id="loadingtest.equals-expected"></a>expected |  Expected value to test   |  none |
+| <a id="loadingtest.equals-actual"></a>actual |  Actual value received.   |  none |
+
+**RETURNS**
+
+None, creates test case
 
 
 <a id="#register_unittest_toolchains"></a>
