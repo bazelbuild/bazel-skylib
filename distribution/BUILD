@@ -10,8 +10,8 @@ package(
 pkg_tar(
     name = "bazel-skylib-%s" % version,
     srcs = ["//:distribution"],
-    mode = "0644",
     extension = "tar.gz",
+    mode = "0644",
     # Make it owned by root so it does not have the uid of the CI robot.
     owner = "0.0",
     strip_prefix = ".",
