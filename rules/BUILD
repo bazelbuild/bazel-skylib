@@ -70,7 +70,10 @@ filegroup(
 
 filegroup(
     name = "bins",
-    srcs = glob(["*.sh"]),
+    srcs = glob(
+        ["*.sh"],
+        allow_empty = True,
+    ),
     visibility = [
         "//:__pkg__",
     ],
