@@ -1,3 +1,13 @@
+Release 1.2.1
+
+Bugfix release: fixes build failure with --incompatible_disallow_empty_glob
+(#359)
+
+**Contributors**
+
+Alexandre Rostovtsev, Ivo List
+
+
 Release 1.2.0
 
 **New Features**
