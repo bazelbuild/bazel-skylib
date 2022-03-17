@@ -43,7 +43,7 @@ def _omit(dictionary, keys):
 
     Args:
       dictionary: A `dict`.
-      keys: A `list` of `str`.
+      keys: A sequence.
 
     Returns:
       A new `dict` that has all the entries of `dictionary` with keys not in `keys`.
@@ -56,7 +56,7 @@ def _pick(dictionary, keys):
 
     Args:
       dictionary: A `dict`.
-      keys: A `list` of `str`.
+      keys: A sequence.
 
     Returns:
       A new `dict` that has all the entries of `dictionary` with keys in `keys`.
