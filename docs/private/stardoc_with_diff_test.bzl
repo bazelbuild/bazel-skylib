@@ -64,6 +64,9 @@ def update_docs(
     bazel build //docs/... && bazel test //docs/... && bazel run //docs:update
     ```
 
+    The `update_docs()` invocation must come after/below any `stardoc_with_diff_test()` invocations
+    in the BUILD file.
+
     Args:
         name: the name of the `sh_binary` target
         docs_folder: the name of the folder containing the doc files in the local source tree

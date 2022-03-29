@@ -97,6 +97,7 @@ stardoc_with_diff_test(
     out_label = "//docs:write_file_doc.md",
 )
 
+# update_docs must be at the bottom of the BUILD file
 update_docs(
     name = "update",
     docs_folder = "docs",
