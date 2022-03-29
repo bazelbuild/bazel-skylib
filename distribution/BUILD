@@ -6,37 +6,15 @@ package(
     default_visibility = ["//visibility:private"],
 )
 
-pkg_tar(
-    name = "srcs",
-    srcs = ["//:distribution"],
-    mode = "0444",
-    # Make it owned by root so it does not have the uid of the CI robot.
-    owner = "0.0",
-    package_dir = "",
-    strip_prefix = ".",
-)
-
-pkg_tar(
-    name = "bins",
-    srcs = ["//:bins"],
-    mode = "0555",
-    # Make it owned by root so it does not have the uid of the CI robot.
-    owner = "0.0",
-    package_dir = "",
-    strip_prefix = ".",
-)
-
 # Build the artifact to put on the github release page.
 pkg_tar(
     name = "bazel-skylib-%s" % version,
+    srcs = ["//:distribution"],
     extension = "tar.gz",
+    mode = "0644",
     # Make it owned by root so it does not have the uid of the CI robot.
     owner = "0.0",
     strip_prefix = ".",
-    deps = [
-        ":bins.tar",
-        ":srcs.tar",
-    ],
 )
 
 print_rel_notes(

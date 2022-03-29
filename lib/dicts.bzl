@@ -38,6 +38,33 @@ def _add(*dictionaries, **kwargs):
     result.update(kwargs)
     return result
 
+def _omit(dictionary, keys):
+    """Returns a new `dict` that has all the entries of `dictionary` with keys not in `keys`.
+
+    Args:
+      dictionary: A `dict`.
+      keys: A sequence.
+
+    Returns:
+      A new `dict` that has all the entries of `dictionary` with keys not in `keys`.
+    """
+    keys_set = {k: None for k in keys}
+    return {k: dictionary[k] for k in dictionary if k not in keys_set}
+
+def _pick(dictionary, keys):
+    """Returns a new `dict` that has all the entries of `dictionary` with keys in `keys`.
+
+    Args:
+      dictionary: A `dict`.
+      keys: A sequence.
+
+    Returns:
+      A new `dict` that has all the entries of `dictionary` with keys in `keys`.
+    """
+    return {k: dictionary[k] for k in keys if k in dictionary}
+
 dicts = struct(
     add = _add,
+    omit = _omit,
+    pick = _pick,
 )
