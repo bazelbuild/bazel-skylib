@@ -43,7 +43,7 @@ def stardoc_with_diff_test(
         file1 = out_label,
         # Output from stardoc rule above
         file2 = out_file.replace(".md", "-docgen.md"),
-        tags = ["no-windows"],
+        tags = ["no_windows"],
     )
 
 def update_docs(
