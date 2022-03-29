@@ -675,7 +675,9 @@ if [ "$UNAME" = "linux" ] || [[ "$UNAME" =~ msys_nt* ]]; then
 else
     function timestamp() {
       # OS X and FreeBSD do not have %N so python is the best we can do
-      python -c 'import time; print int(round(time.time() * 1000))'
+      local PYTHON=python
+      command -v python3 &> /dev/null && PYTHON=python3
+      "${PYTHON}" -c 'import time; print(int(round(time.time() * 1000)))'
     }
 fi
 
