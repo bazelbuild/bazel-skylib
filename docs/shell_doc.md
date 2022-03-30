@@ -59,3 +59,30 @@ shell metacharacters.)
 A quoted version of the string that can be passed to a shell command.
 
 
+<a id="#shell.escape_cmd"></a>
+
+## shell.escape_cmd
+
+<pre>
+shell.escape_cmd(<a href="#shell.escape_cmd-s">s</a>, <a href="#shell.escape_cmd-delayedexpansion">delayedexpansion</a>)
+</pre>
+
+Escapes any Windows metacharacters in the string for use in a cmd.exe command.
+
+This function makes no attempt to quote the string due to context-sensitive
+and unintuitive treatment of `"` in Windows command parsing.
+
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="shell.escape_cmd-s"></a>s |  The string to escape.   |  none |
+| <a id="shell.escape_cmd-delayedexpansion"></a>delayedexpansion |  Escape <code>!</code> for shells in ENABLEDELAYEDEXPANSION mode.   |  <code>False</code> |
+
+**RETURNS**
+
+An escaped version of the string that can be passed to a command in cmd.exe.
+
+

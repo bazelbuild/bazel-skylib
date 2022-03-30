@@ -48,7 +48,32 @@ def _quote(s):
     """
     return "'" + s.replace("'", "'\\''") + "'"
 
+def _escape_cmd(s, delayedexpansion = False):
+    """Escapes any Windows metacharacters in the string for use in a cmd.exe command.
+
+    This function makes no attempt to quote the string due to context-sensitive
+    and unintuitive treatment of `"` in Windows command parsing.
+
+    Args:
+      s: The string to escape.
+      delayedexpansion: Escape `!` for shells in ENABLEDELAYEDEXPANSION mode.
+
+    Returns:
+      An escaped version of the string that can be passed to a command in cmd.exe.
+    """
+    s = s.replace("^", "^^") \
+        .replace("%", "%%") \
+        .replace("&", "^&") \
+        .replace("\\", "^\\") \
+        .replace("<", "^<") \
+        .replace(">", "^>") \
+        .replace("|", "^|")
+    if delayedexpansion:
+        s = s.replace("!", "^^!")  # must be escaped twice for two expansions
+    return s
+
 shell = struct(
     array_literal = _array_literal,
     quote = _quote,
+    escape_cmd = _escape_cmd,
 )

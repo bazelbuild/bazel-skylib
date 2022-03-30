@@ -10,6 +10,7 @@ tasks:
     - "//..."
     test_flags:
     - "--test_env=PATH"
+    - "--test_tag_filters=-windows"
 
   ubuntu1604_latest:
     name: "Latest Bazel"
@@ -21,6 +22,7 @@ tasks:
     - "//..."
     test_flags:
     - "--test_env=PATH"
+    - "--test_tag_filters=-windows"
 
   macos_latest:
     name: "Latest Bazel"
@@ -32,6 +34,7 @@ tasks:
     - "//..."
     test_flags:
     - "--test_env=PATH"
+    - "--test_tag_filters=-windows"
 
   windows_latest:
     name: "Latest Bazel"
@@ -58,6 +61,7 @@ tasks:
     - "//..."
     test_flags:
     - "--test_env=PATH"
+    - "--test_tag_filters=-windows"
 
   ubuntu1604_last_green:
     name: "Last Green Bazel"
@@ -69,6 +73,7 @@ tasks:
     - "//..."
     test_flags:
     - "--test_env=PATH"
+    - "--test_tag_filters=-windows"
 
   macos_last_green:
     name: "Last Green Bazel"
@@ -80,6 +85,7 @@ tasks:
     - "//..."
     test_flags:
     - "--test_env=PATH"
+    - "--test_tag_filters=-windows"
 
   windows_last_green:
     name: "Last Green Bazel"
