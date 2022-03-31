@@ -142,7 +142,7 @@ _diff_test = rule(
     implementation = _diff_test_impl,
 )
 
-def diff_test(name, file1, file2, **kwargs):
+def diff_test(name, file1, file2, failure_message = None, **kwargs):
     """A test that compares two files.
 
     The test succeeds if the files' contents match.
@@ -151,6 +151,7 @@ def diff_test(name, file1, file2, **kwargs):
       name: The name of the test rule.
       file1: Label of the file to compare to <code>file2</code>.
       file2: Label of the file to compare to <code>file1</code>.
+      failure_message: Additional message to log if the files' contents do not match.
       **kwargs: The <a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
     """
     _diff_test(
