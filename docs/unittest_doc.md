@@ -38,7 +38,7 @@ unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unitte
 
 <pre>
 analysistest.make(<a href="#analysistest.make-impl">impl</a>, <a href="#analysistest.make-expect_failure">expect_failure</a>, <a href="#analysistest.make-attrs">attrs</a>, <a href="#analysistest.make-fragments">fragments</a>, <a href="#analysistest.make-config_settings">config_settings</a>,
-                  <a href="#analysistest.make-extra_target_under_test_aspects">extra_target_under_test_aspects</a>, <a href="#analysistest.make-doc">doc</a>)
+                  <a href="#analysistest.make-extra_target_under_test_aspects">extra_target_under_test_aspects</a>, <a href="#analysistest.make-doc">doc</a>, <a href="#analysistest.make-name">name</a>)
 </pre>
 
 Creates an analysis test rule from its implementation function.
@@ -79,6 +79,7 @@ Recall that names of test rules must end in `_test`.
 | <a id="analysistest.make-config_settings"></a>config_settings |  A dictionary of configuration settings to change for the target under test and its dependencies. This may be used to essentially change 'build flags' for the target under test, and may thus be utilized to test multiple targets with different flags in a single build   |  <code>{}</code> |
 | <a id="analysistest.make-extra_target_under_test_aspects"></a>extra_target_under_test_aspects |  An optional list of aspects to apply to the target_under_test in addition to those set up by default for the test harness itself.   |  <code>[]</code> |
 | <a id="analysistest.make-doc"></a>doc |  A description of the rule that can be extracted by documentation generating tools.   |  <code>""</code> |
+| <a id="analysistest.make-name"></a>name |  If set, the rule class will be exported with this name   |  <code>None</code> |
 
 **RETURNS**
 
