@@ -67,7 +67,8 @@ def _escape_for_bat(s, delayed_expansion = False, escape_quotes = False):
         the MSVCRT command line parser, but not by older commands like `echo`.
 
     Returns:
-      An escaped version of the string that can be passed to a command in cmd.exe.
+      An escaped version of the string that can be used as part of a command
+      line in a Windows batch file.
     """
     escaped = ""
     in_quote = False
