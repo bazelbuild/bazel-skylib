@@ -90,6 +90,7 @@ See https://stackoverflow.com/questions/4094699 for gory details.
 
 **RETURNS**
 
-An escaped version of the string that can be passed to a command in cmd.exe.
+An escaped version of the string that can be used as part of a command
+line in a Windows batch file.
 
 
