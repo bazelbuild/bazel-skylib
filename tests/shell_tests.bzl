@@ -166,7 +166,7 @@ def shell_windows_bat_e2e_test(name, **kwargs):
     This macro writes and executes a .bat file which echoes an escaped string, and
     verifies that the output is identical to the original string.
     """
-    evil_string = '>out.txt <in.txt %path%, !path! "^xyz^" & echo foo | echo \\"bar\\"'
+    evil_string = '>out.txt <in.txt %path%, !path! "(x,y,z)" & echo foo | echo \\"bar\\"'
     write_file(
         name = "_%s_original" % name,
         content = [evil_string + "\r\n"],
