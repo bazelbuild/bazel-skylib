@@ -43,9 +43,13 @@ source "$(rlocation bazel_skylib/tests/unittest.bash)" \
 function import_diff_test() {
   local -r repo="$1"
   mkdir -p "${repo}/rules"
+  mkdir -p "${repo}/lib"
+  touch "${repo}/lib/BUILD"
   touch "${repo}/WORKSPACE"
   ln -sf "$(rlocation bazel_skylib/rules/diff_test.bzl)" \
          "${repo}/rules/diff_test.bzl"
+  ln -sf "$(rlocation bazel_skylib/lib/shell.bzl)" \
+         "${repo}/lib/shell.bzl"
   echo "exports_files(['diff_test.bzl'])" > "${repo}/rules/BUILD"
 }
 
@@ -212,6 +216,30 @@ function test_from_ext_repo_with_legacy_external_runfiles() {
 
 function test_from_ext_repo_without_legacy_external_runfiles() {
   assert_from_ext_repo "--nolegacy_external_runfiles" "${FUNCNAME[0]}"
+}
+
+function test_failure_message() {
+  local -r ws="${TEST_TMPDIR}/${FUNCNAME[0]}"
+
+  import_diff_test "$ws"
+  touch "$ws/WORKSPACE"
+  cat >"$ws/BUILD" <<'eof'
+load("//rules:diff_test.bzl", "diff_test")
+
+diff_test(
+    name = "different",
+    failure_message = "This is %an% `$error`",
+    file1 = "a.txt",
+    file2 = "b.txt",
+)
+eof
+  echo foo > "$ws/a.txt"
+  echo bar > "$ws/b.txt"
+
+  (cd "$ws" && \
+   bazel test //:different --test_output=errors 1>"$TEST_log" 2>&1 \
+     && fail "expected failure" || true)
+  expect_log "FAIL: files \"a.txt\" and \"b.txt\" differ. This is %an% \`\$error\`"
 }
 
 cd "$TEST_TMPDIR"
