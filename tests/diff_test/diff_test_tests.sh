@@ -227,19 +227,32 @@ function test_failure_message() {
 load("//rules:diff_test.bzl", "diff_test")
 
 diff_test(
-    name = "different",
+    name = "different_with_message",
     failure_message = "This is %an% `$error`",
     file1 = "a.txt",
     file2 = "b.txt",
 )
+
+diff_test(
+    name = "different_without_message",
+    file1 = "c.txt",
+    file2 = "d.txt",
+)
 eof
   echo foo > "$ws/a.txt"
   echo bar > "$ws/b.txt"
+  echo foo > "$ws/c.txt"
+  echo bar > "$ws/d.txt"
 
   (cd "$ws" && \
-   bazel test //:different --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test //:different_with_message --test_output=errors 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
   expect_log "FAIL: files \"a.txt\" and \"b.txt\" differ. This is %an% \`\$error\`"
+
+(cd "$ws" && \
+   bazel test //:different_without_message --test_output=errors 1>"$TEST_log" 2>&1 \
+     && fail "expected failure" || true)
+  expect_log "FAIL: files \"c.txt\" and \"d.txt\" differ. $"
 }
 
 cd "$TEST_TMPDIR"

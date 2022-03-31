@@ -158,6 +158,7 @@ def diff_test(name, file1, file2, failure_message = None, **kwargs):
         name = name,
         file1 = file1,
         file2 = file2,
+        failure_message = failure_message,
         is_windows = select({
             "@bazel_tools//src/conditions:host_windows": True,
             "//conditions:default": False,
