@@ -54,25 +54,32 @@ def _shell_quote_test(ctx):
 
 shell_quote_test = unittest.make(_shell_quote_test)
 
-def _shell_escape_cmd_test(ctx):
+def _shell_escape_for_bat_test(ctx):
     """Unit tests for shell.escape_cmd."""
     env = unittest.begin(ctx)
 
-    asserts.equals(env, "foo", shell.escape_cmd("foo"))
-    asserts.equals(env, "%%foo%%", shell.escape_cmd("%foo%"))
-    asserts.equals(env, "^^foo", shell.escape_cmd("^foo"))
-    asserts.equals(env, "^>foo.txt", shell.escape_cmd(">foo.txt"))
-    asserts.equals(env, "^<foo.txt", shell.escape_cmd("<foo.txt"))
-    asserts.equals(env, "^& ECHO foo", shell.escape_cmd("& ECHO foo"))
-    asserts.equals(env, "^| ECHO foo", shell.escape_cmd("| ECHO foo"))
-    asserts.equals(env, '^\\"foo^\\"', shell.escape_cmd('\\"foo\\"'))
+    asserts.equals(env, "foo", shell.escape_for_bat("foo"))
+    asserts.equals(env, "%%foo%%", shell.escape_for_bat("%foo%"))
+    asserts.equals(env, '"%%foo%%"', shell.escape_for_bat('"%foo%"'))
+    asserts.equals(env, "^^foo", shell.escape_for_bat("^foo"))
+    asserts.equals(env, '"^foo"', shell.escape_for_bat('"^foo"'))
+    asserts.equals(env, "^>foo.txt", shell.escape_for_bat(">foo.txt"))
+    asserts.equals(env, "^<foo.txt", shell.escape_for_bat("<foo.txt"))
+    asserts.equals(env, "^& ECHO foo", shell.escape_for_bat("& ECHO foo"))
+    asserts.equals(env, "^| ECHO foo", shell.escape_for_bat("| ECHO foo"))
+    asserts.equals(env, '^^"^<foo>^"^^', shell.escape_for_bat('^"^<foo>^"^'))
+    asserts.equals(env, "hello^\nworld", shell.escape_for_bat("hello\nworld"))
 
-    asserts.equals(env, "!delay!", shell.escape_cmd("!delay!"))
-    asserts.equals(env, "^^!delay^^!", shell.escape_cmd("!delay!", delayedexpansion = True))
+    asserts.equals(env, "!delay!", shell.escape_for_bat("!delay!"))
+    asserts.equals(env, "^^!delay^^!", shell.escape_for_bat("!delay!", delayed_expansion = True))
+    asserts.equals(env, '"^^!delay^^!"', shell.escape_for_bat('"!delay!"', delayed_expansion = True))
+
+    asserts.equals(env, 'hello^, "world"', shell.escape_for_bat('hello, "world"'))
+    asserts.equals(env, 'hello^, \\"world\\"', shell.escape_for_bat('hello, "world"', escape_quotes = True))
 
     return unittest.end(env)
 
-shell_escape_cmd_test = unittest.make(_shell_escape_cmd_test)
+shell_escape_for_bat_test = unittest.make(_shell_escape_for_bat_test)
 
 def _shell_args_test_gen_impl(ctx):
     """Test argument escaping: this rule writes a script for a sh_test."""
@@ -117,8 +124,8 @@ shell_args_test_gen = rule(
     implementation = _shell_args_test_gen_impl,
 )
 
-def _shell_windows_cmd_echo_escaped_string_impl(ctx):
-    """Test Windows cmd.exe argument escaping.
+def _shell_windows_bat_echo_escaped_string_impl(ctx):
+    """Test Windows .bat file argument escaping.
 
     This rule writes and executes a .bat file which echoes an escaped string.
     """
@@ -126,7 +133,7 @@ def _shell_windows_cmd_echo_escaped_string_impl(ctx):
         "@echo off",
         "setlocal ENABLEDELAYEDEXPANSION",
         "echo {escaped}>%1",
-    ]).format(escaped = shell.escape_cmd(ctx.attr.escape, delayedexpansion = True))
+    ]).format(escaped = shell.escape_for_bat(ctx.attr.escape, delayed_expansion = True))
     script = ctx.actions.declare_file(ctx.label.name + ".bat")
     ctx.actions.write(
         output = script,
@@ -137,20 +144,20 @@ def _shell_windows_cmd_echo_escaped_string_impl(ctx):
         outputs = [ctx.outputs.out],
         executable = script,
         arguments = [ctx.outputs.out.path],
-        mnemonic = "ShellWindowsCmdEchoEscapedString",
+        mnemonic = "ShellWindowsBatEchoEscapedString",
     )
     return [DefaultInfo()]
 
-_shell_windows_cmd_echo_escaped_string = rule(
+_shell_windows_bat_echo_escaped_string = rule(
     attrs = {
         "escape": attr.string(),
         "out": attr.output(mandatory = True),
     },
-    implementation = _shell_windows_cmd_echo_escaped_string_impl,
+    implementation = _shell_windows_bat_echo_escaped_string_impl,
 )
 
-def shell_windows_cmd_spawn_e2e_test(name, **kwargs):
-    """Test Windows cmd.exe argument escaping.
+def shell_windows_bat_e2e_test(name, **kwargs):
+    """Test Windows .bat file argument escaping.
 
     Args:
       name: Name of the test rule.
@@ -159,16 +166,17 @@ def shell_windows_cmd_spawn_e2e_test(name, **kwargs):
     This macro writes and executes a .bat file which echoes an escaped string, and
     verifies that the output is identical to the original string.
     """
-    evil_string = '>out.txt <in.txt %hello% !world! & echo foo | echo \\"bar\\"'
+    evil_string = '>out.txt <in.txt %path%, !path! "^xyz^" & echo foo | echo \\"bar\\"'
     write_file(
         name = "_%s_original" % name,
         content = [evil_string + "\r\n"],
         out = "_%s_original.txt" % name,
     )
-    _shell_windows_cmd_echo_escaped_string(
+    _shell_windows_bat_echo_escaped_string(
         name = "_%s_echo_escaped" % name,
         escape = evil_string,
         out = "_%s_echo_escaped.txt" % name,
+        **kwargs
     )
     diff_test(
         name = name,
@@ -183,5 +191,5 @@ def shell_test_suite():
         "shell_tests",
         shell_array_literal_test,
         shell_quote_test,
-        shell_escape_cmd_test,
+        shell_escape_for_bat_test,
     )
