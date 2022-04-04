@@ -28,14 +28,24 @@ def _impl_rule(ctx, is_windows):
         copy_cmd(ctx, ctx.file.src, out)
     else:
         copy_bash(ctx, ctx.file.src, out)
+    runfiles = ctx.runfiles(files = ctx.files.data)
+
+    # Bazel 4.x LTS does not support `merge_all`.
+    # TODO: remove `merge` branch once we drop support for Bazel 4.x.
+    if hasattr(runfiles, "merge_all"):
+        runfiles = runfiles.merge_all([
+            d[DefaultInfo].default_runfiles
+            for d in ctx.attr.data + [ctx.attr.src]
+        ])
+    else:
+        for d in ctx.attr.data:
+            runfiles = runfiles.merge(d[DefaultInfo].default_runfiles)
+        runfiles = runfiles.merge(ctx.attr.src[DefaultInfo].default_runfiles)
+
     return DefaultInfo(
         executable = out,
         files = depset([out]),
-        runfiles = ctx.runfiles(
-            files = [out],
-            collect_data = True,
-            collect_default = True,
-        ),
+        runfiles = runfiles,
     )
 
 def _impl(ctx):

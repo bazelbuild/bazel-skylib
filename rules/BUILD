@@ -33,6 +33,11 @@ bzl_library(
 )
 
 bzl_library(
+    name = "expand_template",
+    srcs = ["expand_template.bzl"],
+)
+
+bzl_library(
     name = "native_binary",
     srcs = ["native_binary.bzl"],
     deps = ["//rules/private:copy_file_private"],
@@ -63,14 +68,6 @@ filegroup(
     srcs = [
         "BUILD",
     ] + glob(["*.bzl"]),
-    visibility = [
-        "//:__pkg__",
-    ],
-)
-
-filegroup(
-    name = "bins",
-    srcs = glob(["*.sh"]),
     visibility = [
         "//:__pkg__",
     ],

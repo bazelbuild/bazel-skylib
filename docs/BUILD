@@ -1,144 +1,114 @@
-load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
+load("//docs/private:stardoc_with_diff_test.bzl", "stardoc_with_diff_test", "update_docs")
 
 licenses(["notice"])
 
-# Note that due to a bug in Bazel 0.22.0, these targets cannot be built without
-# the --incompatible_remap_main_repo flag.
-stardoc(
-    name = "build_test_docs",
-    out = "build_test_doc_gen.md",
-    input = "//rules:build_test.bzl",
-    deps = ["//rules:build_test"],
+stardoc_with_diff_test(
+    bzl_library_target = "//rules:analysis_test",
+    out_label = "//docs:analysis_test_doc.md",
 )
 
-stardoc(
-    name = "analysis_test_docs",
-    out = "analysis_test_doc_gen.md",
-    input = "//rules:analysis_test.bzl",
+stardoc_with_diff_test(
+    bzl_library_target = "//rules:build_test",
+    out_label = "//docs:build_test_doc.md",
 )
 
-stardoc(
-    name = "collections_docs",
-    out = "collections_doc_gen.md",
-    input = "//lib:collections.bzl",
-    deps = ["//lib:collections"],
+stardoc_with_diff_test(
+    bzl_library_target = "//lib:collections",
+    out_label = "//docs:collections_doc.md",
 )
 
-stardoc(
-    name = "dicts_docs",
-    out = "dicts_doc_gen.md",
-    input = "//lib:dicts.bzl",
-    deps = ["//lib:dicts"],
+stardoc_with_diff_test(
+    bzl_library_target = "//rules:common_settings",
+    out_label = "//docs:common_settings_doc.md",
 )
 
-stardoc(
-    name = "partial_docs",
-    out = "partial_doc_gen.md",
-    input = "//lib:partial.bzl",
-    deps = ["//lib:partial"],
+stardoc_with_diff_test(
+    bzl_library_target = "//rules:copy_file",
+    out_label = "//docs:copy_file_doc.md",
 )
 
-stardoc(
-    name = "paths_docs",
-    out = "paths_doc_gen.md",
-    input = "//lib:paths.bzl",
-    deps = ["//lib:paths"],
+stardoc_with_diff_test(
+    bzl_library_target = "//lib:dicts",
+    out_label = "//docs:dicts_doc.md",
 )
 
-stardoc(
-    name = "selects_docs",
-    out = "selects_doc_gen.md",
-    input = "//lib:selects.bzl",
-    deps = ["//lib:selects"],
+stardoc_with_diff_test(
+    bzl_library_target = "//rules:diff_test",
+    out_label = "//docs:diff_test_doc.md",
 )
 
-stardoc(
-    name = "new_sets_docs",
-    out = "new_sets_doc_gen.md",
-    input = "//lib:new_sets.bzl",
-    deps = ["//lib:new_sets"],
+stardoc_with_diff_test(
+    bzl_library_target = "//rules:expand_template",
+    out_label = "//docs:expand_template_doc.md",
 )
 
-stardoc(
-    name = "shell_docs",
-    out = "shell_doc_gen.md",
-    input = "//lib:shell.bzl",
-    deps = ["//lib:shell"],
+stardoc_with_diff_test(
+    bzl_library_target = "//rules:native_binary",
+    out_label = "//docs:native_binary_doc.md",
 )
 
-stardoc(
-    name = "structs_docs",
-    out = "structs_doc_gen.md",
-    input = "//lib:structs.bzl",
-    deps = ["//lib:structs"],
+stardoc_with_diff_test(
+    bzl_library_target = "//lib:new_sets",
+    out_label = "//docs:new_sets_doc.md",
 )
 
-stardoc(
-    name = "subpackages_docs",
-    out = "subpackages_doc_gen.md",
-    input = "//lib:subpackages.bzl",
-    deps = ["//lib:subpackages"],
+stardoc_with_diff_test(
+    bzl_library_target = "//lib:partial",
+    out_label = "//docs:partial_doc.md",
 )
 
-stardoc(
-    name = "types_docs",
-    out = "types_doc_gen.md",
-    input = "//lib:types.bzl",
-    deps = ["//lib:types"],
+stardoc_with_diff_test(
+    bzl_library_target = "//lib:paths",
+    out_label = "//docs:paths_doc.md",
 )
 
-stardoc(
-    name = "unittest_docs",
-    out = "unittest_doc_gen.md",
-    input = "//lib:unittest.bzl",
-    deps = ["//lib:unittest"],
+stardoc_with_diff_test(
+    bzl_library_target = "//rules:run_binary",
+    out_label = "//docs:run_binary_doc.md",
 )
 
-stardoc(
-    name = "versions_docs",
-    out = "versions_doc_gen.md",
-    input = "//lib:versions.bzl",
-    deps = ["//lib:versions"],
+stardoc_with_diff_test(
+    bzl_library_target = "//lib:selects",
+    out_label = "//docs:selects_doc.md",
 )
 
-stardoc(
-    name = "copy_file_docs",
-    out = "copy_file_doc_gen.md",
-    input = "//rules:copy_file.bzl",
-    deps = ["//rules:copy_file"],
+stardoc_with_diff_test(
+    bzl_library_target = "//lib:shell",
+    out_label = "//docs:shell_doc.md",
 )
 
-stardoc(
-    name = "write_file_docs",
-    out = "write_file_doc_gen.md",
-    input = "//rules:write_file.bzl",
-    deps = ["//rules:write_file"],
+stardoc_with_diff_test(
+    bzl_library_target = "//lib:structs",
+    out_label = "//docs:structs_doc.md",
 )
 
-stardoc(
-    name = "diff_test_docs",
-    out = "diff_test_doc_gen.md",
-    input = "//rules:diff_test.bzl",
-    deps = ["//rules:diff_test"],
+stardoc_with_diff_test(
+    bzl_library_target = "//lib:subpackages.bzl",
+    out_label = "//docs:subpackages_doc.md",
 )
 
-stardoc(
-    name = "native_binary_docs",
-    out = "native_binary_doc_gen.md",
-    input = "//rules:native_binary.bzl",
-    deps = ["//rules:native_binary"],
+stardoc_with_diff_test(
+    bzl_library_target = "//lib:types",
+    out_label = "//docs:types_doc.md",
 )
 
-stardoc(
-    name = "run_binary_docs",
-    out = "run_binary_doc_gen.md",
-    input = "//rules:run_binary.bzl",
-    deps = ["//rules:run_binary"],
+stardoc_with_diff_test(
+    bzl_library_target = "//lib:unittest",
+    out_label = "//docs:unittest_doc.md",
 )
 
-stardoc(
-    name = "common_settings_docs",
-    out = "common_settings_doc_gen.md",
-    input = "//rules:common_settings.bzl",
-    deps = ["//rules:common_settings"],
+stardoc_with_diff_test(
+    bzl_library_target = "//lib:versions",
+    out_label = "//docs:versions_doc.md",
+)
+
+stardoc_with_diff_test(
+    bzl_library_target = "//rules:write_file",
+    out_label = "//docs:write_file_doc.md",
+)
+
+# update_docs must be at the bottom of the BUILD file
+update_docs(
+    name = "update",
+    docs_folder = "docs",
 )
