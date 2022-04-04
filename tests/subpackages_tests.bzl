@@ -23,6 +23,7 @@ def _all_test(env):
     all_pkgs = [
         "copy_file",
         "diff_test",
+        "expand_template",
         "select_file",
         "write_file",
     ]
@@ -37,6 +38,7 @@ def _all_test(env):
     # These exist in all cases
     filtered_pkgs = [
         "copy_file",
+        "expand_template",
         "select_file",
         "write_file",
     ]
@@ -48,6 +50,14 @@ def _all_test(env):
     loadingtest.equals(
         env,
         "all",
+        ["//tests/" + pkg for pkg in all_pkgs],
+        subpackages.all(),
+    )
+
+    # test non-fully-qualified output
+    loadingtest.equals(
+        env,
+        "all_not_fully_qualified",
         all_pkgs,
         subpackages.all(fully_qualified = False),
     )
