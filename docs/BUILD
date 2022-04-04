@@ -83,6 +83,11 @@ stardoc_with_diff_test(
 )
 
 stardoc_with_diff_test(
+    bzl_library_target = "//lib:subpackages",
+    out_label = "//docs:subpackages_doc.md",
+)
+
+stardoc_with_diff_test(
     bzl_library_target = "//lib:types",
     out_label = "//docs:types_doc.md",
 )

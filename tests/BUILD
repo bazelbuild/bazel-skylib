@@ -8,6 +8,7 @@ load(":paths_tests.bzl", "paths_test_suite")
 load(":selects_tests.bzl", "selects_test_suite")
 load(":shell_tests.bzl", "shell_args_test_gen", "shell_test_suite")
 load(":structs_tests.bzl", "structs_test_suite")
+load(":subpackages_tests.bzl", "subpackages_test_suite")
 load(":types_tests.bzl", "types_test_suite")
 load(":unittest_tests.bzl", "unittest_passing_tests_suite")
 load(":versions_tests.bzl", "versions_test_suite")
@@ -36,6 +37,8 @@ selects_test_suite()
 shell_test_suite()
 
 structs_test_suite()
+
+subpackages_test_suite()
 
 types_test_suite()
 
