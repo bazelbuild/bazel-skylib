@@ -25,9 +25,9 @@ load("//rules/private:copy_file_private.bzl", "copy_bash", "copy_cmd")
 def _impl_rule(ctx, is_windows):
     out = ctx.actions.declare_file(ctx.attr.out)
     if is_windows:
-        copy_cmd(ctx, ctx.file.src, out)
+        copy_cmd(ctx, ctx.executable.src, out)
     else:
-        copy_bash(ctx, ctx.file.src, out)
+        copy_bash(ctx, ctx.executable.src, out)
     runfiles = ctx.runfiles(files = ctx.files.data)
 
     # Bazel 4.x LTS does not support `merge_all`.
@@ -54,9 +54,12 @@ def _impl(ctx):
 _ATTRS = {
     "src": attr.label(
         executable = True,
-        allow_single_file = True,
+        # This must be used instead of `allow_single_file` because otherwise a
+        # target with multiple default outputs (e.g. py_binary) would not be
+        # allowed.
+        allow_files = True,
         mandatory = True,
-        cfg = "host",
+        cfg = "target",
     ),
     "data": attr.label_list(allow_files = True),
     # "out" is attr.string instead of attr.output, so that it is select()'able.
