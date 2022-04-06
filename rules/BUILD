@@ -30,6 +30,7 @@ bzl_library(
 bzl_library(
     name = "diff_test",
     srcs = ["diff_test.bzl"],
+    deps = ["//lib:shell"],
 )
 
 bzl_library(
