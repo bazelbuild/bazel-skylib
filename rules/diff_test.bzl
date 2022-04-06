@@ -18,6 +18,8 @@ The rule uses a Bash command (diff) on Linux/macOS/non-Windows, and a cmd.exe
 command (fc.exe) on Windows (no Bash is required).
 """
 
+load("//lib:shell.bzl", "shell")
+
 def _runfiles_path(f):
     if f.root.path:
         return f.path[len(f.root.path) + 1:]  # generated file
@@ -76,6 +78,7 @@ if %ERRORLEVEL% neq 0 (
   )
 )
 """.format(
+                # TODO(arostovtsev): use shell.escape_for_bat when https://github.com/bazelbuild/bazel-skylib/pull/363 is merged
                 fail_msg = ctx.attr.failure_message,
                 file1 = _runfiles_path(ctx.file.file1),
                 file2 = _runfiles_path(ctx.file.file2),
@@ -106,11 +109,11 @@ else
   exit 1
 fi
 if ! diff "$RF1" "$RF2"; then
-  echo >&2 "FAIL: files \"{file1}\" and \"{file2}\" differ. {fail_msg}"
+  echo >&2 "FAIL: files \"{file1}\" and \"{file2}\" differ. "{fail_msg}
   exit 1
 fi
 """.format(
-                fail_msg = ctx.attr.failure_message,
+                fail_msg = shell.quote(ctx.attr.failure_message),
                 file1 = _runfiles_path(ctx.file.file1),
                 file2 = _runfiles_path(ctx.file.file2),
             ),
@@ -139,7 +142,7 @@ _diff_test = rule(
     implementation = _diff_test_impl,
 )
 
-def diff_test(name, file1, file2, **kwargs):
+def diff_test(name, file1, file2, failure_message = None, **kwargs):
     """A test that compares two files.
 
     The test succeeds if the files' contents match.
@@ -148,12 +151,14 @@ def diff_test(name, file1, file2, **kwargs):
       name: The name of the test rule.
       file1: Label of the file to compare to <code>file2</code>.
       file2: Label of the file to compare to <code>file1</code>.
+      failure_message: Additional message to log if the files' contents do not match.
       **kwargs: The <a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
     """
     _diff_test(
         name = name,
         file1 = file1,
         file2 = file2,
+        failure_message = failure_message,
         is_windows = select({
             "@bazel_tools//src/conditions:host_windows": True,
             "//conditions:default": False,
