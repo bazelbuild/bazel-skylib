@@ -228,7 +228,7 @@ load("//rules:diff_test.bzl", "diff_test")
 
 diff_test(
     name = "different_with_message",
-    failure_message = "This is %an% `$error`",
+    failure_message = "This is an `$error`",  # TODO(arostovtsev): also test Windows cmd.exe escapes when https://github.com/bazelbuild/bazel-skylib/pull/363 is merged
     file1 = "a.txt",
     file2 = "b.txt",
 )
@@ -247,7 +247,8 @@ eof
   (cd "$ws" && \
    bazel test //:different_with_message --test_output=errors 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
-  expect_log "FAIL: files \"a.txt\" and \"b.txt\" differ. This is %an% \`\$error\`"
+  # TODO(arostovtsev): also test Windows cmd.exe escapes when https://github.com/bazelbuild/bazel-skylib/pull/363 is merged
+  expect_log "FAIL: files \"a.txt\" and \"b.txt\" differ. This is an \`\$error\`"
 
 (cd "$ws" && \
    bazel test //:different_without_message --test_output=errors 1>"$TEST_log" 2>&1 \
