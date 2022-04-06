@@ -9,6 +9,13 @@ bzl_library(
 )
 
 bzl_library(
+    name = "map_to_output_private",
+    srcs = ["map_to_output_private.bzl"],
+    deps = [":copy_file_private"],
+    visibility = ["//rules:__pkg__"],
+)
+
+bzl_library(
     name = "write_file_private",
     srcs = ["write_file_private.bzl"],
     visibility = ["//rules:__pkg__"],
