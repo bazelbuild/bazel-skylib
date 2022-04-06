@@ -250,7 +250,7 @@ eof
   # TODO(arostovtsev): also test Windows cmd.exe escapes when https://github.com/bazelbuild/bazel-skylib/pull/363 is merged
   expect_log "FAIL: files \"a.txt\" and \"b.txt\" differ. This is an \`\$error\`"
 
-(cd "$ws" && \
+  (cd "$ws" && \
    bazel test //:different_without_message --test_output=errors 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
   expect_log "FAIL: files \"c.txt\" and \"d.txt\" differ. $"
