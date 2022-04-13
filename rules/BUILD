@@ -22,6 +22,12 @@ bzl_library(
 )
 
 bzl_library(
+    name = "copy_directory",
+    srcs = ["copy_directory.bzl"],
+    deps = ["//rules/private:copy_directory_private"],
+)
+
+bzl_library(
     name = "write_file",
     srcs = ["write_file.bzl"],
     deps = ["//rules/private:write_file_private"],
