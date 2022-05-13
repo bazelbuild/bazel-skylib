@@ -38,6 +38,11 @@ stardoc_with_diff_test(
 )
 
 stardoc_with_diff_test(
+    bzl_library_target = "//rules:expand_template",
+    out_label = "//docs:expand_template_doc.md",
+)
+
+stardoc_with_diff_test(
     bzl_library_target = "//rules:native_binary",
     out_label = "//docs:native_binary_doc.md",
 )
@@ -75,6 +80,11 @@ stardoc_with_diff_test(
 stardoc_with_diff_test(
     bzl_library_target = "//lib:structs",
     out_label = "//docs:structs_doc.md",
+)
+
+stardoc_with_diff_test(
+    bzl_library_target = "//lib:subpackages",
+    out_label = "//docs:subpackages_doc.md",
 )
 
 stardoc_with_diff_test(

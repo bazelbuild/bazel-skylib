@@ -50,9 +50,12 @@ def _impl_rule(ctx):
 _ATTRS = {
     "src": attr.label(
         executable = True,
-        allow_single_file = True,
+        # This must be used instead of `allow_single_file` because otherwise a
+        # target with multiple default outputs (e.g. py_binary) would not be
+        # allowed.
+        allow_files = True,
         mandatory = True,
-        cfg = "host",
+        cfg = "target",
         doc = "path of the pre-built executable",
     ),
     "data": attr.label_list(allow_files = True),
