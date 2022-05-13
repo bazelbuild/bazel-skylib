@@ -17,7 +17,7 @@
 These rules let you wrap a pre-built binary or script in a conventional binary
 and test rule respectively. They fulfill the same goal as sh_binary and sh_test
 do, but they run the wrapped binary directly, instead of through Bash, so they
-don't depend on Bash and work with --shell_exectuable="".
+don't depend on Bash and work with --shell_executable="".
 """
 
 def _impl_rule(ctx):
@@ -58,7 +58,11 @@ _ATTRS = {
         cfg = "target",
         doc = "path of the pre-built executable",
     ),
-    "data": attr.label_list(allow_files = True),
+    "data": attr.label_list(
+        allow_files = True,
+        doc = "data dependencies. See" +
+              " https://docs.bazel.build/versions/main/be/common-definitions.html#typical.data",
+    ),
     # "out" is attr.string instead of attr.output, so that it is select()'able.
     "out": attr.string(mandatory = True, doc = "An output name for the copy of the binary"),
 }
