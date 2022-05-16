@@ -72,7 +72,7 @@ run_binary = rule(
             executable = True,
             allow_files = True,
             mandatory = True,
-            cfg = "host",
+            cfg = "exec",
         ),
         "env": attr.string_dict(
             doc = "Environment variables of the action.<br/><br/>Subject to " +
