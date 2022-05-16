@@ -37,7 +37,10 @@ def _common_impl(ctx, is_windows, is_executable):
     if is_executable:
         return [DefaultInfo(files = files, runfiles = runfiles, executable = ctx.outputs.out)]
     else:
-        return [DefaultInfo(files = files, runfiles = runfiles)]
+        # Do not include the copied file into the default runfiles of the
+        # target, but ensure that it is picked up by native rule's data
+        # attribute despite https://github.com/bazelbuild/bazel/issues/15043.
+        return [DefaultInfo(files = files, data_runfiles = runfiles)]
 
 def _impl(ctx):
     return _common_impl(ctx, ctx.attr.is_windows, False)
