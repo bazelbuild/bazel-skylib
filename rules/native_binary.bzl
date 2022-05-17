@@ -23,7 +23,7 @@ don't depend on Bash and work with --shell_executable="".
 def _impl_rule(ctx):
     out = ctx.actions.declare_file(ctx.attr.out)
     ctx.actions.symlink(
-        target_file = ctx.file.src,
+        target_file = ctx.executable.src,
         output = out,
         is_executable = True,
     )
