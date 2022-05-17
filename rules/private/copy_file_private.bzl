@@ -75,7 +75,10 @@ def _copy_file_impl(ctx):
     if ctx.attr.is_executable:
         return [DefaultInfo(files = files, runfiles = runfiles, executable = ctx.outputs.out)]
     else:
-        return [DefaultInfo(files = files, runfiles = runfiles)]
+        # Do not include the copied file into the default runfiles of the
+        # target, but ensure that it is picked up by native rule's data
+        # attribute despite https://github.com/bazelbuild/bazel/issues/15043.
+        return [DefaultInfo(files = files, data_runfiles = runfiles)]
 
 _ATTRS = {
     "src": attr.label(mandatory = True, allow_single_file = True),

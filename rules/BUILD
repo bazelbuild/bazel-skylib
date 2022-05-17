@@ -41,7 +41,6 @@ bzl_library(
 bzl_library(
     name = "native_binary",
     srcs = ["native_binary.bzl"],
-    deps = ["//rules/private:copy_file_private"],
 )
 
 bzl_library(
