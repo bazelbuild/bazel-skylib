@@ -2,10 +2,12 @@
 
 Unit testing support.
 
-Unlike most Skylib files, this exports three modules:
+Unlike most Skylib files, this exports four modules:
 * `unittest` which contains functions to declare and define unit tests
 * `analysistest` which contains functions to declare and define analysis tests
+* `loadingtest` which contains functions to decalre and define loading phase test
 * `asserts` which contains the assertions used to within tests
+
 
 <a id="#unittest_toolchain"></a>
 
