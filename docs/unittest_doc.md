@@ -94,9 +94,9 @@ A rule definition that should be stored in a global whose name ends in
 analysistest.begin(<a href="#analysistest.begin-ctx">ctx</a>)
 </pre>
 
-Begins a unit test.
+Begins an analysis test.
 
-This should be the first function called in a unit test implementation
+This should be the first function called in an analysis test implementation
 function. It initializes a "test environment" that is used to collect
 assertion failures so that they can be reported and logged at the end of the
 test.
