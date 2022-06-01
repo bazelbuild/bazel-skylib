@@ -21,6 +21,7 @@ def _all_test(env):
     """Unit tests for subpackages.all."""
 
     all_pkgs = [
+        "copy_directory",
         "copy_file",
         "diff_test",
         "expand_template",
@@ -37,6 +38,7 @@ def _all_test(env):
 
     # These exist in all cases
     filtered_pkgs = [
+        "copy_directory",
         "copy_file",
         "expand_template",
         "select_file",

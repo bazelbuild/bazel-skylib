@@ -3,6 +3,12 @@ load("//:bzl_library.bzl", "bzl_library")
 licenses(["notice"])
 
 bzl_library(
+    name = "copy_directory_private",
+    srcs = ["copy_directory_private.bzl"],
+    visibility = ["//rules:__pkg__"],
+)
+
+bzl_library(
     name = "copy_file_private",
     srcs = ["copy_file_private.bzl"],
     visibility = ["//rules:__pkg__"],

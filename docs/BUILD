@@ -23,6 +23,11 @@ stardoc_with_diff_test(
 )
 
 stardoc_with_diff_test(
+    bzl_library_target = "//rules:copy_directory",
+    out_label = "//docs:copy_directory_doc.md",
+)
+
+stardoc_with_diff_test(
     bzl_library_target = "//rules:copy_file",
     out_label = "//docs:copy_file_doc.md",
 )
