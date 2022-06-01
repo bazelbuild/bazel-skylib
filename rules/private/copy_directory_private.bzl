@@ -18,14 +18,7 @@ This rule copies a directory to another location using Bash (on Linux/macOS) or
 cmd.exe (on Windows).
 """
 
-# Hints for Bazel spawn strategy
-_execution_requirements = {
-    # Copying files is entirely IO-bound and there is no point doing this work remotely.
-    # Also, remote-execution does not allow source directory inputs, see
-    # https://github.com/bazelbuild/bazel/commit/c64421bc35214f0414e4f4226cc953e8c55fa0d2
-    # So we must not attempt to execute remotely in that case.
-    "no-remote-exec": "1",
-}
+load(":copy_common.bzl", "COPY_EXECUTION_REQUIREMENTS")
 
 def _copy_cmd(ctx, src, dst):
     # Most Windows binaries built with MSVC use a certain argument quoting
@@ -69,7 +62,7 @@ if not exist \"{src}\\\" (
         mnemonic = mnemonic,
         progress_message = progress_message,
         use_default_shell_env = True,
-        execution_requirements = _execution_requirements,
+        execution_requirements = COPY_EXECUTION_REQUIREMENTS,
     )
 
 def _copy_bash(ctx, src, dst):
@@ -92,7 +85,7 @@ rm -rf \"$2\" && cp -fR \"$1/\" \"$2\"
         mnemonic = mnemonic,
         progress_message = progress_message,
         use_default_shell_env = True,
-        execution_requirements = _execution_requirements,
+        execution_requirements = COPY_EXECUTION_REQUIREMENTS,
     )
 
 def copy_directory_action(ctx, src, dst, is_windows = False):
