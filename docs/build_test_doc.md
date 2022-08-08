@@ -1,3 +1,9 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+A test verifying other targets build as part of a `bazel test`
+
+<a id="#build_test"></a>
+
 ## build_test
 
 <pre>
@@ -9,9 +15,6 @@ Test rule checking that other targets build.
 This works not by an instance of this test failing, but instead by
 the targets it depends on failing to build, and hence failing
 the attempt to run this test.
-
-NOTE: At the moment, this won't work on Windows; but someone adding
-support would be welcomed.
 
 Typical usage:
 
@@ -26,42 +29,13 @@ Typical usage:
 ```
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="build_test-name">
-      <td><code>name</code></td>
-      <td>
-        required.
-        <p>
-          The name of the test rule.
-        </p>
-      </td>
-    </tr>
-    <tr id="build_test-targets">
-      <td><code>targets</code></td>
-      <td>
-        required.
-        <p>
-          A list of targets to ensure build.
-        </p>
-      </td>
-    </tr>
-    <tr id="build_test-kwargs">
-      <td><code>kwargs</code></td>
-      <td>
-        optional.
-        <p>
-          The <a href="https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="build_test-name"></a>name |  The name of the test rule.   |  none |
+| <a id="build_test-targets"></a>targets |  A list of targets to ensure build.   |  none |
+| <a id="build_test-kwargs"></a>kwargs |  The &lt;a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-tests"&gt;common attributes for tests&lt;/a&gt;.   |  none |
 
 

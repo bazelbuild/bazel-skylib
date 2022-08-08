@@ -1,4 +1,9 @@
-<a name="#analysis_test"></a>
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+A test verifying other targets can be successfully analyzed as part of a `bazel test`
+
+<a id="#analysis_test"></a>
+
 ## analysis_test
 
 <pre>
@@ -32,30 +37,12 @@ Test rule checking that other targets can be successfully analyzed.
       name: The name of the test rule.
       targets: A list of targets to ensure build.
 
-### Attributes
+**ATTRIBUTES**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="analysis_test-name">
-      <td><code>name</code></td>
-      <td>
-        <a href="https://bazel.build/docs/build-ref.html#name">Name</a>; required
-        <p>
-          A unique name for this target.
-        </p>
-      </td>
-    </tr>
-    <tr id="analysis_test-targets">
-      <td><code>targets</code></td>
-      <td>
-        <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a>; required
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="analysis_test-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
+| <a id="analysis_test-targets"></a>targets |  -   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | required |  |
 
 

@@ -9,6 +9,7 @@ toolchain_type(
 
 unittest_toolchain(
     name = "cmd",
+    escape_chars_with = {"%": "%"},
     failure_templ = """@echo off
 echo %s
 exit /b 1
@@ -30,14 +31,13 @@ toolchain(
 
 unittest_toolchain(
     name = "bash",
+    escape_other_chars_with = "\\",
     failure_templ = """#!/bin/sh
-cat <<'EOF'
-%s
-EOF
+echo %s
 exit 1
 """,
     file_ext = ".sh",
-    join_on = "\n",
+    join_on = "\necho ",
     success_templ = "#!/bin/sh\nexit 0",
     visibility = ["//visibility:public"],
 )

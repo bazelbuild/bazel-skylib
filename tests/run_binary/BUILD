@@ -82,7 +82,7 @@ write_file(
             "@echo>>%OUT% ENV_PATH_CMD=(%ENV_PATH_CMD%)",
         ],
         "//conditions:default": [
-            "#!/bin/bash",
+            "#!/usr/bin/env bash",
             "echo > \"$OUT\" \"arg1=($1)\"",
             "echo >> \"$OUT\" \"arg2=($2)\"",
             "echo >> \"$OUT\" \"ENV_LOCATION=($ENV_LOCATION)\"",

@@ -1,6 +1,6 @@
 # Skylib
 
-[![Build status](https://badge.buildkite.com/921dc61e2d3a350ec40efb291914360c0bfa9b6196fa357420.svg?branch=master)](https://buildkite.com/bazel/bazel-skylib)
+[![Build status](https://badge.buildkite.com/921dc61e2d3a350ec40efb291914360c0bfa9b6196fa357420.svg?branch=main)](https://buildkite.com/bazel/bazel-skylib)
 
 Skylib is a library of Starlark functions for manipulating collections, file paths,
 and various other data types in the domain of Bazel build rules.
@@ -51,6 +51,7 @@ s = shell.quote(p)
 * [new_sets](docs/new_sets_doc.md)
 * [shell](docs/shell_doc.md)
 * [structs](docs/structs_doc.md)
+* [subpackages](docs/subpackages_doc.md)
 * [types](docs/types_doc.md)
 * [unittest](docs/unittest_doc.md)
 * [versions](docs/versions_doc.md)
@@ -59,6 +60,9 @@ s = shell.quote(p)
 
 * [analysis_test](docs/analysis_test_doc.md)
 * [build_test](docs/build_test_doc.md)
+* [copy_file](docs/copy_file_doc.md)
+* [expand_template](docs/expand_template_doc.md)
+* [write_file](docs/write_file_doc.md)
 
 ## Writing a new module
 
@@ -117,3 +121,8 @@ ERROR: Analysis of target '//foo:bar' failed; build aborted: no matching toolcha
 
 then you probably forgot to load and call `bazel_skylib_workspace()` in your
 `WORKSPACE` file.
+
+### Maintainer's guide
+
+See the [maintaner's guide](docs/maintainers_guide.md) for instructions for
+cutting a new release.

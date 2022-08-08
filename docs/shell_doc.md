@@ -1,3 +1,9 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+Skylib module containing shell utility functions.
+
+<a id="#shell.array_literal"></a>
+
 ## shell.array_literal
 
 <pre>
@@ -14,27 +20,20 @@ Note that all elements in the array are quoted (using `shell.quote`) for
 safety, even if they do not need to be.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="shell.array_literal-iterable">
-      <td><code>iterable</code></td>
-      <td>
-        required.
-        <p>
-          A sequence of elements. Elements that are not strings will be
-    converted to strings first, by calling `str()`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="shell.array_literal-iterable"></a>iterable |  A sequence of elements. Elements that are not strings will be converted to strings first, by calling <code>str()</code>.   |  none |
+
+**RETURNS**
+
+A string that represents the sequence as a shell array; that is,
+parentheses containing the quoted elements.
+
+
+<a id="#shell.quote"></a>
 
 ## shell.quote
 
@@ -48,24 +47,15 @@ This function quotes the given string (in case it contains spaces or other
 shell metacharacters.)
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="shell.quote-s">
-      <td><code>s</code></td>
-      <td>
-        required.
-        <p>
-          The string to quote.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="shell.quote-s"></a>s |  The string to quote.   |  none |
+
+**RETURNS**
+
+A quoted version of the string that can be passed to a shell command.
 
 

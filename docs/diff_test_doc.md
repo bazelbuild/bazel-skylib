@@ -1,7 +1,17 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+A test rule that compares two binary files.
+
+The rule uses a Bash command (diff) on Linux/macOS/non-Windows, and a cmd.exe
+command (fc.exe) on Windows (no Bash is required).
+
+
+<a id="#diff_test"></a>
+
 ## diff_test
 
 <pre>
-diff_test(<a href="#diff_test-name">name</a>, <a href="#diff_test-file1">file1</a>, <a href="#diff_test-file2">file2</a>, <a href="#diff_test-kwargs">kwargs</a>)
+diff_test(<a href="#diff_test-name">name</a>, <a href="#diff_test-file1">file1</a>, <a href="#diff_test-file2">file2</a>, <a href="#diff_test-failure_message">failure_message</a>, <a href="#diff_test-kwargs">kwargs</a>)
 </pre>
 
 A test that compares two files.
@@ -9,51 +19,15 @@ A test that compares two files.
 The test succeeds if the files' contents match.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="diff_test-name">
-      <td><code>name</code></td>
-      <td>
-        required.
-        <p>
-          The name of the test rule.
-        </p>
-      </td>
-    </tr>
-    <tr id="diff_test-file1">
-      <td><code>file1</code></td>
-      <td>
-        required.
-        <p>
-          Label of the file to compare to <code>file2</code>.
-        </p>
-      </td>
-    </tr>
-    <tr id="diff_test-file2">
-      <td><code>file2</code></td>
-      <td>
-        required.
-        <p>
-          Label of the file to compare to <code>file1</code>.
-        </p>
-      </td>
-    </tr>
-    <tr id="diff_test-kwargs">
-      <td><code>kwargs</code></td>
-      <td>
-        optional.
-        <p>
-          The <a href="https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="diff_test-name"></a>name |  The name of the test rule.   |  none |
+| <a id="diff_test-file1"></a>file1 |  Label of the file to compare to &lt;code&gt;file2&lt;/code&gt;.   |  none |
+| <a id="diff_test-file2"></a>file2 |  Label of the file to compare to &lt;code&gt;file1&lt;/code&gt;.   |  none |
+| <a id="diff_test-failure_message"></a>failure_message |  Additional message to log if the files' contents do not match.   |  <code>None</code> |
+| <a id="diff_test-kwargs"></a>kwargs |  The &lt;a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-tests"&gt;common attributes for tests&lt;/a&gt;.   |  none |
 
 

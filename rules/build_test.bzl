@@ -16,15 +16,37 @@
 
 load("//lib:new_sets.bzl", "sets")
 
+def _empty_test_impl(ctx):
+    extension = ".bat" if ctx.attr.is_windows else ".sh"
+    content = "exit 0" if ctx.attr.is_windows else "#!/usr/bin/env bash\nexit 0"
+    executable = ctx.actions.declare_file(ctx.label.name + extension)
+    ctx.actions.write(
+        output = executable,
+        is_executable = True,
+        content = content,
+    )
+
+    return [DefaultInfo(
+        files = depset([executable]),
+        executable = executable,
+        runfiles = ctx.runfiles(files = ctx.files.data),
+    )]
+
+_empty_test = rule(
+    implementation = _empty_test_impl,
+    attrs = {
+        "data": attr.label_list(allow_files = True),
+        "is_windows": attr.bool(mandatory = True),
+    },
+    test = True,
+)
+
 def build_test(name, targets, **kwargs):
     """Test rule checking that other targets build.
 
     This works not by an instance of this test failing, but instead by
     the targets it depends on failing to build, and hence failing
     the attempt to run this test.
-
-    NOTE: At the moment, this won't work on Windows; but someone adding
-    support would be welcomed.
 
     Typical usage:
 
@@ -41,7 +63,7 @@ def build_test(name, targets, **kwargs):
     Args:
       name: The name of the test rule.
       targets: A list of targets to ensure build.
-      **kwargs: The <a href="https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
+      **kwargs: The <a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
     """
     if len(targets) == 0:
         fail("targets must be non-empty", "targets")
@@ -75,16 +97,18 @@ def build_test(name, targets, **kwargs):
             outs = [full_name + ".out"],
             testonly = 1,
             visibility = ["//visibility:private"],
-            # TODO: Does this need something else for Windows?
             cmd = "touch $@",
+            cmd_bat = "type nul > $@",
             **genrule_args
         )
 
-    native.sh_test(
+    _empty_test(
         name = name,
-        # TODO: Does this need something else for Windows?
-        srcs = ["@bazel_skylib//rules:empty_test.sh"],
         data = test_data,
         size = kwargs.pop("size", "small"),  # Default to small for test size
+        is_windows = select({
+            "@bazel_tools//src/conditions:host_windows": True,
+            "//conditions:default": False,
+        }),
         **kwargs
     )

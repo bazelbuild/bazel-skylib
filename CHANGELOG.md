@@ -1,3 +1,54 @@
+Release 1.2.1
+
+Bugfix release: fixes build failure with --incompatible_disallow_empty_glob
+(#359)
+
+**Contributors**
+
+Alexandre Rostovtsev, Ivo List
+
+
+Release 1.2.0
+
+**New Features**
+
+-   The unittest toolchain has better support for special characters in failure
+    messages (#320)
+-   Use portable Bash shebangs for BSD compatibility (#329)
+-   Add loadingtest - tests which evaluate during the loading phase (#347)
+-   Add doc parameter to analysistest.make, allowing analysis tests to be
+    documented in a Stardoc-friendly way (#343, #352)
+
+**Contributors**
+
+Alexandre Rostovtsev, Geoffrey Martin-Noble, Kevin Kress, Samuel Freilich,
+UebelAndre, Yesudeep Mangalapilly
+
+
+Release 1.1.1 (initially tagged as 1.1.0)
+
+**New Features**
+
+-   Gazelle: support relative imports (#271) and imports from `@bazel_tools`
+    (#273)
+-   Add partial.is_instance() (#276)
+-   Allow unittest.suite() to accept partial calls of test rules (#276)
+-   Allow specifying additional aspects to target under test in
+    analysistest.make() (#299)
+-   Add Windows support for build_test (#302)
+
+**Incompatible Changes**
+
+-   structs.to_dict() ignores deprecated to_json()/to_proto() methods (#295)
+
+**Contributors**
+
+aiuto, alandonovan, Alex Eagle, Alexandre Rostovtsev, Andrew Z Allen, c-parsons,
+Christopher Sauer, Daniel Wagner-Hall, David Sanderson, dmaclach, Laurent Le
+Brun, Mansur, Olek Wojnar, Philipp Wollermann, River, Samuel Giddins, Thaler
+Benedek
+
+
 Release 1.0.3
 
 **Significant Changes**
@@ -41,7 +92,7 @@ Release 0.9.0
     https://docs.google.com/document/d/1vc8v-kXjvgZOdQdnxPTaV0rrLxtP2XwnD2tAZlYJOqw/edit#bookmark=id.iiumwic0jphr
 -   selects.bzl: Add config_setting_group for config_setting AND/OR-chaining
     Implements
-    https://github.com/bazelbuild/proposals/blob/master/designs/2018-11-09-config-setting-chaining.md.
+    https://github.com/bazelbuild/proposals/blob/HEAD/designs/2018-11-09-config-setting-chaining.md.
 -   Make sets.bzl point to new_sets.bzl instead of old_sets.bzl. new_sets.bzl
     and old_sets.bzl should be removed in the following skylib release.
 

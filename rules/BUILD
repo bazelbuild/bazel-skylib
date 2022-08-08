@@ -22,6 +22,12 @@ bzl_library(
 )
 
 bzl_library(
+    name = "copy_directory",
+    srcs = ["copy_directory.bzl"],
+    deps = ["//rules/private:copy_directory_private"],
+)
+
+bzl_library(
     name = "write_file",
     srcs = ["write_file.bzl"],
     deps = ["//rules/private:write_file_private"],
@@ -30,12 +36,17 @@ bzl_library(
 bzl_library(
     name = "diff_test",
     srcs = ["diff_test.bzl"],
+    deps = ["//lib:shell"],
+)
+
+bzl_library(
+    name = "expand_template",
+    srcs = ["expand_template.bzl"],
 )
 
 bzl_library(
     name = "native_binary",
     srcs = ["native_binary.bzl"],
-    deps = ["//rules/private:copy_file_private"],
 )
 
 bzl_library(
@@ -49,16 +60,11 @@ bzl_library(
     srcs = ["common_settings.bzl"],
 )
 
-# Exported for build_test.bzl to make sure of, it is an implementation detail
-# of the rule and should not be directly used by anything else.
-exports_files(["empty_test.sh"])
-
 filegroup(
     name = "test_deps",
     testonly = True,
     srcs = [
         "BUILD",
-        "empty_test.sh",
     ] + glob(["*.bzl"]),
 )
 
@@ -68,14 +74,6 @@ filegroup(
     srcs = [
         "BUILD",
     ] + glob(["*.bzl"]),
-    visibility = [
-        "//:__pkg__",
-    ],
-)
-
-filegroup(
-    name = "bins",
-    srcs = glob(["*.sh"]),
     visibility = [
         "//:__pkg__",
     ],

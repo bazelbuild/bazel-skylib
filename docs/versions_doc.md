@@ -1,3 +1,9 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+Skylib module containing functions for checking Bazel versions.
+
+<a id="#versions.get"></a>
+
 ## versions.get
 
 <pre>
@@ -7,6 +13,8 @@ versions.get()
 Returns the current Bazel version
 
 
+
+<a id="#versions.parse"></a>
 
 ## versions.parse
 
@@ -19,26 +27,19 @@ Parses a version string into a 3-tuple of ints
 int tuples can be compared directly using binary operators (<, >).
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="versions.parse-bazel_version">
-      <td><code>bazel_version</code></td>
-      <td>
-        required.
-        <p>
-          the Bazel version string
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="versions.parse-bazel_version"></a>bazel_version |  the Bazel version string   |  none |
+
+**RETURNS**
+
+An int 3-tuple of a (major, minor, patch) version.
+
+
+<a id="#versions.check"></a>
 
 ## versions.check
 
@@ -48,44 +49,17 @@ versions.check(<a href="#versions.check-minimum_bazel_version">minimum_bazel_ver
 
 Check that the version of Bazel is valid within the specified range.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="versions.check-minimum_bazel_version">
-      <td><code>minimum_bazel_version</code></td>
-      <td>
-        required.
-        <p>
-          minimum version of Bazel expected
-        </p>
-      </td>
-    </tr>
-    <tr id="versions.check-maximum_bazel_version">
-      <td><code>maximum_bazel_version</code></td>
-      <td>
-        optional. default is <code>None</code>
-        <p>
-          maximum version of Bazel expected
-        </p>
-      </td>
-    </tr>
-    <tr id="versions.check-bazel_version">
-      <td><code>bazel_version</code></td>
-      <td>
-        optional. default is <code>None</code>
-        <p>
-          the version of Bazel to check. Used for testing, defaults to native.bazel_version
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="versions.check-minimum_bazel_version"></a>minimum_bazel_version |  minimum version of Bazel expected   |  none |
+| <a id="versions.check-maximum_bazel_version"></a>maximum_bazel_version |  maximum version of Bazel expected   |  <code>None</code> |
+| <a id="versions.check-bazel_version"></a>bazel_version |  the version of Bazel to check. Used for testing, defaults to native.bazel_version   |  <code>None</code> |
+
+
+<a id="#versions.is_at_most"></a>
 
 ## versions.is_at_most
 
@@ -95,35 +69,20 @@ versions.is_at_most(<a href="#versions.is_at_most-threshold">threshold</a>, <a h
 
 Check that a version is lower or equals to a threshold.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="versions.is_at_most-threshold">
-      <td><code>threshold</code></td>
-      <td>
-        required.
-        <p>
-          the maximum version string
-        </p>
-      </td>
-    </tr>
-    <tr id="versions.is_at_most-version">
-      <td><code>version</code></td>
-      <td>
-        required.
-        <p>
-          the version string to be compared to the threshold
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="versions.is_at_most-threshold"></a>threshold |  the maximum version string   |  none |
+| <a id="versions.is_at_most-version"></a>version |  the version string to be compared to the threshold   |  none |
+
+**RETURNS**
+
+True if version <= threshold.
+
+
+<a id="#versions.is_at_least"></a>
 
 ## versions.is_at_least
 
@@ -133,33 +92,16 @@ versions.is_at_least(<a href="#versions.is_at_least-threshold">threshold</a>, <a
 
 Check that a version is higher or equals to a threshold.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="versions.is_at_least-threshold">
-      <td><code>threshold</code></td>
-      <td>
-        required.
-        <p>
-          the minimum version string
-        </p>
-      </td>
-    </tr>
-    <tr id="versions.is_at_least-version">
-      <td><code>version</code></td>
-      <td>
-        required.
-        <p>
-          the version string to be compared to the threshold
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="versions.is_at_least-threshold"></a>threshold |  the minimum version string   |  none |
+| <a id="versions.is_at_least-version"></a>version |  the version string to be compared to the threshold   |  none |
+
+**RETURNS**
+
+True if version >= threshold.
 
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Copyright 2019 The Bazel Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,8 +52,8 @@ function test_write_empty_text() {
 
 function test_write_nonempty_text() {
   cat "$(rlocation bazel_skylib/tests/write_file/out/nonempty.txt)" >"$TEST_log"
-  expect_log '^aaa$'
-  expect_log '^bbb$'
+  expect_log '^aaa'
+  expect_log '^bbb'
 }
 
 function test_write_empty_bin() {
@@ -60,7 +62,7 @@ function test_write_empty_bin() {
 
 function test_write_nonempty_bin() {
   cat "$(rlocation bazel_skylib/tests/write_file/nonempty-bin-out.txt)" >"$TEST_log"
-  expect_log '^potato$'
+  expect_log '^potato'
 }
 
 run_suite "write_file_tests test suite"

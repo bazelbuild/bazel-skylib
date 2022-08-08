@@ -15,11 +15,12 @@
 """Unit tests for unittest.bzl."""
 
 load("//lib:partial.bzl", "partial")
-load("//lib:unittest.bzl", "analysistest", "asserts", "unittest")
+load("//lib:unittest.bzl", "analysistest", "asserts", "loadingtest", "unittest")
 
 ###################################
-####### fail_basic_test ###########
+####### basic_failing_test ########
 ###################################
+
 def _basic_failing_test(ctx):
     """Unit tests for a basic library verification test that fails."""
     env = unittest.begin(ctx)
@@ -29,6 +30,27 @@ def _basic_failing_test(ctx):
     return unittest.end(env)
 
 basic_failing_test = unittest.make(_basic_failing_test)
+
+###################################
+####### failure_message_test ######
+###################################
+
+def _failure_message_test(ctx):
+    """Failing unit test with arbitrary content in the message."""
+    env = unittest.begin(ctx)
+
+    if not ctx.attr.message:
+        unittest.fail(env, "Message must be non-empty.")
+    asserts.equals(env, "", ctx.attr.message)
+
+    return unittest.end(env)
+
+failure_message_test = unittest.make(
+    _failure_message_test,
+    attrs = {
+        "message": attr.string(),
+    },
+)
 
 ###################################
 ####### basic_passing_test ########
@@ -100,7 +122,7 @@ def _failure_testing_test(ctx):
     return analysistest.end(env)
 
 def _failure_testing_fake_rule(ctx):
-    ignore = [ctx]
+    _ignore = [ctx]  # @unused
     fail("This rule should never work")
 
 failure_testing_fake_rule = rule(
@@ -124,7 +146,7 @@ def _fail_unexpected_passing_test(ctx):
     return analysistest.end(env)
 
 def _fail_unexpected_passing_fake_rule(ctx):
-    _ignore = [ctx]
+    _ignore = [ctx]  # @unused
     return []
 
 fail_unexpected_passing_fake_rule = rule(
@@ -194,6 +216,51 @@ inspect_actions_test = analysistest.make(
     _inspect_actions_test,
 )
 
+####################################
+####### inspect_aspect_test #######
+####################################
+_AddedByAspectInfo = provider(
+    doc = "Example provider added by example aspect",
+    fields = {
+        "value": "(str)",
+    },
+)
+
+def _example_aspect_impl(target, ctx):
+    _ignore = [target, ctx]  # @unused
+    return [
+        _AddedByAspectInfo(value = "attached by aspect"),
+    ]
+
+example_aspect = aspect(
+    implementation = _example_aspect_impl,
+)
+
+def _inspect_aspect_test(ctx):
+    """Test verifying aspect run on a target."""
+    env = analysistest.begin(ctx)
+
+    tut = env.ctx.attr.target_under_test
+    asserts.equals(env, "attached by aspect", tut[_AddedByAspectInfo].value)
+    return analysistest.end(env)
+
+def _inspect_aspect_fake_rule(ctx):
+    out_file = ctx.actions.declare_file("out.txt")
+    ctx.actions.run_shell(
+        command = "echo 'hello' > %s" % out_file.basename,
+        outputs = [out_file],
+    )
+    return [DefaultInfo(files = depset([out_file]))]
+
+inspect_aspect_fake_rule = rule(
+    implementation = _inspect_aspect_fake_rule,
+)
+
+inspect_aspect_test = analysistest.make(
+    _inspect_aspect_test,
+    extra_target_under_test_aspects = [example_aspect],
+)
+
 ########################################
 ####### inspect_output_dirs_test #######
 ########################################
@@ -240,6 +307,13 @@ inspect_output_dirs_test = analysistest.make(
         "//command_line_option:minimum_os_version": "1234.5678",
     },
 )
+
+def _loading_phase_test(env):
+    loadingtest.equals(env, "self_glob", ["unittest_tests.bzl"], native.glob(["unittest_tests.bzl"]))
+
+    # now use our own calls to assert we created a test case rule and test_suite for it.
+    loadingtest.equals(env, "test_exists", True, native.existing_rule(env.name + "_self_glob") != None)
+    loadingtest.equals(env, "suite_exists", True, native.existing_rule(env.name + "_tests") != None)
 
 #########################################
 
@@ -293,6 +367,15 @@ def unittest_passing_tests_suite():
         tags = ["manual"],
     )
 
+    inspect_aspect_test(
+        name = "inspect_aspect_test",
+        target_under_test = ":inspect_aspect_fake_target",
+    )
+    inspect_aspect_fake_rule(
+        name = "inspect_aspect_fake_target",
+        tags = ["manual"],
+    )
+
     inspect_output_dirs_test(
         name = "inspect_output_dirs_test",
         target_under_test = ":inspect_output_dirs_fake_target",
@@ -301,3 +384,6 @@ def unittest_passing_tests_suite():
         name = "inspect_output_dirs_fake_target",
         tags = ["manual"],
     )
+
+    loading_env = loadingtest.make("selftest")
+    _loading_phase_test(loading_env)

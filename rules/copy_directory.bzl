@@ -1,6 +1,4 @@
-#!/bin/bash
-
-# Copyright 2019 The Bazel Authors. All rights reserved.
+# Copyright 2022 The Bazel Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,15 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-# A script to manually regenerate the documentation contained in the docs/ directory.
-# Should be run from the WORKSPACE root.
 
-set -euo pipefail
+"""A rule that copies a directory to another place.
 
-bazel build docs:all --experimental_remap_main_repo
+The rule uses a Bash command on Linux/macOS/non-Windows, and a cmd.exe command
+on Windows (no Bash is required).
+"""
 
-for filename in bazel-bin/docs/*_gen.md; do
-    target_filename="$(echo $filename | sed -En "s/bazel-bin\/(.*)_gen.md/\1/p").md"
-    cp $filename $target_filename
-done
+load(
+    "//rules/private:copy_directory_private.bzl",
+    _copy_directory = "copy_directory",
+    _copy_directory_action = "copy_directory_action",
+)
+
+copy_directory = _copy_directory
+copy_directory_action = _copy_directory_action

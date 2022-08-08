@@ -18,6 +18,8 @@ The rule uses a Bash command (diff) on Linux/macOS/non-Windows, and a cmd.exe
 command (fc.exe) on Windows (no Bash is required).
 """
 
+load("//lib:shell.bzl", "shell")
+
 def _runfiles_path(f):
     if f.root.path:
         return f.path[len(f.root.path) + 1:]  # generated file
@@ -44,21 +46,43 @@ for /F "tokens=2* usebackq" %%i in (`findstr.exe /l /c:"!F1! " "%MF%"`) do (
   set RF1=!RF1:/=\\!
 )
 if "!RF1!" equ "" (
-  echo>&2 ERROR: !F1! not found
-  exit /b 1
+  if "%RUNFILES_MANIFEST_ONLY%" neq "1" if exist "%RUNFILES_DIR%\\%F1%" (
+    set RF1="%RUNFILES_DIR%\\%F1%"
+  ) else (
+    if exist "{file1}" (
+      set RF1="{file1}"
+    )
+  )
+  if "!RF1!" neq "" (
+    set RF1=!RF1:/=\\!
+  ) else (
+    echo>&2 ERROR: !F1! not found
+    exit /b 1
+  )
 )
 for /F "tokens=2* usebackq" %%i in (`findstr.exe /l /c:"!F2! " "%MF%"`) do (
   set RF2=%%i
   set RF2=!RF2:/=\\!
 )
 if "!RF2!" equ "" (
-  echo>&2 ERROR: !F2! not found
-  exit /b 1
+  if "%RUNFILES_MANIFEST_ONLY%" neq "1" if exist "%RUNFILES_DIR%\\%F2%" (
+    set RF2="%RUNFILES_DIR%\\%F2%"
+  ) else (
+    if exist "{file2}" (
+      set RF2="{file2}"
+    )
+  )
+  if "!RF2!" neq "" (
+    set RF2=!RF2:/=\\!
+  ) else (
+    echo>&2 ERROR: !F2! not found
+    exit /b 1
+  )
 )
 fc.exe 2>NUL 1>NUL /B "!RF1!" "!RF2!"
 if %ERRORLEVEL% neq 0 (
   if %ERRORLEVEL% equ 1 (
-    echo>&2 FAIL: files "{file1}" and "{file2}" differ
+    echo>&2 FAIL: files "{file1}" and "{file2}" differ. {fail_msg}
     exit /b 1
   ) else (
     fc.exe /B "!RF1!" "!RF2!"
@@ -66,6 +90,8 @@ if %ERRORLEVEL% neq 0 (
   )
 )
 """.format(
+                # TODO(arostovtsev): use shell.escape_for_bat when https://github.com/bazelbuild/bazel-skylib/pull/363 is merged
+                fail_msg = ctx.attr.failure_message,
                 file1 = _runfiles_path(ctx.file.file1),
                 file2 = _runfiles_path(ctx.file.file2),
             ),
@@ -75,7 +101,7 @@ if %ERRORLEVEL% neq 0 (
         test_bin = ctx.actions.declare_file(ctx.label.name + "-test.sh")
         ctx.actions.write(
             output = test_bin,
-            content = r"""#!/bin/bash
+            content = r"""#!/usr/bin/env bash
 set -euo pipefail
 F1="{file1}"
 F2="{file2}"
@@ -95,10 +121,11 @@ else
   exit 1
 fi
 if ! diff "$RF1" "$RF2"; then
-  echo >&2 "FAIL: files \"{file1}\" and \"{file2}\" differ"
+  echo >&2 "FAIL: files \"{file1}\" and \"{file2}\" differ. "{fail_msg}
   exit 1
 fi
 """.format(
+                fail_msg = shell.quote(ctx.attr.failure_message),
                 file1 = _runfiles_path(ctx.file.file1),
                 file2 = _runfiles_path(ctx.file.file2),
             ),
@@ -112,6 +139,7 @@ fi
 
 _diff_test = rule(
     attrs = {
+        "failure_message": attr.string(),
         "file1": attr.label(
             allow_single_file = True,
             mandatory = True,
@@ -126,7 +154,7 @@ _diff_test = rule(
     implementation = _diff_test_impl,
 )
 
-def diff_test(name, file1, file2, **kwargs):
+def diff_test(name, file1, file2, failure_message = None, **kwargs):
     """A test that compares two files.
 
     The test succeeds if the files' contents match.
@@ -135,12 +163,14 @@ def diff_test(name, file1, file2, **kwargs):
       name: The name of the test rule.
       file1: Label of the file to compare to <code>file2</code>.
       file2: Label of the file to compare to <code>file1</code>.
-      **kwargs: The <a href="https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
+      failure_message: Additional message to log if the files' contents do not match.
+      **kwargs: The <a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-tests">common attributes for tests</a>.
     """
     _diff_test(
         name = name,
         file1 = file1,
         file2 = file2,
+        failure_message = failure_message,
         is_windows = select({
             "@bazel_tools//src/conditions:host_windows": True,
             "//conditions:default": False,

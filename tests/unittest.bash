@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Copyright 2015 The Bazel Authors. All rights reserved.
 #
@@ -21,7 +21,7 @@
 # A typical test suite looks like so:
 #
 #   ------------------------------------------------------------------------
-#   #!/bin/bash
+#   #!/usr/bin/env bash
 #
 #   source path/to/unittest.bash || exit 1
 #
@@ -674,8 +674,12 @@ if [ "$UNAME" = "linux" ] || [[ "$UNAME" =~ msys_nt* ]]; then
     }
 else
     function timestamp() {
-      # OS X and FreeBSD do not have %N so python is the best we can do
-      python -c 'import time; print int(round(time.time() * 1000))'
+      # macOS and BSDs do not have %N, so Python is the best we can do.
+      # LC_ALL=C works around python 3.8 and 3.9 crash on macOS when the
+      # filesystem encoding is unspecified (e.g. when LANG=en_US).
+      local PYTHON=python
+      command -v python3 &> /dev/null && PYTHON=python3
+      LC_ALL=C "${PYTHON}" -c 'import time; print(int(round(time.time() * 1000)))'
     }
 fi
 

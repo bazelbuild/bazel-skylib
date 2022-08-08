@@ -83,9 +83,77 @@ def _add_test(ctx):
 
 add_test = unittest.make(_add_test)
 
+def _omit_test(ctx):
+    """Unit tests for dicts.omit."""
+    env = unittest.begin(ctx)
+
+    # Test empty dict, empty list.
+    asserts.equals(env, {}, dicts.omit({}, []))
+
+    # Test empty dict, nonempty list.
+    asserts.equals(env, {}, dicts.omit({}, ["a"]))
+
+    # Test nonempty dict, empty list.
+    asserts.equals(env, {"a": 1}, dicts.omit({"a": 1}, []))
+
+    # Test key in dict.
+    asserts.equals(env, {}, dicts.omit({"a": 1}, ["a"]))
+
+    # Test key not in dict.
+    asserts.equals(env, {"a": 1}, dicts.omit({"a": 1}, ["b"]))
+
+    # Since dictionaries are passed around by reference, make sure that the
+    # result of dicts.omit is always a *copy* by modifying it afterwards and
+    # ensuring that the original argument doesn't also reflect the change. We do
+    # this to protect against someone who might attempt to optimize the function
+    # by returning the argument itself in the empty list case.
+    original = {"a": 1}
+    result = dicts.omit(original, [])
+    result["a"] = 2
+    asserts.equals(env, 1, original["a"])
+
+    return unittest.end(env)
+
+omit_test = unittest.make(_omit_test)
+
+def _pick_test(ctx):
+    """Unit tests for dicts.pick."""
+    env = unittest.begin(ctx)
+
+    # Test empty dict, empty list.
+    asserts.equals(env, {}, dicts.pick({}, []))
+
+    # Test empty dict, nonempty list.
+    asserts.equals(env, {}, dicts.pick({}, ["a"]))
+
+    # Test nonempty dict, empty list.
+    asserts.equals(env, {}, dicts.pick({"a": 1}, []))
+
+    # Test key in dict.
+    asserts.equals(env, {"a": 1}, dicts.pick({"a": 1}, ["a"]))
+
+    # Test key not in dict.
+    asserts.equals(env, {}, dicts.pick({"a": 1}, ["b"]))
+
+    # Since dictionaries are passed around by reference, make sure that the
+    # result of dicts.pick is always a *copy* by modifying it afterwards and
+    # ensuring that the original argument doesn't also reflect the change. We do
+    # this to protect against someone who might attempt to optimize the function
+    # by returning the argument itself.
+    original = {"a": 1}
+    result = dicts.pick(original, ["a"])
+    result["a"] = 2
+    asserts.equals(env, 1, original["a"])
+
+    return unittest.end(env)
+
+pick_test = unittest.make(_pick_test)
+
 def dicts_test_suite():
     """Creates the test targets and test suite for dicts.bzl tests."""
     unittest.suite(
         "dicts_tests",
         add_test,
+        omit_test,
+        pick_test,
     )

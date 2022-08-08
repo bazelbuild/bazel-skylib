@@ -1,61 +1,44 @@
-<a name="#unittest_toolchain"></a>
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+Unit testing support.
+
+Unlike most Skylib files, this exports two modules: `unittest` which contains
+functions to declare and define unit tests, and `asserts` which contains the
+assertions used to within tests.
+
+
+<a id="#unittest_toolchain"></a>
+
 ## unittest_toolchain
 
 <pre>
-unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unittest_toolchain-failure_templ">failure_templ</a>, <a href="#unittest_toolchain-file_ext">file_ext</a>, <a href="#unittest_toolchain-join_on">join_on</a>, <a href="#unittest_toolchain-success_templ">success_templ</a>)
+unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unittest_toolchain-escape_chars_with">escape_chars_with</a>, <a href="#unittest_toolchain-escape_other_chars_with">escape_other_chars_with</a>, <a href="#unittest_toolchain-failure_templ">failure_templ</a>, <a href="#unittest_toolchain-file_ext">file_ext</a>,
+                   <a href="#unittest_toolchain-join_on">join_on</a>, <a href="#unittest_toolchain-success_templ">success_templ</a>)
 </pre>
 
 
 
-### Attributes
+**ATTRIBUTES**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="unittest_toolchain-name">
-      <td><code>name</code></td>
-      <td>
-        <a href="https://bazel.build/docs/build-ref.html#name">Name</a>; required
-        <p>
-          A unique name for this target.
-        </p>
-      </td>
-    </tr>
-    <tr id="unittest_toolchain-failure_templ">
-      <td><code>failure_templ</code></td>
-      <td>
-        String; required
-      </td>
-    </tr>
-    <tr id="unittest_toolchain-file_ext">
-      <td><code>file_ext</code></td>
-      <td>
-        String; required
-      </td>
-    </tr>
-    <tr id="unittest_toolchain-join_on">
-      <td><code>join_on</code></td>
-      <td>
-        String; required
-      </td>
-    </tr>
-    <tr id="unittest_toolchain-success_templ">
-      <td><code>success_templ</code></td>
-      <td>
-        String; required
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="unittest_toolchain-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
+| <a id="unittest_toolchain-escape_chars_with"></a>escape_chars_with |  Dictionary of characters that need escaping in test failure message to prefix appended to escape those characters. For example, <code>{"%": "%", "&gt;": "^"}</code> would replace <code>%</code> with <code>%%</code> and <code>&gt;</code> with <code>^&gt;</code> in the failure message before that is included in <code>success_templ</code>.   | <a href="https://bazel.build/docs/skylark/lib/dict.html">Dictionary: String -> String</a> | optional | {} |
+| <a id="unittest_toolchain-escape_other_chars_with"></a>escape_other_chars_with |  String to prefix every character in test failure message which is not a key in <code>escape_chars_with</code> before including that in <code>success_templ</code>. For example, <code>""</code> would prefix every character in the failure message (except those in the keys of <code>escape_chars_with</code>) with <code>\</code>.   | String | optional | "" |
+| <a id="unittest_toolchain-failure_templ"></a>failure_templ |  Test script template with a single <code>%s</code>. That placeholder is replaced with the lines in the failure message joined with the string specified in <code>join_with</code>. The resulting script should print the failure message and exit with non-zero status.   | String | required |  |
+| <a id="unittest_toolchain-file_ext"></a>file_ext |  File extension for test script, including leading dot.   | String | required |  |
+| <a id="unittest_toolchain-join_on"></a>join_on |  String used to join the lines in the failure message before including the resulting string in the script specified in <code>failure_templ</code>.   | String | required |  |
+| <a id="unittest_toolchain-success_templ"></a>success_templ |  Test script generated when the test passes. Should exit with status 0.   | String | required |  |
+
+
+<a id="#analysistest.make"></a>
 
 ## analysistest.make
 
 <pre>
-analysistest.make(<a href="#analysistest.make-impl">impl</a>, <a href="#analysistest.make-expect_failure">expect_failure</a>, <a href="#analysistest.make-attrs">attrs</a>, <a href="#analysistest.make-config_settings">config_settings</a>)
+analysistest.make(<a href="#analysistest.make-impl">impl</a>, <a href="#analysistest.make-expect_failure">expect_failure</a>, <a href="#analysistest.make-attrs">attrs</a>, <a href="#analysistest.make-fragments">fragments</a>, <a href="#analysistest.make-config_settings">config_settings</a>,
+                  <a href="#analysistest.make-extra_target_under_test_aspects">extra_target_under_test_aspects</a>, <a href="#analysistest.make-doc">doc</a>)
 </pre>
 
 Creates an analysis test rule from its implementation function.
@@ -84,58 +67,26 @@ your_test = analysistest.make(_your_test)
 Recall that names of test rules must end in `_test`.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="analysistest.make-impl">
-      <td><code>impl</code></td>
-      <td>
-        required.
-        <p>
-          The implementation function of the unit test.
-        </p>
-      </td>
-    </tr>
-    <tr id="analysistest.make-expect_failure">
-      <td><code>expect_failure</code></td>
-      <td>
-        optional. default is <code>False</code>
-        <p>
-          If true, the analysis test will expect the target_under_test
-    to fail. Assertions can be made on the underlying failure using asserts.expect_failure
-        </p>
-      </td>
-    </tr>
-    <tr id="analysistest.make-attrs">
-      <td><code>attrs</code></td>
-      <td>
-        optional. default is <code>{}</code>
-        <p>
-          An optional dictionary to supplement the attrs passed to the
-    unit test's `rule()` constructor.
-        </p>
-      </td>
-    </tr>
-    <tr id="analysistest.make-config_settings">
-      <td><code>config_settings</code></td>
-      <td>
-        optional. default is <code>{}</code>
-        <p>
-          A dictionary of configuration settings to change for the target under
-    test and its dependencies. This may be used to essentially change 'build flags' for
-    the target under test, and may thus be utilized to test multiple targets with different
-    flags in a single build
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.make-impl"></a>impl |  The implementation function of the unit test.   |  none |
+| <a id="analysistest.make-expect_failure"></a>expect_failure |  If true, the analysis test will expect the target_under_test to fail. Assertions can be made on the underlying failure using asserts.expect_failure   |  <code>False</code> |
+| <a id="analysistest.make-attrs"></a>attrs |  An optional dictionary to supplement the attrs passed to the unit test's <code>rule()</code> constructor.   |  <code>{}</code> |
+| <a id="analysistest.make-fragments"></a>fragments |  An optional list of fragment names that can be used to give rules access to language-specific parts of configuration.   |  <code>[]</code> |
+| <a id="analysistest.make-config_settings"></a>config_settings |  A dictionary of configuration settings to change for the target under test and its dependencies. This may be used to essentially change 'build flags' for the target under test, and may thus be utilized to test multiple targets with different flags in a single build   |  <code>{}</code> |
+| <a id="analysistest.make-extra_target_under_test_aspects"></a>extra_target_under_test_aspects |  An optional list of aspects to apply to the target_under_test in addition to those set up by default for the test harness itself.   |  <code>[]</code> |
+| <a id="analysistest.make-doc"></a>doc |  A description of the rule that can be extracted by documentation generating tools.   |  <code>""</code> |
+
+**RETURNS**
+
+A rule definition that should be stored in a global whose name ends in
+`_test`.
+
+
+<a id="#analysistest.begin"></a>
 
 ## analysistest.begin
 
@@ -151,27 +102,21 @@ assertion failures so that they can be reported and logged at the end of the
 test.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="analysistest.begin-ctx">
-      <td><code>ctx</code></td>
-      <td>
-        required.
-        <p>
-          The Skylark context. Pass the implementation function's `ctx` argument
-    in verbatim.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.begin-ctx"></a>ctx |  The Starlark context. Pass the implementation function's <code>ctx</code> argument in verbatim.   |  none |
+
+**RETURNS**
+
+A test environment struct that must be passed to assertions and finally to
+`unittest.end`. Do not rely on internal details about the fields in this
+struct as it may change.
+
+
+<a id="#analysistest.end"></a>
 
 ## analysistest.end
 
@@ -185,26 +130,19 @@ This must be called and returned at the end of an analysis test implementation f
 that the results are reported.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="analysistest.end-env">
-      <td><code>env</code></td>
-      <td>
-        required.
-        <p>
-          The test environment returned by `analysistest.begin`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.end-env"></a>env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+
+**RETURNS**
+
+A list of providers needed to automatically register the analysis test result.
+
+
+<a id="#analysistest.fail"></a>
 
 ## analysistest.fail
 
@@ -214,35 +152,16 @@ analysistest.fail(<a href="#analysistest.fail-env">env</a>, <a href="#analysiste
 
 Unconditionally causes the current test to fail.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="analysistest.fail-env">
-      <td><code>env</code></td>
-      <td>
-        required.
-        <p>
-          The test environment returned by `unittest.begin`.
-        </p>
-      </td>
-    </tr>
-    <tr id="analysistest.fail-msg">
-      <td><code>msg</code></td>
-      <td>
-        required.
-        <p>
-          The message to log describing the failure.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.fail-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| <a id="analysistest.fail-msg"></a>msg |  The message to log describing the failure.   |  none |
+
+
+<a id="#analysistest.target_actions"></a>
 
 ## analysistest.target_actions
 
@@ -252,26 +171,41 @@ analysistest.target_actions(<a href="#analysistest.target_actions-env">env</a>)
 
 Returns a list of actions registered by the target under test.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="analysistest.target_actions-env">
-      <td><code>env</code></td>
-      <td>
-        required.
-        <p>
-          The test environment returned by `analysistest.begin`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.target_actions-env"></a>env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+
+**RETURNS**
+
+A list of actions registered by the target under test
+
+
+<a id="#analysistest.target_bin_dir_path"></a>
+
+## analysistest.target_bin_dir_path
+
+<pre>
+analysistest.target_bin_dir_path(<a href="#analysistest.target_bin_dir_path-env">env</a>)
+</pre>
+
+Returns ctx.bin_dir.path for the target under test.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.target_bin_dir_path-env"></a>env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+
+**RETURNS**
+
+Output bin dir path string.
+
+
+<a id="#analysistest.target_under_test"></a>
 
 ## analysistest.target_under_test
 
@@ -281,26 +215,19 @@ analysistest.target_under_test(<a href="#analysistest.target_under_test-env">env
 
 Returns the target under test.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="analysistest.target_under_test-env">
-      <td><code>env</code></td>
-      <td>
-        required.
-        <p>
-          The test environment returned by `analysistest.begin`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.target_under_test-env"></a>env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+
+**RETURNS**
+
+The target under test.
+
+
+<a id="#asserts.expect_failure"></a>
 
 ## asserts.expect_failure
 
@@ -314,35 +241,16 @@ This requires that the analysis test is created with `analysistest.make()` and
 `expect_failures = True` is specified.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="asserts.expect_failure-env">
-      <td><code>env</code></td>
-      <td>
-        required.
-        <p>
-          The test environment returned by `analysistest.begin`.
-        </p>
-      </td>
-    </tr>
-    <tr id="asserts.expect_failure-expected_failure_msg">
-      <td><code>expected_failure_msg</code></td>
-      <td>
-        optional. default is <code>""</code>
-        <p>
-          The error message to expect as a result of analysis failures.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="asserts.expect_failure-env"></a>env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+| <a id="asserts.expect_failure-expected_failure_msg"></a>expected_failure_msg |  The error message to expect as a result of analysis failures.   |  <code>""</code> |
+
+
+<a id="#asserts.equals"></a>
 
 ## asserts.equals
 
@@ -352,54 +260,18 @@ asserts.equals(<a href="#asserts.equals-env">env</a>, <a href="#asserts.equals-e
 
 Asserts that the given `expected` and `actual` values are equal.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="asserts.equals-env">
-      <td><code>env</code></td>
-      <td>
-        required.
-        <p>
-          The test environment returned by `unittest.begin`.
-        </p>
-      </td>
-    </tr>
-    <tr id="asserts.equals-expected">
-      <td><code>expected</code></td>
-      <td>
-        required.
-        <p>
-          The expected value of some computation.
-        </p>
-      </td>
-    </tr>
-    <tr id="asserts.equals-actual">
-      <td><code>actual</code></td>
-      <td>
-        required.
-        <p>
-          The actual value returned by some computation.
-        </p>
-      </td>
-    </tr>
-    <tr id="asserts.equals-msg">
-      <td><code>msg</code></td>
-      <td>
-        optional. default is <code>None</code>
-        <p>
-          An optional message that will be printed that describes the failure.
-    If omitted, a default will be used.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="asserts.equals-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| <a id="asserts.equals-expected"></a>expected |  The expected value of some computation.   |  none |
+| <a id="asserts.equals-actual"></a>actual |  The actual value returned by some computation.   |  none |
+| <a id="asserts.equals-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>None</code> |
+
+
+<a id="#asserts.false"></a>
 
 ## asserts.false
 
@@ -409,45 +281,17 @@ asserts.false(<a href="#asserts.false-env">env</a>, <a href="#asserts.false-cond
 
 Asserts that the given `condition` is false.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="asserts.false-env">
-      <td><code>env</code></td>
-      <td>
-        required.
-        <p>
-          The test environment returned by `unittest.begin`.
-        </p>
-      </td>
-    </tr>
-    <tr id="asserts.false-condition">
-      <td><code>condition</code></td>
-      <td>
-        required.
-        <p>
-          A value that will be evaluated in a Boolean context.
-        </p>
-      </td>
-    </tr>
-    <tr id="asserts.false-msg">
-      <td><code>msg</code></td>
-      <td>
-        optional. default is <code>"Expected condition to be false, but was true."</code>
-        <p>
-          An optional message that will be printed that describes the failure.
-    If omitted, a default will be used.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="asserts.false-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| <a id="asserts.false-condition"></a>condition |  A value that will be evaluated in a Boolean context.   |  none |
+| <a id="asserts.false-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>"Expected condition to be false, but was true."</code> |
+
+
+<a id="#asserts.set_equals"></a>
 
 ## asserts.set_equals
 
@@ -457,54 +301,18 @@ asserts.set_equals(<a href="#asserts.set_equals-env">env</a>, <a href="#asserts.
 
 Asserts that the given `expected` and `actual` sets are equal.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="asserts.set_equals-env">
-      <td><code>env</code></td>
-      <td>
-        required.
-        <p>
-          The test environment returned by `unittest.begin`.
-        </p>
-      </td>
-    </tr>
-    <tr id="asserts.set_equals-expected">
-      <td><code>expected</code></td>
-      <td>
-        required.
-        <p>
-          The expected set resulting from some computation.
-        </p>
-      </td>
-    </tr>
-    <tr id="asserts.set_equals-actual">
-      <td><code>actual</code></td>
-      <td>
-        required.
-        <p>
-          The actual set returned by some computation.
-        </p>
-      </td>
-    </tr>
-    <tr id="asserts.set_equals-msg">
-      <td><code>msg</code></td>
-      <td>
-        optional. default is <code>None</code>
-        <p>
-          An optional message that will be printed that describes the failure.
-    If omitted, a default will be used.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="asserts.set_equals-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| <a id="asserts.set_equals-expected"></a>expected |  The expected set resulting from some computation.   |  none |
+| <a id="asserts.set_equals-actual"></a>actual |  The actual set returned by some computation.   |  none |
+| <a id="asserts.set_equals-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>None</code> |
+
+
+<a id="#asserts.new_set_equals"></a>
 
 ## asserts.new_set_equals
 
@@ -514,54 +322,18 @@ asserts.new_set_equals(<a href="#asserts.new_set_equals-env">env</a>, <a href="#
 
 Asserts that the given `expected` and `actual` sets are equal.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="asserts.new_set_equals-env">
-      <td><code>env</code></td>
-      <td>
-        required.
-        <p>
-          The test environment returned by `unittest.begin`.
-        </p>
-      </td>
-    </tr>
-    <tr id="asserts.new_set_equals-expected">
-      <td><code>expected</code></td>
-      <td>
-        required.
-        <p>
-          The expected set resulting from some computation.
-        </p>
-      </td>
-    </tr>
-    <tr id="asserts.new_set_equals-actual">
-      <td><code>actual</code></td>
-      <td>
-        required.
-        <p>
-          The actual set returned by some computation.
-        </p>
-      </td>
-    </tr>
-    <tr id="asserts.new_set_equals-msg">
-      <td><code>msg</code></td>
-      <td>
-        optional. default is <code>None</code>
-        <p>
-          An optional message that will be printed that describes the failure.
-    If omitted, a default will be used.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="asserts.new_set_equals-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| <a id="asserts.new_set_equals-expected"></a>expected |  The expected set resulting from some computation.   |  none |
+| <a id="asserts.new_set_equals-actual"></a>actual |  The actual set returned by some computation.   |  none |
+| <a id="asserts.new_set_equals-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>None</code> |
+
+
+<a id="#asserts.true"></a>
 
 ## asserts.true
 
@@ -571,45 +343,64 @@ asserts.true(<a href="#asserts.true-env">env</a>, <a href="#asserts.true-conditi
 
 Asserts that the given `condition` is true.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="asserts.true-env">
-      <td><code>env</code></td>
-      <td>
-        required.
-        <p>
-          The test environment returned by `unittest.begin`.
-        </p>
-      </td>
-    </tr>
-    <tr id="asserts.true-condition">
-      <td><code>condition</code></td>
-      <td>
-        required.
-        <p>
-          A value that will be evaluated in a Boolean context.
-        </p>
-      </td>
-    </tr>
-    <tr id="asserts.true-msg">
-      <td><code>msg</code></td>
-      <td>
-        optional. default is <code>"Expected condition to be true, but was false."</code>
-        <p>
-          An optional message that will be printed that describes the failure.
-    If omitted, a default will be used.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="asserts.true-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| <a id="asserts.true-condition"></a>condition |  A value that will be evaluated in a Boolean context.   |  none |
+| <a id="asserts.true-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>"Expected condition to be true, but was false."</code> |
+
+
+<a id="#loadingtest.make"></a>
+
+## loadingtest.make
+
+<pre>
+loadingtest.make(<a href="#loadingtest.make-name">name</a>)
+</pre>
+
+Creates a loading phase test environment and test_suite.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="loadingtest.make-name"></a>name |  name of the suite of tests to create   |  none |
+
+**RETURNS**
+
+loading phase environment passed to other loadingtest functions
+
+
+<a id="#loadingtest.equals"></a>
+
+## loadingtest.equals
+
+<pre>
+loadingtest.equals(<a href="#loadingtest.equals-env">env</a>, <a href="#loadingtest.equals-test_case">test_case</a>, <a href="#loadingtest.equals-expected">expected</a>, <a href="#loadingtest.equals-actual">actual</a>)
+</pre>
+
+Creates a test case for asserting state at LOADING phase.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="loadingtest.equals-env"></a>env |  Loading test env created from loadingtest.make   |  none |
+| <a id="loadingtest.equals-test_case"></a>test_case |  Name of the test case   |  none |
+| <a id="loadingtest.equals-expected"></a>expected |  Expected value to test   |  none |
+| <a id="loadingtest.equals-actual"></a>actual |  Actual value received.   |  none |
+
+**RETURNS**
+
+None, creates test case
+
+
+<a id="#register_unittest_toolchains"></a>
 
 ## register_unittest_toolchains
 
@@ -620,6 +411,8 @@ register_unittest_toolchains()
 Registers the toolchains for unittest users.
 
 
+
+<a id="#unittest.make"></a>
 
 ## unittest.make
 
@@ -653,36 +446,21 @@ your_test = unittest.make(_your_test)
 Recall that names of test rules must end in `_test`.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="unittest.make-impl">
-      <td><code>impl</code></td>
-      <td>
-        required.
-        <p>
-          The implementation function of the unit test.
-        </p>
-      </td>
-    </tr>
-    <tr id="unittest.make-attrs">
-      <td><code>attrs</code></td>
-      <td>
-        optional. default is <code>{}</code>
-        <p>
-          An optional dictionary to supplement the attrs passed to the
-    unit test's `rule()` constructor.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="unittest.make-impl"></a>impl |  The implementation function of the unit test.   |  none |
+| <a id="unittest.make-attrs"></a>attrs |  An optional dictionary to supplement the attrs passed to the unit test's <code>rule()</code> constructor.   |  <code>{}</code> |
+
+**RETURNS**
+
+A rule definition that should be stored in a global whose name ends in
+`_test`.
+
+
+<a id="#unittest.suite"></a>
 
 ## unittest.suite
 
@@ -699,10 +477,10 @@ and then creating each target one by one. To reduce duplication, we recommend
 writing a macro in your `.bzl` file to instantiate all targets, and calling
 that macro from your BUILD file so you only have to load one symbol.
 
-For the case where your unit tests do not take any (non-default) attributes --
-i.e., if your unit tests do not test rules -- you can use this function to
-create the targets and wrap them in a single test_suite target. In your
-`.bzl` file, write:
+You can use this function to create the targets and wrap them in a single
+test_suite target. If a test rule requires no arguments, you can simply list
+it as an argument. If you wish to supply attributes explicitly, you can do so
+using `partial.make()`. For instance, in your `.bzl` file, you could write:
 
 ```
 def your_test_suite():
@@ -710,7 +488,7 @@ def your_test_suite():
       "your_test_suite",
       your_test,
       your_other_test,
-      yet_another_test,
+      partial.make(yet_another_test, timeout = "short"),
   )
 ```
 
@@ -729,36 +507,16 @@ is the index of the test in the `test_rules` list, which is used to uniquely
 name each target.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="unittest.suite-name">
-      <td><code>name</code></td>
-      <td>
-        required.
-        <p>
-          The name of the `test_suite` target, and the prefix of all the test
-    target names.
-        </p>
-      </td>
-    </tr>
-    <tr id="unittest.suite-test_rules">
-      <td><code>test_rules</code></td>
-      <td>
-        optional.
-        <p>
-          A list of test rules defines by `unittest.test`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="unittest.suite-name"></a>name |  The name of the <code>test_suite</code> target, and the prefix of all the test target names.   |  none |
+| <a id="unittest.suite-test_rules"></a>test_rules |  A list of test rules defines by <code>unittest.test</code>.   |  none |
+
+
+<a id="#unittest.begin"></a>
 
 ## unittest.begin
 
@@ -774,27 +532,21 @@ assertion failures so that they can be reported and logged at the end of the
 test.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="unittest.begin-ctx">
-      <td><code>ctx</code></td>
-      <td>
-        required.
-        <p>
-          The Skylark context. Pass the implementation function's `ctx` argument
-    in verbatim.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="unittest.begin-ctx"></a>ctx |  The Starlark context. Pass the implementation function's <code>ctx</code> argument in verbatim.   |  none |
+
+**RETURNS**
+
+A test environment struct that must be passed to assertions and finally to
+`unittest.end`. Do not rely on internal details about the fields in this
+struct as it may change.
+
+
+<a id="#unittest.end"></a>
 
 ## unittest.end
 
@@ -808,26 +560,19 @@ This must be called and returned at the end of a unit test implementation functi
 that the results are reported.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="unittest.end-env">
-      <td><code>env</code></td>
-      <td>
-        required.
-        <p>
-          The test environment returned by `unittest.begin`.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="unittest.end-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+
+**RETURNS**
+
+A list of providers needed to automatically register the test result.
+
+
+<a id="#unittest.fail"></a>
 
 ## unittest.fail
 
@@ -837,33 +582,12 @@ unittest.fail(<a href="#unittest.fail-env">env</a>, <a href="#unittest.fail-msg"
 
 Unconditionally causes the current test to fail.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="unittest.fail-env">
-      <td><code>env</code></td>
-      <td>
-        required.
-        <p>
-          The test environment returned by `unittest.begin`.
-        </p>
-      </td>
-    </tr>
-    <tr id="unittest.fail-msg">
-      <td><code>msg</code></td>
-      <td>
-        required.
-        <p>
-          The message to log describing the failure.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="unittest.fail-env"></a>env |  The test environment returned by <code>unittest.begin</code>.   |  none |
+| <a id="unittest.fail-msg"></a>msg |  The message to log describing the failure.   |  none |
 
 

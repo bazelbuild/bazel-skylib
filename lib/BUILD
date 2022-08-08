@@ -81,6 +81,11 @@ bzl_library(
 )
 
 bzl_library(
+    name = "subpackages",
+    srcs = ["subpackages.bzl"],
+)
+
+bzl_library(
     name = "types",
     srcs = ["types.bzl"],
 )

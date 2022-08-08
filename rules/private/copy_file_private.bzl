@@ -19,6 +19,8 @@ cmd.exe (on Windows). '_copy_xfile' marks the resulting file executable,
 '_copy_file' does not.
 """
 
+load(":copy_common.bzl", "COPY_EXECUTION_REQUIREMENTS")
+
 def copy_cmd(ctx, src, dst):
     # Most Windows binaries built with MSVC use a certain argument quoting
     # scheme. Bazel uses that scheme too to quote arguments. However,
@@ -45,6 +47,7 @@ def copy_cmd(ctx, src, dst):
         mnemonic = "CopyFile",
         progress_message = "Copying files",
         use_default_shell_env = True,
+        execution_requirements = COPY_EXECUTION_REQUIREMENTS,
     )
 
 def copy_bash(ctx, src, dst):
@@ -56,6 +59,7 @@ def copy_bash(ctx, src, dst):
         mnemonic = "CopyFile",
         progress_message = "Copying files",
         use_default_shell_env = True,
+        execution_requirements = COPY_EXECUTION_REQUIREMENTS,
     )
 
 def _copy_file_impl(ctx):
@@ -65,18 +69,20 @@ def _copy_file_impl(ctx):
             target_file = ctx.file.src,
             is_executable = ctx.attr.is_executable,
         )
+    elif ctx.attr.is_windows:
+        copy_cmd(ctx, ctx.file.src, ctx.outputs.out)
     else:
-        if ctx.attr.is_windows:
-            copy_cmd(ctx, ctx.file.src, ctx.outputs.out)
-        else:
-            copy_bash(ctx, ctx.file.src, ctx.outputs.out)
+        copy_bash(ctx, ctx.file.src, ctx.outputs.out)
 
     files = depset(direct = [ctx.outputs.out])
     runfiles = ctx.runfiles(files = [ctx.outputs.out])
     if ctx.attr.is_executable:
         return [DefaultInfo(files = files, runfiles = runfiles, executable = ctx.outputs.out)]
     else:
-        return [DefaultInfo(files = files, runfiles = runfiles)]
+        # Do not include the copied file into the default runfiles of the
+        # target, but ensure that it is picked up by native rule's data
+        # attribute despite https://github.com/bazelbuild/bazel/issues/15043.
+        return [DefaultInfo(files = files, data_runfiles = runfiles)]
 
 _ATTRS = {
     "src": attr.label(mandatory = True, allow_single_file = True),

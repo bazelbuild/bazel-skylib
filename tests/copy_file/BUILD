@@ -80,8 +80,8 @@ genrule(
     output_to_bindir = 1,
     tools = [
         ":bin_gen",
-        ":bin_src",
         ":bin_gen_symlink",
+        ":bin_src",
         ":bin_src_symlink",
     ],
 )
@@ -147,8 +147,8 @@ copy_file(
     name = "copy_xsrc_symlink",
     src = "a_with_exec_bit.txt",
     out = "xout/a-out-symlink.sh",
-    is_executable = True,
     allow_symlink = True,
+    is_executable = True,
 )
 
 copy_file(
@@ -162,12 +162,12 @@ copy_file(
     name = "copy_xgen_symlink",
     src = ":gen",
     out = "xout/gen-out-symlink.sh",
-    is_executable = True,
     allow_symlink = True,
+    is_executable = True,
 )
 
 genrule(
     name = "gen",
     outs = ["b.txt"],
-    cmd = "echo -e '#!/bin/bash\necho potato' > $@",
+    cmd = "echo -e '#!/usr/bin/env bash\necho potato' > $@",
 )

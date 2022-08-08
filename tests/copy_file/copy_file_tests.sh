@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Copyright 2019 The Bazel Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,25 +42,25 @@ source "$(rlocation bazel_skylib/tests/unittest.bash)" \
 
 function test_copy_src() {
   cat "$(rlocation bazel_skylib/tests/copy_file/out/a-out.txt)" >"$TEST_log"
-  expect_log '^#!/bin/bash$'
+  expect_log '^#!/usr/bin/env bash$'
   expect_log '^echo aaa$'
 }
 
 function test_copy_src_symlink() {
   cat "$(rlocation bazel_skylib/tests/copy_file/out/a-out-symlink.txt)" >"$TEST_log"
-  expect_log '^#!/bin/bash$'
+  expect_log '^#!/usr/bin/env bash$'
   expect_log '^echo aaa$'
 }
 
 function test_copy_gen() {
   cat "$(rlocation bazel_skylib/tests/copy_file/out/gen-out.txt)" >"$TEST_log"
-  expect_log '^#!/bin/bash$'
+  expect_log '^#!/usr/bin/env bash$'
   expect_log '^echo potato$'
 }
 
 function test_copy_gen_symlink() {
   cat "$(rlocation bazel_skylib/tests/copy_file/out/gen-out-symlink.txt)" >"$TEST_log"
-  expect_log '^#!/bin/bash$'
+  expect_log '^#!/usr/bin/env bash$'
   expect_log '^echo potato$'
 }
 

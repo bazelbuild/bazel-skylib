@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Copyright 2019 The Bazel Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,14 +43,18 @@ source "$(rlocation bazel_skylib/tests/unittest.bash)" \
 function import_diff_test() {
   local -r repo="$1"
   mkdir -p "${repo}/rules"
+  mkdir -p "${repo}/lib"
+  touch "${repo}/lib/BUILD"
   touch "${repo}/WORKSPACE"
   ln -sf "$(rlocation bazel_skylib/rules/diff_test.bzl)" \
          "${repo}/rules/diff_test.bzl"
+  ln -sf "$(rlocation bazel_skylib/lib/shell.bzl)" \
+         "${repo}/lib/shell.bzl"
   echo "exports_files(['diff_test.bzl'])" > "${repo}/rules/BUILD"
 }
 
 function assert_simple_diff_test() {
-  local -r flag="$1"
+  local -r flags="$1"
   local -r ws="${TEST_TMPDIR}/$2"
   local -r subdir="$3"
 
@@ -74,17 +80,17 @@ eof
   echo bar > "$ws/$subdir/b.txt"
 
   (cd "$ws" && \
-   bazel test "$flag" "//${subdir%/}:same" --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test ${flags} "//${subdir%/}:same" --test_output=errors 1>"$TEST_log" 2>&1 \
      || fail "expected success")
 
   (cd "$ws" && \
-   bazel test "$flag" "//${subdir%/}:different" --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test ${flags} "//${subdir%/}:different" --test_output=errors 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
   expect_log "FAIL: files \"${subdir}a.txt\" and \"${subdir}b.txt\" differ"
 }
 
 function assert_from_ext_repo() {
-  local -r flag="$1"
+  local -r flags="$1"
   local -r ws="${TEST_TMPDIR}/$2"
 
   # Import the rule to an external repository.
@@ -169,47 +175,97 @@ diff_test(
 eof
 
   (cd "$ws/main" && \
-   bazel test "$flag" //:same --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test ${flags} //:same --test_output=errors 1>"$TEST_log" 2>&1 \
      || fail "expected success")
 
   (cd "$ws/main" && \
-   bazel test "$flag" //:different1 --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test ${flags} //:different1 --test_output=errors 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
   expect_log 'FAIL: files "external/ext1/foo/foo.txt" and "external/ext2/foo/bar.txt" differ'
 
   (cd "$ws/main" && \
-   bazel test "$flag" //:different2 --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test ${flags} //:different2 --test_output=errors 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
   expect_log 'FAIL: files "external/ext1/foo/foo.txt" and "ext1/foo/foo.txt" differ'
 
   (cd "$ws/main" && \
-   bazel test "$flag" //:different3 --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test ${flags} //:different3 --test_output=errors 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
   expect_log 'FAIL: files "ext2/foo/foo.txt" and "external/ext2/foo/foo.txt" differ'
 }
 
 function test_simple_diff_test_with_legacy_external_runfiles() {
-  assert_simple_diff_test "--legacy_external_runfiles" "${FUNCNAME[0]}" ""
+  assert_simple_diff_test "--enable_runfiles --legacy_external_runfiles" "${FUNCNAME[0]}" ""
 }
 
 function test_simple_diff_test_without_legacy_external_runfiles() {
-  assert_simple_diff_test "--nolegacy_external_runfiles" "${FUNCNAME[0]}" ""
+  assert_simple_diff_test "--enable_runfiles --nolegacy_external_runfiles" "${FUNCNAME[0]}" ""
+}
+
+function test_simple_diff_test_with_manifest() {
+  assert_simple_diff_test "--noenable_runfiles" "${FUNCNAME[0]}" ""
 }
 
 function test_directory_named_external_with_legacy_external_runfiles() {
-  assert_simple_diff_test "--legacy_external_runfiles" "${FUNCNAME[0]}" "path/to/direcotry/external/in/name/"
+  assert_simple_diff_test "--enable_runfiles --legacy_external_runfiles" "${FUNCNAME[0]}" "path/to/direcotry/external/in/name/"
 }
 
 function test_directory_named_external_without_legacy_external_runfiles() {
-  assert_simple_diff_test "--nolegacy_external_runfiles" "${FUNCNAME[0]}" "path/to/direcotry/external/in/name/"
+  assert_simple_diff_test "--enable_runfiles --nolegacy_external_runfiles" "${FUNCNAME[0]}" "path/to/direcotry/external/in/name/"
+}
+
+function test_directory_named_external_with_manifest() {
+  assert_simple_diff_test "--noenable_runfiles" "${FUNCNAME[0]}" "path/to/direcotry/external/in/name/"
 }
 
 function test_from_ext_repo_with_legacy_external_runfiles() {
-  assert_from_ext_repo "--legacy_external_runfiles" "${FUNCNAME[0]}"
+  assert_from_ext_repo "--enable_runfiles --legacy_external_runfiles" "${FUNCNAME[0]}"
 }
 
 function test_from_ext_repo_without_legacy_external_runfiles() {
-  assert_from_ext_repo "--nolegacy_external_runfiles" "${FUNCNAME[0]}"
+  assert_from_ext_repo "--enable_runfiles --nolegacy_external_runfiles" "${FUNCNAME[0]}"
+}
+
+function test_from_ext_repo_with_manifest() {
+  assert_from_ext_repo "--noenable_runfiles" "${FUNCNAME[0]}"
+}
+
+function test_failure_message() {
+  local -r ws="${TEST_TMPDIR}/${FUNCNAME[0]}"
+
+  import_diff_test "$ws"
+  touch "$ws/WORKSPACE"
+  cat >"$ws/BUILD" <<'eof'
+load("//rules:diff_test.bzl", "diff_test")
+
+diff_test(
+    name = "different_with_message",
+    failure_message = "This is an `$error`",  # TODO(arostovtsev): also test Windows cmd.exe escapes when https://github.com/bazelbuild/bazel-skylib/pull/363 is merged
+    file1 = "a.txt",
+    file2 = "b.txt",
+)
+
+diff_test(
+    name = "different_without_message",
+    file1 = "c.txt",
+    file2 = "d.txt",
+)
+eof
+  echo foo > "$ws/a.txt"
+  echo bar > "$ws/b.txt"
+  echo foo > "$ws/c.txt"
+  echo bar > "$ws/d.txt"
+
+  (cd "$ws" && \
+   bazel test //:different_with_message --test_output=errors 1>"$TEST_log" 2>&1 \
+     && fail "expected failure" || true)
+  # TODO(arostovtsev): also test Windows cmd.exe escapes when https://github.com/bazelbuild/bazel-skylib/pull/363 is merged
+  expect_log "FAIL: files \"a.txt\" and \"b.txt\" differ. This is an \`\$error\`"
+
+  (cd "$ws" && \
+   bazel test //:different_without_message --test_output=errors 1>"$TEST_log" 2>&1 \
+     && fail "expected failure" || true)
+  expect_log "FAIL: files \"c.txt\" and \"d.txt\" differ. $"
 }
 
 cd "$TEST_TMPDIR"

@@ -1,3 +1,14 @@
+<!-- Generated with Stardoc: http://skydoc.bazel.build -->
+
+Skylib module containing file path manipulation functions.
+
+NOTE: The functions in this module currently only support paths with Unix-style
+path separators (forward slash, "/"); they do not handle Windows-style paths
+with backslash separators or drive letters.
+
+
+<a id="#paths.basename"></a>
+
 ## paths.basename
 
 <pre>
@@ -12,26 +23,19 @@ the Unix `basename` command (which would return the path segment preceding
 the final slash).
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="paths.basename-p">
-      <td><code>p</code></td>
-      <td>
-        required.
-        <p>
-          The path whose basename should be returned.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="paths.basename-p"></a>p |  The path whose basename should be returned.   |  none |
+
+**RETURNS**
+
+The basename of the path, which includes the extension.
+
+
+<a id="#paths.dirname"></a>
 
 ## paths.dirname
 
@@ -46,26 +50,19 @@ The dirname is the portion of `p` up to but not including the file portion
 included, unless omitting them would make the dirname empty.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="paths.dirname-p">
-      <td><code>p</code></td>
-      <td>
-        required.
-        <p>
-          The path whose dirname should be returned.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="paths.dirname-p"></a>p |  The path whose dirname should be returned.   |  none |
+
+**RETURNS**
+
+The dirname of the path.
+
+
+<a id="#paths.is_absolute"></a>
 
 ## paths.is_absolute
 
@@ -75,26 +72,19 @@ paths.is_absolute(<a href="#paths.is_absolute-path">path</a>)
 
 Returns `True` if `path` is an absolute path.
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="paths.is_absolute-path">
-      <td><code>path</code></td>
-      <td>
-        required.
-        <p>
-          A path (which is a string).
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="paths.is_absolute-path"></a>path |  A path (which is a string).   |  none |
+
+**RETURNS**
+
+`True` if `path` is an absolute path.
+
+
+<a id="#paths.join"></a>
 
 ## paths.join
 
@@ -113,35 +103,20 @@ already ends in a separator.
 If any component is an absolute path, all previous components are discarded.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="paths.join-path">
-      <td><code>path</code></td>
-      <td>
-        required.
-        <p>
-          A path segment.
-        </p>
-      </td>
-    </tr>
-    <tr id="paths.join-others">
-      <td><code>others</code></td>
-      <td>
-        optional.
-        <p>
-          Additional path segments.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="paths.join-path"></a>path |  A path segment.   |  none |
+| <a id="paths.join-others"></a>others |  Additional path segments.   |  none |
+
+**RETURNS**
+
+A string containing the joined paths.
+
+
+<a id="#paths.normalize"></a>
 
 ## paths.normalize
 
@@ -166,26 +141,19 @@ POSIX platforms; specifically:
 - Multiple adjacent internal slashes are collapsed into a single slash.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="paths.normalize-path">
-      <td><code>path</code></td>
-      <td>
-        required.
-        <p>
-          A path.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="paths.normalize-path"></a>path |  A path.   |  none |
+
+**RETURNS**
+
+The normalized path.
+
+
+<a id="#paths.relativize"></a>
 
 ## paths.relativize
 
@@ -204,35 +172,20 @@ Relativizing paths that start with parent directory references only works if
 the path both start with the same initial parent references.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="paths.relativize-path">
-      <td><code>path</code></td>
-      <td>
-        required.
-        <p>
-          The path to relativize.
-        </p>
-      </td>
-    </tr>
-    <tr id="paths.relativize-start">
-      <td><code>start</code></td>
-      <td>
-        required.
-        <p>
-          The ancestor path against which to relativize.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="paths.relativize-path"></a>path |  The path to relativize.   |  none |
+| <a id="paths.relativize-start"></a>start |  The ancestor path against which to relativize.   |  none |
+
+**RETURNS**
+
+The portion of `path` that is relative to `start`.
+
+
+<a id="#paths.replace_extension"></a>
 
 ## paths.replace_extension
 
@@ -245,36 +198,20 @@ Replaces the extension of the file at the end of a path.
 If the path has no extension, the new extension is added to it.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="paths.replace_extension-p">
-      <td><code>p</code></td>
-      <td>
-        required.
-        <p>
-          The path whose extension should be replaced.
-        </p>
-      </td>
-    </tr>
-    <tr id="paths.replace_extension-new_extension">
-      <td><code>new_extension</code></td>
-      <td>
-        required.
-        <p>
-          The new extension for the file. The new extension should
-    begin with a dot if you want the new filename to have one.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="paths.replace_extension-p"></a>p |  The path whose extension should be replaced.   |  none |
+| <a id="paths.replace_extension-new_extension"></a>new_extension |  The new extension for the file. The new extension should begin with a dot if you want the new filename to have one.   |  none |
+
+**RETURNS**
+
+The path with the extension replaced (or added, if it did not have one).
+
+
+<a id="#paths.split_extension"></a>
 
 ## paths.split_extension
 
@@ -288,24 +225,18 @@ Leading periods on the basename are ignored, so
 `path.split_extension(".bashrc")` returns `(".bashrc", "")`.
 
 
-### Parameters
+**PARAMETERS**
 
-<table class="params-table">
-  <colgroup>
-    <col class="col-param" />
-    <col class="col-description" />
-  </colgroup>
-  <tbody>
-    <tr id="paths.split_extension-p">
-      <td><code>p</code></td>
-      <td>
-        required.
-        <p>
-          The path whose root and extension should be split.
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="paths.split_extension-p"></a>p |  The path whose root and extension should be split.   |  none |
+
+**RETURNS**
+
+A tuple `(root, ext)` such that the root is the path without the file
+extension, and `ext` is the file extension (which, if non-empty, contains
+the leading dot). The returned tuple always satisfies the relationship
+`root + ext == p`.
 
 

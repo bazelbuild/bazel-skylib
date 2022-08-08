@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Copyright 2019 The Bazel Authors. All rights reserved.
 #
@@ -83,10 +83,11 @@ EOF
 
   # Create test files.
   mkdir -p testdir
-  cat > testdir/BUILD <<EOF
+  cat > testdir/BUILD <<'EOF'
 load("//tests:unittest_tests.bzl",
     "basic_passing_test",
     "basic_failing_test",
+    "failure_message_test",
     "fail_unexpected_passing_test",
     "fail_unexpected_passing_fake_rule")
 
@@ -94,10 +95,26 @@ basic_passing_test(name = "basic_passing_test")
 
 basic_failing_test(name = "basic_failing_test")
 
+failure_message_test(
+    name = "shell_escape_failure_message_test",
+    message = "Contains $FOO",
+)
+
+failure_message_test(
+   name = "cmd_escape_failure_message_test",
+   message = "Contains %FOO%",
+)
+
+failure_message_test(
+   name = "eof_failure_message_test",
+   message = "\nEOF\n more after EOF",
+)
+
 fail_unexpected_passing_test(
     name = "fail_unexpected_passing_test",
     target_under_test = ":fail_unexpected_passing_fake_target",
 )
+
 fail_unexpected_passing_fake_rule(
     name = "fail_unexpected_passing_fake_target",
     tags = ["manual"])
@@ -121,6 +138,36 @@ function test_basic_failing_test() {
       >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
 
   expect_log "In test _basic_failing_test from //tests:unittest_tests.bzl: Expected \"1\", but got \"2\""
+}
+
+function test_shell_escape_failure_message_test() {
+  local -r pkg="${FUNCNAME[0]}"
+  create_pkg "$pkg"
+
+  bazel test testdir:shell_escape_failure_message_test --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
+
+  expect_log 'In test _failure_message_test from //tests:unittest_tests.bzl: Expected "", but got "Contains $FOO"'
+}
+
+function test_cmd_escape_failure_message_test() {
+  local -r pkg="${FUNCNAME[0]}"
+  create_pkg "$pkg"
+
+  bazel test testdir:cmd_escape_failure_message_test --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
+
+  expect_log 'In test _failure_message_test from //tests:unittest_tests.bzl: Expected "", but got "Contains %FOO%"'
+}
+
+function test_eof_failure_message_test() {
+  local -r pkg="${FUNCNAME[0]}"
+  create_pkg "$pkg"
+
+  bazel test testdir:eof_failure_message_test --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
+
+  expect_log '^ more after EOF'
 }
 
 function test_fail_unexpected_passing_test() {

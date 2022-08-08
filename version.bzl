@@ -13,4 +13,4 @@
 # limitations under the License.
 """The version of bazel-skylib."""
 
-version = "1.0.3"
+version = "1.2.1"

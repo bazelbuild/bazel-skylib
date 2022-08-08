@@ -36,7 +36,14 @@ TOOLCHAIN_TYPE = "@bazel_skylib//toolchains/unittest:toolchain_type"
 
 _UnittestToolchainInfo = provider(
     doc = "Execution platform information for rules in the bazel_skylib repository.",
-    fields = ["file_ext", "success_templ", "failure_templ", "join_on"],
+    fields = [
+        "file_ext",
+        "success_templ",
+        "failure_templ",
+        "join_on",
+        "escape_chars_with",
+        "escape_other_chars_with",
+    ],
 )
 
 def _unittest_toolchain_impl(ctx):
@@ -47,6 +54,8 @@ def _unittest_toolchain_impl(ctx):
                 success_templ = ctx.attr.success_templ,
                 failure_templ = ctx.attr.failure_templ,
                 join_on = ctx.attr.join_on,
+                escape_chars_with = ctx.attr.escape_chars_with,
+                escape_other_chars_with = ctx.attr.escape_other_chars_with,
             ),
         ),
     ]
@@ -54,10 +63,59 @@ def _unittest_toolchain_impl(ctx):
 unittest_toolchain = rule(
     implementation = _unittest_toolchain_impl,
     attrs = {
-        "failure_templ": attr.string(mandatory = True),
-        "file_ext": attr.string(mandatory = True),
-        "join_on": attr.string(mandatory = True),
-        "success_templ": attr.string(mandatory = True),
+        "failure_templ": attr.string(
+            mandatory = True,
+            doc = (
+                "Test script template with a single `%s`. That " +
+                "placeholder is replaced with the lines in the " +
+                "failure message joined with the string " +
+                "specified in `join_with`. The resulting script " +
+                "should print the failure message and exit with " +
+                "non-zero status."
+            ),
+        ),
+        "file_ext": attr.string(
+            mandatory = True,
+            doc = (
+                "File extension for test script, including leading dot."
+            ),
+        ),
+        "join_on": attr.string(
+            mandatory = True,
+            doc = (
+                "String used to join the lines in the failure " +
+                "message before including the resulting string " +
+                "in the script specified in `failure_templ`."
+            ),
+        ),
+        "success_templ": attr.string(
+            mandatory = True,
+            doc = (
+                "Test script generated when the test passes. " +
+                "Should exit with status 0."
+            ),
+        ),
+        "escape_chars_with": attr.string_dict(
+            doc = (
+                "Dictionary of characters that need escaping in " +
+                "test failure message to prefix appended to escape " +
+                "those characters. For example, " +
+                '`{"%": "%", ">": "^"}` would replace `%` with ' +
+                "`%%` and `>` with `^>` in the failure message " +
+                "before that is included in `success_templ`."
+            ),
+        ),
+        "escape_other_chars_with": attr.string(
+            default = "",
+            doc = (
+                "String to prefix every character in test failure " +
+                "message which is not a key in `escape_chars_with` " +
+                "before including that in `success_templ`. For " +
+                'example, `"\"` would prefix every character in ' +
+                "the failure message (except those in the keys of " +
+                "`escape_chars_with`) with `\\`."
+            ),
+        ),
     },
 )
 
@@ -151,7 +209,9 @@ def _make_analysis_test(
         expect_failure = False,
         attrs = {},
         fragments = [],
-        config_settings = {}):
+        config_settings = {},
+        extra_target_under_test_aspects = [],
+        doc = ""):
     """Creates an analysis test rule from its implementation function.
 
     An analysis test verifies the behavior of a "real" rule target by examining
@@ -189,6 +249,9 @@ def _make_analysis_test(
           test and its dependencies. This may be used to essentially change 'build flags' for
           the target under test, and may thus be utilized to test multiple targets with different
           flags in a single build
+      extra_target_under_test_aspects: An optional list of aspects to apply to the target_under_test
+          in addition to those set up by default for the test harness itself.
+      doc: A description of the rule that can be extracted by documentation generating tools.
 
     Returns:
       A rule definition that should be stored in a global whose name ends in
@@ -209,13 +272,14 @@ def _make_analysis_test(
         target_attr_kwargs["cfg"] = test_transition
 
     attrs["target_under_test"] = attr.label(
-        aspects = [_action_retrieving_aspect],
+        aspects = [_action_retrieving_aspect] + extra_target_under_test_aspects,
         mandatory = True,
         **target_attr_kwargs
     )
 
     return rule(
         impl,
+        doc = doc,
         attrs = attrs,
         fragments = fragments,
         test = True,
@@ -333,7 +397,15 @@ def _end(env):
     tc = env.ctx.toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
     testbin = env.ctx.actions.declare_file(env.ctx.label.name + tc.file_ext)
     if env.failures:
-        cmd = tc.failure_templ % tc.join_on.join(env.failures)
+        failure_message_lines = "\n".join(env.failures).split("\n")
+        escaped_failure_message_lines = [
+            "".join([
+                tc.escape_chars_with.get(c, tc.escape_other_chars_with) + c
+                for c in line.elems()
+            ])
+            for line in failure_message_lines
+        ]
+        cmd = tc.failure_templ % tc.join_on.join(escaped_failure_message_lines)
     else:
         cmd = tc.success_templ
 
@@ -495,6 +567,67 @@ def _target_under_test(env):
             fail("test rule does not have a target_under_test")
     return result
 
+def _loading_test_impl(ctx):
+    tc = ctx.toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
+    content = tc.success_templ
+    if ctx.attr.failure_message:
+        content = tc.failure_templ % ctx.attr.failure_message
+
+    testbin = ctx.actions.declare_file("loading_test_" + ctx.label.name + tc.file_ext)
+    ctx.actions.write(
+        output = testbin,
+        content = content,
+        is_executable = True,
+    )
+    return [DefaultInfo(executable = testbin)]
+
+_loading_test = rule(
+    implementation = _loading_test_impl,
+    attrs = {
+        "failure_message": attr.string(),
+    },
+    toolchains = [TOOLCHAIN_TYPE],
+    test = True,
+)
+
+def _loading_make(name):
+    """Creates a loading phase test environment and test_suite.
+
+    Args:
+       name: name of the suite of tests to create
+
+    Returns:
+       loading phase environment passed to other loadingtest functions
+    """
+    native.test_suite(
+        name = name + "_tests",
+        tags = [name + "_test_case"],
+    )
+    return struct(name = name)
+
+def _loading_assert_equals(env, test_case, expected, actual):
+    """Creates a test case for asserting state at LOADING phase.
+
+    Args:
+      env:       Loading test env created from loadingtest.make
+      test_case: Name of the test case
+      expected:  Expected value to test
+      actual:    Actual value received.
+
+    Returns:
+      None, creates test case
+    """
+
+    msg = None
+    if expected != actual:
+        msg = 'Expected "%s", but got "%s"' % (expected, actual)
+
+    _loading_test(
+        name = "%s_%s" % (env.name, test_case),
+        failure_message = msg,
+        tags = [env.name + "_test_case"],
+    )
+
 asserts = struct(
     expect_failure = _expect_failure,
     equals = _assert_equals,
@@ -520,4 +653,9 @@ analysistest = struct(
     target_actions = _target_actions,
     target_bin_dir_path = _target_bin_dir_path,
     target_under_test = _target_under_test,
+)
+
+loadingtest = struct(
+    make = _loading_make,
+    equals = _loading_assert_equals,
 )
