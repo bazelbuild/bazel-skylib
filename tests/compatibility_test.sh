@@ -17,27 +17,16 @@
 # Test building targets that are declared as compatible only with certain
 # platforms (see the "target_compatible_with" common build rule attribute).
 
-# --- begin runfiles.bash initialization ---
-set -euo pipefail
-if [[ ! -d "${RUNFILES_DIR:-/dev/null}" && ! -f "${RUNFILES_MANIFEST_FILE:-/dev/null}" ]]; then
-  if [[ -f "$0.runfiles_manifest" ]]; then
-    export RUNFILES_MANIFEST_FILE="$0.runfiles_manifest"
-  elif [[ -f "$0.runfiles/MANIFEST" ]]; then
-    export RUNFILES_MANIFEST_FILE="$0.runfiles/MANIFEST"
-  elif [[ -f "$0.runfiles/bazel_tools/tools/bash/runfiles/runfiles.bash" ]]; then
-    export RUNFILES_DIR="$0.runfiles"
-  fi
-fi
-if [[ -f "${RUNFILES_DIR:-/dev/null}/bazel_tools/tools/bash/runfiles/runfiles.bash" ]]; then
-  source "${RUNFILES_DIR}/bazel_tools/tools/bash/runfiles/runfiles.bash"
-elif [[ -f "${RUNFILES_MANIFEST_FILE:-/dev/null}" ]]; then
-  source "$(grep -m1 "^bazel_tools/tools/bash/runfiles/runfiles.bash " \
-            "$RUNFILES_MANIFEST_FILE" | cut -d ' ' -f 2-)"
-else
-  echo >&2 "ERROR: cannot find @bazel_tools//tools/bash/runfiles:runfiles.bash"
-  exit 1
-fi
-# --- end runfiles.bash initialization ---
+# --- begin runfiles.bash initialization v2 ---
+# Copy-pasted from the Bazel Bash runfiles library v2.
+set -uo pipefail; f=bazel_tools/tools/bash/runfiles/runfiles.bash
+source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
+  source "$(grep -sm1 "^$f " "${RUNFILES_MANIFEST_FILE:-/dev/null}" | cut -f2- -d' ')" 2>/dev/null || \
+  source "$0.runfiles/$f" 2>/dev/null || \
+  source "$(grep -sm1 "^$f " "$0.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
+  source "$(grep -sm1 "^$f " "$0.exe.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
+  { echo>&2 "ERROR: cannot find $f"; exit 1; }; f=; set -e
+# --- end runfiles.bash initialization v2 ---
 
 source "$(rlocation bazel_skylib/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
@@ -61,10 +50,6 @@ default_host_platform="@local_config_platform//:host"
 
   cat > WORKSPACE <<EOF
 workspace(name = 'bazel_skylib')
-
-load("//lib:unittest.bzl", "register_unittest_toolchains")
-
-register_unittest_toolchains()
 EOF
 
   mkdir -p lib
@@ -72,11 +57,14 @@ EOF
 exports_files(["*.bzl"])
 EOF
 
+  for file in compatibility.bzl selects.bzl; do
+    ln -sf "$(rlocation "bazel_skylib/lib/${file}")" "lib/${file}" \
+      || fail "couldn't symlink ${file}."
+  done
+
   cat > target_skipping/BUILD <<EOF || fail "couldn't create BUILD file"
 # We're not validating visibility here. Let everything access these targets.
 package(default_visibility = ["//visibility:public"])
-
-constraint_setting(name = "not_compatible_setting")
 
 constraint_setting(name = "foo_version")
 
@@ -142,6 +130,14 @@ platform(
     ],
 )
 
+platform(
+    name = "bar1_platform",
+    parents = ["${default_host_platform}"],
+    constraint_values = [
+        ":bar1",
+    ],
+)
+
 sh_test(
     name = "pass_on_foo1",
     srcs = ["pass.sh"],
@@ -178,7 +174,7 @@ function tear_down() {
 }
 
 # Validates that we can express targets being compatible with A _or_ B.
-function test_or_logic() {
+function test_any_of_logic() {
   cat >> target_skipping/BUILD <<EOF
 load("//lib:compatibility.bzl", "compatibility")
 
@@ -224,7 +220,7 @@ EOF
 
 # Validates that we can express targets being compatible with everything _but_
 # A and B.
-function test_inverse_logic() {
+function test_none_of_logic() {
 
   cat >> target_skipping/BUILD <<EOF
 load("//lib:compatibility.bzl", "compatibility")
@@ -232,8 +228,7 @@ load("//lib:compatibility.bzl", "compatibility")
 sh_test(
     name = "pass_on_everything_but_foo1_and_foo2",
     srcs = [":pass.sh"],
-    target_compatible_with = compatibility.none_of(
-	(":foo1", ":foo2")),
+    target_compatible_with = compatibility.none_of((":foo1", ":foo2")),
 )
 EOF
 
@@ -280,24 +275,22 @@ load("//lib:compatibility.bzl", "compatibility")
 sh_test(
     name = "pass_on_only_foo1_and_bar1",
     srcs = [":pass.sh"],
-    target_compatible_with = compatibility.all_of(
-	[":foo1", ":bar1"]),
+    target_compatible_with = compatibility.all_of([":foo1", ":bar1"]),
 )
 EOF
 
   cd target_skipping || fail "couldn't cd into workspace"
 
-  # Try with :foo1. This should fail.
+  # Try with :foo1 and :bar1. This should pass.
   bazel test \
     --show_result=10 \
     --host_platform=@//target_skipping:foo1_bar1_platform \
     --platforms=@//target_skipping:foo1_bar1_platform \
     //target_skipping:pass_on_only_foo1_and_bar1  &> "${TEST_log}" \
-    && fail "Bazel passed unexpectedly."
-  expect_log 'ERROR: Target //target_skipping:pass_on_only_foo1_and_bar1 is incompatible and cannot be built, but was explicitly requested'
-  expect_log 'FAILED: Build did NOT complete successfully'
+    || fail "Bazel failed unexpectedly."
+  expect_log "INFO: Build completed successfully"
 
-  # Try with :foo2. This should fail.
+  # Try with :foo2 and :bar1. This should fail.
   bazel test \
     --show_result=10 \
     --host_platform=@//target_skipping:foo2_bar1_platform \
@@ -307,15 +300,28 @@ EOF
   expect_log 'ERROR: Target //target_skipping:pass_on_only_foo1_and_bar1 is incompatible and cannot be built, but was explicitly requested'
   expect_log 'FAILED: Build did NOT complete successfully'
 
-  # Now with :foo3. This should pass.
+  # Now with :foo3. This should fail.
   bazel test \
     --show_result=10 \
     --host_platform=@//target_skipping:foo3_platform \
     --platforms=@//target_skipping:foo3_platform \
     --nocache_test_results \
     //target_skipping:pass_on_only_foo1_and_bar1  &> "${TEST_log}" \
-    || fail "Bazel failed unexpectedly."
-  expect_log '^//target_skipping:pass_on_only_foo1_and_bar1  *  PASSED in'
+    && fail "Bazel passed unexpectedly."
+  expect_log 'ERROR: Target //target_skipping:pass_on_only_foo1_and_bar1 is incompatible and cannot be built, but was explicitly requested'
+  expect_log 'FAILED: Build did NOT complete successfully'
+
+  # Now with :bar1 only. This should fail.
+  bazel test \
+    --show_result=10 \
+    --host_platform=@//target_skipping:bar1_platform \
+    --platforms=@//target_skipping:bar1_platform \
+    --nocache_test_results \
+    //target_skipping:pass_on_only_foo1_and_bar1  &> "${TEST_log}" \
+    && fail "Bazel passed unexpectedly."
+  expect_log 'ERROR: Target //target_skipping:pass_on_only_foo1_and_bar1 is incompatible and cannot be built, but was explicitly requested'
+  expect_log 'FAILED: Build did NOT complete successfully'
 }
 
+cd "$TEST_TMPDIR"
 run_suite "compatibility tests"

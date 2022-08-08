@@ -2,8 +2,7 @@
 
 load(":selects.bzl", "selects")
 
-# TODO(trybka): switch this to @platforms:incompatible.
-INCOMPATIBLE_SETTING=":not_compatible_setting"
+_INCOMPATIBLE_SETTING="@platforms//:incompatible_setting"
 
 def _get_name_from_target_list(targets, joiner=" or "):
     """Join a list of strings into a string which is suitable as a target name.
@@ -31,7 +30,10 @@ def _maybe_make_unique_incompatible_value(name):
       name: A target name to check and use.
     """
     if not native.existing_rule(name):
-        native.constraint_value(name = name, constraint_setting = INCOMPATIBLE_SETTING)
+        native.constraint_value(
+            name = name,
+            constraint_setting = "@platforms//:incompatible_setting",
+        )
 
 def _none_of(settings):
     """Create a `select()` which matches none of the given config_settings.
@@ -47,7 +49,11 @@ def _none_of(settings):
     """
     compat_name = " incompatible with " + _get_name_from_target_list(settings)
     _maybe_make_unique_incompatible_value(compat_name)
-    return selects.with_or({"//conditions:default": [], tuple(settings): [":" + compat_name]})
+
+    return selects.with_or({
+        "//conditions:default": [],
+        tuple(settings): [":" + compat_name],
+    })
 
 def _any_of(settings):
     """Create a `select()` which matches any of the given config_settings.
@@ -63,7 +69,11 @@ def _any_of(settings):
     """
     compat_name = " compatible with any of " + _get_name_from_target_list(settings)
     _maybe_make_unique_incompatible_value(compat_name)
-    return selects.with_or({tuple(settings): [], "//conditions:default": [":" + compat_name]})
+
+    return selects.with_or({
+        tuple(settings): [],
+        "//conditions:default": [":" + compat_name],
+    })
 
 def _all_of(settings):
     """Create a `select()` which matches all of the given config_settings.
@@ -80,17 +90,23 @@ def _all_of(settings):
       A native `select()` which is "incompatible" unless all `config_settings` are true.
     """
     group_name = _get_name_from_target_list(settings, joiner=" and ")
-    # All of can only be accomplished with a config_setting_group.match_all.
-    if not native.existing_rule(group_name):
-        selects.config_setting_group(name = group_name, match_all = settings)
     compat_name = " compatible with all of " + group_name
     _maybe_make_unique_incompatible_value(compat_name)
-    return select({":" + group_name: [], "//conditions:default": [":" + compat_name]})
+
+    # all_of can only be accomplished with a config_setting_group.match_all.
+    if not native.existing_rule(group_name):
+        selects.config_setting_group(
+            name = group_name,
+            match_all = settings,
+        )
+
+    return select({
+        ":" + group_name: [],
+        "//conditions:default": [":" + compat_name],
+    })
 
 compatibility = struct(
     all_of = _all_of,
     any_of = _any_of,
     none_of = _none_of,
 )
-
-
