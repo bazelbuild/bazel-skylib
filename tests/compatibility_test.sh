@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2021 The Bazel Authors. All rights reserved.
+# Copyright 2022 The Bazel Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,20 +33,15 @@ source "$(rlocation bazel_skylib/tests/unittest.bash)" \
 
 function set_up() {
   mkdir -p target_skipping || fail "couldn't create directory"
+
   cat > target_skipping/pass.sh <<EOF || fail "couldn't create pass.sh"
 #!/bin/bash
 exit 0
 EOF
   chmod +x target_skipping/pass.sh
 
-  cat > target_skipping/fail.sh <<EOF|| fail "couldn't create fail.sh"
-#!/bin/bash
-exit 1
-EOF
-  chmod +x target_skipping/fail.sh
-
-# Platforms
-default_host_platform="@local_config_platform//:host"
+  # Platforms
+  default_host_platform="@local_config_platform//:host"
 
   cat > WORKSPACE <<EOF
 workspace(name = 'bazel_skylib')
@@ -54,7 +49,6 @@ EOF
 
   mkdir -p lib
   cat > lib/BUILD <<EOF
-exports_files(["*.bzl"])
 EOF
 
   for file in compatibility.bzl selects.bzl; do
@@ -63,6 +57,8 @@ EOF
   done
 
   cat > target_skipping/BUILD <<EOF || fail "couldn't create BUILD file"
+load("//lib:compatibility.bzl", "compatibility")
+
 # We're not validating visibility here. Let everything access these targets.
 package(default_visibility = ["//visibility:public"])
 
@@ -90,11 +86,6 @@ constraint_value(
     constraint_setting = "bar_version",
 )
 
-constraint_value(
-    name = "bar2",
-    constraint_setting = "bar_version",
-)
-
 platform(
     name = "foo1_bar1_platform",
     parents = ["${default_host_platform}"],
@@ -114,15 +105,6 @@ platform(
 )
 
 platform(
-    name = "foo1_bar2_platform",
-    parents = ["${default_host_platform}"],
-    constraint_values = [
-        ":foo1",
-        ":bar2",
-    ],
-)
-
-platform(
     name = "foo3_platform",
     parents = ["${default_host_platform}"],
     constraint_values = [
@@ -135,35 +117,6 @@ platform(
     parents = ["${default_host_platform}"],
     constraint_values = [
         ":bar1",
-    ],
-)
-
-sh_test(
-    name = "pass_on_foo1",
-    srcs = ["pass.sh"],
-    target_compatible_with = [":foo1"],
-)
-
-sh_test(
-    name = "fail_on_foo2",
-    srcs = ["fail.sh"],
-    target_compatible_with = [":foo2"],
-)
-
-sh_test(
-    name = "pass_on_foo1_bar2",
-    srcs = ["pass.sh"],
-    target_compatible_with = [
-        ":foo1",
-        ":bar2",
-    ],
-)
-
-sh_binary(
-    name = "some_foo3_target",
-    srcs = ["pass.sh"],
-    target_compatible_with = [
-        ":foo3",
     ],
 )
 EOF
@@ -213,18 +166,12 @@ function ensure_that_target_doesnt_build_for_platforms() {
 # Validates that we can express targets being compatible with A _or_ B.
 function test_any_of_logic() {
   cat >> target_skipping/BUILD <<EOF
-load("//lib:compatibility.bzl", "compatibility")
-
 sh_test(
     name = "pass_on_foo1_or_foo2_but_not_on_foo3",
     srcs = [":pass.sh"],
-    target_compatible_with = compatibility.any_of(
-	(":foo1", ":foo2")
-    ),
+    target_compatible_with = compatibility.any_of((":foo1", ":foo2")),
 )
 EOF
-
-  cd target_skipping || fail "couldn't cd into workspace"
 
   ensure_that_target_builds_for_platforms \
     //target_skipping:pass_on_foo1_or_foo2_but_not_on_foo3 \
@@ -240,18 +187,13 @@ EOF
 # Validates that we can express targets being compatible with everything _but_
 # A and B.
 function test_none_of_logic() {
-
   cat >> target_skipping/BUILD <<EOF
-load("//lib:compatibility.bzl", "compatibility")
-
 sh_test(
     name = "pass_on_everything_but_foo1_and_foo2",
     srcs = [":pass.sh"],
     target_compatible_with = compatibility.none_of((":foo1", ":foo2")),
 )
 EOF
-
-  cd target_skipping || fail "couldn't cd into workspace"
 
   ensure_that_target_builds_for_platforms \
     //target_skipping:pass_on_everything_but_foo1_and_foo2 \
@@ -267,18 +209,13 @@ EOF
 # Validates that we can express targets being compatible with _only_ A and B,
 # and nothing else.
 function test_all_of_logic() {
-
   cat >> target_skipping/BUILD <<EOF
-load("//lib:compatibility.bzl", "compatibility")
-
 sh_test(
     name = "pass_on_only_foo1_and_bar1",
     srcs = [":pass.sh"],
-    target_compatible_with = compatibility.all_of([":foo1", ":bar1"]),
+    target_compatible_with = compatibility.all_of((":foo1", ":bar1")),
 )
 EOF
-
-  cd target_skipping || fail "couldn't cd into workspace"
 
   # Try with :foo1 and :bar1. This should pass.
   ensure_that_target_builds_for_platforms \
