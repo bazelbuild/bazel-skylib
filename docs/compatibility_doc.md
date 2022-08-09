@@ -22,14 +22,14 @@ compatibility.all_of(<a href="#compatibility.all_of-settings">settings</a>)
 Create a `select()` for `target_compatible_with` which matches all of the given settings.
 
 All of the settings must be true to get an empty list. Failure to match will result
-in an incompatible constraint_value for the purpose of target skipping.
+in an incompatible `constraint_value` for the purpose of target skipping.
 
 In other words, use this function to make a target incompatible unless all of the settings are
 true.
 
 Example:
 
-```build
+```python
 config_setting(
     name = "dbg",
     values = {"compilation_mode": "dbg"},
@@ -72,12 +72,12 @@ compatibility.any_of(<a href="#compatibility.any_of-settings">settings</a>)
 Create a `select()` for `target_compatible_with` which matches any of the given settings.
 
 Any of the settings will resolve to an empty list, while the default condition will map to
-an incompatible constraint_value for the purpose of target skipping.
+an incompatible `constraint_value` for the purpose of target skipping.
 
 In other words, use this function to make target incompatible unless one or more of the
 settings are true.
 
-```build
+```python
 cc_binary(
     name = "bin",
     srcs = ["bin.cc"],
@@ -112,12 +112,12 @@ compatibility.none_of(<a href="#compatibility.none_of-settings">settings</a>)
 
 Create a `select()` for `target_compatible_with` which matches none of the given settings.
 
-Any of the settings will resolve to an incompatible constraint_value for the
+Any of the settings will resolve to an incompatible `constraint_value` for the
 purpose of target skipping.
 
 In other words, use this function to make target incompatible if any of the settings are true.
 
-```build
+```python
 cc_binary(
     name = "bin",
     srcs = ["bin.cc"],
