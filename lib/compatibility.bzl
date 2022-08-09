@@ -36,7 +36,7 @@ def _maybe_make_unique_incompatible_value(name):
         )
 
 def _none_of(settings):
-    """Create a `select()` which matches none of the given config_settings.
+    """Create a `select()` which matches none of the given settings.
 
     Any of the settings will resolve to an incompatible constraint_value for the
     purpose of target skipping.
