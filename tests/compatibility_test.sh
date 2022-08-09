@@ -173,6 +173,43 @@ function tear_down() {
   bazel shutdown
 }
 
+function ensure_that_target_builds_for_platforms() {
+  local target="$1"
+  local platform
+
+  for platform in "${@:2}"; do
+    echo "Building ${target} for ${platform}. Expecing success."
+    bazel build \
+      --show_result=10 \
+      --host_platform="${platform}" \
+      --platforms="${platform}" \
+      --nocache_test_results \
+      "${target}"  &> "${TEST_log}" \
+      || fail "Bazel failed unexpectedly."
+
+    expect_log "INFO: Build completed successfully"
+  done
+}
+
+function ensure_that_target_doesnt_build_for_platforms() {
+  local target="$1"
+  local platform
+
+  for platform in "${@:2}"; do
+    echo "Building ${target} for ${platform}. Expecing failure."
+    bazel build \
+      --show_result=10 \
+      --host_platform="${platform}" \
+      --platforms="${platform}" \
+      --nocache_test_results \
+      "${target}"  &> "${TEST_log}" \
+      && fail "Bazel passed unexpectedly."
+
+    expect_log "ERROR: Target ${target} is incompatible and cannot be built, but was explicitly requested"
+    expect_log 'FAILED: Build did NOT complete successfully'
+  done
+}
+
 # Validates that we can express targets being compatible with A _or_ B.
 function test_any_of_logic() {
   cat >> target_skipping/BUILD <<EOF
@@ -282,45 +319,15 @@ EOF
   cd target_skipping || fail "couldn't cd into workspace"
 
   # Try with :foo1 and :bar1. This should pass.
-  bazel test \
-    --show_result=10 \
-    --host_platform=@//target_skipping:foo1_bar1_platform \
-    --platforms=@//target_skipping:foo1_bar1_platform \
-    //target_skipping:pass_on_only_foo1_and_bar1  &> "${TEST_log}" \
-    || fail "Bazel failed unexpectedly."
-  expect_log "INFO: Build completed successfully"
+  ensure_that_target_builds_for_platforms \
+    //target_skipping:pass_on_only_foo1_and_bar1 \
+    //target_skipping:foo1_bar1_platform
 
-  # Try with :foo2 and :bar1. This should fail.
-  bazel test \
-    --show_result=10 \
-    --host_platform=@//target_skipping:foo2_bar1_platform \
-    --platforms=@//target_skipping:foo2_bar1_platform \
-    //target_skipping:pass_on_only_foo1_and_bar1  &> "${TEST_log}" \
-    && fail "Bazel passed unexpectedly."
-  expect_log 'ERROR: Target //target_skipping:pass_on_only_foo1_and_bar1 is incompatible and cannot be built, but was explicitly requested'
-  expect_log 'FAILED: Build did NOT complete successfully'
-
-  # Now with :foo3. This should fail.
-  bazel test \
-    --show_result=10 \
-    --host_platform=@//target_skipping:foo3_platform \
-    --platforms=@//target_skipping:foo3_platform \
-    --nocache_test_results \
-    //target_skipping:pass_on_only_foo1_and_bar1  &> "${TEST_log}" \
-    && fail "Bazel passed unexpectedly."
-  expect_log 'ERROR: Target //target_skipping:pass_on_only_foo1_and_bar1 is incompatible and cannot be built, but was explicitly requested'
-  expect_log 'FAILED: Build did NOT complete successfully'
-
-  # Now with :bar1 only. This should fail.
-  bazel test \
-    --show_result=10 \
-    --host_platform=@//target_skipping:bar1_platform \
-    --platforms=@//target_skipping:bar1_platform \
-    --nocache_test_results \
-    //target_skipping:pass_on_only_foo1_and_bar1  &> "${TEST_log}" \
-    && fail "Bazel passed unexpectedly."
-  expect_log 'ERROR: Target //target_skipping:pass_on_only_foo1_and_bar1 is incompatible and cannot be built, but was explicitly requested'
-  expect_log 'FAILED: Build did NOT complete successfully'
+  ensure_that_target_doesnt_build_for_platforms \
+    //target_skipping:pass_on_only_foo1_and_bar1 \
+    //target_skipping:foo2_bar1_platform \
+    //target_skipping:foo3_platform \
+    //target_skipping:bar1_platform
 }
 
 cd "$TEST_TMPDIR"
