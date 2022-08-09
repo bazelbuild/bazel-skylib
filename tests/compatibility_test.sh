@@ -226,33 +226,15 @@ EOF
 
   cd target_skipping || fail "couldn't cd into workspace"
 
-  bazel test \
-    --show_result=10 \
-    --host_platform=@//target_skipping:foo1_bar1_platform \
-    --platforms=@//target_skipping:foo1_bar1_platform \
-    --nocache_test_results \
-    //target_skipping:pass_on_foo1_or_foo2_but_not_on_foo3 &> "${TEST_log}" \
-    || fail "Bazel failed unexpectedly."
-  expect_log '^//target_skipping:pass_on_foo1_or_foo2_but_not_on_foo3  *  PASSED in'
+  ensure_that_target_builds_for_platforms \
+    //target_skipping:pass_on_foo1_or_foo2_but_not_on_foo3 \
+    //target_skipping:foo1_bar1_platform \
+    //target_skipping:foo2_bar1_platform
 
-  bazel test \
-    --show_result=10 \
-    --host_platform=@//target_skipping:foo2_bar1_platform \
-    --platforms=@//target_skipping:foo2_bar1_platform \
-    --nocache_test_results \
-    //target_skipping:pass_on_foo1_or_foo2_but_not_on_foo3 &> "${TEST_log}" \
-    || fail "Bazel failed unexpectedly."
-  expect_log '^//target_skipping:pass_on_foo1_or_foo2_but_not_on_foo3  *  PASSED in'
-
-  bazel test \
-    --show_result=10 \
-    --host_platform=@//target_skipping:foo3_platform \
-    --platforms=@//target_skipping:foo3_platform \
-    //target_skipping:pass_on_foo1_or_foo2_but_not_on_foo3 &> "${TEST_log}" \
-    && fail "Bazel passed unexpectedly."
-
-  expect_log 'ERROR: Target //target_skipping:pass_on_foo1_or_foo2_but_not_on_foo3 is incompatible and cannot be built, but was explicitly requested'
-  expect_log 'FAILED: Build did NOT complete successfully'
+  ensure_that_target_doesnt_build_for_platforms \
+    //target_skipping:pass_on_foo1_or_foo2_but_not_on_foo3 \
+    //target_skipping:foo3_platform \
+    //target_skipping:bar1_platform
 }
 
 # Validates that we can express targets being compatible with everything _but_
@@ -271,35 +253,15 @@ EOF
 
   cd target_skipping || fail "couldn't cd into workspace"
 
-  # Try with :foo1. This should fail.
-  bazel test \
-    --show_result=10 \
-    --host_platform=@//target_skipping:foo1_bar1_platform \
-    --platforms=@//target_skipping:foo1_bar1_platform \
-    //target_skipping:pass_on_everything_but_foo1_and_foo2  &> "${TEST_log}" \
-    && fail "Bazel passed unexpectedly."
-  expect_log 'ERROR: Target //target_skipping:pass_on_everything_but_foo1_and_foo2 is incompatible and cannot be built, but was explicitly requested'
-  expect_log 'FAILED: Build did NOT complete successfully'
+  ensure_that_target_builds_for_platforms \
+    //target_skipping:pass_on_everything_but_foo1_and_foo2 \
+    //target_skipping:foo3_platform \
+    //target_skipping:bar1_platform
 
-  # Try with :foo2. This should fail.
-  bazel test \
-    --show_result=10 \
-    --host_platform=@//target_skipping:foo2_bar1_platform \
-    --platforms=@//target_skipping:foo2_bar1_platform \
-    //target_skipping:pass_on_everything_but_foo1_and_foo2 &> "${TEST_log}" \
-    && fail "Bazel passed unexpectedly."
-  expect_log 'ERROR: Target //target_skipping:pass_on_everything_but_foo1_and_foo2 is incompatible and cannot be built, but was explicitly requested'
-  expect_log 'FAILED: Build did NOT complete successfully'
-
-  # Now with :foo3. This should pass.
-  bazel test \
-    --show_result=10 \
-    --host_platform=@//target_skipping:foo3_platform \
-    --platforms=@//target_skipping:foo3_platform \
-    --nocache_test_results \
-    //target_skipping:pass_on_everything_but_foo1_and_foo2 &> "${TEST_log}" \
-    || fail "Bazel failed unexpectedly."
-  expect_log '^//target_skipping:pass_on_everything_but_foo1_and_foo2  *  PASSED in'
+  ensure_that_target_doesnt_build_for_platforms \
+    //target_skipping:pass_on_everything_but_foo1_and_foo2 \
+    //target_skipping:foo1_bar1_platform \
+    //target_skipping:foo2_bar1_platform
 }
 
 # Validates that we can express targets being compatible with _only_ A and B,
