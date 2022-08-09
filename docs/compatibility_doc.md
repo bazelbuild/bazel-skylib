@@ -3,7 +3,7 @@
 Skylib module of convenience functions for `target_compatible_with`.
 
 Load the macros as follows in your `BUILD` files:
-```build
+```python
 load("@bazel_skylib//lib:compatibility.bzl", "compatibility")
 ```
 

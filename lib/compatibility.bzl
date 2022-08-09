@@ -1,7 +1,7 @@
 """Skylib module of convenience functions for `target_compatible_with`.
 
 Load the macros as follows in your `BUILD` files:
-```build
+```python
 load("@bazel_skylib//lib:compatibility.bzl", "compatibility")
 ```
 
@@ -31,7 +31,7 @@ def _maybe_make_unique_incompatible_value(name):
     """Creates a `native.constraint_value` which is "incompatible."
 
     When composing selects which could all resolve to "incompatible" we need distinct labels.
-    This will create a constraint_value with the given name, if it does not already exist.
+    This will create a `constraint_value` with the given name, if it does not already exist.
 
     Args:
       name: A target name to check and use.
@@ -45,12 +45,12 @@ def _maybe_make_unique_incompatible_value(name):
 def _none_of(settings):
     """Create a `select()` for `target_compatible_with` which matches none of the given settings.
 
-    Any of the settings will resolve to an incompatible constraint_value for the
+    Any of the settings will resolve to an incompatible `constraint_value` for the
     purpose of target skipping.
 
     In other words, use this function to make target incompatible if any of the settings are true.
 
-    ```build
+    ```python
     cc_binary(
         name = "bin",
         srcs = ["bin.cc"],
@@ -81,12 +81,12 @@ def _any_of(settings):
     """Create a `select()` for `target_compatible_with` which matches any of the given settings.
 
     Any of the settings will resolve to an empty list, while the default condition will map to
-    an incompatible constraint_value for the purpose of target skipping.
+    an incompatible `constraint_value` for the purpose of target skipping.
 
     In other words, use this function to make target incompatible unless one or more of the
     settings are true.
 
-    ```build
+    ```python
     cc_binary(
         name = "bin",
         srcs = ["bin.cc"],
@@ -116,14 +116,14 @@ def _all_of(settings):
     """Create a `select()` for `target_compatible_with` which matches all of the given settings.
 
     All of the settings must be true to get an empty list. Failure to match will result
-    in an incompatible constraint_value for the purpose of target skipping.
+    in an incompatible `constraint_value` for the purpose of target skipping.
 
     In other words, use this function to make a target incompatible unless all of the settings are
     true.
 
     Example:
 
-    ```build
+    ```python
     config_setting(
         name = "dbg",
         values = {"compilation_mode": "dbg"},
