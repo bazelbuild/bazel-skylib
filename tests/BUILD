@@ -98,9 +98,8 @@ sh_test(
     data = [
         ":unittest.bash",
         "//lib:compatibility",
-        "//lib:selects",
-        "//lib:unittest",
-        "//toolchains/unittest:test_deps",
+    ],
+    deps = [
         "@bazel_tools//tools/bash/runfiles",
     ],
     tags = ["local"],

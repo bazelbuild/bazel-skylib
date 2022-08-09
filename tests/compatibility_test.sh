@@ -126,6 +126,8 @@ function tear_down() {
   bazel shutdown
 }
 
+# Builds the specified target against various platforms and expects the builds
+# to succeed.
 function ensure_that_target_builds_for_platforms() {
   local target="$1"
   local platform
@@ -144,6 +146,8 @@ function ensure_that_target_builds_for_platforms() {
   done
 }
 
+# Builds the specified target against various platforms and expects the builds
+# to fail.
 function ensure_that_target_doesnt_build_for_platforms() {
   local target="$1"
   local platform
