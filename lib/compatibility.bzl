@@ -14,8 +14,6 @@ load(":selects.bzl", "selects")
 def _get_name_from_target_list(targets, joiner=" or "):
     """Join a list of strings into a string which is suitable as a target name.
 
-    Removes/replaces characters which are not valid as target names.
-
     The return value has a hash appended so that it is different between multiple "targets" values
     that have the same name portion. For readability, we keep only the name portion of the
     specified targets. But for uniqueness we need the hash. For example, the following two calls
@@ -39,8 +37,7 @@ def _get_name_from_target_list(targets, joiner=" or "):
     package_label = Label("//" + native.package_name())
     absolute_targets = sorted([package_label.relative(target) for target in targets])
     joined_names = joiner.join([target.name for target in absolute_targets])
-    name = joined_names.replace("/", "_").replace(".", "_")
-    name += " (%x)" % hash(str(absolute_targets))
+    name = "%s (%x)" % (joined_names, hash(str(absolute_targets)))
     return name
 
 def _maybe_make_unique_incompatible_value(name):
