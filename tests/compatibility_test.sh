@@ -31,6 +31,26 @@ source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
 source "$(rlocation bazel_skylib/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
 
+# `uname` returns the current platform, e.g "MSYS_NT-10.0" or "Linux".
+# `tr` converts all upper case letters to lower case.
+# `case` matches the result if the `uname | tr` expression to string prefixes
+# that use the same wildcards as names do in Bash, i.e. "msys*" matches strings
+# starting with "msys", and "*" matches everything (it's the default case).
+case "$(uname -s | tr [:upper:] [:lower:])" in
+msys*)
+  # As of 2019-01-15, Bazel on Windows only supports MSYS Bash.
+  declare -r is_windows=true
+  ;;
+*)
+  declare -r is_windows=false
+  ;;
+esac
+
+if "$is_windows"; then
+  export MSYS_NO_PATHCONV=1
+  export MSYS2_ARG_CONV_EXCL="*"
+fi
+
 function set_up() {
   mkdir -p target_skipping || fail "couldn't create directory"
 
@@ -133,7 +153,7 @@ function ensure_that_target_builds_for_platforms() {
   local platform
 
   for platform in "${@:2}"; do
-    echo "Building ${target} for ${platform}. Expecing success."
+    echo "Building ${target} for ${platform}. Expecting success."
     bazel build \
       --show_result=10 \
       --host_platform="${platform}" \
@@ -150,10 +170,11 @@ function ensure_that_target_builds_for_platforms() {
 # to fail.
 function ensure_that_target_doesnt_build_for_platforms() {
   local target="$1"
+  local error_string="$2"
   local platform
 
-  for platform in "${@:2}"; do
-    echo "Building ${target} for ${platform}. Expecing failure."
+  for platform in "${@:3}"; do
+    echo "Building ${target} for ${platform}. Expecting failure."
     bazel build \
       --show_result=10 \
       --host_platform="${platform}" \
@@ -163,6 +184,7 @@ function ensure_that_target_doesnt_build_for_platforms() {
       && fail "Bazel passed unexpectedly."
 
     expect_log "ERROR: Target ${target} is incompatible and cannot be built, but was explicitly requested"
+    expect_log " <-- target platform (${platform}) didn't satisfy constraint //target_skipping:${error_string}"
     expect_log 'FAILED: Build did NOT complete successfully'
   done
 }
@@ -184,6 +206,7 @@ EOF
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_foo1_or_foo2_but_not_on_foo3 \
+    " compatible with any of foo1 or foo2 (" \
     //target_skipping:foo3_platform \
     //target_skipping:bar1_platform
 }
@@ -206,6 +229,7 @@ EOF
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_everything_but_foo1_and_foo2 \
+    " incompatible with foo1 or foo2 (" \
     //target_skipping:foo1_bar1_platform \
     //target_skipping:foo2_bar1_platform
 }
@@ -228,6 +252,7 @@ EOF
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_only_foo1_and_bar1 \
+    " compatible with all of bar1 and foo1 (" \
     //target_skipping:foo2_bar1_platform \
     //target_skipping:foo3_platform \
     //target_skipping:bar1_platform

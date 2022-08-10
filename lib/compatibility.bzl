@@ -17,14 +17,20 @@ def _get_name_from_target_list(targets, joiner=" or "):
     Removes/replaces characters which are not valid as target names.
 
     Args:
-      target_list: A list of target names.
+      targets: A list of target names.
       joiner: An optional string to use for joining the list.
 
     Returns:
       A string which is a valid target name.
     """
-    targets_name = joiner.join([s.split(":")[1] for s in targets])
-    name = targets_name.replace("//", "").replace(":", "_").replace("/", "_").replace(".", "_")
+    # Compute absolute labels from the user-specified ones. They can be
+    # relative or absolute. We do this to make the final name as unique as
+    # possible.
+    package_label = Label("//" + native.package_name())
+    absolute_targets = sorted([package_label.relative(target) for target in targets])
+    target_names = joiner.join([target.name for target in absolute_targets])
+    name = target_names.replace("//", "").replace(":", "_").replace("/", "_").replace(".", "_")
+    name += " (%x)" % hash(str(absolute_targets))
     return name
 
 def _maybe_make_unique_incompatible_value(name):

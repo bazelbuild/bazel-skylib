@@ -10,8 +10,6 @@ exports_files(
     visibility = ["//:__subpackages__"],
 )
 
-load(":compatibility.bzl", "compatibility")
-
 bzl_library(
     name = "collections",
     srcs = ["collections.bzl"],
