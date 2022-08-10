@@ -306,8 +306,13 @@ EOF
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_foo1_or_foo2_but_not_bar1 \
-    "didn't satisfy constraints \\[//target_skipping: compatible with any of foo1 or foo2 (.*), //target_skipping: incompatible with bar1 (" \
+    "didn't satisfy constraints \\[" \
     //target_skipping:bar1_platform
+
+  # Since the order of constraints isn't guaranteed until
+  # 72787a1267a6087923aca83bf161f93c0a1323e0, we do two individual checks here.
+  expect_log "//target_skipping: compatible with any of foo1 or foo2 ("
+  expect_log "//target_skipping: incompatible with bar1 ("
 }
 
 cd "$TEST_TMPDIR"
