@@ -106,6 +106,11 @@ constraint_value(
     constraint_setting = "bar_version",
 )
 
+constraint_value(
+    name = "bar2",
+    constraint_setting = "bar_version",
+)
+
 platform(
     name = "foo1_bar1_platform",
     parents = ["${default_host_platform}"],
@@ -121,6 +126,15 @@ platform(
     constraint_values = [
         ":foo2",
         ":bar1",
+    ],
+)
+
+platform(
+    name = "foo2_bar2_platform",
+    parents = ["${default_host_platform}"],
+    constraint_values = [
+        ":foo2",
+        ":bar2",
     ],
 )
 
@@ -184,7 +198,7 @@ function ensure_that_target_doesnt_build_for_platforms() {
       && fail "Bazel passed unexpectedly."
 
     expect_log "ERROR: Target ${target} is incompatible and cannot be built, but was explicitly requested"
-    expect_log " <-- target platform (${platform}) didn't satisfy constraint //target_skipping:${error_string}"
+    expect_log " <-- target platform (${platform}) ${error_string}"
     expect_log 'FAILED: Build did NOT complete successfully'
   done
 }
@@ -202,11 +216,12 @@ EOF
   ensure_that_target_builds_for_platforms \
     //target_skipping:pass_on_foo1_or_foo2_but_not_on_foo3 \
     //target_skipping:foo1_bar1_platform \
-    //target_skipping:foo2_bar1_platform
+    //target_skipping:foo2_bar1_platform \
+    //target_skipping:foo2_bar2_platform
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_foo1_or_foo2_but_not_on_foo3 \
-    " compatible with any of foo1 or foo2 (" \
+    "didn't satisfy constraint //target_skipping: compatible with any of foo1 or foo2 (" \
     //target_skipping:foo3_platform \
     //target_skipping:bar1_platform
 }
@@ -229,9 +244,10 @@ EOF
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_everything_but_foo1_and_foo2 \
-    " incompatible with foo1 or foo2 (" \
+    "didn't satisfy constraint //target_skipping: incompatible with foo1 or foo2 (" \
     //target_skipping:foo1_bar1_platform \
-    //target_skipping:foo2_bar1_platform
+    //target_skipping:foo2_bar1_platform \
+    //target_skipping:foo2_bar2_platform
 }
 
 # Validates that we can express targets being compatible with _only_ A and B,
@@ -245,16 +261,52 @@ sh_test(
 )
 EOF
 
-  # Try with :foo1 and :bar1. This should pass.
   ensure_that_target_builds_for_platforms \
     //target_skipping:pass_on_only_foo1_and_bar1 \
     //target_skipping:foo1_bar1_platform
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_only_foo1_and_bar1 \
-    " compatible with all of bar1 and foo1 (" \
+    "didn't satisfy constraint //target_skipping: compatible with all of bar1 and foo1 (" \
     //target_skipping:foo2_bar1_platform \
+    //target_skipping:foo2_bar2_platform \
     //target_skipping:foo3_platform \
+    //target_skipping:bar1_platform
+}
+
+# Validates that we can express composed incompatibility.
+function test_composition() {
+  cat >> target_skipping/BUILD <<EOF
+sh_test(
+    name = "pass_on_foo1_or_foo2_but_not_bar1",
+    srcs = [":pass.sh"],
+    target_compatible_with = compatibility.any_of([
+        ":foo1",
+        ":foo2",
+    ]) + compatibility.none_of([
+        ":bar1",
+    ]),
+)
+EOF
+
+  ensure_that_target_builds_for_platforms \
+    //target_skipping:pass_on_foo1_or_foo2_but_not_bar1 \
+    //target_skipping:foo2_bar2_platform
+
+  ensure_that_target_doesnt_build_for_platforms \
+    //target_skipping:pass_on_foo1_or_foo2_but_not_bar1 \
+    "didn't satisfy constraint //target_skipping: incompatible with bar1 (" \
+    //target_skipping:foo1_bar1_platform \
+    //target_skipping:foo2_bar1_platform \
+
+  ensure_that_target_doesnt_build_for_platforms \
+    //target_skipping:pass_on_foo1_or_foo2_but_not_bar1 \
+    "didn't satisfy constraint //target_skipping: compatible with any of foo1 or foo2 (" \
+    //target_skipping:foo3_platform
+
+  ensure_that_target_doesnt_build_for_platforms \
+    //target_skipping:pass_on_foo1_or_foo2_but_not_bar1 \
+    "didn't satisfy constraints \\[//target_skipping: compatible with any of foo1 or foo2 (.*), //target_skipping: incompatible with bar1 (" \
     //target_skipping:bar1_platform
 }
 

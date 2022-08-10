@@ -17,7 +17,7 @@ def _get_name_from_target_list(targets, joiner=" or "):
     The return value has a hash appended so that it is different between multiple "targets" values
     that have the same name portion. For readability, we keep only the name portion of the
     specified targets. But for uniqueness we need the hash. For example, the following two calls
-    may return strings as follows:
+    may return strings as follows. The hashes are arbitrary in this example.
 
         >>> _get_name_from_target_list(["@platforms//os:linux", "@platforms//cpu:x86_64"])
         "linux or x86_64 (3ef2349)"
