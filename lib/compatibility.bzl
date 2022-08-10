@@ -16,6 +16,16 @@ def _get_name_from_target_list(targets, joiner=" or "):
 
     Removes/replaces characters which are not valid as target names.
 
+    The return value has a hash appended so that it is different between multiple "targets" values
+    that have the same name portion. For readability, we keep only the name portion of the
+    specified targets. But for uniqueness we need the hash. For example, the following two calls
+    may return strings as follows:
+
+        >>> _get_name_from_target_list(["@platforms//os:linux", "@platforms//cpu:x86_64"])
+        "linux or x86_64 (3ef2349)"
+        >>> _get_name_from_target_list(["//some/custom:linux", "//some/custom:x86_64"])
+        "linux or x86_64 (98ab64)"
+
     Args:
       targets: A list of target names.
       joiner: An optional string to use for joining the list.
@@ -25,11 +35,11 @@ def _get_name_from_target_list(targets, joiner=" or "):
     """
     # Compute absolute labels from the user-specified ones. They can be
     # relative or absolute. We do this to make the final name as unique as
-    # possible.
+    # possible via a hash.
     package_label = Label("//" + native.package_name())
     absolute_targets = sorted([package_label.relative(target) for target in targets])
-    target_names = joiner.join([target.name for target in absolute_targets])
-    name = target_names.replace("//", "").replace(":", "_").replace("/", "_").replace(".", "_")
+    joined_names = joiner.join([target.name for target in absolute_targets])
+    name = joined_names.replace("/", "_").replace(".", "_")
     name += " (%x)" % hash(str(absolute_targets))
     return name
 
