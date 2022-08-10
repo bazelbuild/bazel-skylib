@@ -99,10 +99,10 @@ sh_test(
         ":unittest.bash",
         "//lib:compatibility",
     ],
+    tags = ["local"],
     deps = [
         "@bazel_tools//tools/bash/runfiles",
     ],
-    tags = ["local"],
 )
 
 shell_args_test_gen(

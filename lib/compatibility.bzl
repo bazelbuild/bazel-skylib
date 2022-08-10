@@ -11,7 +11,7 @@ more information.
 
 load(":selects.bzl", "selects")
 
-def _get_name_from_target_list(targets, joiner=" or "):
+def _get_name_from_target_list(targets, joiner = " or "):
     """Join a list of strings into a string which is suitable as a target name.
 
     The return value has a hash appended so that it is different between multiple "targets" values
@@ -31,6 +31,7 @@ def _get_name_from_target_list(targets, joiner=" or "):
     Returns:
       A string which is a valid target name.
     """
+
     # Compute absolute labels from the user-specified ones. They can be
     # relative or absolute. We do this to make the final name as unique as
     # possible via a hash.
@@ -161,7 +162,7 @@ def _all_of(settings):
     Returns:
       A native `select()` which is "incompatible" unless all settings are true.
     """
-    group_name = _get_name_from_target_list(settings, joiner=" and ")
+    group_name = _get_name_from_target_list(settings, joiner = " and ")
     compat_name = " compatible with all of " + group_name
     _maybe_make_unique_incompatible_value(compat_name)
 
