@@ -111,7 +111,7 @@ func (*bzlLibraryLang) Fix(c *config.Config, f *rule.File) {}
 // returned, including an empty slice, the rule will be indexed.
 func (b *bzlLibraryLang) Imports(c *config.Config, r *rule.Rule, f *rule.File) []resolve.ImportSpec {
 	srcs := r.AttrStrings("srcs")
-	imports := make([]resolve.ImportSpec, len(srcs))
+	imports := make([]resolve.ImportSpec, 0, len(srcs))
 
 	for _, src := range srcs {
 		spec := resolve.ImportSpec{
