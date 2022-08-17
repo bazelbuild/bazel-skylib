@@ -156,10 +156,6 @@ platform(
 EOF
 }
 
-function tear_down() {
-  bazel shutdown
-}
-
 # Builds the specified target against various platforms and expects the builds
 # to succeed.
 function ensure_that_target_builds_for_platforms() {
