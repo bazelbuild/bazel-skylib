@@ -96,4 +96,18 @@ tasks:
     - "--test_env=LOCALAPPDATA"
     - "--test_tag_filters=-no_windows"
 
+  ubuntu1804_last_green_bzlmod:
+    name: "Last Green Bazel (with bzlmod)"
+    platform: ubuntu1804
+    bazel: last_green
+    build_targets:
+    - "//..."
+    test_targets:
+    - "//..."
+    build_flags:
+      - "--experimental_enable_bzlmod"
+    test_flags:
+      - "--experimental_enable_bzlmod"
+      - "--test_env=PATH"
+
 buildifier: latest

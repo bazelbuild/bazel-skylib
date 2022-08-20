@@ -2,7 +2,7 @@
 
 Skylib module containing functions that operate on structs.
 
-<a id="#structs.to_dict"></a>
+<a id="structs.to_dict"></a>
 
 ## structs.to_dict
 

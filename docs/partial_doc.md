@@ -7,7 +7,7 @@ Partial function objects allow some parameters are bound before the call.
 Similar to https://docs.python.org/3/library/functools.html#functools.partial.
 
 
-<a id="#partial.make"></a>
+<a id="partial.make"></a>
 
 ## partial.make
 
@@ -123,7 +123,7 @@ partial.call(func, x=2)
 A new `partial` that can be called using `call`
 
 
-<a id="#partial.call"></a>
+<a id="partial.call"></a>
 
 ## partial.call
 
@@ -147,7 +147,7 @@ Calls a partial created using `make`.
 Whatever the function in the partial returns.
 
 
-<a id="#partial.is_instance"></a>
+<a id="partial.is_instance"></a>
 
 ## partial.is_instance
 

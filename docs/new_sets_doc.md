@@ -11,7 +11,7 @@ Skylib module containing common hash-set algorithms.
   `types.is_set()` method in types.bzl.
 
 
-<a id="#sets.make"></a>
+<a id="sets.make"></a>
 
 ## sets.make
 
@@ -36,7 +36,7 @@ All elements must be hashable.
 A set containing the passed in values.
 
 
-<a id="#sets.copy"></a>
+<a id="sets.copy"></a>
 
 ## sets.copy
 
@@ -58,7 +58,7 @@ Creates a new set from another set.
 A new set containing the same elements as `s`.
 
 
-<a id="#sets.to_list"></a>
+<a id="sets.to_list"></a>
 
 ## sets.to_list
 
@@ -80,7 +80,7 @@ Creates a list from the values in the set.
 A list of values inserted into the set.
 
 
-<a id="#sets.insert"></a>
+<a id="sets.insert"></a>
 
 ## sets.insert
 
@@ -106,7 +106,7 @@ Element must be hashable.  This mutates the original set.
 The set `s` with `e` included.
 
 
-<a id="#sets.contains"></a>
+<a id="sets.contains"></a>
 
 ## sets.contains
 
@@ -129,7 +129,7 @@ Checks for the existence of an element in a set.
 True if the element exists in the set, False if the element does not.
 
 
-<a id="#sets.is_equal"></a>
+<a id="sets.is_equal"></a>
 
 ## sets.is_equal
 
@@ -152,7 +152,7 @@ Returns whether two sets are equal.
 True if `a` is equal to `b`, False otherwise.
 
 
-<a id="#sets.is_subset"></a>
+<a id="sets.is_subset"></a>
 
 ## sets.is_subset
 
@@ -175,7 +175,7 @@ Returns whether `a` is a subset of `b`.
 True if `a` is a subset of `b`, False otherwise.
 
 
-<a id="#sets.disjoint"></a>
+<a id="sets.disjoint"></a>
 
 ## sets.disjoint
 
@@ -201,7 +201,7 @@ Two sets are disjoint if they have no elements in common.
 True if `a` and `b` are disjoint, False otherwise.
 
 
-<a id="#sets.intersection"></a>
+<a id="sets.intersection"></a>
 
 ## sets.intersection
 
@@ -224,7 +224,7 @@ Returns the intersection of two sets.
 A set containing the elements that are in both `a` and `b`.
 
 
-<a id="#sets.union"></a>
+<a id="sets.union"></a>
 
 ## sets.union
 
@@ -246,7 +246,7 @@ Returns the union of several sets.
 The set union of all sets in `*args`.
 
 
-<a id="#sets.difference"></a>
+<a id="sets.difference"></a>
 
 ## sets.difference
 
@@ -269,7 +269,7 @@ Returns the elements in `a` that are not in `b`.
 A set containing the elements that are in `a` but not in `b`.
 
 
-<a id="#sets.length"></a>
+<a id="sets.length"></a>
 
 ## sets.length
 
@@ -291,7 +291,7 @@ Returns the number of elements in a set.
 An integer representing the number of elements in the set.
 
 
-<a id="#sets.remove"></a>
+<a id="sets.remove"></a>
 
 ## sets.remove
 
@@ -317,7 +317,7 @@ Element must be hashable.  This mutates the original set.
 The set `s` with `e` removed.
 
 
-<a id="#sets.repr"></a>
+<a id="sets.repr"></a>
 
 ## sets.repr
 
@@ -339,7 +339,7 @@ Returns a string value representing the set.
 A string representing the set.
 
 
-<a id="#sets.str"></a>
+<a id="sets.str"></a>
 
 ## sets.str
 

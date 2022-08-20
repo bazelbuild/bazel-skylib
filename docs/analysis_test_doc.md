@@ -2,7 +2,7 @@
 
 A test verifying other targets can be successfully analyzed as part of a `bazel test`
 
-<a id="#analysis_test"></a>
+<a id="analysis_test"></a>
 
 ## analysis_test
 

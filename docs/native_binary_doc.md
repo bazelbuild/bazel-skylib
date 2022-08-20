@@ -8,7 +8,7 @@ do, but they run the wrapped binary directly, instead of through Bash, so they
 don't depend on Bash and work with --shell_executable="".
 
 
-<a id="#native_binary"></a>
+<a id="native_binary"></a>
 
 ## native_binary
 
@@ -34,7 +34,7 @@ in genrule.tools for example. You can also augment the binary with runfiles.
 | <a id="native_binary-src"></a>src |  path of the pre-built executable   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | required |  |
 
 
-<a id="#native_test"></a>
+<a id="native_test"></a>
 
 ## native_test
 

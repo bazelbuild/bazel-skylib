@@ -7,7 +7,7 @@ path separators (forward slash, "/"); they do not handle Windows-style paths
 with backslash separators or drive letters.
 
 
-<a id="#paths.basename"></a>
+<a id="paths.basename"></a>
 
 ## paths.basename
 
@@ -35,7 +35,7 @@ the final slash).
 The basename of the path, which includes the extension.
 
 
-<a id="#paths.dirname"></a>
+<a id="paths.dirname"></a>
 
 ## paths.dirname
 
@@ -62,7 +62,7 @@ included, unless omitting them would make the dirname empty.
 The dirname of the path.
 
 
-<a id="#paths.is_absolute"></a>
+<a id="paths.is_absolute"></a>
 
 ## paths.is_absolute
 
@@ -84,7 +84,7 @@ Returns `True` if `path` is an absolute path.
 `True` if `path` is an absolute path.
 
 
-<a id="#paths.join"></a>
+<a id="paths.join"></a>
 
 ## paths.join
 
@@ -116,7 +116,7 @@ If any component is an absolute path, all previous components are discarded.
 A string containing the joined paths.
 
 
-<a id="#paths.normalize"></a>
+<a id="paths.normalize"></a>
 
 ## paths.normalize
 
@@ -153,7 +153,7 @@ POSIX platforms; specifically:
 The normalized path.
 
 
-<a id="#paths.relativize"></a>
+<a id="paths.relativize"></a>
 
 ## paths.relativize
 
@@ -185,7 +185,7 @@ the path both start with the same initial parent references.
 The portion of `path` that is relative to `start`.
 
 
-<a id="#paths.replace_extension"></a>
+<a id="paths.replace_extension"></a>
 
 ## paths.replace_extension
 
@@ -211,7 +211,7 @@ If the path has no extension, the new extension is added to it.
 The path with the extension replaced (or added, if it did not have one).
 
 
-<a id="#paths.split_extension"></a>
+<a id="paths.split_extension"></a>
 
 ## paths.split_extension
 

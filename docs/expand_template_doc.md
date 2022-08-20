@@ -3,7 +3,7 @@
 A rule that performes template expansion.
 
 
-<a id="#expand_template"></a>
+<a id="expand_template"></a>
 
 ## expand_template
 

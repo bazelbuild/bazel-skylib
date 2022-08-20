@@ -10,7 +10,7 @@ file. Instead they use Starlark's built-in file writing action
 (ctx.actions.write).
 
 
-<a id="#write_file"></a>
+<a id="write_file"></a>
 
 ## write_file
 
