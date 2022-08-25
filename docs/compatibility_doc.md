@@ -39,10 +39,10 @@ cc_binary(
     name = "bin",
     srcs = ["bin.cc"],
     # This target can only be built for Linux in debug mode.
-    target_compatible_with = compatibility.all_of([
+    target_compatible_with = compatibility.all_of(
         ":dbg",
         "@platforms//os:linux",
-    ]),
+    ),
 )
 ```
 
@@ -54,7 +54,7 @@ See also: `selects.config_setting_group(match_all)`
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="compatibility.all_of-settings"></a>settings |  A list of <code>config_setting</code> or <code>constraint_value</code> targets.   |  none |
+| <a id="compatibility.all_of-settings"></a>settings |  The <code>config_setting</code> or <code>constraint_value</code> targets.   |  none |
 
 **RETURNS**
 
@@ -82,10 +82,10 @@ cc_binary(
     name = "bin",
     srcs = ["bin.cc"],
     # This target can only be built for Linux or Mac.
-    target_compatible_with = compatibility.any_of([
+    target_compatible_with = compatibility.any_of(
         "@platforms//os:linux",
         "@platforms//os:macos",
-    ]),
+    ),
 )
 ```
 
@@ -95,7 +95,7 @@ cc_binary(
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="compatibility.any_of-settings"></a>settings |  A list of <code>config_settings</code> or <code>constraint_value</code> targets.   |  none |
+| <a id="compatibility.any_of-settings"></a>settings |  The <code>config_settings</code> or <code>constraint_value</code> targets.   |  none |
 
 **RETURNS**
 
@@ -123,10 +123,10 @@ cc_binary(
     srcs = ["bin.cc"],
     # This target cannot be built for Linux or Mac, but can be built for
     # everything else.
-    target_compatible_with = compatibility.none_of([
+    target_compatible_with = compatibility.none_of(
         "@platforms//os:linux",
         "@platforms//os:macos",
-    ]),
+    ),
 )
 ```
 
@@ -136,7 +136,7 @@ cc_binary(
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="compatibility.none_of-settings"></a>settings |  A list of <code>config_setting</code> or <code>constraint_value</code> targets.   |  none |
+| <a id="compatibility.none_of-settings"></a>settings |  The <code>config_setting</code> or <code>constraint_value</code> targets.   |  none |
 
 **RETURNS**
 

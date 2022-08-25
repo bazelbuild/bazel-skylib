@@ -56,7 +56,7 @@ def _maybe_make_unique_incompatible_value(name):
             constraint_setting = "@platforms//:incompatible_setting",
         )
 
-def _none_of(settings):
+def _none_of(*settings):
     """Create a `select()` for `target_compatible_with` which matches none of the given settings.
 
     Any of the settings will resolve to an incompatible `constraint_value` for the
@@ -70,15 +70,15 @@ def _none_of(settings):
         srcs = ["bin.cc"],
         # This target cannot be built for Linux or Mac, but can be built for
         # everything else.
-        target_compatible_with = compatibility.none_of([
+        target_compatible_with = compatibility.none_of(
             "@platforms//os:linux",
             "@platforms//os:macos",
-        ]),
+        ),
     )
     ```
 
     Args:
-      settings: A list of `config_setting` or `constraint_value` targets.
+      *settings: The `config_setting` or `constraint_value` targets.
 
     Returns:
       A native `select()` which maps any of the settings to the incompatible target.
@@ -91,7 +91,7 @@ def _none_of(settings):
         tuple(settings): [":" + compat_name],
     })
 
-def _any_of(settings):
+def _any_of(*settings):
     """Create a `select()` for `target_compatible_with` which matches any of the given settings.
 
     Any of the settings will resolve to an empty list, while the default condition will map to
@@ -105,15 +105,15 @@ def _any_of(settings):
         name = "bin",
         srcs = ["bin.cc"],
         # This target can only be built for Linux or Mac.
-        target_compatible_with = compatibility.any_of([
+        target_compatible_with = compatibility.any_of(
             "@platforms//os:linux",
             "@platforms//os:macos",
-        ]),
+        ),
     )
     ```
 
     Args:
-      settings: A list of `config_settings` or `constraint_value` targets.
+      *settings: The `config_settings` or `constraint_value` targets.
 
     Returns:
       A native `select()` which maps any of the settings an empty list.
@@ -126,7 +126,7 @@ def _any_of(settings):
         "//conditions:default": [":" + compat_name],
     })
 
-def _all_of(settings):
+def _all_of(*settings):
     """Create a `select()` for `target_compatible_with` which matches all of the given settings.
 
     All of the settings must be true to get an empty list. Failure to match will result
@@ -147,17 +147,17 @@ def _all_of(settings):
         name = "bin",
         srcs = ["bin.cc"],
         # This target can only be built for Linux in debug mode.
-        target_compatible_with = compatibility.all_of([
+        target_compatible_with = compatibility.all_of(
             ":dbg",
             "@platforms//os:linux",
-        ]),
+        ),
     )
     ```
 
     See also: `selects.config_setting_group(match_all)`
 
     Args:
-      settings: A list of `config_setting` or `constraint_value` targets.
+      *settings: The `config_setting` or `constraint_value` targets.
 
     Returns:
       A native `select()` which is "incompatible" unless all settings are true.

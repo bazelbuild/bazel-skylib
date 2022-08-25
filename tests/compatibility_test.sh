@@ -205,7 +205,7 @@ function test_any_of_logic() {
 sh_test(
     name = "pass_on_foo1_or_foo2_but_not_on_foo3",
     srcs = [":pass.sh"],
-    target_compatible_with = compatibility.any_of((":foo1", ":foo2")),
+    target_compatible_with = compatibility.any_of(":foo1", ":foo2"),
 )
 EOF
 
@@ -229,7 +229,7 @@ function test_none_of_logic() {
 sh_test(
     name = "pass_on_everything_but_foo1_and_foo2",
     srcs = [":pass.sh"],
-    target_compatible_with = compatibility.none_of((":foo1", ":foo2")),
+    target_compatible_with = compatibility.none_of(":foo1", ":foo2"),
 )
 EOF
 
@@ -253,7 +253,7 @@ function test_all_of_logic() {
 sh_test(
     name = "pass_on_only_foo1_and_bar1",
     srcs = [":pass.sh"],
-    target_compatible_with = compatibility.all_of((":foo1", ":bar1")),
+    target_compatible_with = compatibility.all_of(":foo1", ":bar1"),
 )
 EOF
 
@@ -276,12 +276,12 @@ function test_composition() {
 sh_test(
     name = "pass_on_foo1_or_foo2_but_not_bar1",
     srcs = [":pass.sh"],
-    target_compatible_with = compatibility.any_of([
+    target_compatible_with = compatibility.any_of(
         ":foo1",
         ":foo2",
-    ]) + compatibility.none_of([
+    ) + compatibility.none_of(
         ":bar1",
-    ]),
+    ),
 )
 EOF
 
