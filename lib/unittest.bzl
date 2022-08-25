@@ -364,6 +364,25 @@ def _begin(ctx):
     """
     return struct(ctx = ctx, failures = [])
 
+def _begin_analysis_test(ctx):
+    """Begins an analysis test.
+
+    This should be the first function called in an analysis test implementation
+    function. It initializes a "test environment" that is used to collect
+    assertion failures so that they can be reported and logged at the end of the
+    test.
+
+    Args:
+      ctx: The Starlark context. Pass the implementation function's `ctx` argument
+          in verbatim.
+
+    Returns:
+      A test environment struct that must be passed to assertions and finally to
+      `analysistest.end`. Do not rely on internal details about the fields in this
+      struct as it may change.
+    """
+    return struct(ctx = ctx, failures = [])
+
 def _end_analysis_test(env):
     """Ends an analysis test and logs the results.
 
@@ -647,7 +666,7 @@ unittest = struct(
 
 analysistest = struct(
     make = _make_analysis_test,
-    begin = _begin,
+    begin = _begin_analysis_test,
     end = _end_analysis_test,
     fail = _fail,
     target_actions = _target_actions,
