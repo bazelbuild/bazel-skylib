@@ -378,7 +378,7 @@ def _begin_analysis_test(ctx):
 
     Returns:
       A test environment struct that must be passed to assertions and finally to
-      `analysis.end`. Do not rely on internal details about the fields in this
+      `analysistest.end`. Do not rely on internal details about the fields in this
       struct as it may change.
     """
     return struct(ctx = ctx, failures = [])
