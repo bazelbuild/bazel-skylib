@@ -30,7 +30,7 @@ in genrule.tools for example. You can also augment the binary with runfiles.
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="native_binary-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 | <a id="native_binary-data"></a>data |  data dependencies. See https://docs.bazel.build/versions/main/be/common-definitions.html#typical.data   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | optional | [] |
-| <a id="native_binary-out"></a>out |  An output name for the copy of the binary   | String | required |  |
+| <a id="native_binary-out"></a>out |  An output name for the copy of the binary (defaults to target name)   | String | optional | "" |
 | <a id="native_binary-src"></a>src |  path of the pre-built executable   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | required |  |
 
 
@@ -56,7 +56,7 @@ the binary with runfiles.
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="native_test-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 | <a id="native_test-data"></a>data |  data dependencies. See https://docs.bazel.build/versions/main/be/common-definitions.html#typical.data   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | optional | [] |
-| <a id="native_test-out"></a>out |  An output name for the copy of the binary   | String | required |  |
+| <a id="native_test-out"></a>out |  An output name for the copy of the binary (defaults to target name)   | String | optional | "" |
 | <a id="native_test-src"></a>src |  path of the pre-built executable   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | required |  |
 
 
