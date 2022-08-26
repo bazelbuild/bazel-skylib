@@ -2,9 +2,18 @@
 
 Unit testing support.
 
-Unlike most Skylib files, this exports two modules: `unittest` which contains
-functions to declare and define unit tests, and `asserts` which contains the
-assertions used to within tests.
+Unlike most Skylib files, this exports four modules:
+* `unittest` contains functions to declare and define unit tests for ordinary
+   Starlark functions;
+* `analysistest` contains functions to declare and define tests for analysis
+   phase behavior of a rule, such as a given target's providers or registered
+   actions;
+* `loadingtest` contains functions to declare and define tests for loading
+   phase behavior, such as macros and `native.*`;
+* `asserts` contains the assertions used within tests.
+
+See https://bazel.build/extending/concepts for background about macros, rules,
+and the different phases of a build.
 
 
 <a id="#unittest_toolchain"></a>
