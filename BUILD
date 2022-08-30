@@ -7,7 +7,10 @@ package(default_visibility = ["//visibility:public"])
 # buildifier: disable=skylark-comment
 # gazelle:exclude skylark_library.bzl
 
-exports_files(["LICENSE"])
+exports_files([
+    "LICENSE",
+    "MODULE.bazel",
+])
 
 filegroup(
     name = "test_deps",
@@ -69,6 +72,7 @@ filegroup(
         "BUILD",
         "CODEOWNERS",
         "CONTRIBUTORS",
+        "WORKSPACE.bzlmod",
         "//lib:distribution",
         "//rules:distribution",
         "//rules/private:distribution",
