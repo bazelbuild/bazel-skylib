@@ -60,8 +60,14 @@ s = shell.quote(p)
 
 * [analysis_test](docs/analysis_test_doc.md)
 * [build_test](docs/build_test_doc.md)
+* [common_settings](docs/common_settings_doc.md)
+* [copy_directory](docs/copy_directory_doc.md)
 * [copy_file](docs/copy_file_doc.md)
+* [diff_test](docs/diff_test_doc.md)
 * [expand_template](docs/expand_template_doc.md)
+* [native_binary and native_test](docs/native_binary_doc.md)
+* [run_binary](docs/run_binary_doc.md)
+* [select_file](docs/select_file_doc.md)
 * [write_file](docs/write_file_doc.md)
 
 ## Writing a new module
