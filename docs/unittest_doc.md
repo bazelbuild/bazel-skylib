@@ -2,9 +2,18 @@
 
 Unit testing support.
 
-Unlike most Skylib files, this exports two modules: `unittest` which contains
-functions to declare and define unit tests, and `asserts` which contains the
-assertions used to within tests.
+Unlike most Skylib files, this exports four modules:
+* `unittest` contains functions to declare and define unit tests for ordinary
+   Starlark functions;
+* `analysistest` contains functions to declare and define tests for analysis
+   phase behavior of a rule, such as a given target's providers or registered
+   actions;
+* `loadingtest` contains functions to declare and define tests for loading
+   phase behavior, such as macros and `native.*`;
+* `asserts` contains the assertions used within tests.
+
+See https://bazel.build/extending/concepts for background about macros, rules,
+and the different phases of a build.
 
 
 <a id="#unittest_toolchain"></a>
@@ -94,9 +103,9 @@ A rule definition that should be stored in a global whose name ends in
 analysistest.begin(<a href="#analysistest.begin-ctx">ctx</a>)
 </pre>
 
-Begins a unit test.
+Begins an analysis test.
 
-This should be the first function called in a unit test implementation
+This should be the first function called in an analysis test implementation
 function. It initializes a "test environment" that is used to collect
 assertion failures so that they can be reported and logged at the end of the
 test.
@@ -112,7 +121,7 @@ test.
 **RETURNS**
 
 A test environment struct that must be passed to assertions and finally to
-`unittest.end`. Do not rely on internal details about the fields in this
+`analysistest.end`. Do not rely on internal details about the fields in this
 struct as it may change.
 
 

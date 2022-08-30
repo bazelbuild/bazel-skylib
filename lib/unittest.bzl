@@ -14,9 +14,18 @@
 
 """Unit testing support.
 
-Unlike most Skylib files, this exports two modules: `unittest` which contains
-functions to declare and define unit tests, and `asserts` which contains the
-assertions used to within tests.
+Unlike most Skylib files, this exports four modules:
+* `unittest` contains functions to declare and define unit tests for ordinary
+   Starlark functions;
+* `analysistest` contains functions to declare and define tests for analysis
+   phase behavior of a rule, such as a given target's providers or registered
+   actions;
+* `loadingtest` contains functions to declare and define tests for loading
+   phase behavior, such as macros and `native.*`;
+* `asserts` contains the assertions used within tests.
+
+See https://bazel.build/extending/concepts for background about macros, rules,
+and the different phases of a build.
 """
 
 load(":new_sets.bzl", new_sets = "sets")
@@ -364,6 +373,25 @@ def _begin(ctx):
     """
     return struct(ctx = ctx, failures = [])
 
+def _begin_analysis_test(ctx):
+    """Begins an analysis test.
+
+    This should be the first function called in an analysis test implementation
+    function. It initializes a "test environment" that is used to collect
+    assertion failures so that they can be reported and logged at the end of the
+    test.
+
+    Args:
+      ctx: The Starlark context. Pass the implementation function's `ctx` argument
+          in verbatim.
+
+    Returns:
+      A test environment struct that must be passed to assertions and finally to
+      `analysistest.end`. Do not rely on internal details about the fields in this
+      struct as it may change.
+    """
+    return struct(ctx = ctx, failures = [])
+
 def _end_analysis_test(env):
     """Ends an analysis test and logs the results.
 
@@ -647,7 +675,7 @@ unittest = struct(
 
 analysistest = struct(
     make = _make_analysis_test,
-    begin = _begin,
+    begin = _begin_analysis_test,
     end = _end_analysis_test,
     fail = _fail,
     target_actions = _target_actions,
