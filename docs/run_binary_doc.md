@@ -6,7 +6,7 @@ run_binary() build rule implementation.
 Runs a binary as a build action. This rule does not require Bash (unlike native.genrule()).
 
 
-<a id="#run_binary"></a>
+<a id="run_binary"></a>
 
 ## run_binary
 

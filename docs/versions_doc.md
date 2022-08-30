@@ -2,7 +2,7 @@
 
 Skylib module containing functions for checking Bazel versions.
 
-<a id="#versions.get"></a>
+<a id="versions.get"></a>
 
 ## versions.get
 
@@ -14,7 +14,7 @@ Returns the current Bazel version
 
 
 
-<a id="#versions.parse"></a>
+<a id="versions.parse"></a>
 
 ## versions.parse
 
@@ -39,7 +39,7 @@ int tuples can be compared directly using binary operators (<, >).
 An int 3-tuple of a (major, minor, patch) version.
 
 
-<a id="#versions.check"></a>
+<a id="versions.check"></a>
 
 ## versions.check
 
@@ -59,7 +59,7 @@ Check that the version of Bazel is valid within the specified range.
 | <a id="versions.check-bazel_version"></a>bazel_version |  the version of Bazel to check. Used for testing, defaults to native.bazel_version   |  <code>None</code> |
 
 
-<a id="#versions.is_at_most"></a>
+<a id="versions.is_at_most"></a>
 
 ## versions.is_at_most
 
@@ -82,7 +82,7 @@ Check that a version is lower or equals to a threshold.
 True if version <= threshold.
 
 
-<a id="#versions.is_at_least"></a>
+<a id="versions.is_at_least"></a>
 
 ## versions.is_at_least
 

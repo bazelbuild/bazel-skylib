@@ -2,7 +2,7 @@
 
 Skylib module containing shell utility functions.
 
-<a id="#shell.array_literal"></a>
+<a id="shell.array_literal"></a>
 
 ## shell.array_literal
 
@@ -33,7 +33,7 @@ A string that represents the sequence as a shell array; that is,
 parentheses containing the quoted elements.
 
 
-<a id="#shell.quote"></a>
+<a id="shell.quote"></a>
 
 ## shell.quote
 

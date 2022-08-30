@@ -6,7 +6,7 @@ The rule uses a Bash command (diff) on Linux/macOS/non-Windows, and a cmd.exe
 command (fc.exe) on Windows (no Bash is required).
 
 
-<a id="#diff_test"></a>
+<a id="diff_test"></a>
 
 ## diff_test
 

@@ -2,7 +2,7 @@
 
 Skylib module containing convenience interfaces for select().
 
-<a id="#selects.with_or"></a>
+<a id="selects.with_or"></a>
 
 ## selects.with_or
 
@@ -48,7 +48,7 @@ to
 ```
 
 
-<a id="#selects.with_or_dict"></a>
+<a id="selects.with_or_dict"></a>
 
 ## selects.with_or_dict
 
@@ -74,7 +74,7 @@ macros.
 A dictionary usable by a native `select()`.
 
 
-<a id="#selects.config_setting_group"></a>
+<a id="selects.config_setting_group"></a>
 
 ## selects.config_setting_group
 

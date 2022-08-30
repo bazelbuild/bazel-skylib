@@ -2,7 +2,7 @@
 
 Skylib module containing functions that operate on dictionaries.
 
-<a id="#dicts.add"></a>
+<a id="dicts.add"></a>
 
 ## dicts.add
 
@@ -34,7 +34,7 @@ dictionary, and the sum of a single dictionary is a copy of itself.
 A new `dict` that has all the entries of the given dictionaries.
 
 
-<a id="#dicts.omit"></a>
+<a id="dicts.omit"></a>
 
 ## dicts.omit
 
@@ -57,7 +57,7 @@ Returns a new `dict` that has all the entries of `dictionary` with keys not in `
 A new `dict` that has all the entries of `dictionary` with keys not in `keys`.
 
 
-<a id="#dicts.pick"></a>
+<a id="dicts.pick"></a>
 
 ## dicts.pick
 

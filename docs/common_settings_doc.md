@@ -9,7 +9,7 @@ More documentation on how to use build settings at
 https://docs.bazel.build/versions/main/skylark/config.html#user-defined-build-settings
 
 
-<a id="#bool_flag"></a>
+<a id="bool_flag"></a>
 
 ## bool_flag
 
@@ -27,7 +27,7 @@ A bool-typed build setting that can be set on the command line
 | <a id="bool_flag-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 
 
-<a id="#bool_setting"></a>
+<a id="bool_setting"></a>
 
 ## bool_setting
 
@@ -45,7 +45,7 @@ A bool-typed build setting that cannot be set on the command line
 | <a id="bool_setting-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 
 
-<a id="#int_flag"></a>
+<a id="int_flag"></a>
 
 ## int_flag
 
@@ -63,7 +63,7 @@ An int-typed build setting that can be set on the command line
 | <a id="int_flag-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 
 
-<a id="#int_setting"></a>
+<a id="int_setting"></a>
 
 ## int_setting
 
@@ -81,7 +81,7 @@ An int-typed build setting that cannot be set on the command line
 | <a id="int_setting-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 
 
-<a id="#string_flag"></a>
+<a id="string_flag"></a>
 
 ## string_flag
 
@@ -100,7 +100,7 @@ A string-typed build setting that can be set on the command line
 | <a id="string_flag-values"></a>values |  The list of allowed values for this setting. An error is raised if any other value is given.   | List of strings | optional | [] |
 
 
-<a id="#string_list_flag"></a>
+<a id="string_list_flag"></a>
 
 ## string_list_flag
 
@@ -118,7 +118,7 @@ A string list-typed build setting that can be set on the command line
 | <a id="string_list_flag-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 
 
-<a id="#string_list_setting"></a>
+<a id="string_list_setting"></a>
 
 ## string_list_setting
 
@@ -136,7 +136,7 @@ A string list-typed build setting that cannot be set on the command line
 | <a id="string_list_setting-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
 
 
-<a id="#string_setting"></a>
+<a id="string_setting"></a>
 
 ## string_setting
 
@@ -155,7 +155,7 @@ A string-typed build setting that cannot be set on the command line
 | <a id="string_setting-values"></a>values |  The list of allowed values for this setting. An error is raised if any other value is given.   | List of strings | optional | [] |
 
 
-<a id="#BuildSettingInfo"></a>
+<a id="BuildSettingInfo"></a>
 
 ## BuildSettingInfo
 

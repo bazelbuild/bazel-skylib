@@ -9,7 +9,7 @@ The rule uses a Bash command on Linux/macOS/non-Windows, and a cmd.exe command
 on Windows (no Bash is required).
 
 
-<a id="#copy_file"></a>
+<a id="copy_file"></a>
 
 ## copy_file
 

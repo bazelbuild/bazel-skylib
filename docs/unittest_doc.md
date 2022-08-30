@@ -16,7 +16,7 @@ See https://bazel.build/extending/concepts for background about macros, rules,
 and the different phases of a build.
 
 
-<a id="#unittest_toolchain"></a>
+<a id="unittest_toolchain"></a>
 
 ## unittest_toolchain
 
@@ -41,7 +41,7 @@ unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unitte
 | <a id="unittest_toolchain-success_templ"></a>success_templ |  Test script generated when the test passes. Should exit with status 0.   | String | required |  |
 
 
-<a id="#analysistest.make"></a>
+<a id="analysistest.make"></a>
 
 ## analysistest.make
 
@@ -95,7 +95,7 @@ A rule definition that should be stored in a global whose name ends in
 `_test`.
 
 
-<a id="#analysistest.begin"></a>
+<a id="analysistest.begin"></a>
 
 ## analysistest.begin
 
@@ -125,7 +125,7 @@ A test environment struct that must be passed to assertions and finally to
 struct as it may change.
 
 
-<a id="#analysistest.end"></a>
+<a id="analysistest.end"></a>
 
 ## analysistest.end
 
@@ -151,7 +151,7 @@ that the results are reported.
 A list of providers needed to automatically register the analysis test result.
 
 
-<a id="#analysistest.fail"></a>
+<a id="analysistest.fail"></a>
 
 ## analysistest.fail
 
@@ -170,7 +170,7 @@ Unconditionally causes the current test to fail.
 | <a id="analysistest.fail-msg"></a>msg |  The message to log describing the failure.   |  none |
 
 
-<a id="#analysistest.target_actions"></a>
+<a id="analysistest.target_actions"></a>
 
 ## analysistest.target_actions
 
@@ -192,7 +192,7 @@ Returns a list of actions registered by the target under test.
 A list of actions registered by the target under test
 
 
-<a id="#analysistest.target_bin_dir_path"></a>
+<a id="analysistest.target_bin_dir_path"></a>
 
 ## analysistest.target_bin_dir_path
 
@@ -214,7 +214,7 @@ Returns ctx.bin_dir.path for the target under test.
 Output bin dir path string.
 
 
-<a id="#analysistest.target_under_test"></a>
+<a id="analysistest.target_under_test"></a>
 
 ## analysistest.target_under_test
 
@@ -236,7 +236,7 @@ Returns the target under test.
 The target under test.
 
 
-<a id="#asserts.expect_failure"></a>
+<a id="asserts.expect_failure"></a>
 
 ## asserts.expect_failure
 
@@ -259,7 +259,7 @@ This requires that the analysis test is created with `analysistest.make()` and
 | <a id="asserts.expect_failure-expected_failure_msg"></a>expected_failure_msg |  The error message to expect as a result of analysis failures.   |  <code>""</code> |
 
 
-<a id="#asserts.equals"></a>
+<a id="asserts.equals"></a>
 
 ## asserts.equals
 
@@ -280,7 +280,7 @@ Asserts that the given `expected` and `actual` values are equal.
 | <a id="asserts.equals-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>None</code> |
 
 
-<a id="#asserts.false"></a>
+<a id="asserts.false"></a>
 
 ## asserts.false
 
@@ -300,7 +300,7 @@ Asserts that the given `condition` is false.
 | <a id="asserts.false-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>"Expected condition to be false, but was true."</code> |
 
 
-<a id="#asserts.set_equals"></a>
+<a id="asserts.set_equals"></a>
 
 ## asserts.set_equals
 
@@ -321,7 +321,7 @@ Asserts that the given `expected` and `actual` sets are equal.
 | <a id="asserts.set_equals-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>None</code> |
 
 
-<a id="#asserts.new_set_equals"></a>
+<a id="asserts.new_set_equals"></a>
 
 ## asserts.new_set_equals
 
@@ -342,7 +342,7 @@ Asserts that the given `expected` and `actual` sets are equal.
 | <a id="asserts.new_set_equals-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>None</code> |
 
 
-<a id="#asserts.true"></a>
+<a id="asserts.true"></a>
 
 ## asserts.true
 
@@ -362,7 +362,7 @@ Asserts that the given `condition` is true.
 | <a id="asserts.true-msg"></a>msg |  An optional message that will be printed that describes the failure. If omitted, a default will be used.   |  <code>"Expected condition to be true, but was false."</code> |
 
 
-<a id="#loadingtest.make"></a>
+<a id="loadingtest.make"></a>
 
 ## loadingtest.make
 
@@ -384,7 +384,7 @@ Creates a loading phase test environment and test_suite.
 loading phase environment passed to other loadingtest functions
 
 
-<a id="#loadingtest.equals"></a>
+<a id="loadingtest.equals"></a>
 
 ## loadingtest.equals
 
@@ -409,7 +409,7 @@ Creates a test case for asserting state at LOADING phase.
 None, creates test case
 
 
-<a id="#register_unittest_toolchains"></a>
+<a id="register_unittest_toolchains"></a>
 
 ## register_unittest_toolchains
 
@@ -421,7 +421,7 @@ Registers the toolchains for unittest users.
 
 
 
-<a id="#unittest.make"></a>
+<a id="unittest.make"></a>
 
 ## unittest.make
 
@@ -469,7 +469,7 @@ A rule definition that should be stored in a global whose name ends in
 `_test`.
 
 
-<a id="#unittest.suite"></a>
+<a id="unittest.suite"></a>
 
 ## unittest.suite
 
@@ -525,7 +525,7 @@ name each target.
 | <a id="unittest.suite-test_rules"></a>test_rules |  A list of test rules defines by <code>unittest.test</code>.   |  none |
 
 
-<a id="#unittest.begin"></a>
+<a id="unittest.begin"></a>
 
 ## unittest.begin
 
@@ -555,7 +555,7 @@ A test environment struct that must be passed to assertions and finally to
 struct as it may change.
 
 
-<a id="#unittest.end"></a>
+<a id="unittest.end"></a>
 
 ## unittest.end
 
@@ -581,7 +581,7 @@ that the results are reported.
 A list of providers needed to automatically register the test result.
 
 
-<a id="#unittest.fail"></a>
+<a id="unittest.fail"></a>
 
 ## unittest.fail
 

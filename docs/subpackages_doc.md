@@ -3,7 +3,7 @@
 Skylib module containing common functions for working with native.subpackages()
 
 
-<a id="#subpackages.all"></a>
+<a id="subpackages.all"></a>
 
 ## subpackages.all
 
@@ -46,7 +46,7 @@ A mutable sorted list containing all sub-packages of the current Bazel
 package.
 
 
-<a id="#subpackages.exists"></a>
+<a id="subpackages.exists"></a>
 
 ## subpackages.exists
 
@@ -82,7 +82,7 @@ NOTE: fail()s if native.subpackages() is not supported in the current Bazel vers
 True if 'relative_path' is a subpackage of the current package.
 
 
-<a id="#subpackages.supported"></a>
+<a id="subpackages.supported"></a>
 
 ## subpackages.supported
 

@@ -2,7 +2,7 @@
 
 A test verifying other targets build as part of a `bazel test`
 
-<a id="#build_test"></a>
+<a id="build_test"></a>
 
 ## build_test
 

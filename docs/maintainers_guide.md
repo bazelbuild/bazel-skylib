@@ -72,7 +72,8 @@ Name 1, Name 2, Name 3 (alphabetically from `git log`)
 
 --------------------------------------------------------------------------------
 
-2.  Bump `version` in version.bzl to the new version.
+2.  Bump `version` in version.bzl *and* MODULE.bazel to the new version.
+    TODO(#386): add a test to make sure the two versions are in sync.
 3.  Ensure that the commits for steps 1 and 2 have been merged. All further
     steps must be performed on a single, known-good git commit.
 4.  `bazel build //distribution:bazel-skylib-$VERSION.tar.gz`
