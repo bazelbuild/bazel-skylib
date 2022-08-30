@@ -58,7 +58,7 @@ See also: `selects.config_setting_group(match_all)`
 
 **RETURNS**
 
-A native `select()` which is "incompatible" unless all settings are true.
+A native series of `select()`s. The result is "incompatible" unless all settings are true.
 
 
 <a id="#compatibility.any_of"></a>
