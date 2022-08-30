@@ -67,11 +67,21 @@ EOF
 workspace(name = 'bazel_skylib')
 EOF
 
+  cat > BUILD <<EOF
+EOF
+  cat > bzl_library.bzl <<EOF
+def bzl_library(**kwargs):
+    """A dummy implementation of bzl_library()."""
+    pass
+EOF
+
   mkdir -p lib
   cat > lib/BUILD <<EOF
 EOF
 
-  for file in compatibility.bzl selects.bzl; do
+  for file in compatibility.bzl selects.bzl compatibility/BUILD compatibility/defs.bzl; do
+    mkdir -p "$(dirname "lib/${file}")" \
+      || fail "couldn't mkdir for ${file}"
     ln -sf "$(rlocation "bazel_skylib/lib/${file}")" "lib/${file}" \
       || fail "couldn't symlink ${file}."
   done
@@ -217,7 +227,7 @@ EOF
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_foo1_or_foo2_but_not_on_foo3 \
-    "didn't satisfy constraint //target_skipping: compatible with any of foo1 or foo2 (" \
+    "didn't satisfy constraint //lib/compatibility:any_of$" \
     //target_skipping:foo3_platform \
     //target_skipping:bar1_platform
 }
@@ -240,7 +250,7 @@ EOF
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_everything_but_foo1_and_foo2 \
-    "didn't satisfy constraint //target_skipping: incompatible with foo1 or foo2 (" \
+    "didn't satisfy constraint //lib/compatibility:none_of$" \
     //target_skipping:foo1_bar1_platform \
     //target_skipping:foo2_bar1_platform \
     //target_skipping:foo2_bar2_platform
@@ -263,7 +273,7 @@ EOF
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_only_foo1_and_bar1 \
-    "didn't satisfy constraint //target_skipping: compatible with all of bar1 and foo1 (" \
+    "didn't satisfy constraints\\? \\[\\?//lib/compatibility:all_of_" \
     //target_skipping:foo2_bar1_platform \
     //target_skipping:foo2_bar2_platform \
     //target_skipping:foo3_platform \
@@ -291,24 +301,23 @@ EOF
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_foo1_or_foo2_but_not_bar1 \
-    "didn't satisfy constraint //target_skipping: incompatible with bar1 (" \
+    "didn't satisfy constraint //lib/compatibility:none_of$" \
     //target_skipping:foo1_bar1_platform \
-    //target_skipping:foo2_bar1_platform \
+    //target_skipping:foo2_bar1_platform
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_foo1_or_foo2_but_not_bar1 \
-    "didn't satisfy constraint //target_skipping: compatible with any of foo1 or foo2 (" \
+    "didn't satisfy constraint //lib/compatibility:any_of$" \
     //target_skipping:foo3_platform
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_foo1_or_foo2_but_not_bar1 \
-    "didn't satisfy constraints \\[" \
+    "didn't satisfy constraints \\[//lib/compatibility:" \
     //target_skipping:bar1_platform
-
   # Since the order of constraints isn't guaranteed until
   # 72787a1267a6087923aca83bf161f93c0a1323e0, we do two individual checks here.
-  expect_log "//target_skipping: compatible with any of foo1 or foo2 ("
-  expect_log "//target_skipping: incompatible with bar1 ("
+  expect_log "//lib/compatibility:any_of\\>"
+  expect_log "//lib/compatibility:none_of\\>"
 }
 
 cd "$TEST_TMPDIR"
