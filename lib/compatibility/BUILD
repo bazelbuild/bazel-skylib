@@ -29,4 +29,4 @@ constraint_value(
 [constraint_value(
     name = "all_of_" + str(i),
     constraint_setting = "@platforms//:incompatible_setting",
-) for i in range(50)]
+) for i in range(MAX_NUM_ALL_OF_SETTINGS)]
