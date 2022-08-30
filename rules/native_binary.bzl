@@ -61,7 +61,7 @@ _ATTRS = {
     "data": attr.label_list(
         allow_files = True,
         doc = "data dependencies. See" +
-              " https://docs.bazel.build/versions/main/be/common-definitions.html#typical.data",
+              " https://bazel.build/reference/be/common-definitions#typical.data",
     ),
     # "out" is attr.string instead of attr.output, so that it is select()'able.
     "out": attr.string(mandatory = True, doc = "An output name for the copy of the binary"),
