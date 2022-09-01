@@ -26,7 +26,7 @@ COPY_EXECUTION_REQUIREMENTS = {
     #                 | or run inside the sandbox. For genrules and tests, marking the rule with the
     #                 | local = True attribute has the same effect.
     # ----------------+-----------------------------------------------------------------------------
-    # See https://bazel.google.cn/reference/be/common-definitions?hl=en&authuser=0#common-attributes
+    # See https://bazel.build/reference/be/common-definitions#common-attributes
     #
     # Copying file & directories is entirely IO-bound and there is no point doing this work
     # remotely.

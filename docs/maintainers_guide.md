@@ -82,7 +82,7 @@ Name 1, Name 2, Name 3 (alphabetically from `git log`)
     can obtain them via `gcloud init`):
 
 ```
-gsutil cp bazel-bin/distro/bazel-skylib-$VERSION.tar.gz gs://bazel-mirror/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz
+gsutil cp bazel-bin/distribution/bazel-skylib-$VERSION.tar.gz gs://bazel-mirror/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz
 gsutil setmeta -h "Cache-Control: public, max-age=31536000" "gs://bazel-mirror/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz"
 ```
 
