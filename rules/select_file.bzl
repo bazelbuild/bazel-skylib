@@ -15,7 +15,7 @@
 """
 select_file() build rule implementation.
 
-Selects a single file from the outputs of some target by given relative path.
+Selects a single file from the outputs of a target by given relative path.
 """
 
 def _impl(ctx):
@@ -38,8 +38,7 @@ def _impl(ctx):
 
 select_file = rule(
     implementation = _impl,
-    doc = "Selects a single file from the outputs of some target \
-by given relative path",
+    doc = "Selects a single file from the outputs of a target by given relative path",
     attrs = {
         "srcs": attr.label(
             allow_files = True,
