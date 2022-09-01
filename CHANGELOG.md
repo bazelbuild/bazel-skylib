@@ -16,7 +16,7 @@ Release 1.3.0
 
 **Contributors**
 
-Alexandre Rostovtsev, Alex Eagle, Barry McNamara, Derek Cormier, Fabian
+Alex Eagle, Alexandre Rostovtsev, Barry McNamara, Derek Cormier, Fabian
 Meumertzheim, Geoffrey Martin-Noble, hchsiao, Kevin Kres, nickgooding,
 Vertexwahn, Vinh Tran
 
