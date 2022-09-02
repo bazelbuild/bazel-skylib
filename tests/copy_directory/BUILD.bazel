@@ -1,6 +1,7 @@
 # This package aids testing the 'copy_directory' rule.
 
 load("//rules:copy_directory.bzl", "copy_directory")
+load(":empty_directory.bzl", "empty_directory")
 
 licenses(["notice"])
 
@@ -13,10 +14,8 @@ copy_directory(
     out = "dir_copy",
 )
 
-genrule(
-    name = "empty_directory",
-    outs = ["empty_dir"],
-    cmd = "mkdir $@",
+empty_directory(
+    name = "empty_dir",
 )
 
 copy_directory(
