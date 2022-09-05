@@ -72,8 +72,10 @@ string_list_setting = rule(
 def _no_at_str(label):
     """Strips any leading '@'s for labels in the main repo, so that the error string is more friendly."""
     s = str(label)
-    if s.startswith("@@//"): return s[2:]
-    if s.startswith("@//"): return s[1:]
+    if s.startswith("@@//"):
+        return s[2:]
+    if s.startswith("@//"):
+        return s[1:]
     return s
 
 def _string_impl(ctx):
