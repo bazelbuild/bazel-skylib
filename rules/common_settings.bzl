@@ -69,13 +69,22 @@ string_list_setting = rule(
     doc = "A string list-typed build setting that cannot be set on the command line",
 )
 
+def _no_at_str(label):
+    """Strips any leading '@'s for labels in the main repo, so that the error string is more friendly."""
+    s = str(label)
+    if s.startswith("@@//"):
+        return s[2:]
+    if s.startswith("@//"):
+        return s[1:]
+    return s
+
 def _string_impl(ctx):
     allowed_values = ctx.attr.values
     value = ctx.build_setting_value
     if len(allowed_values) == 0 or value in ctx.attr.values:
         return BuildSettingInfo(value = value)
     else:
-        fail("Error setting " + str(ctx.label) + ": invalid value '" + value + "'. Allowed values are " + str(allowed_values))
+        fail("Error setting " + _no_at_str(ctx.label) + ": invalid value '" + value + "'. Allowed values are " + str(allowed_values))
 
 string_flag = rule(
     implementation = _string_impl,
