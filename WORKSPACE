@@ -80,6 +80,28 @@ http_archive(
 # Another Gazelle repository hint.
 # gazelle:repository go_repository name=bazel_gazelle importpath=github.com/bazelbuild/bazel-gazelle/testtools
 
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 
 gazelle_dependencies()
+
+# Buildozer & deps
+http_archive(
+    name = "com_google_protobuf",
+    sha256 = "9b4ee22c250fe31b16f1a24d61467e40780a3fbb9b91c3b65be2a376ed913a1a",
+    strip_prefix = "protobuf-3.19.2",
+    urls = [
+        "https://github.com/protocolbuffers/protobuf/archive/v3.19.2.tar.gz",
+    ],
+)
+
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()
+
+go_repository(
+    name = "com_github_bazelbuild_buildtools",
+    build_naming_convention = "go_default_library",
+    importpath = "github.com/bazelbuild/buildtools",
+    sum = "h1:fmdo+fvvWlhldUcqkhAMpKndSxMN3vH5l7yow5cEaiQ=",
+    version = "v0.0.0-20220531122519-a43aed7014c8"
+)

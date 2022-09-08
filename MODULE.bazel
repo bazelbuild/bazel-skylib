@@ -31,3 +31,10 @@ use_repo(go_deps, "com_github_bazelbuild_buildtools")
 bazel_dep(name = "stardoc", dev_dependency = True, repo_name = "io_bazel_stardoc", version = "0.5.1")
 bazel_dep(name = "rules_pkg", dev_dependency = True, version = "0.5.1")
 bazel_dep(name = "rules_cc", dev_dependency = True, version = "0.0.1")
+
+# needed by buildozer
+go_deps.module(
+    path = "github.com/golang/protobuf",
+    sum = "h1:FsONVRAS9T7sI+LIUmWTfcYkHO4aIWwzhcaSAoJOfIk=",
+    version = "v1.5.0",
+)
