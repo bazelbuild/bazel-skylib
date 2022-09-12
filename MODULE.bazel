@@ -21,7 +21,12 @@ bazel_dep(name = "rules_go", repo_name = "io_bazel_rules_go", version = "0.34.0"
 
 # We need https://github.com/bazelbuild/bazel-gazelle/pull/1331 for buildtools
 bazel_dep(name = "gazelle", repo_name = "bazel_gazelle", version = "0.27.0-pre")
-git_override(module_name = "gazelle", remote = "https://github.com/bazelbuild/bazel-gazelle", commit = "55ba8e3f2aaad0f43d82d02eba90ccf7a7fe9c73")
+
+git_override(
+    commit = "55ba8e3f2aaad0f43d82d02eba90ccf7a7fe9c73",
+    module_name = "gazelle",
+    remote = "https://github.com/bazelbuild/bazel-gazelle",
+)
 
 go_deps = use_extension("@bazel_gazelle//:extensions.bzl", "go_deps")
 
