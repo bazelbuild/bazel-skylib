@@ -40,7 +40,7 @@ def _none_of(*settings):
       A native `select()` which maps any of the settings to the incompatible target.
     """
     return selects.with_or({
-        tuple(settings): ["@bazel_skylib//lib/compatibility:none_of"],
+        tuple(settings): ["@bazel_skylib//lib/compatibility:incompatible_in_none_of"],
         "//conditions:default": [],
     })
 
@@ -73,7 +73,7 @@ def _any_of(*settings):
     """
     return selects.with_or({
         tuple(settings): [],
-        "//conditions:default": ["@bazel_skylib//lib/compatibility:any_of"],
+        "//conditions:default": ["@bazel_skylib//lib/compatibility:incompatible_in_any_of"],
     })
 
 def _all_of(*settings):
@@ -119,7 +119,7 @@ def _all_of(*settings):
     for i, setting in enumerate(settings):
         result += select({
             setting: [],
-            "//conditions:default": ["@bazel_skylib//lib/compatibility:all_of_{}".format(i)],
+            "//conditions:default": ["@bazel_skylib//lib/compatibility:incompatible_in_all_of_{}".format(i)],
         })
     return result
 
