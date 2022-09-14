@@ -22,11 +22,7 @@ COPY_EXECUTION_REQUIREMENTS = {
     # ----------------+-----------------------------------------------------------------------------
     # no-cache        | Results in the action or test never being cached (remotely or locally)
     # ----------------+-----------------------------------------------------------------------------
-    # local           | Precludes the action or test from being remotely cached, remotely executed,
-    #                 | or run inside the sandbox. For genrules and tests, marking the rule with the
-    #                 | local = True attribute has the same effect.
-    # ----------------+-----------------------------------------------------------------------------
-    # See https://bazel.google.cn/reference/be/common-definitions?hl=en&authuser=0#common-attributes
+    # See https://bazel.build/reference/be/common-definitions#common-attributes
     #
     # Copying file & directories is entirely IO-bound and there is no point doing this work
     # remotely.
@@ -44,11 +40,6 @@ COPY_EXECUTION_REQUIREMENTS = {
     # disk cache stores the directory artifact as a single entry, but the slight performance bump
     # comes at the cost of heavy disk cache usage, which is an unmanaged directory that grow beyond
     # the bounds of the physical disk.
-    #
-    # Sandboxing for this action is wasteful as well since there is a 1:1 mapping of input
-    # file/directory to output file/directory and no room for non-hermetic inputs to sneak in to the
-    # input.
     "no-remote": "1",
     "no-cache": "1",
-    "local": "1",
 }

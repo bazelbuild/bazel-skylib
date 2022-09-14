@@ -8,7 +8,7 @@ do, but they run the wrapped binary directly, instead of through Bash, so they
 don't depend on Bash and work with --shell_executable="".
 
 
-<a id="#native_binary"></a>
+<a id="native_binary"></a>
 
 ## native_binary
 
@@ -29,12 +29,12 @@ in genrule.tools for example. You can also augment the binary with runfiles.
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="native_binary-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
-| <a id="native_binary-data"></a>data |  data dependencies. See https://docs.bazel.build/versions/main/be/common-definitions.html#typical.data   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | optional | [] |
+| <a id="native_binary-data"></a>data |  data dependencies. See https://bazel.build/reference/be/common-definitions#typical.data   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | optional | [] |
 | <a id="native_binary-out"></a>out |  An output name for the copy of the binary   | String | required |  |
 | <a id="native_binary-src"></a>src |  path of the pre-built executable   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | required |  |
 
 
-<a id="#native_test"></a>
+<a id="native_test"></a>
 
 ## native_test
 
@@ -55,7 +55,7 @@ the binary with runfiles.
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="native_test-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
-| <a id="native_test-data"></a>data |  data dependencies. See https://docs.bazel.build/versions/main/be/common-definitions.html#typical.data   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | optional | [] |
+| <a id="native_test-data"></a>data |  data dependencies. See https://bazel.build/reference/be/common-definitions#typical.data   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | optional | [] |
 | <a id="native_test-out"></a>out |  An output name for the copy of the binary   | String | required |  |
 | <a id="native_test-src"></a>src |  path of the pre-built executable   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | required |  |
 

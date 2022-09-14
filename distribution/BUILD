@@ -6,10 +6,20 @@ package(
     default_visibility = ["//visibility:private"],
 )
 
+genrule(
+    name = "distro_module_bazel",
+    srcs = ["//:MODULE.bazel"],
+    outs = ["MODULE.bazel"],
+    cmd = "sed -e '/### INTERNAL ONLY/,$$d' $(location //:MODULE.bazel) >$@",
+)
+
 # Build the artifact to put on the github release page.
 pkg_tar(
     name = "bazel-skylib-%s" % version,
-    srcs = ["//:distribution"],
+    srcs = [
+        "distro_module_bazel",
+        "//:distribution",
+    ],
     extension = "tar.gz",
     mode = "0644",
     # Make it owned by root so it does not have the uid of the CI robot.

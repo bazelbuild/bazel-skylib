@@ -2,7 +2,7 @@
 
 A test verifying other targets build as part of a `bazel test`
 
-<a id="#build_test"></a>
+<a id="build_test"></a>
 
 ## build_test
 
@@ -36,6 +36,6 @@ Typical usage:
 | :------------- | :------------- | :------------- |
 | <a id="build_test-name"></a>name |  The name of the test rule.   |  none |
 | <a id="build_test-targets"></a>targets |  A list of targets to ensure build.   |  none |
-| <a id="build_test-kwargs"></a>kwargs |  The &lt;a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-tests"&gt;common attributes for tests&lt;/a&gt;.   |  none |
+| <a id="build_test-kwargs"></a>kwargs |  The &lt;a href="https://bazel.build/reference/be/common-definitions#common-attributes-tests"&gt;common attributes for tests&lt;/a&gt;.   |  none |
 
 

@@ -2,7 +2,7 @@
 
 Skylib module containing functions that operate on collections.
 
-<a id="#collections.after_each"></a>
+<a id="collections.after_each"></a>
 
 ## collections.after_each
 
@@ -25,7 +25,7 @@ Inserts `separator` after each item in `iterable`.
 A new list with `separator` after each item in `iterable`.
 
 
-<a id="#collections.before_each"></a>
+<a id="collections.before_each"></a>
 
 ## collections.before_each
 
@@ -48,7 +48,7 @@ Inserts `separator` before each item in `iterable`.
 A new list with `separator` before each item in `iterable`.
 
 
-<a id="#collections.uniq"></a>
+<a id="collections.uniq"></a>
 
 ## collections.uniq
 

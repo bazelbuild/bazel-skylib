@@ -6,7 +6,7 @@ The rule uses a Bash command (diff) on Linux/macOS/non-Windows, and a cmd.exe
 command (fc.exe) on Windows (no Bash is required).
 
 
-<a id="#diff_test"></a>
+<a id="diff_test"></a>
 
 ## diff_test
 
@@ -28,6 +28,6 @@ The test succeeds if the files' contents match.
 | <a id="diff_test-file1"></a>file1 |  Label of the file to compare to &lt;code&gt;file2&lt;/code&gt;.   |  none |
 | <a id="diff_test-file2"></a>file2 |  Label of the file to compare to &lt;code&gt;file1&lt;/code&gt;.   |  none |
 | <a id="diff_test-failure_message"></a>failure_message |  Additional message to log if the files' contents do not match.   |  <code>None</code> |
-| <a id="diff_test-kwargs"></a>kwargs |  The &lt;a href="https://docs.bazel.build/versions/main/be/common-definitions.html#common-attributes-tests"&gt;common attributes for tests&lt;/a&gt;.   |  none |
+| <a id="diff_test-kwargs"></a>kwargs |  The &lt;a href="https://bazel.build/reference/be/common-definitions#common-attributes-tests"&gt;common attributes for tests&lt;/a&gt;.   |  none |
 
 

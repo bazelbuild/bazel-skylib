@@ -1,3 +1,17 @@
+# Copyright 2022 The Bazel Authors. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """Helpers for keeping stardoc documentation up-to-date.
 
 These are currently a private API in bazel-skylib.
@@ -14,6 +28,7 @@ load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 
 def stardoc_with_diff_test(
+        name,
         bzl_library_target,
         out_label):
     """Creates a stardoc target coupled with a `diff_test` for a given `bzl_library`.
@@ -21,15 +36,15 @@ def stardoc_with_diff_test(
     This is helpful for minimizing boilerplate in repos wih lots of stardoc targets.
 
     Args:
+        name: the stardoc target name
         bzl_library_target: the label of the `bzl_library` target to generate documentation for
         out_label: the label of the output MD file
     """
-
     out_file = out_label.replace("//", "").replace(":", "/")
 
     # Generate MD from .bzl
     stardoc(
-        name = out_file.replace("/", "_").replace(".md", "-docgen"),
+        name = name,
         out = out_file.replace(".md", "-docgen.md"),
         input = bzl_library_target + ".bzl",
         deps = [bzl_library_target],

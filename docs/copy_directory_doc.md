@@ -6,7 +6,7 @@ The rule uses a Bash command on Linux/macOS/non-Windows, and a cmd.exe command
 on Windows (no Bash is required).
 
 
-<a id="#copy_directory"></a>
+<a id="copy_directory"></a>
 
 ## copy_directory
 
@@ -36,7 +36,7 @@ for more context.
 | <a id="copy_directory-kwargs"></a>kwargs |  further keyword arguments, e.g. <code>visibility</code>   |  none |
 
 
-<a id="#copy_directory_action"></a>
+<a id="copy_directory_action"></a>
 
 ## copy_directory_action
 

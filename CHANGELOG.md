@@ -1,3 +1,26 @@
+Release 1.3.0
+
+**New Features**
+-   Added `dicts.omit` and `dicts.pick` (#304)
+-   Added `expand_template` rule (#330)
+-   Added `subpackages` module (#348)
+-   Added `copy_directory` rule (#366)
+-   Added `bzlmod` support (#385)
+
+**Incompatible Changes**
+-   `native_binary` and `native_test` now use symlinks instead of copying, if
+    the OS supports it (#340)
+-   `native_binary` and `native_test` now build in target configuration instead
+    of host configuration (#341)
+-   `copy_file` no longer adds non-executables to `default_runfiles` (#326)
+
+**Contributors**
+
+Alex Eagle, Alexandre Rostovtsev, Barry McNamara, Derek Cormier, Fabian
+Meumertzheim, Geoffrey Martin-Noble, hchsiao, Kevin Kres, nickgooding,
+Vertexwahn, Vinh Tran
+
+
 Release 1.2.1
 
 Bugfix release: fixes build failure with --incompatible_disallow_empty_glob

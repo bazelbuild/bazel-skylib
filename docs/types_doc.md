@@ -2,7 +2,7 @@
 
 Skylib module containing functions checking types.
 
-<a id="#types.is_list"></a>
+<a id="types.is_list"></a>
 
 ## types.is_list
 
@@ -24,7 +24,7 @@ Returns True if v is an instance of a list.
 True if v is an instance of a list, False otherwise.
 
 
-<a id="#types.is_string"></a>
+<a id="types.is_string"></a>
 
 ## types.is_string
 
@@ -46,7 +46,7 @@ Returns True if v is an instance of a string.
 True if v is an instance of a string, False otherwise.
 
 
-<a id="#types.is_bool"></a>
+<a id="types.is_bool"></a>
 
 ## types.is_bool
 
@@ -68,7 +68,7 @@ Returns True if v is an instance of a bool.
 True if v is an instance of a bool, False otherwise.
 
 
-<a id="#types.is_none"></a>
+<a id="types.is_none"></a>
 
 ## types.is_none
 
@@ -90,7 +90,7 @@ Returns True if v has the type of None.
 True if v is None, False otherwise.
 
 
-<a id="#types.is_int"></a>
+<a id="types.is_int"></a>
 
 ## types.is_int
 
@@ -112,7 +112,7 @@ Returns True if v is an instance of a signed integer.
 True if v is an instance of a signed integer, False otherwise.
 
 
-<a id="#types.is_tuple"></a>
+<a id="types.is_tuple"></a>
 
 ## types.is_tuple
 
@@ -134,7 +134,7 @@ Returns True if v is an instance of a tuple.
 True if v is an instance of a tuple, False otherwise.
 
 
-<a id="#types.is_dict"></a>
+<a id="types.is_dict"></a>
 
 ## types.is_dict
 
@@ -156,7 +156,7 @@ Returns True if v is an instance of a dict.
 True if v is an instance of a dict, False otherwise.
 
 
-<a id="#types.is_function"></a>
+<a id="types.is_function"></a>
 
 ## types.is_function
 
@@ -178,7 +178,7 @@ Returns True if v is an instance of a function.
 True if v is an instance of a function, False otherwise.
 
 
-<a id="#types.is_depset"></a>
+<a id="types.is_depset"></a>
 
 ## types.is_depset
 
@@ -200,7 +200,7 @@ Returns True if v is an instance of a `depset`.
 True if v is an instance of a `depset`, False otherwise.
 
 
-<a id="#types.is_set"></a>
+<a id="types.is_set"></a>
 
 ## types.is_set
 
