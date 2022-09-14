@@ -40,8 +40,8 @@ def _none_of(*settings):
       A native `select()` which maps any of the settings to the incompatible target.
     """
     return selects.with_or({
-        "//conditions:default": [],
         tuple(settings): ["@bazel_skylib//lib/compatibility:none_of"],
+        "//conditions:default": [],
     })
 
 def _any_of(*settings):
