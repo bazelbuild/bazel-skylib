@@ -52,6 +52,8 @@ if "$is_windows"; then
 fi
 
 function set_up() {
+  export PATH="/home/jenkins/repos/bazel/bazel-bin/src:${PATH}"
+
   mkdir -p target_skipping || fail "couldn't create directory"
 
   cat > target_skipping/pass.sh <<EOF || fail "couldn't create pass.sh"
@@ -79,7 +81,7 @@ EOF
   cat > lib/BUILD <<EOF
 EOF
 
-  for file in compatibility.bzl selects.bzl compatibility/BUILD compatibility/defs.bzl; do
+  for file in compatibility.bzl selects.bzl; do
     mkdir -p "$(dirname "lib/${file}")" \
       || fail "couldn't mkdir for ${file}"
     ln -sf "$(rlocation "bazel_skylib/lib/${file}")" "lib/${file}" \
@@ -227,7 +229,7 @@ EOF
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_foo1_or_foo2_but_not_on_foo3 \
-    "didn't satisfy constraint //lib/compatibility:incompatible_in_any_of$" \
+    "didn't satisfy constraint @platforms//:incompatible$" \
     //target_skipping:foo3_platform \
     //target_skipping:bar1_platform
 }
@@ -250,7 +252,7 @@ EOF
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_everything_but_foo1_and_foo2 \
-    "didn't satisfy constraint //lib/compatibility:incompatible_in_none_of$" \
+    "didn't satisfy constraint @platforms//:incompatible$" \
     //target_skipping:foo1_bar1_platform \
     //target_skipping:foo2_bar1_platform \
     //target_skipping:foo2_bar2_platform
@@ -273,7 +275,7 @@ EOF
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_only_foo1_and_bar1 \
-    "didn't satisfy constraints\\? \\[\\?//lib/compatibility:incompatible_in_all_of_" \
+    "didn't satisfy constraint @platforms//:incompatible" \
     //target_skipping:foo2_bar1_platform \
     //target_skipping:foo2_bar2_platform \
     //target_skipping:foo3_platform \
@@ -301,23 +303,19 @@ EOF
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_foo1_or_foo2_but_not_bar1 \
-    "didn't satisfy constraint //lib/compatibility:incompatible_in_none_of$" \
+    "didn't satisfy constraint @platforms//:incompatible$" \
     //target_skipping:foo1_bar1_platform \
     //target_skipping:foo2_bar1_platform
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_foo1_or_foo2_but_not_bar1 \
-    "didn't satisfy constraint //lib/compatibility:incompatible_in_any_of$" \
+    "didn't satisfy constraint @platforms//:incompatible$" \
     //target_skipping:foo3_platform
 
   ensure_that_target_doesnt_build_for_platforms \
     //target_skipping:pass_on_foo1_or_foo2_but_not_bar1 \
-    "didn't satisfy constraints \\[//lib/compatibility:incompatible_in_" \
+    "didn't satisfy constraint @platforms//:incompatible$" \
     //target_skipping:bar1_platform
-  # Since the order of constraints isn't guaranteed until
-  # 72787a1267a6087923aca83bf161f93c0a1323e0, we do two individual checks here.
-  expect_log "//lib/compatibility:incompatible_in_any_of\\>"
-  expect_log "//lib/compatibility:incompatible_in_none_of\\>"
 }
 
 cd "$TEST_TMPDIR"

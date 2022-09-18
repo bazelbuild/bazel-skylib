@@ -20,7 +20,6 @@ bzl_library(
     srcs = ["compatibility.bzl"],
     deps = [
         ":selects",
-        "//lib/compatibility:defs",
     ],
 )
 

@@ -98,7 +98,6 @@ sh_test(
     data = [
         ":unittest.bash",
         "//lib:compatibility",
-        "//lib/compatibility:build_file",
     ],
     tags = ["local"],
     deps = [

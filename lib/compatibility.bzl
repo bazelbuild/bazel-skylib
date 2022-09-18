@@ -10,7 +10,6 @@ more information.
 """
 
 load(":selects.bzl", "selects")
-load("//lib/compatibility:defs.bzl", "MAX_NUM_ALL_OF_SETTINGS")
 
 def _none_of(*settings):
     """Create a `select()` for `target_compatible_with` which matches none of the given settings.
@@ -40,7 +39,7 @@ def _none_of(*settings):
       A native `select()` which maps any of the settings to the incompatible target.
     """
     return selects.with_or({
-        tuple(settings): ["@bazel_skylib//lib/compatibility:incompatible_in_none_of"],
+        tuple(settings): ["@platforms//:incompatible"],
         "//conditions:default": [],
     })
 
@@ -73,7 +72,7 @@ def _any_of(*settings):
     """
     return selects.with_or({
         tuple(settings): [],
-        "//conditions:default": ["@bazel_skylib//lib/compatibility:incompatible_in_any_of"],
+        "//conditions:default": ["@platforms//:incompatible"],
     })
 
 def _all_of(*settings):
@@ -112,14 +111,11 @@ def _all_of(*settings):
     Returns:
       A native series of `select()`s. The result is "incompatible" unless all settings are true.
     """
-    if len(settings) > MAX_NUM_ALL_OF_SETTINGS:
-        fail("Cannot support more than {} arguments. Use selects.config_setting_group() instead.".format(MAX_NUM_ALL_OF_SETTINGS))
-
     result = []
-    for i, setting in enumerate(settings):
+    for setting in settings:
         result += select({
             setting: [],
-            "//conditions:default": ["@bazel_skylib//lib/compatibility:incompatible_in_all_of_{}".format(i)],
+            "//conditions:default": ["@platforms//:incompatible"],
         })
     return result
 
