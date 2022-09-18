@@ -52,8 +52,6 @@ if "$is_windows"; then
 fi
 
 function set_up() {
-  export PATH="/home/jenkins/repos/bazel/bazel-bin/src:${PATH}"
-
   mkdir -p target_skipping || fail "couldn't create directory"
 
   cat > target_skipping/pass.sh <<EOF || fail "couldn't create pass.sh"
