@@ -63,7 +63,7 @@ def build_test(name, targets, **kwargs):
     Args:
       name: The name of the test rule.
       targets: A list of targets to ensure build.
-      **kwargs: The <a href="https://bazel.build/reference/be/common-definitions#common-attributes-tests">common attributes for tests</a>.
+      **kwargs: The [common attributes for tests](https://bazel.build/reference/be/common-definitions#common-attributes-tests).
     """
     if len(targets) == 0:
         fail("targets must be non-empty", "targets")
