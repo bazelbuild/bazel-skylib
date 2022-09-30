@@ -30,6 +30,6 @@ Creates a UTF-8 encoded text file.
 | <a id="write_file-content"></a>content |  A list of strings. Lines of text, the contents of the file. Newlines are added automatically after every line except the last one.   |  <code>[]</code> |
 | <a id="write_file-is_executable"></a>is_executable |  A boolean. Whether to make the output file executable. When True, the rule's output can be executed using <code>bazel run</code> and can be in the srcs of binary and test rules that require executable sources.   |  <code>False</code> |
 | <a id="write_file-newline"></a>newline |  one of ["auto", "unix", "windows"]: line endings to use. "auto" for platform-determined, "unix" for LF, and "windows" for CRLF.   |  <code>"auto"</code> |
-| <a id="write_file-kwargs"></a>kwargs |  further keyword arguments, e.g. &lt;code&gt;visibility&lt;/code&gt;   |  none |
+| <a id="write_file-kwargs"></a>kwargs |  further keyword arguments, e.g. <code>visibility</code>   |  none |
 
 

@@ -24,7 +24,7 @@ versions.parse(<a href="#versions.parse-bazel_version">bazel_version</a>)
 
 Parses a version string into a 3-tuple of ints
 
-int tuples can be compared directly using binary operators (<, >).
+int tuples can be compared directly using binary operators (&lt;, &gt;).
 
 
 **PARAMETERS**
@@ -79,7 +79,7 @@ Check that a version is lower or equals to a threshold.
 
 **RETURNS**
 
-True if version <= threshold.
+True if version &lt;= threshold.
 
 
 <a id="versions.is_at_least"></a>
@@ -102,6 +102,6 @@ Check that a version is higher or equals to a threshold.
 
 **RETURNS**
 
-True if version >= threshold.
+True if version &gt;= threshold.
 
 
