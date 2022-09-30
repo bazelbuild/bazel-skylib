@@ -28,6 +28,6 @@ go_deps.module(
 use_repo(go_deps, "com_github_bazelbuild_buildtools")
 
 # Build-only / test-only dependencies
-bazel_dep(name = "stardoc", dev_dependency = True, repo_name = "io_bazel_stardoc", version = "0.5.1")
+bazel_dep(name = "stardoc", dev_dependency = True, repo_name = "io_bazel_stardoc", version = "0.5.3")
 bazel_dep(name = "rules_pkg", dev_dependency = True, version = "0.5.1")
 bazel_dep(name = "rules_cc", dev_dependency = True, version = "0.0.1")
