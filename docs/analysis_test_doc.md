@@ -42,7 +42,7 @@ Test rule checking that other targets can be successfully analyzed.
 
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
-| <a id="analysis_test-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
-| <a id="analysis_test-targets"></a>targets |  -   | <a href="https://bazel.build/docs/build-ref.html#labels">List of labels</a> | required |  |
+| <a id="analysis_test-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
+| <a id="analysis_test-targets"></a>targets |  -   | <a href="https://bazel.build/concepts/labels">List of labels</a> | required |  |
 
 

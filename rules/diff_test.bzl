@@ -161,10 +161,10 @@ def diff_test(name, file1, file2, failure_message = None, **kwargs):
 
     Args:
       name: The name of the test rule.
-      file1: Label of the file to compare to <code>file2</code>.
-      file2: Label of the file to compare to <code>file1</code>.
+      file1: Label of the file to compare to `file2`.
+      file2: Label of the file to compare to `file1`.
       failure_message: Additional message to log if the files' contents do not match.
-      **kwargs: The <a href="https://bazel.build/reference/be/common-definitions#common-attributes-tests">common attributes for tests</a>.
+      **kwargs: The [common attributes for tests](https://bazel.build/reference/be/common-definitions#common-attributes-tests).
     """
     _diff_test(
         name = name,
