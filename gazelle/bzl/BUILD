@@ -54,7 +54,7 @@ gazelle(
 
 # The files needed for distribution
 # A fake testdata directory is created so that
-# the build file has nothing missing, but we 
+# the build file has nothing missing, but we
 # do not bloat the distribution tarball
 filegroup(
     name = "distribution",
