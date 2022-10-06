@@ -73,6 +73,8 @@ filegroup(
         "CODEOWNERS",
         "CONTRIBUTORS",
         "WORKSPACE.bzlmod",
+        "//gazelle:distribution",
+        "//gazelle/bzl:distribution",
         "//lib:distribution",
         "//rules:distribution",
         "//rules/private:distribution",
