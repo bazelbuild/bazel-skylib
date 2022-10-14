@@ -25,11 +25,11 @@ source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
     { echo>&2 "ERROR: cannot find $f"; exit 1; }; f=; set -e
 # --- end runfiles.bash initialization v2 ---
 
-source "$(rlocation bazel_skylib/tests/unittest.bash)" \
+source "$(rlocation $TEST_WORKSPACE/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
 
 function test_expand_template() {
-  cat "$(rlocation bazel_skylib/tests/expand_template/foo/test.yaml)" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/expand_template/foo/test.yaml)" >"$TEST_log"
   expect_log 'name: test'
   expect_log 'version: 1.1.1'
 }

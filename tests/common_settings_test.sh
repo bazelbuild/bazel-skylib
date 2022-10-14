@@ -38,7 +38,7 @@ else
 fi
 # --- end runfiles.bash initialization ---
 
-source "$(rlocation bazel_skylib/tests/unittest.bash)" \
+source "$(rlocation $TEST_WORKSPACE/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
 
 function create_volcano_pkg() {
@@ -55,7 +55,7 @@ EOF
 exports_files(["*.bzl"])
 EOF
 
-  ln -sf "$(rlocation bazel_skylib/rules/common_settings.bzl)" rules/common_settings.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/rules/common_settings.bzl)" rules/common_settings.bzl
 
   mkdir -p volcano
   cat > volcano/rules.bzl <<EOF

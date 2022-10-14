@@ -42,7 +42,7 @@ else
 fi
 # --- end runfiles.bash initialization ---
 
-source "$(rlocation bazel_skylib/tests/unittest.bash)" \
+source "$(rlocation $TEST_WORKSPACE/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
 
 function create_pkg() {
@@ -64,22 +64,22 @@ EOF
   cat > tests/BUILD <<EOF
 exports_files(["*.bzl"])
 EOF
-  ln -sf "$(rlocation bazel_skylib/tests/unittest_tests.bzl)" tests/unittest_tests.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/tests/unittest_tests.bzl)" tests/unittest_tests.bzl
 
   mkdir -p lib
   touch lib/BUILD
   cat > lib/BUILD <<EOF
 exports_files(["*.bzl"])
 EOF
-  ln -sf "$(rlocation bazel_skylib/lib/dicts.bzl)" lib/dicts.bzl
-  ln -sf "$(rlocation bazel_skylib/lib/new_sets.bzl)" lib/new_sets.bzl
-  ln -sf "$(rlocation bazel_skylib/lib/partial.bzl)" lib/partial.bzl
-  ln -sf "$(rlocation bazel_skylib/lib/sets.bzl)" lib/sets.bzl
-  ln -sf "$(rlocation bazel_skylib/lib/types.bzl)" lib/types.bzl
-  ln -sf "$(rlocation bazel_skylib/lib/unittest.bzl)" lib/unittest.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/dicts.bzl)" lib/dicts.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/new_sets.bzl)" lib/new_sets.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/partial.bzl)" lib/partial.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/sets.bzl)" lib/sets.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/types.bzl)" lib/types.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/unittest.bzl)" lib/unittest.bzl
 
   mkdir -p toolchains/unittest
-  ln -sf "$(rlocation bazel_skylib/toolchains/unittest/BUILD)" toolchains/unittest/BUILD
+  ln -sf "$(rlocation $TEST_WORKSPACE/toolchains/unittest/BUILD)" toolchains/unittest/BUILD
 
   # Create test files.
   mkdir -p testdir

@@ -37,7 +37,7 @@ else
 fi
 # --- end runfiles.bash initialization ---
 
-source "$(rlocation bazel_skylib/tests/unittest.bash)" \
+source "$(rlocation $TEST_WORKSPACE/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
 
 function import_diff_test() {
@@ -46,9 +46,9 @@ function import_diff_test() {
   mkdir -p "${repo}/lib"
   touch "${repo}/lib/BUILD"
   touch "${repo}/WORKSPACE"
-  ln -sf "$(rlocation bazel_skylib/rules/diff_test.bzl)" \
+  ln -sf "$(rlocation $TEST_WORKSPACE/rules/diff_test.bzl)" \
          "${repo}/rules/diff_test.bzl"
-  ln -sf "$(rlocation bazel_skylib/lib/shell.bzl)" \
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/shell.bzl)" \
          "${repo}/lib/shell.bzl"
   echo "exports_files(['diff_test.bzl'])" > "${repo}/rules/BUILD"
 }

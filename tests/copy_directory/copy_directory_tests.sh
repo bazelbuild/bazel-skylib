@@ -37,43 +37,43 @@ else
 fi
 # --- end runfiles.bash initialization ---
 
-source "$(rlocation bazel_skylib/tests/unittest.bash)" \
+source "$(rlocation $TEST_WORKSPACE/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
 
 function test_copy_dir_with_subdir__copies_a() {
-  cat "$(rlocation bazel_skylib/tests/copy_directory/dir_copy)/a" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/copy_directory/dir_copy)/a" >"$TEST_log"
   expect_log '^foo$'
 }
 
 function test_copy_dir_with_subdir__copies_b() {
-  cat "$(rlocation bazel_skylib/tests/copy_directory/dir_copy)/b" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/copy_directory/dir_copy)/b" >"$TEST_log"
   expect_log '^bar$'
 }
 
 function test_copy_dir_with_subdir__copies_c() {
-  cat "$(rlocation bazel_skylib/tests/copy_directory/dir_copy)/subdir/c" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/copy_directory/dir_copy)/subdir/c" >"$TEST_log"
   expect_log '^moocow$'
 }
 
 function test_copy_dir_with_subdir__correct_filecounts() {
-  local -r dir_filecount=$(ls "$(rlocation bazel_skylib/tests/copy_directory/dir_copy)" | wc -l)
+  local -r dir_filecount=$(ls "$(rlocation $TEST_WORKSPACE/tests/copy_directory/dir_copy)" | wc -l)
   assert_equals $dir_filecount 3
-  local -r subdir_filecount=$(ls "$(rlocation bazel_skylib/tests/copy_directory/dir_copy)/subdir" | wc -l)
+  local -r subdir_filecount=$(ls "$(rlocation $TEST_WORKSPACE/tests/copy_directory/dir_copy)/subdir" | wc -l)
   assert_equals $subdir_filecount 1
 }
 
 function test_copy_empty_dir() {
-  local -r filecount=$(ls "$(rlocation bazel_skylib/tests/copy_directory/empty_dir_copy)" | wc -l)
+  local -r filecount=$(ls "$(rlocation $TEST_WORKSPACE/tests/copy_directory/empty_dir_copy)" | wc -l)
   assert_equals $filecount 0
 }
 
 function test_copy_dir_with_symlink__copies_file() {
-  cat "$(rlocation bazel_skylib/tests/copy_directory/dir_with_symlink_copy)/file" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/copy_directory/dir_with_symlink_copy)/file" >"$TEST_log"
   expect_log '^foo$'
 }
 
 function test_copy_dir_with_symlink__copies_symlink() {
-  cat "$(rlocation bazel_skylib/tests/copy_directory/dir_with_symlink_copy)/symlink" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/copy_directory/dir_with_symlink_copy)/symlink" >"$TEST_log"
   expect_log '^foo$'
 }
 
