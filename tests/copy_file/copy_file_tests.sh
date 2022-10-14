@@ -37,50 +37,50 @@ else
 fi
 # --- end runfiles.bash initialization ---
 
-source "$(rlocation bazel_skylib/tests/unittest.bash)" \
+source "$(rlocation $TEST_WORKSPACE/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
 
 function test_copy_src() {
-  cat "$(rlocation bazel_skylib/tests/copy_file/out/a-out.txt)" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/copy_file/out/a-out.txt)" >"$TEST_log"
   expect_log '^#!/usr/bin/env bash$'
   expect_log '^echo aaa$'
 }
 
 function test_copy_src_symlink() {
-  cat "$(rlocation bazel_skylib/tests/copy_file/out/a-out-symlink.txt)" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/copy_file/out/a-out-symlink.txt)" >"$TEST_log"
   expect_log '^#!/usr/bin/env bash$'
   expect_log '^echo aaa$'
 }
 
 function test_copy_gen() {
-  cat "$(rlocation bazel_skylib/tests/copy_file/out/gen-out.txt)" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/copy_file/out/gen-out.txt)" >"$TEST_log"
   expect_log '^#!/usr/bin/env bash$'
   expect_log '^echo potato$'
 }
 
 function test_copy_gen_symlink() {
-  cat "$(rlocation bazel_skylib/tests/copy_file/out/gen-out-symlink.txt)" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/copy_file/out/gen-out-symlink.txt)" >"$TEST_log"
   expect_log '^#!/usr/bin/env bash$'
   expect_log '^echo potato$'
 }
 
 function test_copy_xsrc() {
-  cat "$(rlocation bazel_skylib/tests/copy_file/xsrc-out.txt)" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/copy_file/xsrc-out.txt)" >"$TEST_log"
   expect_log '^aaa$'
 }
 
 function test_copy_xsrc_symlink() {
-  cat "$(rlocation bazel_skylib/tests/copy_file/xsrc-out-symlink.txt)" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/copy_file/xsrc-out-symlink.txt)" >"$TEST_log"
   expect_log '^aaa$'
 }
 
 function test_copy_xgen() {
-  cat "$(rlocation bazel_skylib/tests/copy_file/xgen-out.txt)" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/copy_file/xgen-out.txt)" >"$TEST_log"
   expect_log '^potato$'
 }
 
 function test_copy_xgen_symlink() {
-  cat "$(rlocation bazel_skylib/tests/copy_file/xgen-out-symlink.txt)" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/copy_file/xgen-out-symlink.txt)" >"$TEST_log"
   expect_log '^potato$'
 }
 
