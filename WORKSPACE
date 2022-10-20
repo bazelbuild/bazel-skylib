@@ -6,10 +6,10 @@ load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 maybe(
     name = "io_bazel_rules_go",
     repo_rule = http_archive,
-    sha256 = "685052b498b6ddfe562ca7a97736741d87916fe536623afb7da2824c0211c369",
+    sha256 = "099a9fb96a376ccbbb7d291ed4ecbdfd42f6bc822ab77ae6f1b5cb9e914e94fa",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.33.0/rules_go-v0.33.0.zip",
-        "https://github.com/bazelbuild/rules_go/releases/download/v0.33.0/rules_go-v0.33.0.zip",
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.35.0/rules_go-v0.35.0.zip",
+        "https://github.com/bazelbuild/rules_go/releases/download/v0.35.0/rules_go-v0.35.0.zip",
     ],
 )
 
@@ -17,7 +17,7 @@ load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_depe
 
 go_rules_dependencies()
 
-go_register_toolchains(version = "1.17.1")
+go_register_toolchains(version = "1.19.1")
 
 # Below this line is for documentation generation only,
 # and should thus not be included by dependencies on
@@ -80,6 +80,28 @@ http_archive(
 # Another Gazelle repository hint.
 # gazelle:repository go_repository name=bazel_gazelle importpath=github.com/bazelbuild/bazel-gazelle/testtools
 
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 
 gazelle_dependencies()
+
+# Buildozer & deps
+http_archive(
+    name = "com_google_protobuf",
+    sha256 = "4dd35e788944b7686aac898f77df4e9a54da0ca694b8801bd6b2a9ffc1b3085e",
+    strip_prefix = "protobuf-3.19.2",
+    urls = [
+        "https://github.com/protocolbuffers/protobuf/archive/v3.19.2.tar.gz",
+    ],
+)
+
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()
+
+go_repository(
+    name = "com_github_bazelbuild_buildtools",
+    build_naming_convention = "go_default_library",
+    importpath = "github.com/bazelbuild/buildtools",
+    sum = "h1:fmdo+fvvWlhldUcqkhAMpKndSxMN3vH5l7yow5cEaiQ=",
+    version = "v0.0.0-20220531122519-a43aed7014c8",
+)

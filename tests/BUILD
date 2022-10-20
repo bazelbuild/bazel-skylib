@@ -1,4 +1,5 @@
 load("//:bzl_library.bzl", "bzl_library")
+load("//rules:diff_test.bzl", "diff_test")
 load(":build_test_tests.bzl", "build_test_test_suite")
 load(":collections_tests.bzl", "collections_test_suite")
 load(":dicts_tests.bzl", "dicts_test_suite")
@@ -99,4 +100,26 @@ shell_args_test_gen(
 sh_test(
     name = "shell_spawn_e2e_test",
     srcs = [":shell_spawn_e2e_test_src"],
+)
+
+genrule(
+    name = "version_from_module.bazel",
+    srcs = ["//:MODULE.bazel"],
+    outs = ["version_from_module.bazel.out"],
+    cmd = "cat '$<' | $(location @com_github_bazelbuild_buildtools//buildozer) 'print version' '-:bazel_skylib' > '$@'",
+    tools = ["@com_github_bazelbuild_buildtools//buildozer"],
+)
+
+genrule(
+    name = "version_from_version.bzl",
+    srcs = ["//:version.bzl"],
+    outs = ["version_from_version.bzl.out"],
+    cmd = "sed -n 's/ *version = \"\\(.*\\)\"/\\1/p' '$<' > '$@'",
+)
+
+diff_test(
+    name = "bazel_skylib_version_consistency_test",
+    failure_message = "The values of 'version' in version.bzl and MODULE.bazel do not match",
+    file1 = ":version_from_module.bazel",
+    file2 = ":version_from_version.bzl",
 )
