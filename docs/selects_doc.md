@@ -79,7 +79,7 @@ A dictionary usable by a native `select()`.
 ## selects.config_setting_group
 
 <pre>
-selects.config_setting_group(<a href="#selects.config_setting_group-name">name</a>, <a href="#selects.config_setting_group-match_any">match_any</a>, <a href="#selects.config_setting_group-match_all">match_all</a>, <a href="#selects.config_setting_group-visibility">visibility</a>)
+selects.config_setting_group(<a href="#selects.config_setting_group-name">name</a>, <a href="#selects.config_setting_group-match_any">match_any</a>, <a href="#selects.config_setting_group-match_all">match_all</a>, <a href="#selects.config_setting_group-visibility">visibility</a>, <a href="#selects.config_setting_group-negated">negated</a>)
 </pre>
 
 Matches if all or any of its member `config_setting`s match.
@@ -115,5 +115,6 @@ Example:
 | <a id="selects.config_setting_group-match_any"></a>match_any |  A list of <code>config_settings</code>. This group matches if *any* member in the list matches. If this is set, <code>match_all</code> must not be set.   |  <code>[]</code> |
 | <a id="selects.config_setting_group-match_all"></a>match_all |  A list of <code>config_settings</code>. This group matches if *every* member in the list matches. If this is set, <code>match_any</code> must be not set.   |  <code>[]</code> |
 | <a id="selects.config_setting_group-visibility"></a>visibility |  Visibility of the config_setting_group.   |  <code>None</code> |
+| <a id="selects.config_setting_group-negated"></a>negated |  If set, this argument should list a subset of the targets passed to <code>any_of</code> or <code>all_of</code>. The targets listed here will be negated, such that groups can express things such as "match :condition1 and don't match :condition2". The special group <code>//conditions:default</code> may not be negated.   |  <code>[]</code> |
 
 

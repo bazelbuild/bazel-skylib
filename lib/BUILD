@@ -1,4 +1,5 @@
 load("//:bzl_library.bzl", "bzl_library")
+load("//rules:common_settings.bzl", "string_setting")
 
 licenses(["notice"])
 
@@ -106,4 +107,35 @@ filegroup(
 bzl_library(
     name = "old_sets",
     srcs = ["old_sets.bzl"],
+)
+
+# Define a hidden setting which no other modules can change.
+# No references to this setting other than the two config_setting targets below
+# should exist.
+string_setting(
+    name = "private_setting",
+    build_setting_default = "constant",
+    values = [
+        "constant",
+        "not_constant",
+    ],
+    visibility = ["//visibility:private"],
+)
+
+# Define a config setting that will always match, since nothing ever changes
+# private_setting from its default value of "constant".
+config_setting(
+    name = "always_true",
+    flag_values = {
+        ":private_setting": "constant",
+    },
+)
+
+# Define a config setting that will never match, since nothing ever changes
+# private_setting from its default value of "constant".
+config_setting(
+    name = "always_false",
+    flag_values = {
+        ":private_setting": "not_constant",
+    },
 )
