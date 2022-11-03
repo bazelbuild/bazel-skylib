@@ -16,7 +16,7 @@
 
 # Target which will always resolve to True. Referenced through a top-level alias
 # so that it will work with WORKSPACE files in bazel.
-_TRUE_TARGET = "@bazel_skylib//lib:always_true"
+_TRUE_TARGET = Label("//lib:always_true")
 
 # Target which will always resolve to False. Referenced through a top-level alias
 # so that it will work with WORKSPACE files in bazel.
