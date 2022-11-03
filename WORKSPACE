@@ -2,13 +2,20 @@ workspace(name = "bazel_skylib")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
-load(":workspace.bzl", "bazel_skylib_gazelle_plugin_workspace", "bazel_skylib_workspace")
+load(":workspace.bzl", "bazel_skylib_workspace")
 
 bazel_skylib_workspace()
 
+local_repository(
+    name = "bazel_skylib_gazelle_plugin",
+    path = "gazelle",
+)
+
+load("@bazel_skylib_gazelle_plugin//:workspace.bzl", "bazel_skylib_gazelle_plugin_workspace")
+
 bazel_skylib_gazelle_plugin_workspace()
 
-load(":gazelle_setup.bzl", "bazel_skylib_gazelle_plugin_setup")
+load("@bazel_skylib_gazelle_plugin//:setup.bzl", "bazel_skylib_gazelle_plugin_setup")
 
 bazel_skylib_gazelle_plugin_setup()
 
