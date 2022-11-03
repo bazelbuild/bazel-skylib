@@ -20,7 +20,7 @@ _TRUE_TARGET = Label("//lib:always_true")
 
 # Target which will always resolve to False. Referenced through a top-level alias
 # so that it will work with WORKSPACE files in bazel.
-_FALSE_TARGET = "@bazel_skylib//lib:always_false"
+_FALSE_TARGET = Label("//lib:always_false")
 
 def _with_or(input_dict, no_match_error = ""):
     """Drop-in replacement for `select()` that supports ORed keys.
