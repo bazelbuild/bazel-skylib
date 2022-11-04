@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Dependency registration helpers for repositories which need to load bazel-skylib's gazelle plugin."""
+
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
