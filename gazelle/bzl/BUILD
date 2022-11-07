@@ -51,3 +51,25 @@ gazelle(
     name = "gazelle",
     gazelle = ":gazelle-skylib",
 )
+
+# The files needed for distribution
+# A fake testdata directory is created so that
+# the build file has nothing missing, but we
+# do not bloat the distribution tarball
+filegroup(
+    name = "distribution",
+    srcs = glob(["*.go"]) + [
+        "BUILD",
+        ":fake-testdata",
+    ],
+    visibility = [
+        "//:__pkg__",
+        "//distribution:__pkg__",
+    ],
+)
+
+genrule(
+    name = "fake-testdata",
+    outs = ["testdata"],
+    cmd = "touch $@",
+)

@@ -132,3 +132,38 @@ then you probably forgot to load and call `bazel_skylib_workspace()` in your
 
 See the [maintaner's guide](docs/maintainers_guide.md) for instructions for
 cutting a new release.
+
+## Gazelle Plugin
+
+`bazel_skylib` ships with a [gazelle](https://github.com/bazelbuild/bazel-gazelle)
+plugin to generate `bzl_library` entries in build files. To use this, in your
+`WORKSPACE`:
+
+```starlark
+load("@bazel_skylib_gazelle_plugin//:workspace.bzl", "bazel_skylib_gazelle_plugin_workspace")
+
+bazel_skylib_gazelle_plugin_workspace()
+
+load("@bazel_skylib_gazelle_plugin//:setup.bzl", "bazel_skylib_gazelle_plugin_setup"
+
+bazel_skylib_gazelle_plugin_setup()
+```
+
+You may then include the plugin using code similar to this in your `BUILD.bazel`
+file:
+
+```starlark
+load("@bazel_gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle", "gazelle_binary")
+
+gazelle(
+    name = "gazelle",
+    gazelle = ":gazelle_bin",
+)
+
+gazelle_binary(
+    name = "gazelle_bin",
+    languages = DEFAULT_LANGUAGES + [
+        "@bazel_skylib_gazelle_plugin//gazelle/bzl",
+    ],
+)
+```
