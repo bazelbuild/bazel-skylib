@@ -29,7 +29,7 @@ import (
 
 var gazellePath = findGazelle()
 
-const testDataPath = "gazelle/bzl/testdata/"
+const testDataPath = "bzl/testdata/"
 
 // TestGazelleBinary runs a gazelle binary with starlib installed on each
 // directory in `testdata/*`. Please see `testdata/README.md` for more
@@ -135,7 +135,7 @@ func testPath(t *testing.T, name string, files []bazel.RunfileEntry) {
 }
 
 func findGazelle() string {
-	gazellePath, ok := bazel.FindBinary("gazelle/bzl", "gazelle-skylib")
+	gazellePath, ok := bazel.FindBinary("bzl", "gazelle-skylib")
 	if !ok {
 		panic("could not find gazelle binary")
 	}

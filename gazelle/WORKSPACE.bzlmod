@@ -1,0 +1,8 @@
+workspace(name = "bazel_skylib_gazelle_plugin")
+
+# Provide a repository hint for Gazelle to inform it that the go package
+# github.com/bazelbuild/rules_go is available from io_bazel_rules_go and it
+# doesn't need to duplicatively fetch it.
+# gazelle:repository go_repository name=io_bazel_rules_go importpath=github.com/bazelbuild/rules_go
+# Another Gazelle repository hint.
+# gazelle:repository go_repository name=bazel_gazelle importpath=github.com/bazelbuild/bazel-gazelle/testtools

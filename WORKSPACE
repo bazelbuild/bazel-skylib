@@ -2,22 +2,22 @@ workspace(name = "bazel_skylib")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
+load(":workspace.bzl", "bazel_skylib_workspace")
 
-maybe(
-    name = "io_bazel_rules_go",
-    repo_rule = http_archive,
-    sha256 = "685052b498b6ddfe562ca7a97736741d87916fe536623afb7da2824c0211c369",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.33.0/rules_go-v0.33.0.zip",
-        "https://github.com/bazelbuild/rules_go/releases/download/v0.33.0/rules_go-v0.33.0.zip",
-    ],
+bazel_skylib_workspace()
+
+local_repository(
+    name = "bazel_skylib_gazelle_plugin",
+    path = "gazelle",
 )
 
-load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
+load("@bazel_skylib_gazelle_plugin//:workspace.bzl", "bazel_skylib_gazelle_plugin_workspace")
 
-go_rules_dependencies()
+bazel_skylib_gazelle_plugin_workspace()
 
-go_register_toolchains(version = "1.17.1")
+load("@bazel_skylib_gazelle_plugin//:setup.bzl", "bazel_skylib_gazelle_plugin_setup")
+
+bazel_skylib_gazelle_plugin_setup()
 
 # Below this line is for documentation generation only,
 # and should thus not be included by dependencies on
@@ -64,22 +64,3 @@ maybe(
 load("//lib:unittest.bzl", "register_unittest_toolchains")
 
 register_unittest_toolchains()
-
-# Provide a repository hint for Gazelle to inform it that the go package
-# github.com/bazelbuild/rules_go is available from io_bazel_rules_go and it
-# doesn't need to duplicatively fetch it.
-# gazelle:repository go_repository name=io_bazel_rules_go importpath=github.com/bazelbuild/rules_go
-http_archive(
-    name = "bazel_gazelle",
-    sha256 = "de69a09dc70417580aabf20a28619bb3ef60d038470c7cf8442fafcf627c21cb",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.24.0/bazel-gazelle-v0.24.0.tar.gz",
-        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.24.0/bazel-gazelle-v0.24.0.tar.gz",
-    ],
-)
-# Another Gazelle repository hint.
-# gazelle:repository go_repository name=bazel_gazelle importpath=github.com/bazelbuild/bazel-gazelle/testtools
-
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
-
-gazelle_dependencies()
