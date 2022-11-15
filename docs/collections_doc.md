@@ -73,3 +73,25 @@ Requires all the elements to be hashable.
 A new list with all unique elements from `iterable`.
 
 
+<a id="collections.flatten"></a>
+
+## collections.flatten
+
+<pre>
+collections.flatten(<a href="#collections.flatten-iterable">iterable</a>)
+</pre>
+
+Collapses the first dimension of the iterable and returns the result as a list.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="collections.flatten-iterable"></a>iterable |  An iterable of iterables to be collapsed to a list.   |  none |
+
+**RETURNS**
+
+A new list with the collapsed elements from `iterable`.
+
+
