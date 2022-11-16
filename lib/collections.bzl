@@ -71,7 +71,7 @@ def _flatten(iterable):
     This behaves like collapsing the first dimension of the iterable.
 
     Args:
-      iterable: An iterable of iterables to be collapsed to a list.
+      iterable: An iterable to be collapsed to a list.
 
     Returns:
       A new list with the collapsed elements from `iterable`.

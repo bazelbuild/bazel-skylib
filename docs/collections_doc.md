@@ -90,7 +90,7 @@ This behaves like collapsing the first dimension of the iterable.
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="collections.flatten-iterable"></a>iterable |  An iterable of iterables to be collapsed to a list.   |  none |
+| <a id="collections.flatten-iterable"></a>iterable |  An iterable to be collapsed to a list.   |  none |
 
 **RETURNS**
 
