@@ -66,7 +66,9 @@ def _uniq(iterable):
     return list(unique_elements.keys())
 
 def _flatten(iterable):
-    """Collapses the first dimension of the iterable and returns the result as a list.
+    """Flattens an iterable to the sum of those iterables.
+
+    This behaves like collapsing the first dimension of the iterable.
 
     Args:
       iterable: An iterable of iterables to be collapsed to a list.
@@ -74,11 +76,10 @@ def _flatten(iterable):
     Returns:
       A new list with the collapsed elements from `iterable`.
     """
-    return [
-        element
-        for subiterable in iterable
-        for element in subiterable
-    ]
+    result = []
+    for element in iterable:
+      result += element
+    return result
 
 collections = struct(
     after_each = _after_each,

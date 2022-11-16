@@ -105,9 +105,16 @@ uniq_test = unittest.make(_uniq_test)
 
 def _flatten_test(ctx):
     env = unittest.begin(ctx)
-    asserts.equals(env, collections.flatten([[0, 1], [2, 3]]), [0, 1, 2, 3])
-    asserts.equals(env, collections.flatten([]), [])
-    asserts.equals(env, collections.flatten([[], [0, 1]]), [0, 1])
+    asserts.equals(env, [0, 1, 2, 3], collections.flatten([[0, 1], [2, 3]]))
+    asserts.equals(env, [], collections.flatten([]), [])
+    asserts.equals(env, [0, 1], collections.flatten([[], [0, 1]]))
+    asserts.equals(env,
+        '[] + select({"//conditions:default": [0, 1]}) + select({"//conditions:default": [2, 3]})',
+        str(collections.flatten([select({
+            "//conditions:default": [0, 1],
+        }), select({
+            "//conditions:default": [2, 3],
+        })])))
 
     return unittest.end(env)
 
