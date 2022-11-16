@@ -81,7 +81,7 @@ A new list with all unique elements from `iterable`.
 collections.flatten(<a href="#collections.flatten-iterable">iterable</a>)
 </pre>
 
-Flattens an iterable to the sum of those iterables.
+Flattens an iterable to the sum of the elements with a starting value of [].
 
 This behaves like collapsing the first dimension of the iterable.
 

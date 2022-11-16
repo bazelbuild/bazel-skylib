@@ -66,7 +66,7 @@ def _uniq(iterable):
     return list(unique_elements.keys())
 
 def _flatten(iterable):
-    """Flattens an iterable to the sum of those iterables.
+    """Flattens an iterable to the sum of the elements with a starting value of [].
 
     This behaves like collapsing the first dimension of the iterable.
 
