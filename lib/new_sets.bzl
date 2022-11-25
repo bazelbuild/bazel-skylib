@@ -189,6 +189,19 @@ def _union(*args):
     """
     return struct(_values = dicts.add(*[s._values for s in args]))
 
+def _mutable_union(a, b):
+    """Modify set `a` adding elements from `b` to it.
+
+    Args:
+      a: A set, as returned by `sets.make()`.
+      b: A set, as returned by `sets.make()`.
+
+    Returns:
+      The set `a` with all elements appearing in `b` added to it.
+    """
+    a._values.update(b._values)
+    return a
+
 def _difference(a, b):
     """Returns the elements in `a` that are not in `b`.
 
@@ -200,6 +213,21 @@ def _difference(a, b):
       A set containing the elements that are in `a` but not in `b`.
     """
     return struct(_values = {e: None for e in a._values.keys() if e not in b._values})
+
+def _mutable_difference(a, b):
+    """Modify set `a` removing elements from `b` from it.
+
+    Args:
+      a: A set, as returned by `sets.make()`.
+      b: A set, as returned by `sets.make()`.
+
+    Returns:
+      The set `a` with all elements appearing in `b` removed from it.
+    """
+    for item in b._values.keys():
+        if item in a._values:
+            a._values.pop(item)
+    return a
 
 def _length(s):
     """Returns the number of elements in a set.
@@ -234,7 +262,9 @@ sets = struct(
     disjoint = _disjoint,
     intersection = _intersection,
     union = _union,
+    mutable_union = _mutable_union,
     difference = _difference,
+    mutable_difference = _mutable_difference,
     length = _length,
     remove = _remove,
     repr = _repr,

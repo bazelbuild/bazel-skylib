@@ -114,6 +114,38 @@ def _union_test(ctx):
 
 union_test = unittest.make(_union_test)
 
+def _mutable_union_test(ctx):
+    """Unit tests for sets.union."""
+    env = unittest.begin(ctx)
+
+    s = sets.make()
+    s = sets.mutable_union(s, sets.make())
+    asserts.new_set_equals(env, sets.make(), s)
+    s = sets.make()
+    s = sets.mutable_union(s, sets.make([1]))
+    asserts.new_set_equals(env, sets.make([1]), s)
+    s = sets.make([1])
+    s = sets.mutable_union(s, sets.make())
+    asserts.new_set_equals(env, sets.make([1]), s)
+    s = sets.make([1])
+    s = sets.mutable_union(s, sets.make([1]))
+    asserts.new_set_equals(env, sets.make([1]), s)
+    s = sets.make([1])
+    s = sets.mutable_union(s, sets.make([1, 2]))
+    asserts.new_set_equals(env, sets.make([1, 2]), s)
+    s = sets.make([1])
+    s = sets.mutable_union(s, sets.make([2]))
+    asserts.new_set_equals(env, sets.make([1, 2]), s)
+
+    # If passing a list, verify that duplicate elements are ignored.
+    s = sets.make([1, 1])
+    s = sets.mutable_union(s, sets.make([1, 2]))
+    asserts.new_set_equals(env, sets.make([1, 2]), s)
+
+    return unittest.end(env)
+
+mutable_union_test = unittest.make(_mutable_union_test)
+
 def _difference_test(ctx):
     """Unit tests for sets.difference."""
     env = unittest.begin(ctx)
@@ -131,6 +163,38 @@ def _difference_test(ctx):
     return unittest.end(env)
 
 difference_test = unittest.make(_difference_test)
+
+def _mutable_difference_test(ctx):
+    """Unit tests for sets.difference."""
+    env = unittest.begin(ctx)
+
+    s = sets.make()
+    s = sets.mutable_difference(s, sets.make())
+    asserts.new_set_equals(env, sets.make(), s)
+    s = sets.make()
+    s = sets.mutable_difference(s, sets.make([1]))
+    asserts.new_set_equals(env, sets.make(), s)
+    s = sets.make([1])
+    s = sets.mutable_difference(s, sets.make())
+    asserts.new_set_equals(env, sets.make([1]), s)
+    s = sets.make([1])
+    s = sets.mutable_difference(s, sets.make([1]))
+    asserts.new_set_equals(env, sets.make(), s)
+    s = sets.make([1])
+    s = sets.mutable_difference(s, sets.make([1, 2]))
+    asserts.new_set_equals(env, sets.make(), s)
+    s = sets.make([1])
+    s = sets.mutable_difference(s, sets.make([2]))
+    asserts.new_set_equals(env, sets.make([1]), s)
+
+    # If passing a list, verify that duplicate elements are ignored.
+    s = sets.make([1, 2])
+    s = sets.mutable_difference(s, sets.make([1, 1]))
+    asserts.new_set_equals(env, sets.make([2]), s)
+
+    return unittest.end(env)
+
+mutable_difference_test = unittest.make(_mutable_difference_test)
 
 def _to_list_test(ctx):
     """Unit tests for sets.to_list."""
@@ -257,7 +321,9 @@ def new_sets_test_suite():
         is_equal_test,
         is_subset_test,
         difference_test,
+        mutable_difference_test,
         union_test,
+        mutable_union_test,
         to_list_test,
         make_test,
         copy_test,
