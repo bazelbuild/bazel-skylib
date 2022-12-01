@@ -90,12 +90,26 @@ def _create_config_setting_groups():
         match_all = [":condition1"],
     )
     selects.config_setting_group(
+        name = "always_true_all",
+        match_all = ["//conditions:default"],
+    )
+    selects.config_setting_group(
         name = "1_or_2_or_3",
         match_any = [":condition1", ":condition2", ":condition3"],
     )
     selects.config_setting_group(
         name = "1_or_nothing_else",
         match_any = [":condition1"],
+    )
+
+    # Can't create config setting group which has //conditions:default in it.
+    selects.config_setting_group(
+        name = "always_true_regardless_of_1",
+        match_any = ["//conditions:default", ":condition1"],
+    )
+    selects.config_setting_group(
+        name = "always_true_any",
+        match_any = ["//conditions:default"],
     )
 
 ###################################################
@@ -178,6 +192,22 @@ def _and_config_setting_group_matches_test():
     and_config_setting_group_matches_test(
         name = "and_config_setting_group_matches_test",
         target_under_test = ":and_config_setting_group_matches_rule",
+    )
+
+def _and_config_setting_group_always_true_test():
+    """Test verifying match on an ANDing config_setting_group."""
+    boolean_attr_rule(
+        name = "and_config_setting_group_always_true_rule",
+        myboolean = select(
+            {
+                ":always_true_all": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    and_config_setting_group_matches_test(
+        name = "and_config_setting_group_always_true_test",
+        target_under_test = ":and_config_setting_group_always_true_rule",
     )
 
 ###################################################
@@ -619,6 +649,7 @@ def selects_test_suite():
     _create_config_setting_groups()
 
     _and_config_setting_group_matches_test()
+    _and_config_setting_group_always_true_test()
     _and_config_setting_group_first_match_fails_test()
     _and_config_setting_group_middle_match_fails_test()
     _and_config_setting_group_last_match_fails_test()

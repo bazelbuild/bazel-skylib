@@ -138,7 +138,7 @@ def _remove_default_condition(settings):
     """Returns settings with "//conditions:default" entries filtered out."""
     new_settings = []
     for setting in settings:
-        if settings != "//conditions:default":
+        if setting != "//conditions:default":
             new_settings.append(setting)
     return new_settings
 
