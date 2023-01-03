@@ -139,4 +139,11 @@ tasks:
     - "--enable_bzlmod"
     - "--test_env=PATH"
 
+  bcr_test_module:
+    name: "BCR Test Module"
+    platform: ubuntu1804
+    working_directory: tests/bcr
+    build_targets:
+    - "//..."
+
 buildifier: latest

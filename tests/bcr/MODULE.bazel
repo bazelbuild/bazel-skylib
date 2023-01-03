@@ -1,0 +1,20 @@
+module(
+    # Used to test that the module_version extension handles complicated module
+    # names and versions correctly.
+    name = "bazel_skylib.test-module",
+    version = "1.2.3.4-alpha+meta",
+)
+
+bazel_dep(name = "bazel_skylib", version = "")
+
+local_path_override(
+    module_name = "bazel_skylib",
+    path = "../..",
+)
+
+module_version = use_extension("@bazel_skylib//extensions:module_version.bzl", "module_version")
+
+use_repo(
+    module_version,
+    test_version = "bazel_skylib.test-module_version",
+)

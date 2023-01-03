@@ -146,6 +146,12 @@ stardoc_with_diff_test(
     out_label = "//docs:write_file_doc.md",
 )
 
+stardoc_with_diff_test(
+    name = "module_version",
+    bzl_library_target = "//extensions:module_version",
+    out_label = "//docs:module_version_doc.md",
+)
+
 # update_docs must be at the bottom of the BUILD file
 update_docs(
     name = "update",

@@ -74,6 +74,7 @@ filegroup(
         "CONTRIBUTORS",
         "LICENSE",
         "WORKSPACE.bzlmod",
+        "//extensions:distribution",
         "//lib:distribution",
         "//rules:distribution",
         "//rules/private:distribution",

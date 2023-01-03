@@ -70,6 +70,10 @@ s = shell.quote(p)
 * [select_file](docs/select_file_doc.md)
 * [write_file](docs/write_file_doc.md)
 
+## List of module extensions (in extensions/)
+
+* [module_version](docs/module_version_doc.md)
+
 ## Writing a new module
 
 The criteria for adding a new function or module to this repository are:
