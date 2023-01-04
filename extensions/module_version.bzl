@@ -49,14 +49,19 @@ _module_version_repo = repository_rule(
 )
 
 def _module_version_impl(module_ctx):
-    # buildifier: disable=no-effect
-    [
+    # Deduplicate modules by name to handle multiple_version_override.
+    # We arbitrarily pick the first occurrence in module_ctx.modules, which
+    # corresponds to the dependency that is closest to the root module.
+    versions = {}
+    for module in module_ctx.modules:
+        if module.name not in versions:
+            versions[module.name] = module.version
+
+    for name, version in versions.items():
         _module_version_repo(
-            name = module.name + "_version",
-            version = module.version,
+            name = name + "_version",
+            version = version,
         )
-        for module in module_ctx.modules
-    ]
 
 module_version = module_extension(
     implementation = _module_version_impl,
