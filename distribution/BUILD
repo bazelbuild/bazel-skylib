@@ -13,7 +13,7 @@ genrule(
     cmd = "sed -e '/### INTERNAL ONLY/,$$d' $(location //:MODULE.bazel) >$@",
 )
 
-# Build the artifact to put on the github release page.
+# Build the artifacts to put on the github release page.
 pkg_tar(
     name = "bazel-skylib-%s" % version,
     srcs = [
@@ -25,6 +25,37 @@ pkg_tar(
     # Make it owned by root so it does not have the uid of the CI robot.
     owner = "0.0",
     strip_prefix = ".",
+)
+
+alias(
+    name = "bazel-skylib",
+    actual = "bazel-skylib-%s" % version,
+)
+
+pkg_tar(
+    name = "bazel-skylib-gazelle-plugin-%s" % version,
+    srcs = [
+        "@bazel_skylib_gazelle_plugin//:distribution",
+        "@bazel_skylib_gazelle_plugin//bzl:distribution",
+    ],
+    extension = "tar.gz",
+    mode = "0644",
+    # Make it owned by root so it does not have the uid of the CI robot.
+    owner = "0.0",
+    strip_prefix = ".",
+)
+
+alias(
+    name = "bazel-skylib-gazelle-plugin",
+    actual = "bazel-skylib-gazelle-plugin-%s" % version,
+)
+
+filegroup(
+    name = "distribution",
+    srcs = [
+        "bazel-skylib",
+        "bazel-skylib-gazelle-plugin",
+    ],
 )
 
 print_rel_notes(

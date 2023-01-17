@@ -52,6 +52,8 @@ gazelle(
     gazelle = ":gazelle-skylib",
 )
 
+# TODO(arostovtsev): exclude everything below from distro tarball
+
 # The files needed for distribution
 # A fake testdata directory is created so that
 # the build file has nothing missing, but we
@@ -62,10 +64,7 @@ filegroup(
         "BUILD",
         ":fake-testdata",
     ],
-    visibility = [
-        "//:__pkg__",
-        "//distribution:__pkg__",
-    ],
+    visibility = ["//visibility:public"],
 )
 
 genrule(
