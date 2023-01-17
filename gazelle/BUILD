@@ -1,6 +1,6 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
-bzl_library   (
+bzl_library(
     name = "setup",
     srcs = ["setup.bzl"],
     visibility = ["//visibility:public"],
