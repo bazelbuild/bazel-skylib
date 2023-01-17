@@ -1,7 +1,7 @@
 module(
     name = "bazel_skylib_gazelle_plugin",
     compatibility_level = 1,
-    # If you change this, please also update @bazel_gazelle//:MODULE.bazel
+    # Keep in sync with @bazel_skylib//:MODULE.bazel and @bazel_skylib//:version.bzl
     version = "1.3.0",
 )
 
