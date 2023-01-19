@@ -20,7 +20,7 @@ bazel_dep(name = "rules_pkg", version = "0.7.0", dev_dependency = True)
 bazel_dep(name = "rules_cc", version = "0.0.2", dev_dependency = True)
 
 # Needed for bazelci and for building distribution tarballs.
-# Comment out the following if importing an unreleased version of bazel_skylib
-# as a dep via git_override:
+# If using an unreleased version of bazel_skylib via git_override, apply
+# MODULE.bazel-remove-override.patch to remove the following lines:
 bazel_dep(name = "bazel_skylib_gazelle_plugin", dev_dependency = True)
 local_path_override(module_name = "bazel_skylib_gazelle_plugin", path = "gazelle")
