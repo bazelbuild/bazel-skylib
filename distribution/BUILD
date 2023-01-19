@@ -16,11 +16,11 @@ genrule(
 # Build the artifacts to put on the github release page.
 pkg_tar(
     name = "bazel-skylib",
-    out = "bazel-skylib-%s.tar.gz" % version,
     srcs = [
         "distro_module_bazel",
         "//:distribution",
     ],
+    out = "bazel-skylib-%s.tar.gz" % version,
     extension = "tar.gz",
     mode = "0644",
     # Make it owned by root so it does not have the uid of the CI robot.
@@ -39,11 +39,11 @@ pkg_files(
 
 pkg_tar(
     name = "bazel-skylib-gazelle-plugin",
-    out = "bazel-skylib-gazelle-plugin-%s.tar.gz" % version,
     srcs = [
-        "//:LICENSE",
         ":bazel-skylib-gazelle-plugin-without-external-prefix",
+        "//:LICENSE",
     ],
+    out = "bazel-skylib-gazelle-plugin-%s.tar.gz" % version,
     extension = "tar.gz",
     mode = "0644",
     # Make it owned by root so it does not have the uid of the CI robot.
