@@ -148,7 +148,7 @@ def _impl_function_name(impl):
     impl_name = impl_name.partition("<function ")[-1]
     return impl_name.rpartition(">")[0]
 
-def _make(impl, attrs = {}):
+def _make(impl, attrs = {}, fragments = []):
     """Creates a unit test rule from its implementation function.
 
     Each unit test is defined in an implementation function that must then be
@@ -178,6 +178,8 @@ def _make(impl, attrs = {}):
       impl: The implementation function of the unit test.
       attrs: An optional dictionary to supplement the attrs passed to the
           unit test's `rule()` constructor.
+      fragments: An optional list of fragment names that can be used to give rules access to
+          language-specific parts of configuration.
 
     Returns:
       A rule definition that should be stored in a global whose name ends in
@@ -189,6 +191,7 @@ def _make(impl, attrs = {}):
     return rule(
         impl,
         attrs = attrs,
+        fragments = fragments,
         _skylark_testable = True,
         test = True,
         toolchains = [TOOLCHAIN_TYPE],
