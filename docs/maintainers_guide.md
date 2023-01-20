@@ -72,25 +72,33 @@ Name 1, Name 2, Name 3 (alphabetically from `git log`)
 
 --------------------------------------------------------------------------------
 
-2.  Bump `version` in version.bzl *and* MODULE.bazel to the new version.
-    TODO(#386): add a test to make sure the two versions are in sync.
+2.  Bump `version` in version.bzl, MODULE.bazel, *and* gazelle/MODULE.bazel to
+    the new version.
+    TODO(#386): add a test to make sure all the versions are in sync.
 3.  Ensure that the commits for steps 1 and 2 have been merged. All further
     steps must be performed on a single, known-good git commit.
-4.  `bazel build //distribution:bazel-skylib-$VERSION.tar.gz`
-5.  Copy the `bazel-skylib-$VERSION.tar.gz` tarball to the mirror (you'll need
-    Bazel developer gcloud credentials; assuming you are a Bazel developer, you
-    can obtain them via `gcloud init`):
+4.  `bazel build //distribution`
+5.  Copy the `bazel-skylib-$VERSION.tar.gz` and
+    `bazel-skylib-gazelle-plugin-$VERSION.tar.gz` tarballs to the mirror (you'll
+    need Bazel developer gcloud credentials; assuming you are a Bazel developer,
+    you can obtain them via `gcloud init`):
 
-```
-gsutil cp bazel-bin/distribution/bazel-skylib-$VERSION.tar.gz gs://bazel-mirror/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz
-gsutil setmeta -h "Cache-Control: public, max-age=31536000" "gs://bazel-mirror/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz"
+```bash
+gsutil cp bazel-bin/distribution/bazel-skylib{,-gazelle-plugin}-$VERSION.tar.gz gs://bazel-mirror/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/
+gsutil setmeta -h "Cache-Control: public, max-age=31536000" gs://bazel-mirror/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib{,-gazelle-plugin}-$VERSION.tar.gz
 ```
 
-6.  Run `sha256sum bazel-bin/distro/bazel-skylib-$VERSION.tar.gz`; you'll need
-    the checksum for the release notes.
+6.  Obtain checksums for release notes:
+
+```bash
+sha256sum bazel-bin/distro/bazel-skylib-$VERSION.tar.gz
+sha256sum bazel-bin/distro/bazel-skylib-gazelle-plugin-$VERSION.tar.gz
+````
+
 7.  Draft a new release with a new tag named $VERSION in github. Attach
-    `bazel-skylib-$VERSION.tar.gz` to the release. For the release notes, use
-    the CHANGELOG.md entry plus the following template:
+    `bazel-skylib-$VERSION.tar.gz` and
+    `bazel-skylib-gazelle-plugin-$VERSION.tar.gz` to the release. For the
+    release notes, use the CHANGELOG.md entry plus the following template:
 
 --------------------------------------------------------------------------------
 
