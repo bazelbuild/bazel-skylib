@@ -1,3 +1,15 @@
+Release 1.4.0
+
+**New Features**
+-   The Gazelle plugin is marked stable for general use (#400, #424)
+
+**Other Notable Changes**
+-   copy_file/copy_directory again allow sandboxing (#392)
+
+**Contributors**
+Alexandre Rostovtsev, Nick Gooding, Simon Stewart, Xùdōng Yáng
+
+
 Release 1.3.0
 
 **New Features**
