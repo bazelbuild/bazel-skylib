@@ -14,10 +14,18 @@ genrule(
 )
 
 # Build the artifacts to put on the github release page.
+
+# remove "distribution/" path prefix
+pkg_files(
+    name = "distro_module_bazel-without-prefix",
+    srcs = [":distro_module_bazel"],
+    strip_prefix = strip_prefix.from_pkg(),
+)
+
 pkg_tar(
     name = "bazel-skylib",
     srcs = [
-        "distro_module_bazel",
+        ":distro_module_bazel-without-prefix",
         "//:distribution",
     ],
     out = "bazel-skylib-%s.tar.gz" % version,
