@@ -144,7 +144,7 @@ load("@bazel_skylib_gazelle_plugin//:workspace.bzl", "bazel_skylib_gazelle_plugi
 
 bazel_skylib_gazelle_plugin_workspace()
 
-load("@bazel_skylib_gazelle_plugin//:setup.bzl", "bazel_skylib_gazelle_plugin_setup"
+load("@bazel_skylib_gazelle_plugin//:setup.bzl", "bazel_skylib_gazelle_plugin_setup")
 
 bazel_skylib_gazelle_plugin_setup()
 ```
@@ -163,7 +163,7 @@ gazelle(
 gazelle_binary(
     name = "gazelle_bin",
     languages = DEFAULT_LANGUAGES + [
-        "@bazel_skylib_gazelle_plugin//gazelle/bzl",
+        "@bazel_skylib_gazelle_plugin//bzl",
     ],
 )
 ```
