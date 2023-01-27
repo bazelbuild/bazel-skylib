@@ -1,10 +1,15 @@
 workspace(name = "bazel_skylib")
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 load(":workspace.bzl", "bazel_skylib_workspace")
 
 bazel_skylib_workspace()
+
+### INTERNAL ONLY - lines after this are not included in the release packaging.
+# Lines below are for tests, documentation generation, and distribution archive
+# generation only, and should thus not be included by dependencies on bazel-skylib.
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
 local_repository(
     name = "bazel_skylib_gazelle_plugin",
@@ -18,10 +23,6 @@ bazel_skylib_gazelle_plugin_workspace()
 load("@bazel_skylib_gazelle_plugin//:setup.bzl", "bazel_skylib_gazelle_plugin_setup")
 
 bazel_skylib_gazelle_plugin_setup()
-
-# Below this line is for documentation generation only,
-# and should thus not be included by dependencies on
-# bazel-skylib.
 
 maybe(
     http_archive,

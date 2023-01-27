@@ -1,5 +1,7 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
+exports_files(["WORKSPACE.bzlmod"])
+
 bzl_library(
     name = "setup",
     srcs = ["setup.bzl"],
@@ -24,9 +26,12 @@ bzl_library(
 # TODO(arostovtsev): exclude everything below from distro tarball
 filegroup(
     name = "distribution",
-    srcs = glob(
-        ["*"],
-        allow_empty = True,
-    ),
+    srcs = [
+        "BUILD",
+        "MODULE.bazel",
+        "WORKSPACE.bzlmod",
+        "setup.bzl",
+        "workspace.bzl",
+    ],
     visibility = ["//visibility:public"],
 )

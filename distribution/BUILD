@@ -1,3 +1,4 @@
+load("distribution.bzl", "remove_internal_only")
 load("@bazel_skylib//:version.bzl", "version")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_pkg//:mappings.bzl", "pkg_files", "strip_prefix")
@@ -6,18 +7,32 @@ package(
     default_visibility = ["//visibility:private"],
 )
 
-genrule(
-    name = "distro_module_bazel",
-    srcs = ["//:MODULE.bazel"],
-    outs = ["MODULE.bazel"],
-    cmd = "sed -e '/### INTERNAL ONLY/,$$d' $(location //:MODULE.bazel) >$@",
+remove_internal_only(
+    name = "distro_workspace",
+    src = "//:WORKSPACE",
+    out = "WORKSPACE",
 )
 
-# Build the artifacts to put on the github release page.
+remove_internal_only(
+    name = "distro_module_bazel",
+    src = "//:MODULE.bazel",
+    out = "MODULE.bazel",
+)
+
+# remove "distribution/" path prefix
+pkg_files(
+    name = "distro-files-without-prefix",
+    srcs = [
+        "distro_module_bazel",
+        "distro_workspace",
+    ],
+    strip_prefix = strip_prefix.from_pkg(),
+)
+
 pkg_tar(
     name = "bazel-skylib",
     srcs = [
-        "distro_module_bazel",
+        "distro-files-without-prefix",
         "//:distribution",
     ],
     out = "bazel-skylib-%s.tar.gz" % version,
@@ -26,6 +41,14 @@ pkg_tar(
     # Make it owned by root so it does not have the uid of the CI robot.
     owner = "0.0",
     strip_prefix = strip_prefix.from_root(),
+)
+
+# @bazel_skylib_gazelle_plugin//:WORKSPACE refers to bazel-skylib in the parent
+# directory. For distribution, use the minimal WORSKPACE.bzlmod instead.
+pkg_files(
+    name = "bazel-skylib-gazelle-plugin-distro_workspace",
+    srcs = ["@bazel_skylib_gazelle_plugin//:WORKSPACE.bzlmod"],
+    renames = {"@bazel_skylib_gazelle_plugin//:WORKSPACE.bzlmod": "WORKSPACE"},
 )
 
 pkg_files(
@@ -40,7 +63,8 @@ pkg_files(
 pkg_tar(
     name = "bazel-skylib-gazelle-plugin",
     srcs = [
-        ":bazel-skylib-gazelle-plugin-without-external-prefix",
+        "bazel-skylib-gazelle-plugin-distro_workspace",
+        "bazel-skylib-gazelle-plugin-without-external-prefix",
         "//:LICENSE",
     ],
     out = "bazel-skylib-gazelle-plugin-%s.tar.gz" % version,
@@ -50,6 +74,7 @@ pkg_tar(
     owner = "0.0",
 )
 
+# Build the artifacts to put on the github release page.
 filegroup(
     name = "distribution",
     srcs = [

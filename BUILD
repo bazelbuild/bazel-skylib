@@ -10,6 +10,7 @@ package(default_visibility = ["//visibility:public"])
 exports_files([
     "LICENSE",
     "MODULE.bazel",
+    "WORKSPACE",
 ])
 
 filegroup(
