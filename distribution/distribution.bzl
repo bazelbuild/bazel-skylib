@@ -15,7 +15,7 @@
 """Helper utilities for generating distribution tarballs."""
 
 def remove_internal_only(name, src, out, **kwargs):
-    """Removes '#### INTERNAL ONLY' line and all lines below from a file.
+    """Removes '### INTERNAL ONLY' line and all lines below from a file.
 
     Args:
         name: Name of the rule.
