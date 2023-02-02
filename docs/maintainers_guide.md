@@ -168,10 +168,10 @@ echo -n sha256-; cat bazel-bin/distribution/bazel-skylib-gazelle-plugin-$VERSION
     Subresource Integrity checksums obtained above in the new `source.json`
     files.
 
-    Ensure that the MODULE.bazel files you add to bazel_central_registry exactly
-    match the MODULE.bazel file packaged in bazel-skylib-$VERSION.tar.gz and
-    bazel-skylib-gazelle-plugin-$VERSION.tar.gz tarballs - or buildkite checks
-    will fail.
+    Ensure that the MODULE.bazel files you add in the new $VERSION
+    subdirectories exactly match the MODULE.bazel file packaged in
+    bazel-skylib-$VERSION.tar.gz and bazel-skylib-gazelle-plugin-$VERSION.tar.gz
+    tarballs - or buildkite checks will fail.
 
 10. Once the Bazel Central Registry PR is merged, insert in the release
     description after the WORKSPACE setup section:
