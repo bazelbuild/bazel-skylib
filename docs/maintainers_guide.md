@@ -91,8 +91,8 @@ gsutil setmeta -h "Cache-Control: public, max-age=31536000" gs://bazel-mirror/gi
 6.  Obtain checksums for release notes:
 
 ```bash
-sha256sum bazel-bin/distro/bazel-skylib-$VERSION.tar.gz
-sha256sum bazel-bin/distro/bazel-skylib-gazelle-plugin-$VERSION.tar.gz
+sha256sum bazel-bin/distribution/bazel-skylib-$VERSION.tar.gz
+sha256sum bazel-bin/distribution/bazel-skylib-gazelle-plugin-$VERSION.tar.gz
 ````
 
 7.  Draft a new release with a new tag named $VERSION in github. Attach
@@ -106,20 +106,86 @@ sha256sum bazel-bin/distro/bazel-skylib-gazelle-plugin-$VERSION.tar.gz
 
 ```
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 http_archive(
     name = "bazel_skylib",
+    sha256 = "$SHA256SUM"
     urls = [
         "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz",
         "https://github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz",
     ],
-    sha256 = "$SHA256SUM",
 )
+
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+
 bazel_skylib_workspace()
+```
+
+***Additional WORKSPACE setup for the Gazelle plugin***
+
+```starlark
+http_archive(
+    name = "bazel_skylib_gazelle_plugin",
+    sha256 = "$SHA256SUM_GAZELLE_PLUGIN",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-gazelle-plugin-$VERSION.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-gazelle-plugin-$VERSION.tar.gz",
+    ],
+)
+
+load("@bazel_skylib_gazelle_plugin//:workspace.bzl", "bazel_skylib_gazelle_plugin_workspace")
+
+bazel_skylib_gazelle_plugin_workspace()
+
+load("@bazel_skylib_gazelle_plugin//:setup.bzl", "bazel_skylib_gazelle_plugin_setup")
+
+bazel_skylib_gazelle_plugin_setup()
 ```
 
 **Using the rules**
 
 See [the source](https://github.com/bazelbuild/bazel-skylib/tree/$VERSION).
+
+--------------------------------------------------------------------------------
+
+8.  Obtain [Subresource Integrity](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description)
+    format checksums for bzlmod:
+
+```bash
+echo -n sha256-; cat bazel-bin/distribution/bazel-skylib-$VERSION.tar.gz | openssl dgst -sha256 -binary | base64
+echo -n sha256-; cat bazel-bin/distribution/bazel-skylib-gazelle-plugin-$VERSION.tar.gz | openssl dgst -sha256 -binary | base64
+```
+
+9.  Create a PR at https://github.com/bazelbuild/bazel-central-registry to update
+    the registry's versions of bazel_skylib abd bazel_skylib_gazelle_plugin.
+
+    Use https://github.com/bazelbuild/bazel-central-registry/pull/403 as the
+    model; you will need to update `modules/bazel_skylib/metadata.json` and
+    `modules/bazel_skylib_gazelle_plugin/metadata.json` to lis the new version
+    in `versions`, and create new $VERSION subdirectories for the updated
+    modules, using existing version subdirectories as the guide. Use Subresource
+    Integrity checksums obtained above in the new `source.json` files.
+
+    Ensure that the MODULE.bazel files you add to bazel_central_registry exactly
+    match the MODULE.bazel file packaged in bazel-skylib-$VERSION.tar.gz and
+    bazel-skylib-gazelle-plugin-$VERSION.tar.gz tarballs - or buildkite checks
+    will fail.
+
+10. Once the bazel-central-registry PR is merged, insert in the release
+    description after the WORKSPACE setup section:
+
+--------------------------------------------------------------------------------
+
+**MODULE.bazel setup**
+
+```starlark
+bazel_dep(name = "bazel_skylib", version = "$VERSION")
+```
+
+And for the Gazelle plugin:
+
+```starlark
+bazel_dep(name = "bazel_skylib_gazelle_plugin", version = "$VERSION", dev_dependency = True)
+```
 
 --------------------------------------------------------------------------------
