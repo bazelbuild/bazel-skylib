@@ -156,8 +156,9 @@ echo -n sha256-; cat bazel-bin/distribution/bazel-skylib-$VERSION.tar.gz | opens
 echo -n sha256-; cat bazel-bin/distribution/bazel-skylib-gazelle-plugin-$VERSION.tar.gz | openssl dgst -sha256 -binary | base64
 ```
 
-9.  Create a PR at https://github.com/bazelbuild/bazel-central-registry to update
-    the registry's versions of bazel_skylib abd bazel_skylib_gazelle_plugin.
+9.  Create a PR at [Bazel Central Registry](https://github.com/bazelbuild/bazel-central-registry)
+    to update the registry's versions of bazel_skylib and
+    bazel_skylib_gazelle_plugin.
 
     Use https://github.com/bazelbuild/bazel-central-registry/pull/403 as the
     model; you will need to update `modules/bazel_skylib/metadata.json` and
@@ -171,7 +172,7 @@ echo -n sha256-; cat bazel-bin/distribution/bazel-skylib-gazelle-plugin-$VERSION
     bazel-skylib-gazelle-plugin-$VERSION.tar.gz tarballs - or buildkite checks
     will fail.
 
-10. Once the bazel-central-registry PR is merged, insert in the release
+10. Once the Bazel Central Registry PR is merged, insert in the release
     description after the WORKSPACE setup section:
 
 --------------------------------------------------------------------------------
