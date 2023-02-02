@@ -162,10 +162,11 @@ echo -n sha256-; cat bazel-bin/distribution/bazel-skylib-gazelle-plugin-$VERSION
 
     Use https://github.com/bazelbuild/bazel-central-registry/pull/403 as the
     model; you will need to update `modules/bazel_skylib/metadata.json` and
-    `modules/bazel_skylib_gazelle_plugin/metadata.json` to lis the new version
+    `modules/bazel_skylib_gazelle_plugin/metadata.json` to list the new version
     in `versions`, and create new $VERSION subdirectories for the updated
-    modules, using existing version subdirectories as the guide. Use Subresource
-    Integrity checksums obtained above in the new `source.json` files.
+    modules, using the latest existing version subdirectories as the guide. Use
+    Subresource Integrity checksums obtained above in the new `source.json`
+    files.
 
     Ensure that the MODULE.bazel files you add to bazel_central_registry exactly
     match the MODULE.bazel file packaged in bazel-skylib-$VERSION.tar.gz and
