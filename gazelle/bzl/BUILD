@@ -1,5 +1,5 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 load("@bazel_gazelle//:def.bzl", "gazelle", "gazelle_binary")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 # gazelle:exclude testdata
 
@@ -25,9 +25,12 @@ go_test(
     srcs = ["gazelle_test.go"],
     data = [
         ":gazelle-skylib",
-    ] + glob([
-        "testdata/**",
-    ]),
+    ] + glob(
+        [
+            "testdata/**",
+        ],
+        allow_empty = True,
+    ),
     embed = [":bzl"],
     deps = [
         "@bazel_gazelle//testtools:go_default_library",
