@@ -1,3 +1,13 @@
+Release 1.4.1
+
+Bugfix release: fixes gazelle plugin failure with
+`--incompatible_disallow_empty_glob` (#431) and (for released versions) with
+`--incompatible_disable_starlark_host_transitions` (#433).
+
+**Contributors**
+Alexandre Rostovtsev, Chuck Grindel
+
+
 Release 1.4.0
 
 **New Features**
