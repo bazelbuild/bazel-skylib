@@ -17,6 +17,7 @@ tasks:
     bazel: latest
     test_flags:
     - "--test_env=PATH"
+    - "--test_tag_filters=-windows"
 
   ubuntu1604_latest:
     <<: *reusable_config
@@ -25,6 +26,7 @@ tasks:
     bazel: latest
     test_flags:
     - "--test_env=PATH"
+    - "--test_tag_filters=-windows"
 
   macos_latest:
     <<: *reusable_config
@@ -33,6 +35,7 @@ tasks:
     bazel: latest
     test_flags:
     - "--test_env=PATH"
+    - "--test_tag_filters=-windows"
 
   windows_latest:
     <<: *reusable_config
@@ -52,6 +55,7 @@ tasks:
     bazel: last_green
     test_flags:
     - "--test_env=PATH"
+    - "--test_tag_filters=-windows"
 
   ubuntu1604_last_green:
     <<: *reusable_config
@@ -60,6 +64,7 @@ tasks:
     bazel: last_green
     test_flags:
     - "--test_env=PATH"
+    - "--test_tag_filters=-windows"
 
   macos_last_green:
     <<: *reusable_config
@@ -68,6 +73,7 @@ tasks:
     bazel: last_green
     test_flags:
     - "--test_env=PATH"
+    - "--test_tag_filters=-windows"
 
   windows_last_green:
     <<: *reusable_config

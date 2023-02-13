@@ -48,7 +48,57 @@ def _quote(s):
     """
     return "'" + s.replace("'", "'\\''") + "'"
 
+def _escape_for_bat(s, delayed_expansion = False, escape_quotes = False):
+    """Escapes Windows metacharacters in a string for use in a .bat script.
+
+    This function makes no attempt to quote the string due to context-sensitive
+    and unintuitive treatment of `"` in Windows command parsing (e.g. `echo`
+    echoes `"` characters).
+
+    This function assumes that the string will not be embedded within a larger
+    quoted string.
+
+    See https://stackoverflow.com/questions/4094699 for gory details.
+
+    Args:
+      s: The string to escape.
+      delayed_expansion: Escape `!` for `setlocal ENABLEDELAYEDEXPANSION` mode.
+      escape_quotes: Escape `"` using `/`; respected by executables which use
+        the MSVCRT command line parser, but not by older commands like `echo`.
+
+    Returns:
+      An escaped version of the string that can be used as part of a command
+      line in a Windows batch file.
+    """
+    escaped = ""
+    in_quote = False
+    caret_escapable = ["^", "(", ")", "@", "&", "|", "<", ">", "\n", ";", ",", "="]
+
+    for c in s.elems():
+        # Variable substitution metacharacters - escape even in quote
+        if c == "%":
+            escaped += "%"
+        elif delayed_expansion and c == "!":
+            # Must be escaped twice for two expansions
+            escaped += "^^"
+
+        if c == '"':
+            if escape_quotes:
+                escaped += "\\"
+            in_quote = not in_quote
+
+        if in_quote and c == "\n":
+            # the only reasonable thing we can do is skip the newline
+            continue
+        if not in_quote and c in caret_escapable:
+            escaped += "^"
+
+        escaped += c
+
+    return escaped
+
 shell = struct(
     array_literal = _array_literal,
     quote = _quote,
+    escape_for_bat = _escape_for_bat,
 )
