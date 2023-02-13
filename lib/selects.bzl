@@ -19,16 +19,16 @@ def _with_or(input_dict, no_match_error = ""):
 
     Example:
 
-          ```build
-          deps = selects.with_or({
-              "//configs:one": [":dep1"],
-              ("//configs:two", "//configs:three"): [":dep2or3"],
-              "//configs:four": [":dep4"],
-              "//conditions:default": [":default"]
-          })
-          ```
+    ```build
+    deps = selects.with_or({
+        "//configs:one": [":dep1"],
+        ("//configs:two", "//configs:three"): [":dep2or3"],
+        "//configs:four": [":dep4"],
+        "//conditions:default": [":default"]
+    })
+    ```
 
-          Key labels may appear at most once anywhere in the input.
+    Key labels may appear at most once anywhere in the input.
 
     Args:
       input_dict: The same dictionary `select()` takes, except keys may take
@@ -81,24 +81,24 @@ def _config_setting_group(name, match_any = [], match_all = [], visibility = Non
 
     Example:
 
-      ```build
-      config_setting(name = "one", define_values = {"foo": "true"})
-      config_setting(name = "two", define_values = {"bar": "false"})
-      config_setting(name = "three", define_values = {"baz": "more_false"})
+    ```build
+    config_setting(name = "one", define_values = {"foo": "true"})
+    config_setting(name = "two", define_values = {"bar": "false"})
+    config_setting(name = "three", define_values = {"baz": "more_false"})
 
-      config_setting_group(
-          name = "one_two_three",
-          match_all = [":one", ":two", ":three"]
-      )
+    config_setting_group(
+        name = "one_two_three",
+        match_all = [":one", ":two", ":three"]
+    )
 
-      cc_binary(
-          name = "myapp",
-          srcs = ["myapp.cc"],
-          deps = select({
-              ":one_two_three": [":special_deps"],
-              "//conditions:default": [":default_deps"]
-          })
-      ```
+    cc_binary(
+        name = "myapp",
+        srcs = ["myapp.cc"],
+        deps = select({
+            ":one_two_three": [":special_deps"],
+            "//conditions:default": [":default_deps"]
+        })
+    ```
 
     Args:
       name: The group's name. This is how `select()`s reference it.

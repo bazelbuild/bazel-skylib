@@ -14,16 +14,16 @@ Drop-in replacement for `select()` that supports ORed keys.
 
 Example:
 
-      ```build
-      deps = selects.with_or({
-          "//configs:one": [":dep1"],
-          ("//configs:two", "//configs:three"): [":dep2or3"],
-          "//configs:four": [":dep4"],
-          "//conditions:default": [":default"]
-      })
-      ```
+```build
+deps = selects.with_or({
+    "//configs:one": [":dep1"],
+    ("//configs:two", "//configs:three"): [":dep2or3"],
+    "//configs:four": [":dep4"],
+    "//conditions:default": [":default"]
+})
+```
 
-      Key labels may appear at most once anywhere in the input.
+Key labels may appear at most once anywhere in the input.
 
 
 **PARAMETERS**
@@ -86,24 +86,24 @@ Matches if all or any of its member `config_setting`s match.
 
 Example:
 
-  ```build
-  config_setting(name = "one", define_values = {"foo": "true"})
-  config_setting(name = "two", define_values = {"bar": "false"})
-  config_setting(name = "three", define_values = {"baz": "more_false"})
+```build
+config_setting(name = "one", define_values = {"foo": "true"})
+config_setting(name = "two", define_values = {"bar": "false"})
+config_setting(name = "three", define_values = {"baz": "more_false"})
 
-  config_setting_group(
-      name = "one_two_three",
-      match_all = [":one", ":two", ":three"]
-  )
+config_setting_group(
+    name = "one_two_three",
+    match_all = [":one", ":two", ":three"]
+)
 
-  cc_binary(
-      name = "myapp",
-      srcs = ["myapp.cc"],
-      deps = select({
-          ":one_two_three": [":special_deps"],
-          "//conditions:default": [":default_deps"]
-      })
-  ```
+cc_binary(
+    name = "myapp",
+    srcs = ["myapp.cc"],
+    deps = select({
+        ":one_two_three": [":special_deps"],
+        "//conditions:default": [":default_deps"]
+    })
+```
 
 
 **PARAMETERS**
