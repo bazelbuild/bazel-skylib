@@ -23,7 +23,10 @@ def _compact(items):
     Returns:
         A new `list` of items with the `None` values removed.
     """
-    return _filter(items, lambda x: x != None)
+
+    # We are intentionally not calling _filter(). We want to avoid recursion
+    # errors, if these functions are used together.
+    return [item for item in items if item != None]
 
 def _contains(items, target_or_fn):
     """Determines if a value exists in the provided `list`.
@@ -53,8 +56,14 @@ def _contains(items, target_or_fn):
         bool_fn = target_or_fn
     else:
         bool_fn = lambda x: x == target_or_fn
-    item = _find(items, bool_fn)
-    return item != None
+
+    # We are intentionally not calling _find(). We want to be able to use the
+    # lists functions together. For instance, we want to be able to use
+    # lists.contains inside the lambda for lists.find.
+    for item in items:
+        if bool_fn(item):
+            return True
+    return False
 
 def _find(items, bool_fn):
     """Returns the list item that satisfies the provided boolean `function`.
