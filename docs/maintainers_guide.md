@@ -109,7 +109,7 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "bazel_skylib",
-    sha256 = "$SHA256SUM"
+    sha256 = "$SHA256SUM",
     urls = [
         "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz",
         "https://github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz",
