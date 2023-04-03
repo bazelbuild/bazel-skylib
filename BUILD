@@ -69,10 +69,10 @@ bzl_library(
 filegroup(
     name = "distribution",
     srcs = [
-        "LICENSE",
         "BUILD",
         "CODEOWNERS",
         "CONTRIBUTORS",
+        "LICENSE",
         "WORKSPACE.bzlmod",
         "//lib:distribution",
         "//rules:distribution",
