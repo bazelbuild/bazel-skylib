@@ -74,7 +74,7 @@ s = shell.quote(p)
 
 The criteria for adding a new function or module to this repository are:
 
-1. Is it widely needed? The new code must solve a problem that occurs often during the development of Bazel build rules. It is not sufficient that the new code is merely useful.  Candidate code should generally have been proven to be necessary across several projects, either because it provides indispensible common functionality, or because it requires a single standardized implementation.
+1. Is it widely needed? The new code must solve a problem that occurs often during the development of Bazel build rules. It is not sufficient that the new code is merely useful. Candidate code should generally have been proven to be necessary across several projects, either because it provides indispensable common functionality, or because it requires a single standardized implementation.
 
 1. Is its interface simpler than its implementation? A good abstraction provides a simple interface to a complex implementation, relieving the user from the burden of understanding. By contrast, a shallow abstraction provides little that the user could not easily have written out for themselves. If a function's doc comment is longer than its body, it's a good sign that the abstraction is too shallow.
 

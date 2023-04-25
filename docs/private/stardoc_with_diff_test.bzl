@@ -33,7 +33,7 @@ def stardoc_with_diff_test(
         out_label):
     """Creates a stardoc target coupled with a `diff_test` for a given `bzl_library`.
 
-    This is helpful for minimizing boilerplate in repos wih lots of stardoc targets.
+    This is helpful for minimizing boilerplate in repos with lots of stardoc targets.
 
     Args:
         name: the stardoc target name

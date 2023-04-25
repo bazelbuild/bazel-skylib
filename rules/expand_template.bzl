@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""A rule that performes template expansion.
+"""A rule that performs template expansion.
 """
 
 def _expand_template_impl(ctx):
