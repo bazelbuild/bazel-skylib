@@ -10,6 +10,7 @@ package(default_visibility = ["//visibility:public"])
 exports_files([
     "LICENSE",
     "MODULE.bazel",
+    "WORKSPACE",
 ])
 
 filegroup(
@@ -68,10 +69,10 @@ bzl_library(
 filegroup(
     name = "distribution",
     srcs = [
-        "LICENSE",
         "BUILD",
         "CODEOWNERS",
         "CONTRIBUTORS",
+        "LICENSE",
         "WORKSPACE.bzlmod",
         "//lib:distribution",
         "//rules:distribution",

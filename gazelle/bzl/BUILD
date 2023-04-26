@@ -1,5 +1,5 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 load("@bazel_gazelle//:def.bzl", "gazelle", "gazelle_binary")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 # gazelle:exclude testdata
 
@@ -25,9 +25,12 @@ go_test(
     srcs = ["gazelle_test.go"],
     data = [
         ":gazelle-skylib",
-    ] + glob([
-        "testdata/**",
-    ]),
+    ] + glob(
+        [
+            "testdata/**",
+        ],
+        allow_empty = True,
+    ),
     embed = [":bzl"],
     deps = [
         "@bazel_gazelle//testtools:go_default_library",
@@ -50,4 +53,25 @@ gazelle_binary(
 gazelle(
     name = "gazelle",
     gazelle = ":gazelle-skylib",
+)
+
+# TODO(arostovtsev): exclude everything below from distro tarball
+
+# The files needed for distribution
+# A fake testdata directory is created so that
+# the build file has nothing missing, but we
+# do not bloat the distribution tarball
+filegroup(
+    name = "distribution",
+    srcs = glob(["*.go"]) + [
+        "BUILD",
+        ":fake-testdata",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "fake-testdata",
+    outs = ["testdata"],
+    cmd = "touch $@",
 )

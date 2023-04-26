@@ -1,3 +1,25 @@
+Release 1.4.1
+
+Bugfix release: fixes gazelle plugin failure with
+`--incompatible_disallow_empty_glob` (#431) and (for released versions) with
+`--incompatible_disable_starlark_host_transitions` (#433).
+
+**Contributors**
+Alexandre Rostovtsev, Chuck Grindel
+
+
+Release 1.4.0
+
+**New Features**
+-   The Gazelle plugin is marked stable for general use (#400, #424)
+
+**Other Notable Changes**
+-   copy_file/copy_directory again allow sandboxing (#392)
+
+**Contributors**
+Alexandre Rostovtsev, Nick Gooding, Simon Stewart, Xùdōng Yáng
+
+
 Release 1.3.0
 
 **New Features**

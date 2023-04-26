@@ -72,25 +72,33 @@ Name 1, Name 2, Name 3 (alphabetically from `git log`)
 
 --------------------------------------------------------------------------------
 
-2.  Bump `version` in version.bzl *and* MODULE.bazel to the new version.
-    TODO(#386): add a test to make sure the two versions are in sync.
+2.  Bump `version` in version.bzl, MODULE.bazel, *and* gazelle/MODULE.bazel to
+    the new version.
+    TODO(#386): add a test to make sure all the versions are in sync.
 3.  Ensure that the commits for steps 1 and 2 have been merged. All further
     steps must be performed on a single, known-good git commit.
-4.  `bazel build //distribution:bazel-skylib-$VERSION.tar.gz`
-5.  Copy the `bazel-skylib-$VERSION.tar.gz` tarball to the mirror (you'll need
-    Bazel developer gcloud credentials; assuming you are a Bazel developer, you
-    can obtain them via `gcloud init`):
+4.  `bazel build //distribution`
+5.  Copy the `bazel-skylib-$VERSION.tar.gz` and
+    `bazel-skylib-gazelle-plugin-$VERSION.tar.gz` tarballs to the mirror (you'll
+    need Bazel developer gcloud credentials; assuming you are a Bazel developer,
+    you can obtain them via `gcloud init`):
 
-```
-gsutil cp bazel-bin/distribution/bazel-skylib-$VERSION.tar.gz gs://bazel-mirror/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz
-gsutil setmeta -h "Cache-Control: public, max-age=31536000" "gs://bazel-mirror/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz"
+```bash
+gsutil cp bazel-bin/distribution/bazel-skylib{,-gazelle-plugin}-$VERSION.tar.gz gs://bazel-mirror/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/
+gsutil setmeta -h "Cache-Control: public, max-age=31536000" gs://bazel-mirror/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib{,-gazelle-plugin}-$VERSION.tar.gz
 ```
 
-6.  Run `sha256sum bazel-bin/distro/bazel-skylib-$VERSION.tar.gz`; you'll need
-    the checksum for the release notes.
+6.  Obtain checksums for release notes:
+
+```bash
+sha256sum bazel-bin/distribution/bazel-skylib-$VERSION.tar.gz
+sha256sum bazel-bin/distribution/bazel-skylib-gazelle-plugin-$VERSION.tar.gz
+````
+
 7.  Draft a new release with a new tag named $VERSION in github. Attach
-    `bazel-skylib-$VERSION.tar.gz` to the release. For the release notes, use
-    the CHANGELOG.md entry plus the following template:
+    `bazel-skylib-$VERSION.tar.gz` and
+    `bazel-skylib-gazelle-plugin-$VERSION.tar.gz` to the release. For the
+    release notes, use the CHANGELOG.md entry plus the following template:
 
 --------------------------------------------------------------------------------
 
@@ -98,20 +106,88 @@ gsutil setmeta -h "Cache-Control: public, max-age=31536000" "gs://bazel-mirror/g
 
 ```
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 http_archive(
     name = "bazel_skylib",
+    sha256 = "$SHA256SUM"
     urls = [
         "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz",
         "https://github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz",
     ],
-    sha256 = "$SHA256SUM",
 )
+
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+
 bazel_skylib_workspace()
+```
+
+***Additional WORKSPACE setup for the Gazelle plugin***
+
+```starlark
+http_archive(
+    name = "bazel_skylib_gazelle_plugin",
+    sha256 = "$SHA256SUM_GAZELLE_PLUGIN",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-gazelle-plugin-$VERSION.tar.gz",
+        "https://github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-gazelle-plugin-$VERSION.tar.gz",
+    ],
+)
+
+load("@bazel_skylib_gazelle_plugin//:workspace.bzl", "bazel_skylib_gazelle_plugin_workspace")
+
+bazel_skylib_gazelle_plugin_workspace()
+
+load("@bazel_skylib_gazelle_plugin//:setup.bzl", "bazel_skylib_gazelle_plugin_setup")
+
+bazel_skylib_gazelle_plugin_setup()
 ```
 
 **Using the rules**
 
 See [the source](https://github.com/bazelbuild/bazel-skylib/tree/$VERSION).
+
+--------------------------------------------------------------------------------
+
+8.  Obtain [Subresource Integrity](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description)
+    format checksums for bzlmod:
+
+```bash
+echo -n sha256-; cat bazel-bin/distribution/bazel-skylib-$VERSION.tar.gz | openssl dgst -sha256 -binary | base64
+echo -n sha256-; cat bazel-bin/distribution/bazel-skylib-gazelle-plugin-$VERSION.tar.gz | openssl dgst -sha256 -binary | base64
+```
+
+9.  Create a PR at [Bazel Central Registry](https://github.com/bazelbuild/bazel-central-registry)
+    to update the registry's versions of bazel_skylib and
+    bazel_skylib_gazelle_plugin.
+
+    Use https://github.com/bazelbuild/bazel-central-registry/pull/403 as the
+    model; you will need to update `modules/bazel_skylib/metadata.json` and
+    `modules/bazel_skylib_gazelle_plugin/metadata.json` to list the new version
+    in `versions`, and create new $VERSION subdirectories for the updated
+    modules, using the latest existing version subdirectories as the guide. Use
+    Subresource Integrity checksums obtained above in the new `source.json`
+    files.
+
+    Ensure that the MODULE.bazel files you add in the new $VERSION
+    subdirectories exactly match the MODULE.bazel file packaged in
+    bazel-skylib-$VERSION.tar.gz and bazel-skylib-gazelle-plugin-$VERSION.tar.gz
+    tarballs - or buildkite checks will fail.
+
+10. Once the Bazel Central Registry PR is merged, insert in the release
+    description after the WORKSPACE setup section:
+
+--------------------------------------------------------------------------------
+
+**MODULE.bazel setup**
+
+```starlark
+bazel_dep(name = "bazel_skylib", version = "$VERSION")
+```
+
+And for the Gazelle plugin:
+
+```starlark
+bazel_dep(name = "bazel_skylib_gazelle_plugin", version = "$VERSION", dev_dependency = True)
+```
 
 --------------------------------------------------------------------------------
