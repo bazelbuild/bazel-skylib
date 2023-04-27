@@ -261,7 +261,7 @@ and_config_setting_group_multiple_matches_fail_test = analysistest.make(
 )
 
 def _and_config_setting_group_multiple_matches_fail_test():
-    """Test verifying multple conditions mismatch on an ANDing config_setting_group."""
+    """Test verifying multiple conditions mismatch on an ANDing config_setting_group."""
     boolean_attr_rule(
         name = "and_config_setting_group_multiple_matches_fail_rule",
         myboolean = select(
@@ -453,7 +453,7 @@ or_config_setting_group_multiple_conds_match_test = analysistest.make(
 )
 
 def _or_config_setting_group_multiple_conds_match_test():
-    """Test verifying multple conditions matching on an ORing config_setting_group."""
+    """Test verifying multiple conditions matching on an ORing config_setting_group."""
     boolean_attr_rule(
         name = "or_config_setting_group_multiple_conds_match_rule",
         myboolean = select(

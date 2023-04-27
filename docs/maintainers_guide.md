@@ -25,7 +25,7 @@ widespread pain, and shouldn't be done lightly. Therefore:
 1.  In the first place, avoid adding insufficiently thought out, insufficiently
     tested features which will later need to be replaced in a
     backwards-incompatible manner. See the criteria in README.md.
-2.  Given a choice between breaking backwards compatibilty and keeping it, try
+2.  Given a choice between breaking backwards compatibility and keeping it, try
     to keep backwards compatibility. For example, if adding a new argument to a
     function, add it to the end of the argument list, so that existing callers'
     positional arguments continue to work.

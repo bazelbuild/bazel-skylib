@@ -1,6 +1,6 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
-A rule that performes template expansion.
+A rule that performs template expansion.
 
 
 <a id="expand_template"></a>
