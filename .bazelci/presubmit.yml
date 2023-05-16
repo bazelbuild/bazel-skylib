@@ -15,6 +15,8 @@ tasks:
     name: "Latest Bazel"
     platform: ubuntu1804
     bazel: latest
+    build_flags:
+    - "--incompatible_disallow_empty_glob"
     test_flags:
     - "--test_env=PATH"
 
@@ -23,6 +25,8 @@ tasks:
     name: "Latest Bazel"
     platform: ubuntu1604
     bazel: latest
+    build_flags:
+    - "--incompatible_disallow_empty_glob"
     test_flags:
     - "--test_env=PATH"
 
@@ -31,6 +35,8 @@ tasks:
     name: "Latest Bazel"
     platform: macos
     bazel: latest
+    build_flags:
+    - "--incompatible_disallow_empty_glob"
     test_flags:
     - "--test_env=PATH"
 
@@ -39,6 +45,8 @@ tasks:
     name: "Latest Bazel"
     platform: windows
     bazel: latest
+    build_flags:
+    - "--incompatible_disallow_empty_glob"
     test_flags:
     # TODO(laszlocsomor): remove "--test_env=LOCALAPPDATA" after
     # https://github.com/bazelbuild/bazel/issues/7761 is fixed
@@ -50,6 +58,8 @@ tasks:
     name: "Last Green Bazel"
     platform: ubuntu1804
     bazel: last_green
+    build_flags:
+    - "--incompatible_disallow_empty_glob"
     test_flags:
     - "--test_env=PATH"
 
@@ -58,6 +68,8 @@ tasks:
     name: "Last Green Bazel"
     platform: ubuntu1604
     bazel: last_green
+    build_flags:
+    - "--incompatible_disallow_empty_glob"
     test_flags:
     - "--test_env=PATH"
 
@@ -66,6 +78,8 @@ tasks:
     name: "Last Green Bazel"
     platform: macos
     bazel: last_green
+    build_flags:
+    - "--incompatible_disallow_empty_glob"
     test_flags:
     - "--test_env=PATH"
 
@@ -74,6 +88,8 @@ tasks:
     name: "Last Green Bazel"
     platform: windows
     bazel: last_green
+    build_flags:
+    - "--incompatible_disallow_empty_glob"
     test_flags:
     # TODO(laszlocsomor): remove "--test_env=LOCALAPPDATA" after
     # https://github.com/bazelbuild/bazel/issues/7761 is fixed
@@ -86,6 +102,7 @@ tasks:
     platform: ubuntu1804
     bazel: last_green
     build_flags:
+      - "--incompatible_disallow_empty_glob"
       - "--experimental_enable_bzlmod"
     test_flags:
       - "--experimental_enable_bzlmod"
