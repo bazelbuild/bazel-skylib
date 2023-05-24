@@ -42,10 +42,10 @@ _empty_test = rule(
 )
 
 _GENRULE_ATTRS = [
-    "compatible_with", 
+    "compatible_with",
     "exec_compatible_with",
-    "restricted_to", 
-    "tags", 
+    "restricted_to",
+    "tags",
     "target_compatible_with",
 ]
 
