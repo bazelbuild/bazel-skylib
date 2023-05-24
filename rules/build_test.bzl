@@ -41,6 +41,14 @@ _empty_test = rule(
     test = True,
 )
 
+_GENRULE_ATTRS = [
+    "compatible_with", 
+    "exec_compatible_with",
+    "restricted_to", 
+    "tags", 
+    "target_compatible_with",
+]
+
 def build_test(name, targets, **kwargs):
     """Test rule checking that other targets build.
 
@@ -81,8 +89,14 @@ def build_test(name, targets, **kwargs):
     batch_size = max(1, len(targets) // 100)
 
     # Pull a few args over from the test to the genrule.
-    args_to_reuse = ["compatible_with", "restricted_to", "tags"]
-    genrule_args = {k: kwargs.get(k) for k in args_to_reuse if k in kwargs}
+    genrule_args = {k: kwargs.get(k) for k in _GENRULE_ATTRS if k in kwargs}
+
+    # Only the test target should be used to determine whether or not the deps
+    # are built. Tagging the genrule targets as manual accomplishes this by
+    # preventing them from being picked up by recursive build patterns (`//...`).
+    genrule_tags = genrule_args.pop("tags", [])
+    if "manual" not in genrule_tags:
+        genrule_tags = genrule_tags + ["manual"]
 
     # Pass an output from the genrules as data to a shell test to bundle
     # it all up in a test.
@@ -99,6 +113,7 @@ def build_test(name, targets, **kwargs):
             visibility = ["//visibility:private"],
             cmd = "touch $@",
             cmd_bat = "type nul > $@",
+            tags = genrule_tags,
             **genrule_args
         )
 
