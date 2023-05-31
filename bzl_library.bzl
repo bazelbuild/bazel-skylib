@@ -47,7 +47,7 @@ bzl_library = rule(
     attrs = {
         "srcs": attr.label_list(
             allow_files = [".bzl", ".scl"],
-            doc = "List of `.bzl` or `.scl` files that are processed to create this target.",
+            doc = "List of `.bzl` and `.scl` files that are processed to create this target.",
         ),
         "deps": attr.label_list(
             allow_files = [".bzl", ".scl"],
@@ -58,7 +58,7 @@ bzl_library = rule(
 Starlark files listed in `srcs`.""",
         ),
     },
-    doc = """Creates a logical collection of Starlark .bzl or .scl files.
+    doc = """Creates a logical collection of Starlark .bzl and .scl files.
 
 Example:
   Suppose your project has the following structure:

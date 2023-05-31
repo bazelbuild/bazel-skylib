@@ -10,7 +10,7 @@ Skylib module containing a library rule for aggregating rules files.
 bzl_library(<a href="#bzl_library-name">name</a>, <a href="#bzl_library-deps">deps</a>, <a href="#bzl_library-srcs">srcs</a>)
 </pre>
 
-Creates a logical collection of Starlark .bzl or .scl files.
+Creates a logical collection of Starlark .bzl and .scl files.
 
 Example:
   Suppose your project has the following structure:
@@ -64,7 +64,7 @@ Example:
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="bzl_library-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="bzl_library-deps"></a>deps |  List of other <code>bzl_library</code> targets that are required by the Starlark files listed in <code>srcs</code>.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional | <code>[]</code> |
-| <a id="bzl_library-srcs"></a>srcs |  List of <code>.bzl</code> or <code>.scl</code> files that are processed to create this target.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional | <code>[]</code> |
+| <a id="bzl_library-srcs"></a>srcs |  List of <code>.bzl</code> and <code>.scl</code> files that are processed to create this target.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional | <code>[]</code> |
 
 
 <a id="StarlarkLibraryInfo"></a>
