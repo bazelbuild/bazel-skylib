@@ -16,6 +16,7 @@ tasks:
     platform: ubuntu1804
     bazel: latest
     build_flags:
+    - "--incompatible_config_setting_private_default_visibility"
     - "--incompatible_disallow_empty_glob"
     test_flags:
     - "--test_env=PATH"
@@ -26,6 +27,7 @@ tasks:
     platform: ubuntu1604
     bazel: latest
     build_flags:
+    - "--incompatible_config_setting_private_default_visibility"
     - "--incompatible_disallow_empty_glob"
     test_flags:
     - "--test_env=PATH"
@@ -36,6 +38,7 @@ tasks:
     platform: macos
     bazel: latest
     build_flags:
+    - "--incompatible_config_setting_private_default_visibility"
     - "--incompatible_disallow_empty_glob"
     test_flags:
     - "--test_env=PATH"
@@ -46,6 +49,7 @@ tasks:
     platform: windows
     bazel: latest
     build_flags:
+    - "--incompatible_config_setting_private_default_visibility"
     - "--incompatible_disallow_empty_glob"
     test_flags:
     # TODO(laszlocsomor): remove "--test_env=LOCALAPPDATA" after
@@ -59,6 +63,7 @@ tasks:
     platform: ubuntu1804
     bazel: last_green
     build_flags:
+    - "--incompatible_config_setting_private_default_visibility"
     - "--incompatible_disallow_empty_glob"
     test_flags:
     - "--test_env=PATH"
@@ -69,6 +74,7 @@ tasks:
     platform: ubuntu1604
     bazel: last_green
     build_flags:
+    - "--incompatible_config_setting_private_default_visibility"
     - "--incompatible_disallow_empty_glob"
     test_flags:
     - "--test_env=PATH"
@@ -79,6 +85,7 @@ tasks:
     platform: macos
     bazel: last_green
     build_flags:
+    - "--incompatible_config_setting_private_default_visibility"
     - "--incompatible_disallow_empty_glob"
     test_flags:
     - "--test_env=PATH"
@@ -89,6 +96,7 @@ tasks:
     platform: windows
     bazel: last_green
     build_flags:
+    - "--incompatible_config_setting_private_default_visibility"
     - "--incompatible_disallow_empty_glob"
     test_flags:
     # TODO(laszlocsomor): remove "--test_env=LOCALAPPDATA" after
@@ -102,10 +110,11 @@ tasks:
     platform: ubuntu1804
     bazel: last_green
     build_flags:
-      - "--incompatible_disallow_empty_glob"
-      - "--experimental_enable_bzlmod"
+    - "--enable_bzlmod"
+    - "--incompatible_config_setting_private_default_visibility"
+    - "--incompatible_disallow_empty_glob"
     test_flags:
-      - "--experimental_enable_bzlmod"
-      - "--test_env=PATH"
+    - "--enable_bzlmod"
+    - "--test_env=PATH"
 
 buildifier: latest
