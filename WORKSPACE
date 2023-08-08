@@ -41,6 +41,10 @@ stardoc_repositories()
 maybe(
     http_archive,
     name = "rules_pkg",
+    patch_args = ["-p1"],
+    patches = [
+        "//:rules_pkg-0.9.1-python3.patch",  # https://github.com/bazelbuild/rules_pkg/pull/723
+    ],
     sha256 = "8f9ee2dc10c1ae514ee599a8b42ed99fa262b757058f65ad3c384289ff70c4b8",
     urls = [
         "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.9.1/rules_pkg-0.9.1.tar.gz",
