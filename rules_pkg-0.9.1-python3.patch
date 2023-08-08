@@ -13,7 +13,6 @@ and fail: https://buildkite.com/bazel/bazel-skylib/builds/2768#0189d6bc-463d-4c3
  pkg/releasing/git_changelog_private.py | 2 ++
  pkg/releasing/print_rel_notes.py       | 2 ++
  pkg/releasing/release_tools_test.py    | 2 ++
- pkg/verify_archive_test_main.py.tpl    | 2 ++
  8 files changed, 16 insertions(+)
 
 diff --git a/pkg/make_rpm.py b/pkg/make_rpm.py
@@ -84,16 +83,6 @@ index 7ca80d1..0a538db 100644
 +#!/usr/bin/env python3
 +
  # Copyright 2019 The Bazel Authors. All rights reserved.
- #
- # Licensed under the Apache License, Version 2.0 (the "License");
-diff --git a/pkg/verify_archive_test_main.py.tpl b/pkg/verify_archive_test_main.py.tpl
-index 2d6a192..2ece337 100644
---- a/pkg/verify_archive_test_main.py.tpl
-+++ b/pkg/verify_archive_test_main.py.tpl
-@@ -1,3 +1,5 @@
-+#!/usr/bin/env python3
-+
- # Copyright 2023 The Bazel Authors. All rights reserved.
  #
  # Licensed under the Apache License, Version 2.0 (the "License");
 -- 
