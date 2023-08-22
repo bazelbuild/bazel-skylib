@@ -207,15 +207,15 @@ function test_simple_diff_test_with_manifest() {
 }
 
 function test_directory_named_external_with_legacy_external_runfiles() {
-  assert_simple_diff_test "--enable_runfiles --legacy_external_runfiles" "${FUNCNAME[0]}" "path/to/direcotry/external/in/name/"
+  assert_simple_diff_test "--enable_runfiles --legacy_external_runfiles" "${FUNCNAME[0]}" "path/to/directory/external/in/name/"
 }
 
 function test_directory_named_external_without_legacy_external_runfiles() {
-  assert_simple_diff_test "--enable_runfiles --nolegacy_external_runfiles" "${FUNCNAME[0]}" "path/to/direcotry/external/in/name/"
+  assert_simple_diff_test "--enable_runfiles --nolegacy_external_runfiles" "${FUNCNAME[0]}" "path/to/directory/external/in/name/"
 }
 
 function test_directory_named_external_with_manifest() {
-  assert_simple_diff_test "--noenable_runfiles" "${FUNCNAME[0]}" "path/to/direcotry/external/in/name/"
+  assert_simple_diff_test "--noenable_runfiles" "${FUNCNAME[0]}" "path/to/directory/external/in/name/"
 }
 
 function test_from_ext_repo_with_legacy_external_runfiles() {

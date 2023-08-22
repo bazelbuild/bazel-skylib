@@ -1,3 +1,15 @@
+Release 1.4.2
+
+Bugfix release: fixes `build_test` to respect `target_compatible_with` (#448)
+
+**New Features**
+-   `bzl_library` allows `.scl` files (new Starlark dialect loadable by Bazel at
+    HEAD with `--experimental_enable_scl_dialect`)
+
+**Contributors**
+Alexandre Rostovtsev, UebelAndre, Vertexwahn, Xavier Bonaventura
+
+
 Release 1.4.1
 
 Bugfix release: fixes gazelle plugin failure with

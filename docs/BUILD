@@ -15,6 +15,12 @@ stardoc_with_diff_test(
 )
 
 stardoc_with_diff_test(
+    name = "bzl_library",
+    bzl_library_target = "//:bzl_library",
+    out_label = "//docs:bzl_library.md",
+)
+
+stardoc_with_diff_test(
     name = "collections",
     bzl_library_target = "//lib:collections",
     out_label = "//docs:collections_doc.md",
