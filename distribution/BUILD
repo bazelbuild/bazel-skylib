@@ -1,7 +1,7 @@
-load("distribution.bzl", "remove_internal_only")
 load("@bazel_skylib//:version.bzl", "version")
-load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_pkg//:mappings.bzl", "pkg_files", "strip_prefix")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
+load("distribution.bzl", "remove_internal_only")
 
 package(
     default_visibility = ["//visibility:private"],

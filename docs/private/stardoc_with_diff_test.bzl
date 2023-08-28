@@ -23,9 +23,9 @@ available from a third-party:
 https://github.com/aspect-build/bazel-lib/blob/main/docs/docs.md
 """
 
-load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
-load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
+load("@bazel_skylib//rules:write_file.bzl", "write_file")
+load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
 
 def stardoc_with_diff_test(
         name,

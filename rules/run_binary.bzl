@@ -22,7 +22,6 @@ load("//lib:dicts.bzl", "dicts")
 
 def _impl(ctx):
     tool_as_list = [ctx.attr.tool]
-    tool_inputs, tool_input_mfs = ctx.resolve_tools(tools = tool_as_list)
     args = [
         # Expand $(location) / $(locations) in args.
         #
@@ -45,13 +44,12 @@ def _impl(ctx):
     ctx.actions.run(
         outputs = ctx.outputs.outs,
         inputs = ctx.files.srcs,
-        tools = tool_inputs,
+        tools = [ctx.executable.tool],
         executable = ctx.executable.tool,
         arguments = args,
         mnemonic = "RunBinary",
         use_default_shell_env = False,
         env = dicts.add(ctx.configuration.default_shell_env, envs),
-        input_manifests = tool_input_mfs,
     )
     return DefaultInfo(
         files = depset(ctx.outputs.outs),
