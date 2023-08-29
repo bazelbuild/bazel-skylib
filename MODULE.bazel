@@ -27,3 +27,9 @@ local_path_override(
     module_name = "bazel_skylib_gazelle_plugin",
     path = "gazelle",
 )
+
+as_extension_test_ext = use_extension("//tests:modules_test.bzl", "as_extension_test_ext")
+use_repo(as_extension_test_ext, "bar", "foo")
+
+use_all_repos_test_ext = use_extension("//tests:modules_test.bzl", "use_all_repos_test_ext")
+use_repo(use_all_repos_test_ext, "baz", "qux")
