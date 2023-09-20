@@ -44,6 +44,9 @@ def _parse_bazel_version(bazel_version):
 
     int tuples can be compared directly using binary operators (<, >).
 
+    For a development build of Bazel, this returns an unspecified version tuple
+    that compares higher than any released version.
+
     Args:
       bazel_version: the Bazel version string
 
@@ -52,6 +55,8 @@ def _parse_bazel_version(bazel_version):
     """
 
     version = _extract_version_number(bazel_version)
+    if not version:
+        return (999999, 999999, 999999)
     return tuple([int(n) for n in version.split(".")])
 
 def _is_at_most(threshold, version):
