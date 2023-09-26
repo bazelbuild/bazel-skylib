@@ -26,6 +26,9 @@ Parses a version string into a 3-tuple of ints
 
 int tuples can be compared directly using binary operators (&lt;, &gt;).
 
+For a development build of Bazel, this returns an unspecified version tuple
+that compares higher than any released version.
+
 
 **PARAMETERS**
 
