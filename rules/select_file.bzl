@@ -24,7 +24,10 @@ def _impl(ctx):
 
     out = None
     canonical = ctx.attr.subpath.replace("\\", "/")
-    for file_ in ctx.attr.srcs.files.to_list():
+    files_ = ctx.attr.srcs.files.to_list()
+    if ctx.attr.include_runfiles:
+        files_ += ctx.attr.srcs.default_runfiles.files.to_list()
+    for file_ in files_:
         if file_.path.replace("\\", "/").endswith(canonical):
             out = file_
             break
@@ -48,6 +51,10 @@ select_file = rule(
         "subpath": attr.string(
             mandatory = True,
             doc = "Relative path to the file",
+        ),
+        "include_runfiles": attr.bool(
+            default=False,
+            doc = "Whether to include the runfiles in the search",
         ),
     },
 )
