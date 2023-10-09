@@ -25,7 +25,7 @@ def _impl(ctx):
     out = None
     canonical = ctx.attr.subpath.replace("\\", "/")
     files_ = ctx.attr.srcs.files.to_list()
-    if ctx.attr.include_runfiles:
+    if ctx.attr.include_runfiles and ctx.attr.srcs.default_runfiles:
         files_ += ctx.attr.srcs.default_runfiles.files.to_list()
     for file_ in files_:
         if file_.path.replace("\\", "/").endswith(canonical):
