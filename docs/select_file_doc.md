@@ -11,7 +11,7 @@ Selects a single file from the outputs of a target by given relative path.
 ## select_file
 
 <pre>
-select_file(<a href="#select_file-name">name</a>, <a href="#select_file-srcs">srcs</a>, <a href="#select_file-subpath">subpath</a>)
+select_file(<a href="#select_file-name">name</a>, <a href="#select_file-include_runfiles">include_runfiles</a>, <a href="#select_file-srcs">srcs</a>, <a href="#select_file-subpath">subpath</a>)
 </pre>
 
 Selects a single file from the outputs of a target by given relative path
@@ -22,6 +22,7 @@ Selects a single file from the outputs of a target by given relative path
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="select_file-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
+| <a id="select_file-include_runfiles"></a>include_runfiles |  Whether to include the runfiles in the search   | Boolean | optional | <code>False</code> |
 | <a id="select_file-srcs"></a>srcs |  The target producing the file among other outputs   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
 | <a id="select_file-subpath"></a>subpath |  Relative path to the file   | String | required |  |
 
