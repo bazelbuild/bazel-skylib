@@ -53,7 +53,7 @@ select_file = rule(
             doc = "Relative path to the file",
         ),
         "include_runfiles": attr.bool(
-            default=False,
+            default = False,
             doc = "Whether to include the runfiles in the search",
         ),
     },
