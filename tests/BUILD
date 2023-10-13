@@ -78,7 +78,9 @@ sh_test(
     srcs = ["analysis_test_test.sh"],
     data = [
         ":unittest.bash",
+        "//lib:unittest",
         "//rules:analysis_test.bzl",
+        "//toolchains/unittest:test_deps",
         "@bazel_tools//tools/bash/runfiles",
     ],
     tags = ["local"],

@@ -554,18 +554,76 @@ def _expect_failure(env, expected_failure_msg = ""):
     else:
         _fail(env, "Expected failure of target_under_test, but found success")
 
-def _target_actions(env):
+def _target_actions(env, mnemonic = None):
     """Returns a list of actions registered by the target under test.
+
+    If mnemonic is provided, the list of actions will be filtered by
+    the given mnemonic. The list will be empty if no actions match the
+    given mnemonic.
 
     Args:
       env: The test environment returned by `analysistest.begin`.
+      mnemonic: Filter the list of actions by this mnemonic.
 
     Returns:
       A list of actions registered by the target under test
     """
 
+    actions = _target_under_test(env)[_ActionInfo].actions
+
+    if mnemonic != None:
+        actions = [a for a in actions if a.mnemonic == mnemonic]
+
     # Validate?
-    return _target_under_test(env)[_ActionInfo].actions
+    return actions
+
+def _target_action(env, mnemonic = None, output_ending_with = None):
+    """Returns an action registered by the target under test.
+
+    If mnemonic is provided, returns the action with the specified
+    mnemonic. If there are multiple actions with the same mnemonic,
+    fail() will be called. Use target_actions() instead.
+
+    If output_ending_with is provided, returns the action with an output
+    whose path ends with output_ending_with.
+
+    One of mnemonic or output_ending_with must be provided.
+
+    Args:
+      env: The test environment returned by `analysistest.begin`.
+      mnemonic: Finds the action with the given mnemonic.
+      output_ending_with: Finds the action with an output that ends with
+        the given suffix.
+
+    Returns:
+      An action registered by the target under test
+    """
+
+    if mnemonic == None and output_ending_with == None:
+        fail("One of mnemonic or output_ending_with must be provided.")
+
+    if mnemonic != None and output_ending_with != None:
+        fail("Only one of mnemonic or output_ending_with may be provided.")
+
+    actions = _target_under_test(env)[_ActionInfo].actions
+
+    if mnemonic != None:
+        matching_actions = []
+        for action in actions:
+            if action.mnemonic == mnemonic:
+                matching_actions.append(action)
+        if not matching_actions:
+            fail("No action with mnemonic '%s' found." % mnemonic)
+        if len(matching_actions) > 1:
+            fail("Multiple actions with mnemonic '%s' found." % mnemonic)
+        return matching_actions[0]
+
+    if output_ending_with != None:
+        for action in actions:
+            for output in action.outputs.to_list():
+                if output.path.endswith(output_ending_with):
+                    return action
+        fail("No action with an output ending with '%s' found." % output_ending_with)
 
 def _target_bin_dir_path(env):
     """Returns ctx.bin_dir.path for the target under test.
@@ -679,6 +737,7 @@ analysistest = struct(
     end = _end_analysis_test,
     fail = _fail,
     target_actions = _target_actions,
+    target_action = _target_action,
     target_bin_dir_path = _target_bin_dir_path,
     target_under_test = _target_under_test,
 )
