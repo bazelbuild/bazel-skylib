@@ -175,10 +175,15 @@ Unconditionally causes the current test to fail.
 ## analysistest.target_actions
 
 <pre>
-analysistest.target_actions(<a href="#analysistest.target_actions-env">env</a>)
+analysistest.target_actions(<a href="#analysistest.target_actions-env">env</a>, <a href="#analysistest.target_actions-mnemonic">mnemonic</a>)
 </pre>
 
 Returns a list of actions registered by the target under test.
+
+If mnemonic is provided, the list of actions will be filtered by
+the given mnemonic. The list will be empty if no actions match the
+given mnemonic.
+
 
 **PARAMETERS**
 
@@ -186,10 +191,47 @@ Returns a list of actions registered by the target under test.
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="analysistest.target_actions-env"></a>env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+| <a id="analysistest.target_actions-mnemonic"></a>mnemonic |  Filter the list of actions by this mnemonic.   |  <code>None</code> |
 
 **RETURNS**
 
 A list of actions registered by the target under test
+
+
+<a id="analysistest.target_action"></a>
+
+## analysistest.target_action
+
+<pre>
+analysistest.target_action(<a href="#analysistest.target_action-env">env</a>, <a href="#analysistest.target_action-mnemonic">mnemonic</a>, <a href="#analysistest.target_action-output_ending_with">output_ending_with</a>)
+</pre>
+
+Returns an action registered by the target under test.
+
+If mnemonic is provided, returns the action with the specified
+mnemonic. If no action with the given mnemonic is found, or if
+multiple actions with the given mnemonic are found, fail() will
+be called. Use target_actions(env, mnemonic = ...) instead.
+
+If output_ending_with is provided, returns the action with an output
+whose path ends with output_ending_with. If no such action is found,
+fail() will be called.
+
+One of mnemonic or output_ending_with must be provided.
+
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="analysistest.target_action-env"></a>env |  The test environment returned by <code>analysistest.begin</code>.   |  none |
+| <a id="analysistest.target_action-mnemonic"></a>mnemonic |  Finds the action with the given mnemonic.   |  <code>None</code> |
+| <a id="analysistest.target_action-output_ending_with"></a>output_ending_with |  Finds the action with an output that ends with the given suffix.   |  <code>None</code> |
+
+**RETURNS**
+
+An action registered by the target under test
 
 
 <a id="analysistest.target_bin_dir_path"></a>
