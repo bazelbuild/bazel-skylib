@@ -581,11 +581,13 @@ def _target_action(env, mnemonic = None, output_ending_with = None):
     """Returns an action registered by the target under test.
 
     If mnemonic is provided, returns the action with the specified
-    mnemonic. If there are multiple actions with the same mnemonic,
-    fail() will be called. Use target_actions() instead.
+    mnemonic. If no action with the given mnemonic is found, or if
+    multiple actions with the given mnemonic are found, fail() will
+    be called. Use target_actions(env, mnemonic = ...) instead.
 
     If output_ending_with is provided, returns the action with an output
-    whose path ends with output_ending_with.
+    whose path ends with output_ending_with. If no such action is found,
+    fail() will be called.
 
     One of mnemonic or output_ending_with must be provided.
 
