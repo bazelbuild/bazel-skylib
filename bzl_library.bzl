@@ -26,6 +26,9 @@ StarlarkLibraryInfo = provider(
 def _bzl_library_impl(ctx):
     deps_files = [x.files for x in ctx.attr.deps]
     all_files = depset(ctx.files.srcs, order = "postorder", transitive = deps_files)
+    if not ctx.files.srcs and not deps_files:
+        fail("bzl_library rule '%s' has no srcs or deps" % ctx.label)
+
     return [
         # All dependent files should be listed in both `files` and in `runfiles`;
         # this ensures that a `bzl_library` can be referenced as `data` from
