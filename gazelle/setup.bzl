@@ -17,7 +17,7 @@
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 
-def bazel_skylib_gazelle_plugin_setup(go_version = "1.18.7", register_go_toolchains = True):
+def bazel_skylib_gazelle_plugin_setup(go_version = "1.20.5", register_go_toolchains = True):
     """Set up the dependencies needed by the Gazelle plugin.
 
     Args:
