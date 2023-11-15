@@ -54,8 +54,7 @@ if not exist \"{src}\\\" (
         is_executable = True,
     )
     ctx.actions.run(
-        inputs = [src],
-        tools = [bat],
+        inputs = [src, bat],
         outputs = [dst],
         executable = "cmd.exe",
         arguments = ["/C", bat.path.replace("/", "\\")],
@@ -78,7 +77,7 @@ rm -rf \"$2\" && cp -fR \"$1/\" \"$2\"
     progress_message = "Copying directory %s" % src.path
 
     ctx.actions.run_shell(
-        tools = [src],
+        inputs = [src],
         outputs = [dst],
         command = cmd,
         arguments = [src.path, dst.path],
