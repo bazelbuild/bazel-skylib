@@ -41,11 +41,17 @@ def _impl_rule(ctx):
             runfiles = runfiles.merge(d[DefaultInfo].default_runfiles)
         runfiles = runfiles.merge(ctx.attr.src[DefaultInfo].default_runfiles)
 
-    return DefaultInfo(
-        executable = out,
-        files = depset([out]),
-        runfiles = runfiles,
-    )
+    return [
+        DefaultInfo(
+            executable = out,
+            files = depset([out]),
+            runfiles = runfiles,
+        ),
+        RunEnvironmentInfo(
+            environment = ctx.attr.env,
+            inherited_environment = ctx.attr.env_inherit,
+        ),
+    ]
 
 _ATTRS = {
     "src": attr.label(
@@ -65,6 +71,8 @@ _ATTRS = {
     ),
     # "out" is attr.string instead of attr.output, so that it is select()'able.
     "out": attr.string(mandatory = True, doc = "An output name for the copy of the binary"),
+    "env": attr.string_dict(doc = "Environment to provide to the execution of the binary", default = {}),
+    "env_inherit": attr.string_list(doc = "Environment to preserve for the execution of the binary", default = []),
 }
 
 native_binary = rule(
