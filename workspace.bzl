@@ -15,7 +15,31 @@
 """Dependency registration helpers for repositories which need to load bazel-skylib."""
 
 load("@bazel_skylib//lib:unittest.bzl", "register_unittest_toolchains")
+load("@bazel_skylib//lib:versions.bzl", "versions")
+
+def _globals_repo_impl(repository_ctx):
+    globals = {
+        "RunEnvironmentInfo": "5.3.0",
+    }
+    globals = {
+        k: k if versions.is_at_least(v, versions.get()) else "None" for k, v in globals.items()
+    }
+
+    repository_ctx.file("globals.bzl",
+        "globals = struct(\n%s\n)\n" % "\n".join(
+            ["    %s = %s" % item for item in globals.items()]
+        ))
+    repository_ctx.file("BUILD.bazel", "exports_files(['globals.bzl'])\n")
+
+_globals_repo = repository_rule(
+    implementation = _globals_repo_impl,
+    local = True,  # required to make sure the version is updated if the bazel server restarts
+)
+
+def globals_repo():
+    _globals_repo(name = "bazel_skylib_globals")
 
 def bazel_skylib_workspace():
     """Registers toolchains and declares repository dependencies of the bazel_skylib repository."""
     register_unittest_toolchains()
+    globals_repo()
