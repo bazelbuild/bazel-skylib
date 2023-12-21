@@ -11,6 +11,7 @@ register_toolchains(
 )
 
 bazel_dep(name = "platforms", version = "0.0.4")
+
 globals = use_extension("//:extension.bzl", "globals_extension")
 use_repo(globals, "bazel_skylib_globals")
 
