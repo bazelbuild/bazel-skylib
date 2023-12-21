@@ -16,8 +16,7 @@
 load("@bazel_skylib//:workspace.bzl", "globals_repo")
 
 def _globals_extension_impl(
-    module_ctx,  # @unused
-):
+        module_ctx):  # @unused
     globals_repo()
 
 globals_extension = module_extension(_globals_extension_impl)
