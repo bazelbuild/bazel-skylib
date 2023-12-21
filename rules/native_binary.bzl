@@ -84,7 +84,7 @@ _ATTRS = {
     "out": attr.string(mandatory = True, doc = "An output name for the copy of the binary"),
     "env": attr.string_dict(
         doc = "additional environment variables to set when the target is executed by " +
-              "`bazel`",
+              "`bazel`. Setting this requires bazel version 5.3.0 or later.",
         default = {},
     ),
 }
@@ -93,7 +93,8 @@ _TEST_ATTRS = dict(
     _ATTRS,
     env_inherit = attr.string_list(
         doc = "additional environment variables to inherit from the external " +
-              "environment when the test is executed by `bazel test`",
+              "environment when the test is executed by `bazel test`. " +
+              "Setting this requires bazel version 5.3.0 or later.",
         default = [],
     ),
 )

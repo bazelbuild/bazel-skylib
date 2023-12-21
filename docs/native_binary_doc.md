@@ -30,7 +30,7 @@ in genrule.tools for example. You can also augment the binary with runfiles.
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="native_binary-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="native_binary-data"></a>data |  data dependencies. See https://bazel.build/reference/be/common-definitions#typical.data   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional | <code>[]</code> |
-| <a id="native_binary-env"></a>env |  additional environment variables to set when the target is executed by <code>bazel</code>   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional | <code>{}</code> |
+| <a id="native_binary-env"></a>env |  additional environment variables to set when the target is executed by <code>bazel</code>. Setting this requires bazel version 5.3.0 or later.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional | <code>{}</code> |
 | <a id="native_binary-out"></a>out |  An output name for the copy of the binary   | String | required |  |
 | <a id="native_binary-src"></a>src |  path of the pre-built executable   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
 
@@ -57,8 +57,8 @@ the binary with runfiles.
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="native_test-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="native_test-data"></a>data |  data dependencies. See https://bazel.build/reference/be/common-definitions#typical.data   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional | <code>[]</code> |
-| <a id="native_test-env"></a>env |  additional environment variables to set when the target is executed by <code>bazel</code>   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional | <code>{}</code> |
-| <a id="native_test-env_inherit"></a>env_inherit |  additional environment variables to inherit from the external environment when the test is executed by <code>bazel test</code>   | List of strings | optional | <code>[]</code> |
+| <a id="native_test-env"></a>env |  additional environment variables to set when the target is executed by <code>bazel</code>. Setting this requires bazel version 5.3.0 or later.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional | <code>{}</code> |
+| <a id="native_test-env_inherit"></a>env_inherit |  additional environment variables to inherit from the external environment when the test is executed by <code>bazel test</code>. Setting this requires bazel version 5.3.0 or later.   | List of strings | optional | <code>[]</code> |
 | <a id="native_test-out"></a>out |  An output name for the copy of the binary   | String | required |  |
 | <a id="native_test-src"></a>src |  path of the pre-built executable   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
 
