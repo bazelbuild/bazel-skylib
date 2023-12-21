@@ -20,7 +20,6 @@ do, but they run the wrapped binary directly, instead of through Bash, so they
 don't depend on Bash and work with --shell_executable="".
 """
 
-load("@bazel_skylib//lib:versions.bzl", "versions")
 load("@bazel_skylib_globals//:globals.bzl", "globals")
 
 def _impl_rule(ctx):
@@ -57,12 +56,12 @@ def _impl_rule(ctx):
         ),
     ]
     if globals.RunEnvironmentInfo:
-        ret += [
+        ret.append(
             globals.RunEnvironmentInfo(
                 environment = ctx.attr.env,
                 inherited_environment = getattr(ctx.attr, "env_inherit", []),
             ),
-        ]
+        )
     return ret
 
 _ATTRS = {

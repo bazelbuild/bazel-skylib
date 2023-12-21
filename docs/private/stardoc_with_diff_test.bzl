@@ -40,6 +40,7 @@ def stardoc_with_diff_test(
         name: the stardoc target name
         bzl_library_target: the label of the `bzl_library` target to generate documentation for
         out_label: the label of the output MD file
+        deps: additional files loaded by the bazel library, if any
     """
     out_file = out_label.replace("//", "").replace(":", "/")
 
