@@ -142,6 +142,7 @@ native_test(
         "TEST_ENV_VAR": "test_env_var_value",
     },
     env_inherit = [
-        "HOME",  # only checked on POSIX
+        "HOME",  # for POSIX
+        "APPDATA",  # for Windows
     ],
 )
