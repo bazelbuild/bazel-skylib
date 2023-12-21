@@ -30,6 +30,11 @@ cc_binary(
     deps = ["@bazel_tools//tools/cpp/runfiles"],
 )
 
+cc_binary(
+    name="assertenv",
+    srcs=["assertenv.cc"],
+)
+
 # A rule that copies "assertarg"'s output as an opaque executable, simulating a
 # binary that's not built from source and needs to be wrapped in native_binary.
 copy_file(
@@ -52,6 +57,16 @@ copy_file(
     # Therefore we can use ".exe" on every platform.
     out = "assertdata_copy.exe",
     is_executable = True,
+)
+
+copy_file(
+    name="copy_assertenv_exe",
+    src=":assertenv",
+    # On Windows we need the ".exe" extension.
+    # On other platforms the extension doesn't matter.
+    # Therefore we can use ".exe" on every platform.
+    out="assertenv_copy.exe",
+    is_executable=True,
 )
 
 _ARGS = [
@@ -114,4 +129,20 @@ native_test(
     # On other platforms the extension doesn't matter.
     # Therefore we can use ".exe" on every platform.
     out = "data_from_binary_test.exe",
+)
+
+native_test(
+    name="env_test",
+    src=":copy_assertenv_exe",
+    # On Windows we need the ".exe" extension.
+    # On other platforms the extension doesn't matter.
+    # Therefore we can use ".exe" on every platform.
+    out="env_test.exe",
+    env={
+        "TEST_ENV_VAR": "test_env_var_value",
+    },
+    env_inherit=[
+        "HOME",  # for POSIX
+        "HOMEPATH",  # for Windows
+    ],
 )
