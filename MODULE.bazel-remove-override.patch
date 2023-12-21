@@ -1,6 +1,6 @@
 --- MODULE.bazel
 +++ MODULE.bazel
-@@ -22,8 +22,8 @@
+@@ -24,8 +24,8 @@
  # Needed for bazelci and for building distribution tarballs.
  # If using an unreleased version of bazel_skylib via git_override, apply
  # MODULE.bazel-remove-override.patch to remove the following lines:
