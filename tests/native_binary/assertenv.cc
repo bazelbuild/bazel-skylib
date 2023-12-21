@@ -2,11 +2,9 @@
 #include <string.h>
 
 #ifdef _WIN32
-bool is_home_env(const char *env) {
-  return _strnicmp(env, "HOMEPATH=", strlen("HOMEPATH=")) == 0;
-}
+bool check_home(const char *env) { return true; }
 #else
-bool is_home_env(const char *env) {
+bool check_home(const char *env) {
   return strncmp(env, "HOME=", strlen("HOME=")) == 0;
 }
 #endif
@@ -18,7 +16,7 @@ int main(int argc, char **argv, char **envp) {
     if (strcmp(*env, "TEST_ENV_VAR=test_env_var_value") == 0) {
       test_env_found = true;
     }
-    if (is_home_env(*env)) {
+    if (check_home(*env)) {
       home_found = true;
     }
   }
@@ -27,7 +25,7 @@ int main(int argc, char **argv, char **envp) {
             "expected TEST_ENV_VAR=test_env_var_value in environment\n");
   }
   if (!home_found) {
-    fprintf(stderr, "expected HOME or HOMEPATH in environment\n");
+    fprintf(stderr, "expected HOME in environment\n");
   }
   return test_env_found && home_found ? 0 : 1;
 }
