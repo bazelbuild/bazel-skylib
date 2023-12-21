@@ -30,7 +30,8 @@ load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
 def stardoc_with_diff_test(
         name,
         bzl_library_target,
-        out_label):
+        out_label,
+        deps = None):
     """Creates a stardoc target coupled with a `diff_test` for a given `bzl_library`.
 
     This is helpful for minimizing boilerplate in repos with lots of stardoc targets.
@@ -47,7 +48,7 @@ def stardoc_with_diff_test(
         name = name,
         out = out_file.replace(".md", "-docgen.md"),
         input = bzl_library_target + ".bzl",
-        deps = [bzl_library_target],
+        deps = [bzl_library_target] + (deps or []),
     )
 
     # Ensure that the generated MD has been updated in the local source tree
