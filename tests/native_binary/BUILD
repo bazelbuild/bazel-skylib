@@ -31,8 +31,8 @@ cc_binary(
 )
 
 cc_binary(
-    name="assertenv",
-    srcs=["assertenv.cc"],
+    name = "assertenv",
+    srcs = ["assertenv.cc"],
 )
 
 # A rule that copies "assertarg"'s output as an opaque executable, simulating a
@@ -60,13 +60,13 @@ copy_file(
 )
 
 copy_file(
-    name="copy_assertenv_exe",
-    src=":assertenv",
+    name = "copy_assertenv_exe",
+    src = ":assertenv",
     # On Windows we need the ".exe" extension.
     # On other platforms the extension doesn't matter.
     # Therefore we can use ".exe" on every platform.
-    out="assertenv_copy.exe",
-    is_executable=True,
+    out = "assertenv_copy.exe",
+    is_executable = True,
 )
 
 _ARGS = [
@@ -132,16 +132,16 @@ native_test(
 )
 
 native_test(
-    name="env_test",
-    src=":copy_assertenv_exe",
+    name = "env_test",
+    src = ":copy_assertenv_exe",
     # On Windows we need the ".exe" extension.
     # On other platforms the extension doesn't matter.
     # Therefore we can use ".exe" on every platform.
-    out="env_test.exe",
-    env={
+    out = "env_test.exe",
+    env = {
         "TEST_ENV_VAR": "test_env_var_value",
     },
-    env_inherit=[
+    env_inherit = [
         "HOME",  # for POSIX
         "HOMEPATH",  # for Windows
     ],

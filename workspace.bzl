@@ -22,13 +22,16 @@ def _globals_repo_impl(repository_ctx):
         "RunEnvironmentInfo": "5.3.0",
     }
     globals = {
-        k: k if versions.is_at_least(v, versions.get()) else "None" for k, v in globals.items()
+        k: k if versions.is_at_least(v, versions.get()) else "None"
+        for k, v in globals.items()
     }
 
-    repository_ctx.file("globals.bzl",
+    repository_ctx.file(
+        "globals.bzl",
         "globals = struct(\n%s\n)\n" % "\n".join(
-            ["    %s = %s" % item for item in globals.items()]
-        ))
+            ["    %s = %s" % item for item in globals.items()],
+        ),
+    )
     repository_ctx.file("BUILD.bazel", "exports_files(['globals.bzl'])\n")
 
 _globals_repo = repository_rule(
