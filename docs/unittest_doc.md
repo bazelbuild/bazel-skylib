@@ -426,7 +426,7 @@ Registers the toolchains for unittest users.
 ## unittest.make
 
 <pre>
-unittest.make(<a href="#unittest.make-impl">impl</a>, <a href="#unittest.make-attrs">attrs</a>, <a href="#unittest.make-doc">doc</a>)
+unittest.make(<a href="#unittest.make-impl">impl</a>, <a href="#unittest.make-attrs">attrs</a>, <a href="#unittest.make-doc">doc</a>, <a href="#unittest.make-toolchains">toolchains</a>)
 </pre>
 
 Creates a unit test rule from its implementation function.
@@ -438,6 +438,9 @@ implementation function's name so that it can be printed in test feedback.
 
 The optional `attrs` argument can be used to define dependencies for this
 test, in order to form unit tests of rules.
+
+The optional `toolchains` argument can be used to define toolchain
+dependencies for this test.
 
 An example of a unit test:
 
@@ -463,6 +466,7 @@ Recall that names of test rules must end in `_test`.
 | <a id="unittest.make-impl"></a>impl |  The implementation function of the unit test.   |  none |
 | <a id="unittest.make-attrs"></a>attrs |  An optional dictionary to supplement the attrs passed to the unit test's <code>rule()</code> constructor.   |  <code>{}</code> |
 | <a id="unittest.make-doc"></a>doc |  A description of the rule that can be extracted by documentation generating tools.   |  <code>""</code> |
+| <a id="unittest.make-toolchains"></a>toolchains |  An optional list to supplement the toolchains passed to the unit test's <code>rule()</code> constructor.   |  <code>[]</code> |
 
 **RETURNS**
 
