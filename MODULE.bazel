@@ -28,6 +28,7 @@ local_path_override(
     module_name = "bazel_skylib_gazelle_plugin",
     path = "gazelle",
 )
+
 local_path_override(
     module_name = "bazel_features",
     path = "bazel_features_stub",
