@@ -15,34 +15,16 @@
 """Dependency registration helpers for repositories which need to load bazel-skylib."""
 
 load("@bazel_skylib//lib:unittest.bzl", "register_unittest_toolchains")
-load("@bazel_skylib//lib:versions.bzl", "versions")
-
-def _globals_repo_impl(repository_ctx):
-    globals = {
-        "RunEnvironmentInfo": "5.3.0",
-    }
-    globals = {
-        k: k if versions.is_at_least(v, versions.get()) else "None"
-        for k, v in globals.items()
-    }
-
-    repository_ctx.file(
-        "globals.bzl",
-        "globals = struct(\n%s\n)\n" % "\n".join(
-            ["    %s = %s" % item for item in globals.items()],
-        ),
-    )
-    repository_ctx.file("BUILD.bazel", "exports_files(['globals.bzl'])\n")
-
-_globals_repo = repository_rule(
-    implementation = _globals_repo_impl,
-    local = True,  # required to make sure the version is updated if the bazel server restarts
-)
-
-def globals_repo():
-    _globals_repo(name = "bazel_skylib_globals")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
 def bazel_skylib_workspace():
     """Registers toolchains and declares repository dependencies of the bazel_skylib repository."""
     register_unittest_toolchains()
-    globals_repo()
+    maybe(
+        http_archive,
+        name = "bazel_features",
+        sha256 = "b8789c83c893d7ef3041d3f2795774936b27ff61701a705df52fd41d6ddbf692",
+        strip_prefix = "bazel_features-1.2.0",
+        url = "https://github.com/bazel-contrib/bazel_features/releases/download/v1.2.0/bazel_features-v1.2.0.tar.gz",
+    )

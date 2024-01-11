@@ -18,12 +18,16 @@ These rules let you wrap a pre-built binary or script in a conventional binary
 and test rule respectively. They fulfill the same goal as sh_binary and sh_test
 do, but they run the wrapped binary directly, instead of through Bash, so they
 don't depend on Bash and work with --shell_executable="".
+
+If `bazel_skylib` is loaded from `WORKSPACE` rather than with bzlmod, using
+this library requires additional `WORKSPACE` setup as explained in the
+[release page](https://github.com/bazelbuild/bazel-skylib/releases).
 """
 
-load("@bazel_skylib_globals//:globals.bzl", "globals")
+load("@bazel_features//:features.bzl", "bazel_features")
 
 def _impl_rule(ctx):
-    if not globals.RunEnvironmentInfo:
+    if not bazel_features.globals.RunEnvironmentInfo:
         for attr in ("env", "env_inherit"):
             if getattr(ctx.attr, attr, None):
                 fail("Attribute %s specified for %s is only supported with bazel >= 5.3.0" %
@@ -55,9 +59,9 @@ def _impl_rule(ctx):
             runfiles = runfiles,
         ),
     ]
-    if globals.RunEnvironmentInfo:
+    if bazel_features.globals.RunEnvironmentInfo:
         ret.append(
-            globals.RunEnvironmentInfo(
+            bazel_features.globals.RunEnvironmentInfo(
                 environment = ctx.attr.env,
                 inherited_environment = getattr(ctx.attr, "env_inherit", []),
             ),

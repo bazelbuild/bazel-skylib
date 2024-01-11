@@ -1,6 +1,6 @@
 --- MODULE.bazel
 +++ MODULE.bazel
-@@ -25,8 +25,8 @@
+@@ -23,12 +23,3 @@
  # Needed for bazelci and for building distribution tarballs.
  # If using an unreleased version of bazel_skylib via git_override, apply
  # MODULE.bazel-remove-override.patch to remove the following lines:
@@ -9,8 +9,7 @@
 -    module_name = "bazel_skylib_gazelle_plugin",
 -    path = "gazelle",
 -)
-+# bazel_dep(name = "bazel_skylib_gazelle_plugin", dev_dependency = True)
-+# local_path_override(
-+#     module_name = "bazel_skylib_gazelle_plugin",
-+#     path = "gazelle",
-+# )
+-local_path_override(
+-    module_name = "bazel_features",
+-    path = "bazel_features_stub",
+-)

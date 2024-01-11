@@ -7,6 +7,13 @@ and test rule respectively. They fulfill the same goal as sh_binary and sh_test
 do, but they run the wrapped binary directly, instead of through Bash, so they
 don't depend on Bash and work with --shell_executable="".
 
+If `bazel_skylib` is loaded in `WORKSPACE`, using this library requires the
+following additional setup:
+```starlark
+load("@bazel_features//:deps.bzl", "bazel_features_deps")
+bazel_features_deps()
+```
+
 
 <a id="native_binary"></a>
 

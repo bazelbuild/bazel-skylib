@@ -11,9 +11,7 @@ register_toolchains(
 )
 
 bazel_dep(name = "platforms", version = "0.0.4")
-
-globals = use_extension("//:extension.bzl", "globals_extension")
-use_repo(globals, "bazel_skylib_globals")
+bazel_dep(name = "bazel_features", version = "1.2.0")
 
 ### INTERNAL ONLY - lines after this are not included in the release packaging.
 
@@ -29,4 +27,8 @@ bazel_dep(name = "bazel_skylib_gazelle_plugin", dev_dependency = True)
 local_path_override(
     module_name = "bazel_skylib_gazelle_plugin",
     path = "gazelle",
+)
+local_path_override(
+    module_name = "bazel_features",
+    path = "bazel_features_stub",
 )
