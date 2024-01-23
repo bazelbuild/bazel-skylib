@@ -1,4 +1,3 @@
-
 """Unit tests for expansion.bzl."""
 
 load("//lib:expansion.bzl", "expansion")
@@ -260,16 +259,16 @@ _test_toolchain = rule(
 def _mock_expand_location(input_str):
     return input_str.replace(
         "$(location :" + _TEST_DEP_TARGET_NAME + ")",
-        _MOCK_LOCATION_PATH_OF_DUMMY
+        _MOCK_LOCATION_PATH_OF_DUMMY,
     ).replace(
         "$(execpath :" + _TEST_DEP_TARGET_NAME + ")",
-        _MOCK_EXECPATH_PATH_OF_DUMMY
+        _MOCK_EXECPATH_PATH_OF_DUMMY,
     ).replace(
         "$(rootpath :" + _TEST_DEP_TARGET_NAME + ")",
-        _MOCK_ROOTPATH_PATH_OF_DUMMY
+        _MOCK_ROOTPATH_PATH_OF_DUMMY,
     ).replace(
         "$(rlocationpath :" + _TEST_DEP_TARGET_NAME + ")",
-        _MOCK_RLOCATIONPATH_PATH_OF_DUMMY
+        _MOCK_RLOCATIONPATH_PATH_OF_DUMMY,
     )
 
 def _expand_with_manual_dict_test_impl(ctx):
@@ -308,7 +307,7 @@ def _expand_with_manual_dict_and_location_test_impl(ctx):
     resolved_dict = expansion.expand_with_manual_dict_and_location(
         _mock_expand_location,
         _TOOLCHAIN_DICT,
-        _ENV_DICT
+        _ENV_DICT,
     )
 
     # Check that the inputs are not mutated.
@@ -370,7 +369,7 @@ def _expand_with_toolchains_with_additional_dict_test_impl(ctx):
     resolved_dict = expansion.expand_with_toolchains(
         env.ctx,
         _ENV_DICT,
-        additional_lookup_dict = additional_lookup_dict
+        additional_lookup_dict = additional_lookup_dict,
     )
 
     # Check that the inputs are not mutated.
@@ -383,6 +382,7 @@ def _expand_with_toolchains_with_additional_dict_test_impl(ctx):
     updated_expected_dict = _EXPECTED_RESOLVED_DICT_NO_LOCATION | {
         "UNRECOGNIZED_VAR": "naw, it's fine now.",
     }
+
     # Check all output resolved values against expected resolved values.
     for env_key, _ in _ENV_DICT.items():
         expected_val = updated_expected_dict[env_key]
@@ -392,7 +392,7 @@ def _expand_with_toolchains_with_additional_dict_test_impl(ctx):
     return unittest.end(env)
 
 _expand_with_toolchains_with_additional_dict_test = unittest.make(
-    _expand_with_toolchains_with_additional_dict_test_impl
+    _expand_with_toolchains_with_additional_dict_test_impl,
 )
 
 def _expand_with_toolchains_attr_test_impl(ctx):
@@ -423,7 +423,7 @@ _expand_with_toolchains_attr_test = unittest.make(
     _expand_with_toolchains_attr_test_impl,
     attrs = {
         "env": attr.string_dict(),
-    }
+    },
 )
 
 def _expand_with_toolchains_attr_with_additional_dict_test_impl(ctx):
@@ -439,7 +439,7 @@ def _expand_with_toolchains_attr_with_additional_dict_test_impl(ctx):
 
     resolved_dict = expansion.expand_with_toolchains_attr(
         env.ctx,
-        additional_lookup_dict = additional_lookup_dict
+        additional_lookup_dict = additional_lookup_dict,
     )
 
     # Check that the inputs are not mutated.
@@ -452,6 +452,7 @@ def _expand_with_toolchains_attr_with_additional_dict_test_impl(ctx):
     updated_expected_dict = _EXPECTED_RESOLVED_DICT_NO_LOCATION | {
         "UNRECOGNIZED_VAR": "naw, it's fine now.",
     }
+
     # Check all output resolved values against expected resolved values.
     for env_key, _ in env.ctx.attr.env.items():
         expected_val = updated_expected_dict[env_key]
@@ -464,7 +465,7 @@ _expand_with_toolchains_attr_with_additional_dict_test = unittest.make(
     _expand_with_toolchains_attr_with_additional_dict_test_impl,
     attrs = {
         "env": attr.string_dict(),
-    }
+    },
 )
 
 def _expand_with_toolchains_and_location_test_impl(ctx):
@@ -477,7 +478,7 @@ def _expand_with_toolchains_and_location_test_impl(ctx):
     resolved_dict = expansion.expand_with_toolchains_and_location(
         env.ctx,
         [ctx.attr.target],
-        _ENV_DICT
+        _ENV_DICT,
     )
 
     # Check that the inputs are not mutated.
@@ -499,7 +500,7 @@ _expand_with_toolchains_and_location_test = unittest.make(
     _expand_with_toolchains_and_location_test_impl,
     attrs = {
         "target": attr.label(),
-    }
+    },
 )
 
 def _expand_with_toolchains_and_location_with_additional_dict_test_impl(ctx):
@@ -517,7 +518,7 @@ def _expand_with_toolchains_and_location_with_additional_dict_test_impl(ctx):
         env.ctx,
         [ctx.attr.target],
         _ENV_DICT,
-        additional_lookup_dict = additional_lookup_dict
+        additional_lookup_dict = additional_lookup_dict,
     )
 
     # Check that the inputs are not mutated.
@@ -530,6 +531,7 @@ def _expand_with_toolchains_and_location_with_additional_dict_test_impl(ctx):
     updated_expected_dict = _EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION | {
         "UNRECOGNIZED_VAR": "naw, it's fine now.",
     }
+
     # Check all output resolved values against expected resolved values.
     for env_key, _ in _ENV_DICT.items():
         expected_val = updated_expected_dict[env_key]
@@ -542,7 +544,7 @@ _expand_with_toolchains_and_location_with_additional_dict_test = unittest.make(
     _expand_with_toolchains_and_location_with_additional_dict_test_impl,
     attrs = {
         "target": attr.label(),
-    }
+    },
 )
 
 def _expand_with_toolchains_and_location_attr_test_impl(ctx):
@@ -574,7 +576,7 @@ _expand_with_toolchains_and_location_attr_test = unittest.make(
     attrs = {
         "deps": attr.label_list(),
         "env": attr.string_dict(),
-    }
+    },
 )
 
 def _expand_with_toolchains_and_location_attr_with_additional_dict_test_impl(ctx):
@@ -590,7 +592,7 @@ def _expand_with_toolchains_and_location_attr_with_additional_dict_test_impl(ctx
 
     resolved_dict = expansion.expand_with_toolchains_and_location_attr(
         env.ctx,
-        additional_lookup_dict = additional_lookup_dict
+        additional_lookup_dict = additional_lookup_dict,
     )
 
     # Check that the inputs are not mutated.
@@ -603,6 +605,7 @@ def _expand_with_toolchains_and_location_attr_with_additional_dict_test_impl(ctx
     updated_expected_dict = _EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION | {
         "UNRECOGNIZED_VAR": "naw, it's fine now.",
     }
+
     # Check all output resolved values against expected resolved values.
     for env_key, _ in env.ctx.attr.env.items():
         expected_val = updated_expected_dict[env_key]
@@ -616,7 +619,7 @@ _expand_with_toolchains_and_location_attr_with_additional_dict_test = unittest.m
     attrs = {
         "deps": attr.label_list(),
         "env": attr.string_dict(),
-    }
+    },
 )
 
 # buildifier: disable=unnamed-macro

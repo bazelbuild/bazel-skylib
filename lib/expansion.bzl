@@ -1,4 +1,3 @@
-
 """Skylib module containing functions that aid in environment variable expansion."""
 
 def _valid_char_for_env_var_name(char):
@@ -10,7 +9,7 @@ def _key_to_be_expanded(str_with_key, key, start_of_key_index):
     dollar_sign_count = 0
     for index in range(start_of_key_index, -1, -1):
         if str_with_key[index] != "$":
-          break
+            break
         dollar_sign_count += 1
 
     # Check that the key is correctly matched.
@@ -30,6 +29,7 @@ def _expand_key_in_str(key, val, unexpanded_str):
     val_len = len(val)
     searched_index = 0
     expanded_str = unexpanded_str
+
     # Max iterations at the length of the str; will likely break out earlier.
     for _ in range(len(expanded_str)):
         used_key_index = expanded_str.find(key, searched_index)
@@ -42,7 +42,7 @@ def _expand_key_in_str(key, val, unexpanded_str):
                 expanded_str = expanded_str.replace(key, val, 1)
             else:
                 expanded_str = (
-                    expanded_str[0:searched_index-1] +
+                    expanded_str[0:searched_index - 1] +
                     expanded_str[searched_index:].replace(key, val, 1)
                 )
             searched_index += val_len
@@ -60,11 +60,13 @@ def _expand_all_keys_in_str_from_dict(replacement_dict, unexpanded_str):
             continue
         considered_key_formats = ("${}", "${{{}}}", "$({})")
         formatted_keys = [key_format.format(avail_key) for key_format in considered_key_formats]
+
         # Skip self-references (e.g. {"VAR": "$(VAR)"})
         # This may happen (and is ok) for the `env` attribute, where keys can be reused to be
         # expanded by the resolved dict.
         if corresponding_val in formatted_keys:
             continue
+
         # Expand each format style of this key, if it exists.
         for formatted_key in formatted_keys:
             expanded_val = _expand_key_in_str(formatted_key, corresponding_val, expanded_val)
@@ -76,6 +78,7 @@ def _expand_tc_all_keys_in_str(resolved_replacement_dict, env_replacement_dict, 
 
     expanded_val = unexpanded_str
     prev_val = expanded_val
+
     # Max iterations at the length of the str; will likely break out earlier.
     for _ in range(len(expanded_val)):
         # Expand values first from the `env` attribute, then by the toolchain resolved values.
@@ -99,6 +102,7 @@ def _expand_tc_and_loc_all_keys_in_str(
 
     expanded_val = unexpanded_str
     prev_val = expanded_val
+
     # Max iterations at the length of the str; will likely break out earlier.
     for _ in range(len(expanded_val)):
         # First let's try the safe `location` (et al) expansion logic.
@@ -146,7 +150,7 @@ def _expand_with_manual_dict(resolution_dict, source_env_dict):
             _expand_tc_all_keys_in_str(
                 resolution_dict,
                 source_env_dict,
-                unexpanded_val
+                unexpanded_val,
             )
         )
     return expanded_envs
@@ -182,7 +186,8 @@ def _expand_with_manual_dict_and_location(expand_location, resolution_dict, sour
                 expand_location,
                 resolution_dict,
                 source_env_dict,
-                unexpanded_val)
+                unexpanded_val,
+            )
         )
     return expanded_envs
 
@@ -245,15 +250,17 @@ def _expand_with_toolchains_and_location(
       A new dict with all key/values from `source_env_dict`, where all values have been recursively
       expanded.
     """
+
     def _simpler_expand_location(input_str):
         return ctx.expand_location(input_str, deps)
+
     resolution_dict = ctx.var
     if additional_lookup_dict:
         resolution_dict = resolution_dict | additional_lookup_dict
     return _expand_with_manual_dict_and_location(
         _simpler_expand_location,
         resolution_dict,
-        source_env_dict
+        source_env_dict,
     )
 
 def _expand_with_toolchains_attr(ctx, env_attr_name = "env", additional_lookup_dict = None):
@@ -284,7 +291,7 @@ def _expand_with_toolchains_attr(ctx, env_attr_name = "env", additional_lookup_d
     return _expand_with_toolchains(
         ctx,
         getattr(ctx.attr, env_attr_name),
-        additional_lookup_dict = additional_lookup_dict
+        additional_lookup_dict = additional_lookup_dict,
     )
 
 def _expand_with_toolchains_and_location_attr(
@@ -325,7 +332,7 @@ def _expand_with_toolchains_and_location_attr(
         ctx,
         getattr(ctx.attr, deps_attr_name),
         getattr(ctx.attr, env_attr_name),
-        additional_lookup_dict = additional_lookup_dict
+        additional_lookup_dict = additional_lookup_dict,
     )
 
 expansion = struct(
