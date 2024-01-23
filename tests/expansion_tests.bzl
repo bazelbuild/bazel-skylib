@@ -275,7 +275,7 @@ def _mock_expand_location(input_str):
         _MOCK_RLOCATIONPATH_PATH_OF_DUMMY,
     )
 
-def fix_platform_dependent_path_for_assertions(platform_dependent_val):
+def _fix_platform_dependent_path_for_assertions(platform_dependent_val):
     return platform_dependent_val.replace(
         _MAC_FASTBUILD_SUBPATH,
         _LINUX_FASTBUILD_SUBPATH,
@@ -304,7 +304,7 @@ def _expand_with_manual_dict_test_impl(ctx):
     for env_key, _ in _ENV_DICT.items():
         expected_val = _EXPECTED_RESOLVED_DICT_NO_LOCATION[env_key]
         resolved_val = resolved_dict[env_key]
-        resolved_val = fix_platform_dependent_path_for_assertions(resolved_val)
+        resolved_val = _fix_platform_dependent_path_for_assertions(resolved_val)
         asserts.equals(env, expected_val, resolved_val)
 
     return unittest.end(env)
@@ -335,7 +335,7 @@ def _expand_with_manual_dict_and_location_test_impl(ctx):
     for env_key, _ in _ENV_DICT.items():
         expected_val = _EXPECTED_RESOLVED_DICT_WITH_MOCKED_LOCATION[env_key]
         resolved_val = resolved_dict[env_key]
-        resolved_val = fix_platform_dependent_path_for_assertions(resolved_val)
+        resolved_val = _fix_platform_dependent_path_for_assertions(resolved_val)
         asserts.equals(env, expected_val, resolved_val)
 
     return unittest.end(env)
@@ -364,7 +364,7 @@ def _expand_with_toolchains_test_impl(ctx):
     for env_key, _ in _ENV_DICT.items():
         expected_val = _EXPECTED_RESOLVED_DICT_NO_LOCATION[env_key]
         resolved_val = resolved_dict[env_key]
-        resolved_val = fix_platform_dependent_path_for_assertions(resolved_val)
+        resolved_val = _fix_platform_dependent_path_for_assertions(resolved_val)
         asserts.equals(env, expected_val, resolved_val)
 
     return unittest.end(env)
@@ -403,7 +403,7 @@ def _expand_with_toolchains_with_additional_dict_test_impl(ctx):
     for env_key, _ in _ENV_DICT.items():
         expected_val = updated_expected_dict[env_key]
         resolved_val = resolved_dict[env_key]
-        resolved_val = fix_platform_dependent_path_for_assertions(resolved_val)
+        resolved_val = _fix_platform_dependent_path_for_assertions(resolved_val)
         asserts.equals(env, expected_val, resolved_val)
 
     return unittest.end(env)
@@ -432,7 +432,7 @@ def _expand_with_toolchains_attr_test_impl(ctx):
     for env_key, _ in env.ctx.attr.env.items():
         expected_val = _EXPECTED_RESOLVED_DICT_NO_LOCATION[env_key]
         resolved_val = resolved_dict[env_key]
-        resolved_val = fix_platform_dependent_path_for_assertions(resolved_val)
+        resolved_val = _fix_platform_dependent_path_for_assertions(resolved_val)
         asserts.equals(env, expected_val, resolved_val)
 
     return unittest.end(env)
@@ -475,7 +475,7 @@ def _expand_with_toolchains_attr_with_additional_dict_test_impl(ctx):
     for env_key, _ in env.ctx.attr.env.items():
         expected_val = updated_expected_dict[env_key]
         resolved_val = resolved_dict[env_key]
-        resolved_val = fix_platform_dependent_path_for_assertions(resolved_val)
+        resolved_val = _fix_platform_dependent_path_for_assertions(resolved_val)
         asserts.equals(env, expected_val, resolved_val)
 
     return unittest.end(env)
@@ -511,7 +511,7 @@ def _expand_with_toolchains_and_location_test_impl(ctx):
     for env_key, _ in _ENV_DICT.items():
         expected_val = _EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION[env_key]
         resolved_val = resolved_dict[env_key]
-        resolved_val = fix_platform_dependent_path_for_assertions(resolved_val)
+        resolved_val = _fix_platform_dependent_path_for_assertions(resolved_val)
         asserts.equals(env, expected_val, resolved_val)
 
     return unittest.end(env)
@@ -556,7 +556,7 @@ def _expand_with_toolchains_and_location_with_additional_dict_test_impl(ctx):
     for env_key, _ in _ENV_DICT.items():
         expected_val = updated_expected_dict[env_key]
         resolved_val = resolved_dict[env_key]
-        resolved_val = fix_platform_dependent_path_for_assertions(resolved_val)
+        resolved_val = _fix_platform_dependent_path_for_assertions(resolved_val)
         asserts.equals(env, expected_val, resolved_val)
 
     return unittest.end(env)
@@ -588,7 +588,7 @@ def _expand_with_toolchains_and_location_attr_test_impl(ctx):
     for env_key, _ in env.ctx.attr.env.items():
         expected_val = _EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION[env_key]
         resolved_val = resolved_dict[env_key]
-        resolved_val = fix_platform_dependent_path_for_assertions(resolved_val)
+        resolved_val = _fix_platform_dependent_path_for_assertions(resolved_val)
         asserts.equals(env, expected_val, resolved_val)
 
     return unittest.end(env)
@@ -632,7 +632,7 @@ def _expand_with_toolchains_and_location_attr_with_additional_dict_test_impl(ctx
     for env_key, _ in env.ctx.attr.env.items():
         expected_val = updated_expected_dict[env_key]
         resolved_val = resolved_dict[env_key]
-        resolved_val = fix_platform_dependent_path_for_assertions(resolved_val)
+        resolved_val = _fix_platform_dependent_path_for_assertions(resolved_val)
         asserts.equals(env, expected_val, resolved_val)
 
     return unittest.end(env)
