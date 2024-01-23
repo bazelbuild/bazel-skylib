@@ -284,7 +284,6 @@ def fix_platform_dependent_path_for_assertions(platform_dependent_val):
         _LINUX_FASTBUILD_SUBPATH,
     )
 
-
 def _expand_with_manual_dict_test_impl(ctx):
     """Test `expansion.expand_with_manual_dict()`"""
     env = unittest.begin(ctx)
