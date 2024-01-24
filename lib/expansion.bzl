@@ -72,27 +72,7 @@ def _expand_all_keys_in_str_from_dict(replacement_dict, unexpanded_str):
             expanded_val = _expand_key_in_str(formatted_key, corresponding_val, expanded_val)
     return expanded_val
 
-def _expand_tc_all_keys_in_str(resolved_replacement_dict, env_replacement_dict, unexpanded_str):
-    if unexpanded_str.find("$") < 0:
-        return unexpanded_str
-
-    expanded_val = unexpanded_str
-    prev_val = expanded_val
-
-    # Max iterations at the length of the str; will likely break out earlier.
-    for _ in range(len(expanded_val)):
-        # Expand values first from the `env` attribute, then by the toolchain resolved values.
-        expanded_val = _expand_all_keys_in_str_from_dict(env_replacement_dict, expanded_val)
-        expanded_val = _expand_all_keys_in_str_from_dict(resolved_replacement_dict, expanded_val)
-
-        # Break out early if nothing changed in this iteration.
-        if prev_val == expanded_val:
-            break
-        prev_val = expanded_val
-
-    return expanded_val
-
-def _expand_tc_and_loc_all_keys_in_str(
+def _expand_all_keys_in_str(
         expand_location,
         resolved_replacement_dict,
         env_replacement_dict,
@@ -107,7 +87,8 @@ def _expand_tc_and_loc_all_keys_in_str(
     for _ in range(len(expanded_val)):
         # First let's try the safe `location` (et al) expansion logic.
         # `$VAR`, `$(VAR)`, and `${VAR}` will be left untouched.
-        expanded_val = expand_location(expanded_val)
+        if expand_location:
+            expanded_val = expand_location(expanded_val)
 
         # Break early if nothing left to expand.
         if expanded_val.find("$") < 0:
@@ -147,7 +128,8 @@ def _expand_with_manual_dict(resolution_dict, source_env_dict):
     expanded_envs = {}
     for env_key, unexpanded_val in source_env_dict.items():
         expanded_envs[env_key] = (
-            _expand_tc_all_keys_in_str(
+            _expand_all_keys_in_str(
+                None,  # No `expand_location` available
                 resolution_dict,
                 source_env_dict,
                 unexpanded_val,
@@ -182,7 +164,7 @@ def _expand_with_manual_dict_and_location(expand_location, resolution_dict, sour
     expanded_envs = {}
     for env_key, unexpanded_val in source_env_dict.items():
         expanded_envs[env_key] = (
-            _expand_tc_and_loc_all_keys_in_str(
+            _expand_all_keys_in_str(
                 expand_location,
                 resolution_dict,
                 source_env_dict,
@@ -197,6 +179,7 @@ def _expand_with_toolchains(ctx, source_env_dict, additional_lookup_dict = None)
 
     All keys of `source_env_dict` are returned in the resultant dict with values expanded by
     lookups via `ctx.var` dict (unioned with optional `additional_lookup_dict` parameter).
+    Expansion occurs recursively through all given dicts.
     This function does not modify any of the given parameters.
 
     Args:
@@ -205,7 +188,7 @@ def _expand_with_toolchains(ctx, source_env_dict, additional_lookup_dict = None)
                 environment variable expansion.
         source_env_dict:    (Required) The source for all desired expansions. All key/value pairs
                             will appear within the returned dictionary, with all values fully
-                            expanded by lookups in `resolution_dict`.
+                            expanded by lookups in `ctx.var` and optional `additional_lookup_dict`.
         additional_lookup_dict: (Optional) Additional dict to be used with `ctx.var` (union) for
                                 variable expansion.
 
@@ -213,10 +196,11 @@ def _expand_with_toolchains(ctx, source_env_dict, additional_lookup_dict = None)
       A new dict with all key/values from `source_env_dict`, where all values have been recursively
       expanded.
     """
-    resolution_dict = ctx.var
-    if additional_lookup_dict:
-        resolution_dict = resolution_dict | additional_lookup_dict
-    return _expand_with_manual_dict(resolution_dict, source_env_dict)
+    additional_lookup_dict = additional_lookup_dict or {}
+    return _expand_with_manual_dict(
+        ctx.var | additional_lookup_dict,
+        source_env_dict,
+    )
 
 def _expand_with_toolchains_and_location(
         ctx,
@@ -242,7 +226,7 @@ def _expand_with_toolchains_and_location(
         source_env_dict:    (Required) The source for all desired expansions. All key/value pairs
                             will appear within the returned dictionary, with all values fully
                             expanded by the logic expansion logic of `expand_location` and by
-                            lookup in `resolution_dict`.
+                            lookups in `ctx.var` and optional `additional_lookup_dict`.
         additional_lookup_dict: (Optional) Additional dict to be used with `ctx.var` (union) for
                                 variable expansion.
 
@@ -254,12 +238,10 @@ def _expand_with_toolchains_and_location(
     def _simpler_expand_location(input_str):
         return ctx.expand_location(input_str, deps)
 
-    resolution_dict = ctx.var
-    if additional_lookup_dict:
-        resolution_dict = resolution_dict | additional_lookup_dict
+    additional_lookup_dict = additional_lookup_dict or {}
     return _expand_with_manual_dict_and_location(
         _simpler_expand_location,
-        resolution_dict,
+        ctx.var | additional_lookup_dict,
         source_env_dict,
     )
 
@@ -279,7 +261,8 @@ def _expand_with_toolchains_attr(ctx, env_attr_name = "env", additional_lookup_d
                 necessary attributes via `ctx.attr.<attr_name>`.
         env_attr_name:  (Optional) The name of the attribute that is used as the source for all
                         desired expansions. All key/value pairs will appear within the returned
-                        dictionary, with all values fully expanded by lookups in `resolution_dict`.
+                        dictionary, with all values fully expanded by lookups in `ctx.var` and
+                        optional `additional_lookup_dict`.
                         Default value is "env".
         additional_lookup_dict: (Optional) Additional dict to be used with `ctx.var` (union) for
                                 variable expansion.
@@ -319,7 +302,8 @@ def _expand_with_toolchains_and_location_attr(
                         expressions.
         env_attr_name:  (Optional) The name of the attribute that is used as the source for all
                         desired expansions. All key/value pairs will appear within the returned
-                        dictionary, with all values fully expanded by lookups in `resolution_dict`.
+                        dictionary, with all values fully expanded by lookups in `ctx.var` and
+                        optional `additional_lookup_dict`.
                         Default value is "env".
         additional_lookup_dict: (Optional) Additional dict to be used with `ctx.var` (union) for
                                 variable expansion.

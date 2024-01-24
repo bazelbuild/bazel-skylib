@@ -33,9 +33,15 @@ _ENV_DICT = {
     "TOOLCHAIN_ENV_VAR_RAW": "$TOOLCHAIN_ENV_VAR",
     "TOOLCHAIN_ENV_VAR_PAREN": "$(TOOLCHAIN_ENV_VAR)",
     "TOOLCHAIN_ENV_VAR_CURLY": "${TOOLCHAIN_ENV_VAR}",
+    "TOOLCHAIN_ENV_VAR2_RAW": "$TOOLCHAIN_ENV_VAR2",
+    "TOOLCHAIN_ENV_VAR2_PAREN": "$(TOOLCHAIN_ENV_VAR2)",
+    "TOOLCHAIN_ENV_VAR2_CURLY": "${TOOLCHAIN_ENV_VAR2}",
     "TOOLCHAIN_TO_LOCATION_ENV_VAR_RAW": "$TOOLCHAIN_TO_LOCATION_ENV_VAR",
     "TOOLCHAIN_TO_LOCATION_ENV_VAR_PAREN": "$(TOOLCHAIN_TO_LOCATION_ENV_VAR)",
     "TOOLCHAIN_TO_LOCATION_ENV_VAR_CURLY": "${TOOLCHAIN_TO_LOCATION_ENV_VAR}",
+    "TOOLCHAIN_TO_ENV_DICT_ENV_VAR_RAW": "$BACK_TO_ENV_DICT_VAR_RAW",
+    "TOOLCHAIN_TO_ENV_DICT_ENV_VAR_PAREN": "$(BACK_TO_ENV_DICT_VAR_PAREN)",
+    "TOOLCHAIN_TO_ENV_DICT_ENV_VAR_CURLY": "${BACK_TO_ENV_DICT_VAR_CURLY}",
     "INDIRECT_SIMPLE_VAL_RAW": "$SIMPLE_VAL",
     "INDIRECT_SIMPLE_VAL_PAREN": "$(SIMPLE_VAL)",
     "INDIRECT_SIMPLE_VAL_CURLY": "${SIMPLE_VAL}",
@@ -81,7 +87,11 @@ _ENV_DICT = {
 
 _TOOLCHAIN_DICT = {
     "TOOLCHAIN_ENV_VAR": "flag_value",
+    "TOOLCHAIN_ENV_VAR2": "flag_value_2",
     "TOOLCHAIN_TO_LOCATION_ENV_VAR": "$(location :" + _TEST_DEP_TARGET_NAME + ")",
+    "BACK_TO_ENV_DICT_VAR_RAW": "$SIMPLE_VAL",
+    "BACK_TO_ENV_DICT_VAR_PAREN": "$(SIMPLE_VAL)",
+    "BACK_TO_ENV_DICT_VAR_CURLY": "${SIMPLE_VAL}",
 }
 
 # Test expected output dicts
@@ -96,9 +106,15 @@ _EXPECTED_RESOLVED_DICT_NO_LOCATION = {
     "TOOLCHAIN_ENV_VAR_RAW": "flag_value",
     "TOOLCHAIN_ENV_VAR_PAREN": "flag_value",
     "TOOLCHAIN_ENV_VAR_CURLY": "flag_value",
+    "TOOLCHAIN_ENV_VAR2_RAW": "flag_value_2",
+    "TOOLCHAIN_ENV_VAR2_PAREN": "flag_value_2",
+    "TOOLCHAIN_ENV_VAR2_CURLY": "flag_value_2",
     "TOOLCHAIN_TO_LOCATION_ENV_VAR_RAW": "$(location :" + _TEST_DEP_TARGET_NAME + ")",
     "TOOLCHAIN_TO_LOCATION_ENV_VAR_PAREN": "$(location :" + _TEST_DEP_TARGET_NAME + ")",
     "TOOLCHAIN_TO_LOCATION_ENV_VAR_CURLY": "$(location :" + _TEST_DEP_TARGET_NAME + ")",
+    "TOOLCHAIN_TO_ENV_DICT_ENV_VAR_RAW": "hello_world",
+    "TOOLCHAIN_TO_ENV_DICT_ENV_VAR_PAREN": "hello_world",
+    "TOOLCHAIN_TO_ENV_DICT_ENV_VAR_CURLY": "hello_world",
     "INDIRECT_SIMPLE_VAL_RAW": "hello_world",
     "INDIRECT_SIMPLE_VAL_PAREN": "hello_world",
     "INDIRECT_SIMPLE_VAL_CURLY": "hello_world",
@@ -252,6 +268,8 @@ _EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION = _EXPECTED_RESOLVED_DICT_NO_LOCAT
     ),
 }
 
+# Test helper functions and rules
+
 def _test_toolchain_impl(ctx):
     _ignore = [ctx]  # @unused
     return [platform_common.TemplateVariableInfo(_TOOLCHAIN_DICT)]
@@ -283,6 +301,8 @@ def _fix_platform_dependent_path_for_assertions(platform_dependent_val):
         _WIN_FASTBUILD_SUBPATH,
         _LINUX_FASTBUILD_SUBPATH,
     )
+
+# Test cases
 
 def _expand_with_manual_dict_test_impl(ctx):
     """Test `expansion.expand_with_manual_dict()`"""
@@ -379,6 +399,7 @@ def _expand_with_toolchains_with_additional_dict_test_impl(ctx):
     toolchain_dict_copy = dict(env.ctx.var)
 
     additional_lookup_dict = {
+        "TOOLCHAIN_ENV_VAR2": "expanded from additional dict instead",
         "NOPE": "naw, it's fine now.",
     }
 
@@ -396,6 +417,9 @@ def _expand_with_toolchains_with_additional_dict_test_impl(ctx):
     asserts.equals(env, _ENV_DICT.keys(), resolved_dict.keys())
 
     updated_expected_dict = _EXPECTED_RESOLVED_DICT_NO_LOCATION | {
+        "TOOLCHAIN_ENV_VAR2_RAW": "expanded from additional dict instead",
+        "TOOLCHAIN_ENV_VAR2_PAREN": "expanded from additional dict instead",
+        "TOOLCHAIN_ENV_VAR2_CURLY": "expanded from additional dict instead",
         "UNRECOGNIZED_VAR": "naw, it's fine now.",
     }
 
@@ -452,6 +476,7 @@ def _expand_with_toolchains_attr_with_additional_dict_test_impl(ctx):
     toolchain_dict_copy = dict(env.ctx.var)
 
     additional_lookup_dict = {
+        "TOOLCHAIN_ENV_VAR2": "expanded from additional dict instead",
         "NOPE": "naw, it's fine now.",
     }
 
@@ -468,6 +493,9 @@ def _expand_with_toolchains_attr_with_additional_dict_test_impl(ctx):
     asserts.equals(env, env.ctx.attr.env.keys(), resolved_dict.keys())
 
     updated_expected_dict = _EXPECTED_RESOLVED_DICT_NO_LOCATION | {
+        "TOOLCHAIN_ENV_VAR2_RAW": "expanded from additional dict instead",
+        "TOOLCHAIN_ENV_VAR2_PAREN": "expanded from additional dict instead",
+        "TOOLCHAIN_ENV_VAR2_CURLY": "expanded from additional dict instead",
         "UNRECOGNIZED_VAR": "naw, it's fine now.",
     }
 
@@ -531,6 +559,7 @@ def _expand_with_toolchains_and_location_with_additional_dict_test_impl(ctx):
     toolchain_dict_copy = dict(env.ctx.var)
 
     additional_lookup_dict = {
+        "TOOLCHAIN_ENV_VAR2": "expanded from additional dict instead",
         "NOPE": "naw, it's fine now.",
     }
 
@@ -549,6 +578,9 @@ def _expand_with_toolchains_and_location_with_additional_dict_test_impl(ctx):
     asserts.equals(env, _ENV_DICT.keys(), resolved_dict.keys())
 
     updated_expected_dict = _EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION | {
+        "TOOLCHAIN_ENV_VAR2_RAW": "expanded from additional dict instead",
+        "TOOLCHAIN_ENV_VAR2_PAREN": "expanded from additional dict instead",
+        "TOOLCHAIN_ENV_VAR2_CURLY": "expanded from additional dict instead",
         "UNRECOGNIZED_VAR": "naw, it's fine now.",
     }
 
@@ -609,6 +641,7 @@ def _expand_with_toolchains_and_location_attr_with_additional_dict_test_impl(ctx
     toolchain_dict_copy = dict(env.ctx.var)
 
     additional_lookup_dict = {
+        "TOOLCHAIN_ENV_VAR2": "expanded from additional dict instead",
         "NOPE": "naw, it's fine now.",
     }
 
@@ -625,6 +658,9 @@ def _expand_with_toolchains_and_location_attr_with_additional_dict_test_impl(ctx
     asserts.equals(env, env.ctx.attr.env.keys(), resolved_dict.keys())
 
     updated_expected_dict = _EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION | {
+        "TOOLCHAIN_ENV_VAR2_RAW": "expanded from additional dict instead",
+        "TOOLCHAIN_ENV_VAR2_PAREN": "expanded from additional dict instead",
+        "TOOLCHAIN_ENV_VAR2_CURLY": "expanded from additional dict instead",
         "UNRECOGNIZED_VAR": "naw, it's fine now.",
     }
 
