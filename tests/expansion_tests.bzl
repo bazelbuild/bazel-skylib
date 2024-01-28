@@ -268,6 +268,112 @@ _EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION = _EXPECTED_RESOLVED_DICT_NO_LOCAT
     ),
 }
 
+# Unresolved/unterminated validation test input values and expected values
+
+_UNRESOLVED_SUBSTRINGS = [
+    "$SOME_UNEXPANDED_VAR_RAW",
+    "$(SOME_UNEXPANDED_VAR_PAREN)",
+    "${SOME_UNEXPANDED_VAR_CURLY}",
+]
+
+_UNRESOLVED_SUBSTRINGS_FORMAT_STRINGS = [
+    "{}",
+    "prefix-{}",
+    "prefix {}",
+    "{}-suffix",
+    "{} suffix",
+    "prefix-{}-suffix",
+    "prefix {} suffix",
+]
+
+_UNRESOLVED_SUBSTRING_EXPECTED_ERROR_MESSAGES = [
+    "Unexpanded expression ('{}' in '{}').".format(unresolved_substr, full_string)
+    for unresolved_substr in _UNRESOLVED_SUBSTRINGS
+    for full_string in [
+        format_str.format(unresolved_substr)
+        for format_str in _UNRESOLVED_SUBSTRINGS_FORMAT_STRINGS
+    ]
+]
+
+_TWO_UNRESOLVED_SUBSTRINGS = [
+    "{}-{}".format(a, b)
+    for a in _UNRESOLVED_SUBSTRINGS
+    for b in _UNRESOLVED_SUBSTRINGS
+] + [
+    "{} {}".format(a, b)
+    for a in _UNRESOLVED_SUBSTRINGS
+    for b in _UNRESOLVED_SUBSTRINGS
+]
+
+_TWO_UNRESOLVED_SUBSTRING_EXPECTED_ERROR_MESSAGES = [
+    "Unexpanded expression ('{}' in '{}').".format(unresolved_substr, full_string)
+    for unresolved_substr in _UNRESOLVED_SUBSTRINGS
+    for full_string in _TWO_UNRESOLVED_SUBSTRINGS
+    if unresolved_substr in full_string
+]
+
+_UNRESOLVED_NAMELESS_SUBSTRINGS_FORMAT_STRINGS = [
+    "{}-suffix",
+    "{} suffix",
+    "prefix-{}-suffix",
+    "prefix {} suffix",
+]
+
+_UNRESOLVED_NAMELESS_SUBSTRING_EXPECTED_ERROR_MESSAGES = [
+    "Unexpanded expression ('{}' in '{}').".format("$", full_string)
+    for unresolved_substr in _UNRESOLVED_SUBSTRINGS
+    for full_string in [
+        format_str.format("$")
+        for format_str in _UNRESOLVED_NAMELESS_SUBSTRINGS_FORMAT_STRINGS
+    ]
+]
+
+_UNTERMINATED_SUBSTRINGS_PAREN = [
+    "$(",
+    "$(VAR",
+    "$(VAR ",
+    "$(VAR VAL",
+]
+
+_UNTERMINATED_SUBSTRINGS_CURLY = [
+    "${",
+    "${VAR",
+    "${VAR ",
+    "${VAR VAL",
+]
+
+_UNTERMINATED_SUBSTRINGS_FORMAT_STRINGS = [
+    "{}",
+    "prefix-{}",
+    "prefix {}",
+]
+
+_UNTERMINATED_SUBSTRING_EXPECTED_ERROR_MESSAGES_RAW = [
+    "Unterminated '$' expression in '{}'.".format(full_string)
+    for full_string in [
+        format_str.format("$")
+        for format_str in _UNTERMINATED_SUBSTRINGS_FORMAT_STRINGS
+    ]
+]
+
+_UNTERMINATED_SUBSTRING_EXPECTED_ERROR_MESSAGES_PAREN = [
+    "Unterminated '$(...)' expression ('{}' in '{}').".format(unresolved_substr, full_string)
+    for unresolved_substr in _UNTERMINATED_SUBSTRINGS_PAREN
+    for full_string in [
+        format_str.format(unresolved_substr)
+        for format_str in _UNTERMINATED_SUBSTRINGS_FORMAT_STRINGS
+    ]
+]
+
+_UNTERMINATED_SUBSTRING_EXPECTED_ERROR_MESSAGES_CURLY = [
+    "Unterminated '${{...}}' expression ('{}' in '{}').".format(unresolved_substr, full_string)
+    for unresolved_substr in _UNTERMINATED_SUBSTRINGS_CURLY
+    for full_string in [
+        format_str.format(unresolved_substr)
+        for format_str in _UNTERMINATED_SUBSTRINGS_FORMAT_STRINGS
+    ]
+]
+
 # Test helper functions and rules
 
 def _test_toolchain_impl(ctx):
@@ -681,6 +787,114 @@ _expand_with_toolchains_and_location_attr_with_additional_dict_test = unittest.m
     },
 )
 
+def _validate_expansions_on_fully_resolved_values_test_impl(ctx):
+    """Test `expansion.validate_expansions()` with fully resolved strings"""
+    env = unittest.begin(ctx)
+
+    # Remove the values that are meant to be unexpanded in other tests.
+    _values_with_mocked_location = dict(_EXPECTED_RESOLVED_DICT_WITH_MOCKED_LOCATION)
+    _values_with_mocked_location.pop("UNRECOGNIZED_VAR")
+    _values_with_mocked_location.pop("UNRECOGNIZED_FUNC")
+
+    _values_with_genrule_location = dict(_EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION)
+    _values_with_genrule_location.pop("UNRECOGNIZED_VAR")
+    _values_with_genrule_location.pop("UNRECOGNIZED_FUNC")
+
+    failure_messages = []
+    for fail_on_unexpanded in (True, False):
+        failure_messages += expansion.validate_expansions(
+            _values_with_mocked_location.values(),
+            fail_instead_of_return = fail_on_unexpanded,
+        )
+        failure_messages += expansion.validate_expansions(
+            _values_with_genrule_location.values(),
+            fail_instead_of_return = fail_on_unexpanded,
+        )
+
+        failure_messages += expansion.validate_expansions(
+            [
+                "$$SOME_ESCAPED_VAR",
+                "prefix-$$SOME_ESCAPED_VAR",
+                "$$SOME_ESCAPED_VAR-suffix",
+                "prefix-$$SOME_ESCAPED_VAR-suffix",
+                "$$",
+                "prefix-$$",
+                "$$-suffix",
+                "prefix-$$-suffix",
+            ],
+            fail_instead_of_return = fail_on_unexpanded,
+        )
+    asserts.equals(env, [], failure_messages)
+
+    return unittest.end(env)
+
+_validate_expansions_on_fully_resolved_values_test = unittest.make(
+    _validate_expansions_on_fully_resolved_values_test_impl,
+)
+
+def _validate_expansions_on_unresolved_or_unterminated_values_test_impl(ctx):
+    """
+    Test `expansion.validate_expansions()` with unresolved or unterminated values
+
+    Will be used with multiple targets for specific unresolved/unterminated values.
+    """
+    env = unittest.begin(ctx)
+
+    all_error_messages = []
+    for bad_substring in env.ctx.attr.bad_substrings:
+        for string_format in env.ctx.attr.string_formats:
+            bad_str = string_format.format(bad_substring)
+
+            # Get out error messages (instead of calling `fail()` internally).
+            # This allows us to parameterize the test in this impl, instead of parameterizing the
+            # test target definitions.
+            # Also allows using `unittest` without `analysistest`.
+            error_messages = expansion.validate_expansions(
+                [bad_str],
+                fail_instead_of_return = False,
+            )
+
+            expected_error_messages_per_call = ctx.attr.expected_error_messages_per_call
+            asserts.true(
+                env,
+                len(error_messages) == expected_error_messages_per_call,
+                "Wrong error message size. Expected count: {}.\n Got messages:\n{}".format(
+                    expected_error_messages_per_call,
+                    "\n".join(error_messages),
+                ),
+            )
+            all_error_messages.extend(error_messages)
+
+    for expected_failure in ctx.attr.expected_failures:
+        asserts.true(
+            env,
+            expected_failure in all_error_messages,
+            "'{}' not in:\n{}".format(expected_failure, "\n".join(all_error_messages)),
+        )
+
+    return unittest.end(env)
+
+_validate_expansions_on_unresolved_or_unterminated_values_test = unittest.make(
+    _validate_expansions_on_unresolved_or_unterminated_values_test_impl,
+    attrs = {
+        "bad_substrings": attr.string_list(
+            mandatory = True,
+            allow_empty = False,
+        ),
+        "expected_error_messages_per_call": attr.int(
+            default = 1,
+        ),
+        "expected_failures": attr.string_list(
+            mandatory = True,
+            allow_empty = False,
+        ),
+        "string_formats": attr.string_list(
+            mandatory = True,
+            allow_empty = False,
+        ),
+    },
+)
+
 # buildifier: disable=unnamed-macro
 def expansion_test_suite():
     """Creates the test targets and test suite for expansion.bzl tests."""
@@ -741,6 +955,38 @@ def expansion_test_suite():
         env = _ENV_DICT,
         toolchains = [":expansion_tests__test_toolchain"],
     )
+    _validate_expansions_on_fully_resolved_values_test(
+        name = "expansion_tests__validate_expansions_on_fully_resolved_values_test",
+    )
+    _validate_expansions_on_unresolved_or_unterminated_values_test(
+        name = "expansion_tests__validate_expansions_on_unresolved_values_test",
+        bad_substrings = _UNRESOLVED_SUBSTRINGS,
+        expected_failures = _UNRESOLVED_SUBSTRING_EXPECTED_ERROR_MESSAGES,
+        string_formats = _UNRESOLVED_SUBSTRINGS_FORMAT_STRINGS,
+    )
+    _validate_expansions_on_unresolved_or_unterminated_values_test(
+        name = "expansion_tests__validate_expansions_on_two_unresolved_values_test",
+        bad_substrings = _TWO_UNRESOLVED_SUBSTRINGS,
+        expected_error_messages_per_call = 2,
+        expected_failures = _TWO_UNRESOLVED_SUBSTRING_EXPECTED_ERROR_MESSAGES,
+        string_formats = ["{}"],
+    )
+    _validate_expansions_on_unresolved_or_unterminated_values_test(
+        name = "expansion_tests__validate_expansions_on_nameless_var_values_test",
+        bad_substrings = ["$"],
+        expected_failures = _UNRESOLVED_NAMELESS_SUBSTRING_EXPECTED_ERROR_MESSAGES,
+        string_formats = _UNRESOLVED_NAMELESS_SUBSTRINGS_FORMAT_STRINGS,
+    )
+    _validate_expansions_on_unresolved_or_unterminated_values_test(
+        name = "expansion_tests__validate_expansions_on_unterminated_values_test",
+        bad_substrings = ["$"] + _UNTERMINATED_SUBSTRINGS_PAREN + _UNTERMINATED_SUBSTRINGS_CURLY,
+        expected_failures = (
+            _UNTERMINATED_SUBSTRING_EXPECTED_ERROR_MESSAGES_RAW +
+            _UNTERMINATED_SUBSTRING_EXPECTED_ERROR_MESSAGES_PAREN +
+            _UNTERMINATED_SUBSTRING_EXPECTED_ERROR_MESSAGES_CURLY
+        ),
+        string_formats = _UNTERMINATED_SUBSTRINGS_FORMAT_STRINGS,
+    )
 
     native.test_suite(
         name = "expansion_tests",
@@ -755,5 +1001,10 @@ def expansion_test_suite():
             ":expansion_tests__expand_with_toolchains_and_location_with_additional_dict_test",
             ":expansion_tests__expand_with_toolchains_and_location_attr_test",
             ":expansion_tests__expand_with_toolchains_and_location_attr_with_additional_dict_test",
+            ":expansion_tests__validate_expansions_on_fully_resolved_values_test",
+            ":expansion_tests__validate_expansions_on_unresolved_values_test",
+            ":expansion_tests__validate_expansions_on_two_unresolved_values_test",
+            ":expansion_tests__validate_expansions_on_nameless_var_values_test",
+            ":expansion_tests__validate_expansions_on_unterminated_values_test",
         ],
     )
