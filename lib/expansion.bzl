@@ -486,10 +486,11 @@ def _expand_with_toolchains_and_location_attr(
                 environment variable expansion. This object is also used for the
                 `ctx.expand_location` method to handle `$(location ...)` (and similar) expansion
                 logic. This object is also used to retrieve various necessary attributes via
-                `ctx.attr.<attr_name>`. Default value is "deps".
+                `ctx.attr.<attr_name>`.
         deps_attr_name: (Optional) The name of the attribute which contains the set of targets used
                         with `ctx.expand_location` for expanding `$(location ...)` (and similar)
                         expressions.
+                        Default value is "deps".
         env_attr_name:  (Optional) The name of the attribute that is used as the source for all
                         desired expansions. All key/value pairs will appear within the returned
                         dictionary, with all values fully expanded by lookups in `ctx.var` and
