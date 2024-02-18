@@ -3,15 +3,49 @@
 _CONSIDERED_KEY_FORMATS = ("${}", "${{{}}}", "$({})")
 
 def _valid_char_for_env_var_name(char):
+    """
+    Determines if the given character could be used as a part of variable name.
+
+    Args:
+        char:   (Required) A string (intended to be length 1) to be checked.
+
+    Returns:
+        True if the character could be a part of a variable name. False otherwise.
+    """
     return char.isalnum() or char == "_"
 
 def _find_env_var_name_index_index(
         string,
         str_len,
-        search_start,
+        search_start_index,
         special_ending_char = None):
-    for offset in range(str_len - search_start):
-        index = search_start + offset
+    """
+    Searches for the end of a variable name in the given string, starting from the given index.
+
+    Search will start from `search_start_index` and conclude once a character, which cannot be part
+    of a variable name, is encountered or until the end of the string is reached.
+
+    Args:
+        string:     (Required) The string to search through.
+        str_len:    (Required) The precomputed length of the given `string` parameter.
+        search_start_index: (Required) The index to start searching from. This is intended to be
+                            somewhere within (the start?) of a variable name.
+        special_ending_char:    (Optional) A special character which will count as the end of the
+                                variable name. This can be used for `$(VAR)`, `${VAR}`, or similar.
+                                This replaces the "valid variable name character" checking,
+                                allowing for other characters to occur before the given special
+                                ending character.
+                                If set to `None`, no special character will be checked for
+                                (only checking for non-variable characters or the end of the
+                                string).
+                                The default value is `None`.
+
+    Returns:
+        The index (with respect to the start of `string`) of the last character of the variable
+        name.
+    """
+    for offset in range(str_len - search_start_index):
+        index = search_start_index + offset
         char = string[index]
         if special_ending_char:
             if char == special_ending_char:
@@ -20,20 +54,50 @@ def _find_env_var_name_index_index(
             return index - 1
     return str_len - 1
 
-def _odd_count_dollar_sign_repeat(containing_str, end_of_dollar_signs_index):
+def _even_count_dollar_sign_repeat(containing_str, end_of_dollar_signs_index):
+    """
+    Searches backwards through the given string, counting the contiguous `$` characters.
+
+    An even number of `$` characters is indicative of escaped variables, which should not be
+    expanded (left as is in a string).
+
+    Args:
+        containing_str: (Required) The string to search through.
+        end_of_dollar_signs_index:  (Required) The index of the end of the contiguous `$`
+                                    characters in `containing_str`. This is the starting
+                                    index for the backwards search.
+
+    Returns:
+        True if the set of contiguous `$` characters has even length. False if the length is odd.
+    """
     dollar_sign_count = 0
     for index in range(end_of_dollar_signs_index, -1, -1):
         if containing_str[index] != "$":
             break
         dollar_sign_count += 1
-    return (dollar_sign_count % 2) == 1
+    return (dollar_sign_count % 2) == 0
 
 def _key_to_be_expanded(str_with_key, key, start_of_key_index):
-    # Check that the string at index is prefixed with an odd number of `$`.
-    # Odd number means that the last `$` is not escaped.
-    odd_count = _odd_count_dollar_sign_repeat(str_with_key, start_of_key_index)
+    """
+    Examines the given string and determines if the given "key" should be expanded.
 
-    if not odd_count:
+    The "key" was located within the given string (as a substring). This function
+    determines whether the key is complete and is to be expanded.
+
+    Args:
+        str_with_key:   (Required) The string that `key` is found within.
+        key:            (Required) The found substring in `str_with_key` which needs to possibly be
+                        expanded.
+        start_of_key_index: (Required) The index where `key` was found within `str_with_key`.
+
+    Returns:
+        True if the found key is complete (not a substring of another potential key) and is not
+        escaped (even number of preceding `$`).
+    """
+
+    # Check that the string at index is prefixed with an even number of `$`.
+    # An even number means that the last `$` is escaped.
+    if _even_count_dollar_sign_repeat(str_with_key, start_of_key_index):
         return False
 
     # Check that the key is correctly matched.
@@ -49,6 +113,21 @@ def _key_to_be_expanded(str_with_key, key, start_of_key_index):
     return not key_mismatch
 
 def _fail_validation(fail_instead_of_return, found_errors_list, failure_message):
+    """
+    This is called when a failure has occured and handles propagation of a failure message.
+
+    Will either call `fail()` with the given failure message (to hard fail immediately) or append
+    the given failure message to the given list.
+
+    Args:
+        fail_instead_of_return: (Required) If set to True, `fail()` will be called (will not
+                                return). If set to False, `found_errors_list` will be appended to
+                                and the function will return normally.
+        found_errors_list:      (Required) In/out list for error messages to be appended into. Will
+                                only be used if `fail_instead_of_return` is False.
+        failure_message:        (Required) Failure message to be either passed to `fail()` or
+                                appended into `found_errors_list`.
+    """
     if fail_instead_of_return:
         fail(failure_message)
     else:
@@ -60,6 +139,28 @@ def _validate_unterminated_expression(
         found_errors,
         dollar_sign_index,
         next_char_after_dollar_sign):
+    """
+    Checks if given string contains an unterminated expression of the form `$(VAR)` or `${VAR}`.
+
+    If the given variable/expression is of the correct form, and unterminated, an error will be
+    noted (either by calling `fail()` or by appending it into the given error list).
+
+    Args:
+        expanded_val:   (Required) The string which contains a `$` preceding a variable (to be
+                        expanded).
+        fail_instead_of_return: (Required) If set to True, `fail()` will be called (will not
+                                return) when an unterminated variable is found. If set to False,
+                                `found_errors` will be appended to and the function will return
+                                normally.
+        found_errors:   (Required) In/out list for error messages to be appended into. Will only be
+                        used if `fail_instead_of_return` is False.
+        dollar_sign_index:  (Required) The index of the `$` at the start of the expression.
+        next_char_after_dollar_sign:    (Required) The character that immediately follows the `$`.
+
+    Returns:
+        The validaity of the string.
+        Returns False if the variable was of the form and unterminated. Returns True otherwise.
+    """
     if next_char_after_dollar_sign == "(":
         if expanded_val.find(")", dollar_sign_index + 1) < 0:
             unterminated_expr = expanded_val[dollar_sign_index:]
@@ -87,6 +188,26 @@ def _validate_unexpanded_expression(
         found_errors,
         dollar_sign_index,
         next_char_after_dollar_sign):
+    """
+    Always generates an error for the given string (containing unexpanded variable).
+
+    The given string contains a variable which unexpanded (and is not escaped), an error will be
+    noted (either by calling `fail()` or by appending it into the given error list).
+
+    Args:
+        expanded_val:   (Required) The string which contains a `$` preceding a variable (to be
+                        expanded).
+        fail_instead_of_return: (Required) If set to True, `fail()` will be called (will not
+                                return). If set to False, `found_errors` will be appended to and
+                                the function will return normally.
+        str_len:        (Required) The precomputed length of the given `expanded_val` parameter.
+        found_errors:   (Required) In/out list for error messages to be appended into. Will only be
+                        used if `fail_instead_of_return` is False.
+        dollar_sign_index:  (Required) The index of the `$` at the start of the unexpanded
+                            expression.
+        next_char_after_dollar_sign:    (Required) The character that immediately follows the `$`.
+    """
+
     # Find special ending char, if wrapped expression.
     special_ending_char = None
     if next_char_after_dollar_sign == "(":
@@ -94,7 +215,7 @@ def _validate_unexpanded_expression(
     elif next_char_after_dollar_sign == "{":
         special_ending_char = "}"
 
-    # Check for unexpanded expressions.
+    # Find info for unexpanded expression and fail.
     name_end_index = _find_env_var_name_index_index(
         expanded_val,
         str_len,
@@ -111,6 +232,27 @@ def _validate_unexpanded_expression(
     )
 
 def _validate_all_keys_expanded(expanded_val, fail_instead_of_return):
+    """
+    Iterates over the entire given string, searching for any unexpanded variables/expressions.
+
+    If any unexpanded/unterminated variables/expressions are found, an error will be noted (either
+    by calling `fail()` and hard failing immediately, or by collecting all such found errors and
+    returning it in a list).
+
+    Args:
+        expanded_val:   (Required) The string to be checked for any potentially unescaped and
+                        unexpanded/unterminated variables/expressions.
+        fail_instead_of_return: (Required) If set to True, `fail()` will be called (will not
+                                return) when the first error has been found. If set to False, the
+                                function will return normally and return a list of all found
+                                errors.
+
+    Returns:
+        A list of found errors. Each element in the list is a failure message with details about
+        the unescaped and unexpanded/unterminated variable/expression. The list will be empty if
+        no such expressions were found. This function does not return if `fail_instead_of_return`
+        was set to True (`fail()` will be called).
+    """
     str_len = len(expanded_val)
     str_iter = 0
     found_errors = []
@@ -126,7 +268,7 @@ def _validate_all_keys_expanded(expanded_val, fail_instead_of_return):
 
         # Check for unterminated (non-escaped) ending dollar sign(s).
         if next_dollar_sign_index == str_len - 1:
-            if _odd_count_dollar_sign_repeat(expanded_val, next_dollar_sign_index):
+            if not _even_count_dollar_sign_repeat(expanded_val, next_dollar_sign_index):
                 _fail_validation(
                     fail_instead_of_return,
                     found_errors,
@@ -143,7 +285,7 @@ def _validate_all_keys_expanded(expanded_val, fail_instead_of_return):
             continue
 
         # Check for escaped dollar signs (which are ok).
-        if not _odd_count_dollar_sign_repeat(expanded_val, next_dollar_sign_index):
+        if _even_count_dollar_sign_repeat(expanded_val, next_dollar_sign_index):
             continue
 
         # Check for unterminated expressions.
@@ -167,6 +309,29 @@ def _validate_all_keys_expanded(expanded_val, fail_instead_of_return):
     return found_errors
 
 def _expand_key_in_str(key, val, unexpanded_str):
+    """
+    Expand the given key, by replacing it with the given value, in the given string.
+
+    The given `key` may or may not be contained in the given string `unexpanded_str`.
+    If the given key is found, it will be expanded/replaced by the given `val` string.
+    The key is given in its full formatted form with preceding `$` (`$VAR`, `$(VAR)`, `${VAR}`,
+    `$(VAR VAL)`, etc).
+    The key will not be expanded if it is escaped (an even number of contiguous `$` characters at
+    the start) or if the found key is a substring of another potential key (e.g. `$VAR` will not be
+    expanded if the found location is `$VARIABLE`).
+    The given key will be replaced (as appropriate) for all occurences within the given string.
+
+    Args:
+        key:    (Required) The key to search for (within the given string, `unexpanded_str`) and
+                replace all occurences of the key with the given replacement value, `val`.
+        val:    (Required) The value to replace all found occurences of the given key, `key`, into
+                the given string, `unexpanded_str`.
+        unexpanded_str: (Required) The string to search for `key` and replace with `val`.
+
+    Returns:
+        A copy of `unexpanded_str` with all occurences of `key` replaced with `val` (as necessary).
+        The returned string will be `unexpanded_str` (not a copy), if `key` is not found/expanded.
+    """
     key_len = len(key)
     val_len = len(val)
     searched_index = 0
@@ -193,6 +358,29 @@ def _expand_key_in_str(key, val, unexpanded_str):
     return expanded_str
 
 def _expand_all_keys_in_str_from_dict(replacement_dict, unexpanded_str):
+    """
+    Uses the given dictionary to replace keys with values in the given string.
+
+    Each key is intended to be a variable name (e.g. `VARIABLE_NAME`), which can be wrapped with
+    `$`, `$( )`, or `${ }` (to express the given example key as the "formatted key"
+    `$VARIABLE_NAME`, `$(VARIABLE_NAME)`, or `${VARIABLE_NAME}`). The corresponding value (in the
+    dict) is to be used as the intended replacement string when any matching formatted key (of the
+    given variable name key) is found within the given string, `unexpanded_str`.
+
+    Args:
+        replacement_dict:   (Required) The set of key/value pairs to be used for search/replacement
+                            within the given `unexpanded_str` string.
+        unexpanded_str:     (Required) The string to search for the formatted versions of each key
+                            set within `replacement_dict`, where each found occurence will be
+                            expanded/replaced with the associated value.
+
+    Returns:
+        A copy of `unexpanded_str` with all occurences of each key (when formatted into an
+        unexpanded variable) within `replacement_dict` replaced with corresponding value (as
+        necessary).
+        The returned string will be `unexpanded_str` (not a copy), if no expansion occurs.
+    """
+
     # Manually expand variables based on the var dict.
     # Do not use `ctx.expand_make_variables()` as it will error out if any variable expands to
     # `$(location <name>)` (or similar) instead of leaving it untouched.
@@ -218,6 +406,52 @@ def _expand_all_keys_in_str(
         resolved_replacement_dict,
         env_replacement_dict,
         unexpanded_str):
+    """
+    Uses the given dictionaries to replace keys with values in the given string.
+
+    Each key, in the given dictionaries, is intended to be a variable name (e.g. `VARIABLE_NAME`),
+    which can be wrapped with `$`, `$( )`, or `${ }` (to express the given example key as the
+    "formatted key" `$VARIABLE_NAME`, `$(VARIABLE_NAME)`, or `${VARIABLE_NAME}`). The corresponding
+    value (in the dict) is to be used as the intended replacement string when any matching
+    formatted key (of the given variable name key) is found within the given string,
+    `unexpanded_str`.
+
+    Expansion happens iteratively. In each iteration, three steps occur:
+    1) If `expand_location` is not `None`, it will be invoked to replace any occurrences of
+        `$(location ...)` (or similar). Technically, this function can execute any high-priority
+        expansion logic -- but it is intended for functionality similar to `ctx.expand_location()`.
+    2) Each variable name key in `env_replacement_dict` will be searched for (in `unexpanded_str`)
+        and expanded into the corresponding value within the dict for the given found variable
+        name. This is intended for the use with the `env` attribute for a given target (but
+        supports any general "higher priority" dict replacement).
+    3) Each variable name key in `resolved_replacement_dict` will be searched for (in
+        `unexpanded_str`) and expanded into the corresponding value within the dict for the given
+        found variable name. This is intended for the use with `ctx.var` which contains toolchain
+        resolved key/values (but supports any general "lower priority" dict replacement).
+
+    Args:
+        expand_location:            (Required) A None-able function used for optional "location"
+                                    expansion logic (`$(location ...)` or similar).
+        resolved_replacement_dict:  (Required) A set of key/value pairs to be used for
+                                    search/replacement within the given `unexpanded_str` string.
+                                    Replacement logic will occur after (lower priority) replacement
+                                    for `env_replacement_dict`.
+        env_replacement_dict:   (Required) A set of key/value pairs to be used for
+                                search/replacement within the given `unexpanded_str` string.
+                                Replacement logic will occur before (higher priority) replacement
+                                for `resolved_replacement_dict`.
+        unexpanded_str:     (Required) The string to perform expansion variable upon (optionally
+                            invoke `expand_location`, and search for the formatted versions of each
+                            key set within `env_replacement_dict` and `resolved_replacement_dict`,
+                            where each found occurence will be expanded/replaced with the
+                            associated value).
+
+    Returns:
+        A copy of `unexpanded_str` with all occurences of each key (when formatted into an
+        unexpanded variable) within `replacement_dict` replaced with corresponding value (as
+        necessary).
+        The returned string will be `unexpanded_str` (not a copy), if no expansion occurs.
+    """
     if unexpanded_str.find("$") < 0:
         return unexpanded_str
 
