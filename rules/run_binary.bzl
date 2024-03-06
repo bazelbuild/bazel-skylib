@@ -47,7 +47,8 @@ def _impl(ctx):
         tools = [ctx.executable.tool],
         executable = ctx.executable.tool,
         arguments = args,
-        mnemonic = "RunBinary",
+        mnemonic = ctx.attr.mnemonic,
+        progress_message = ctx.attr.progress_message,
         use_default_shell_env = False,
         env = dicts.add(ctx.configuration.default_shell_env, envs),
     )
@@ -91,6 +92,14 @@ run_binary = rule(
             doc = "Command line arguments of the binary.\n\nSubject to" +
                   " [`$(location)`](https://bazel.build/reference/be/make-variables#predefined_label_variables)" +
                   " expansion.",
+        ),
+        "mnemonic": attr.string(
+            default = "RunBinary",
+            doc = "Custom action mnemonic.",
+        ),
+        "progress_message": attr.string(
+            default = "Running binary",
+            doc = "Custom action progress message.",
         ),
     },
 )

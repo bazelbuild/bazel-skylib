@@ -43,8 +43,8 @@ def copy_cmd(ctx, src, dst):
         outputs = [dst],
         executable = "cmd.exe",
         arguments = ["/C", bat.path.replace("/", "\\")],
-        mnemonic = "CopyFile",
-        progress_message = "Copying files",
+        mnemonic = ctx.attr.mnemonic,
+        progress_message = ctx.attr.progress_message,
         use_default_shell_env = True,
         execution_requirements = COPY_EXECUTION_REQUIREMENTS,
     )
@@ -55,8 +55,8 @@ def copy_bash(ctx, src, dst):
         outputs = [dst],
         command = "cp -f \"$1\" \"$2\"",
         arguments = [src.path, dst.path],
-        mnemonic = "CopyFile",
-        progress_message = "Copying files",
+        mnemonic = ctx.attr.mnemonic,
+        progress_message = ctx.attr.progress_message,
         use_default_shell_env = True,
         execution_requirements = COPY_EXECUTION_REQUIREMENTS,
     )
@@ -89,6 +89,8 @@ _ATTRS = {
     "is_windows": attr.bool(mandatory = True),
     "is_executable": attr.bool(mandatory = True),
     "allow_symlink": attr.bool(mandatory = True),
+    "mnemonic": attr.string(),
+    "progress_message": attr.string(),
 }
 
 _copy_file = rule(
@@ -104,7 +106,7 @@ _copy_xfile = rule(
     attrs = _ATTRS,
 )
 
-def copy_file(name, src, out, is_executable = False, allow_symlink = False, **kwargs):
+def copy_file(name, src, out, is_executable = False, allow_symlink = False, mnemonic = "CopyFile", progress_message = "Copying files", **kwargs):
     """Copies a file to another location.
 
     `native.genrule()` is sometimes used to copy files (often wishing to rename them). The 'copy_file' rule does this with a simpler interface than genrule.
@@ -126,6 +128,8 @@ def copy_file(name, src, out, is_executable = False, allow_symlink = False, **kw
           created (i.e., at the time of writing, we don't create symlinks on
           Windows). Set this to True if you need fast copying and your tools can
           handle symlinks (which most UNIX tools can).
+      progress_message: A custom action progress message.
+      mnemonic: A custom action mnemonic.
       **kwargs: further keyword arguments, e.g. `visibility`
     """
 
@@ -143,5 +147,7 @@ def copy_file(name, src, out, is_executable = False, allow_symlink = False, **kw
         }),
         is_executable = is_executable,
         allow_symlink = allow_symlink,
+        mnemonic = mnemonic,
+        progress_message = progress_message,
         **kwargs
     )
