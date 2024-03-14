@@ -22,7 +22,13 @@ load("//lib:dicts.bzl", "dicts")
 
 def _impl(ctx):
     tool_as_list = [ctx.attr.tool]
-    args = [
+
+    args = ctx.actions.args()
+    if ctx.attr.param_file_format != "":
+        args.set_param_file_format("multiline")
+        args.use_param_file(param_file_arg = ctx.attr.param_file_format, use_always = False)
+
+    for arg in ctx.attr.args:
         # Expand $(location) / $(locations) in args.
         #
         # To keep the rule simple, do not expand Make Variables (like *_binary.args usually would).
@@ -33,9 +39,8 @@ def _impl(ctx):
         # tokenization they would have to write args=["'a b'"] or args=["a\\ b"]. There's no
         # documented tokenization function anyway (as of 2019-05-21 ctx.tokenize exists but is
         # undocumented, see https://github.com/bazelbuild/bazel/issues/8389).
-        ctx.expand_location(a, tool_as_list) if "$(location" in a else a
-        for a in ctx.attr.args
-    ]
+        args.add(ctx.expand_location(arg, tool_as_list) if "$(location" in arg else arg)
+
     envs = {
         # Expand $(location) / $(locations) in the values.
         k: ctx.expand_location(v, tool_as_list) if "$(location" in v else v
@@ -46,7 +51,7 @@ def _impl(ctx):
         inputs = ctx.files.srcs,
         tools = [ctx.executable.tool],
         executable = ctx.executable.tool,
-        arguments = args,
+        arguments = [args],
         mnemonic = "RunBinary",
         use_default_shell_env = False,
         env = dicts.add(ctx.configuration.default_shell_env, envs),
@@ -91,6 +96,14 @@ run_binary = rule(
             doc = "Command line arguments of the binary.\n\nSubject to" +
                   " [`$(location)`](https://bazel.build/reference/be/make-variables#predefined_label_variables)" +
                   " expansion.",
+        ),
+        "param_file_format": attr.string(
+            doc = "If provided, Bazel can pass command-line arguments to the tool via file.\n\n" +
+                  "Should be used when the size of the command line can grow longer than the " +
+                  "maximum size allowed by the system. The format is the same as the format of " +
+                  "`param_file_arg` in [`Args.param_file_arg`](https://bazel.build/rules/lib/builtins/Args#use_param_file). " +
+                  "The `tool` has to support reading arguments from the file for this to work.",
+            default = "",
         ),
     },
 )
