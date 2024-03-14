@@ -32,6 +32,7 @@
 #   of it, so we assert that that field contains the output file of the rule
 
 load("//rules:copy_file.bzl", "copy_file")
+load("//tests/copy_file:mnemonic_test.bzl", "copy_file_mnemonic_test")
 
 licenses(["notice"])
 
@@ -170,4 +171,17 @@ genrule(
     name = "gen",
     outs = ["b.txt"],
     cmd = "echo -e '#!/usr/bin/env bash\necho potato' > $@",
+)
+
+copy_file(
+    name = "copy_file_mnemonic_test_target",
+    src = "foo.txt",
+    out = "bar.txt",
+    mnemonic = "FooBar",
+    tags = ["manual"],
+)
+
+copy_file_mnemonic_test(
+    name = "copy_file_mnemonic_test",
+    target_under_test = ":copy_file_mnemonic_test_target",
 )
