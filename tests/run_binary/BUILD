@@ -2,6 +2,7 @@ load("@rules_cc//cc:defs.bzl", "cc_binary")
 load("//rules:diff_test.bzl", "diff_test")
 load("//rules:run_binary.bzl", "run_binary")
 load("//rules:write_file.bzl", "write_file")
+load("//tests/run_binary:mnemonic_test.bzl", "run_binary_mnemonic_test")
 
 package(
     default_testonly = 1,
@@ -164,4 +165,22 @@ filegroup(
 cc_binary(
     name = "printargs",
     srcs = ["printargs.cc"],
+)
+
+cc_binary(
+    name = "hello",
+    srcs = ["hello.cc"],
+)
+
+run_binary(
+    name = "run_binary_test_target",
+    outs = ["hello.out"],
+    mnemonic = "FooBar",
+    tags = ["manual"],
+    tool = ":hello",
+)
+
+run_binary_mnemonic_test(
+    name = "run_binary_mnemonic_test",
+    target_under_test = ":run_binary_test_target",
 )

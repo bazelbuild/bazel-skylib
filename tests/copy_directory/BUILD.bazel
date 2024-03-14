@@ -1,6 +1,7 @@
 # This package aids testing the 'copy_directory' rule.
 
 load("//rules:copy_directory.bzl", "copy_directory")
+load("//tests/copy_directory:mnemonic_test.bzl", "copy_directory_mnemonic_test")
 load(":empty_directory.bzl", "empty_directory")
 
 licenses(["notice"])
@@ -40,4 +41,17 @@ sh_test(
         "//tests:unittest.bash",
     ],
     deps = ["@bazel_tools//tools/bash/runfiles"],
+)
+
+copy_directory(
+    name = "copy_directory_mnemonic_test_target",
+    src = "dir_with_subdir",
+    out = "copied_dir_with_subdir",
+    mnemonic = "FooBar",
+    tags = ["manual"],
+)
+
+copy_directory_mnemonic_test(
+    name = "copy_directory_mnemonic_test",
+    target_under_test = ":copy_directory_mnemonic_test_target",
 )
