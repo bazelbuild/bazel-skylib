@@ -106,7 +106,7 @@ _copy_xfile = rule(
     attrs = _ATTRS,
 )
 
-def copy_file(name, src, out, is_executable = False, allow_symlink = False, progress_message = "Copying files", mnemonic = "CopyFile", **kwargs):
+def copy_file(name, src, out, is_executable = False, allow_symlink = False, mnemonic = "CopyFile", progress_message = "Copying files", **kwargs):
     """Copies a file to another location.
 
     `native.genrule()` is sometimes used to copy files (often wishing to rename them). The 'copy_file' rule does this with a simpler interface than genrule.

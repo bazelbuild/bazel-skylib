@@ -123,7 +123,7 @@ _copy_directory = rule(
     },
 )
 
-def copy_directory(name, src, out, progress_message = "Copying directory %{input}", mnemonic = "CopyDirectory", **kwargs):
+def copy_directory(name, src, out, mnemonic = "CopyDirectory", progress_message = "Copying directory %{input}", **kwargs):
     """Copies a directory to another location.
 
     This rule uses a Bash command on Linux/macOS/non-Windows, and a cmd.exe command on Windows (no Bash is required).
