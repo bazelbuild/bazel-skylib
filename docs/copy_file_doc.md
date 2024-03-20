@@ -14,7 +14,7 @@ on Windows (no Bash is required).
 ## copy_file
 
 <pre>
-copy_file(<a href="#copy_file-name">name</a>, <a href="#copy_file-src">src</a>, <a href="#copy_file-out">out</a>, <a href="#copy_file-is_executable">is_executable</a>, <a href="#copy_file-allow_symlink">allow_symlink</a>, <a href="#copy_file-kwargs">kwargs</a>)
+copy_file(<a href="#copy_file-name">name</a>, <a href="#copy_file-src">src</a>, <a href="#copy_file-out">out</a>, <a href="#copy_file-is_executable">is_executable</a>, <a href="#copy_file-allow_symlink">allow_symlink</a>, <a href="#copy_file-mnemonic">mnemonic</a>, <a href="#copy_file-progress_message">progress_message</a>, <a href="#copy_file-kwargs">kwargs</a>)
 </pre>
 
 Copies a file to another location.
@@ -34,6 +34,8 @@ This rule uses a Bash command on Linux/macOS/non-Windows, and a cmd.exe command 
 | <a id="copy_file-out"></a>out |  Path of the output file, relative to this package.   |  none |
 | <a id="copy_file-is_executable"></a>is_executable |  A boolean. Whether to make the output file executable. When True, the rule's output can be executed using <code>bazel run</code> and can be in the srcs of binary and test rules that require executable sources. WARNING: If <code>allow_symlink</code> is True, <code>src</code> must also be executable.   |  <code>False</code> |
 | <a id="copy_file-allow_symlink"></a>allow_symlink |  A boolean. Whether to allow symlinking instead of copying. When False, the output is always a hard copy. When True, the output *can* be a symlink, but there is no guarantee that a symlink is created (i.e., at the time of writing, we don't create symlinks on Windows). Set this to True if you need fast copying and your tools can handle symlinks (which most UNIX tools can).   |  <code>False</code> |
+| <a id="copy_file-mnemonic"></a>mnemonic |  A custom action mnemonic.   |  <code>"CopyFile"</code> |
+| <a id="copy_file-progress_message"></a>progress_message |  A custom action progress message.   |  <code>"Copying files"</code> |
 | <a id="copy_file-kwargs"></a>kwargs |  further keyword arguments, e.g. <code>visibility</code>   |  none |
 
 

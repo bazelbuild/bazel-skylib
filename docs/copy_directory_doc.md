@@ -11,7 +11,7 @@ on Windows (no Bash is required).
 ## copy_directory
 
 <pre>
-copy_directory(<a href="#copy_directory-name">name</a>, <a href="#copy_directory-src">src</a>, <a href="#copy_directory-out">out</a>, <a href="#copy_directory-kwargs">kwargs</a>)
+copy_directory(<a href="#copy_directory-name">name</a>, <a href="#copy_directory-src">src</a>, <a href="#copy_directory-out">out</a>, <a href="#copy_directory-mnemonic">mnemonic</a>, <a href="#copy_directory-progress_message">progress_message</a>, <a href="#copy_directory-kwargs">kwargs</a>)
 </pre>
 
 Copies a directory to another location.
@@ -33,6 +33,8 @@ for more context.
 | <a id="copy_directory-name"></a>name |  Name of the rule.   |  none |
 | <a id="copy_directory-src"></a>src |  The directory to make a copy of. Can be a source directory or TreeArtifact.   |  none |
 | <a id="copy_directory-out"></a>out |  Path of the output directory, relative to this package.   |  none |
+| <a id="copy_directory-mnemonic"></a>mnemonic |  A custom action mnemonic.   |  <code>"CopyDirectory"</code> |
+| <a id="copy_directory-progress_message"></a>progress_message |  A custom action progress message.   |  <code>"Copying directory %{input}"</code> |
 | <a id="copy_directory-kwargs"></a>kwargs |  further keyword arguments, e.g. <code>visibility</code>   |  none |
 
 
