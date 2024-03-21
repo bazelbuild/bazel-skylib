@@ -47,8 +47,8 @@ s = shell.quote(p)
 * [partial](docs/partial_doc.md)
 * [paths](docs/paths_doc.md)
 * [selects](docs/selects_doc.md)
-* [sets](lib/sets.bzl) - _deprecated_, use `new_sets`
-* [new_sets](docs/new_sets_doc.md)
+* [sets](lib/sets.bzl)
+* [new_sets](docs/new_sets_doc.md) - _deprecated_, use `sets`
 * [shell](docs/shell_doc.md)
 * [structs](docs/structs_doc.md)
 * [subpackages](docs/subpackages_doc.md)
