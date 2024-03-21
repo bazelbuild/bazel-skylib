@@ -21,6 +21,11 @@ bzl_library(
 )
 
 bzl_library(
+    name = "labels",
+    srcs = ["labels.bzl"],
+)
+
+bzl_library(
     name = "partial",
     srcs = ["partial.bzl"],
 )
