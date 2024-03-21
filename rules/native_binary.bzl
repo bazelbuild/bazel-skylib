@@ -18,9 +18,20 @@ These rules let you wrap a pre-built binary or script in a conventional binary
 and test rule respectively. They fulfill the same goal as sh_binary and sh_test
 do, but they run the wrapped binary directly, instead of through Bash, so they
 don't depend on Bash and work with --shell_executable="".
+
+If `bazel_skylib` is loaded from `WORKSPACE` rather than with bzlmod, using
+this library requires additional `WORKSPACE` setup as explained in the
+[release page](https://github.com/bazelbuild/bazel-skylib/releases).
 """
 
+load("@bazel_features//:features.bzl", "bazel_features")
+
 def _impl_rule(ctx):
+    if not bazel_features.globals.RunEnvironmentInfo:
+        for attr in ("env", "env_inherit"):
+            if getattr(ctx.attr, attr, None):
+                fail("Attribute %s specified for %s is only supported with bazel >= 5.3.0" %
+                     (attr, ctx.label))
     out = ctx.actions.declare_file(ctx.attr.out)
     ctx.actions.symlink(
         target_file = ctx.executable.src,
@@ -41,11 +52,21 @@ def _impl_rule(ctx):
             runfiles = runfiles.merge(d[DefaultInfo].default_runfiles)
         runfiles = runfiles.merge(ctx.attr.src[DefaultInfo].default_runfiles)
 
-    return DefaultInfo(
-        executable = out,
-        files = depset([out]),
-        runfiles = runfiles,
-    )
+    ret = [
+        DefaultInfo(
+            executable = out,
+            files = depset([out]),
+            runfiles = runfiles,
+        ),
+    ]
+    if bazel_features.globals.RunEnvironmentInfo:
+        ret.append(
+            bazel_features.globals.RunEnvironmentInfo(
+                environment = ctx.attr.env,
+                inherited_environment = getattr(ctx.attr, "env_inherit", []),
+            ),
+        )
+    return ret
 
 _ATTRS = {
     "src": attr.label(
@@ -65,7 +86,22 @@ _ATTRS = {
     ),
     # "out" is attr.string instead of attr.output, so that it is select()'able.
     "out": attr.string(mandatory = True, doc = "An output name for the copy of the binary"),
+    "env": attr.string_dict(
+        doc = "additional environment variables to set when the target is executed by " +
+              "`bazel`. Setting this requires bazel version 5.3.0 or later.",
+        default = {},
+    ),
 }
+
+_TEST_ATTRS = dict(
+    _ATTRS,
+    env_inherit = attr.string_list(
+        doc = "additional environment variables to inherit from the external " +
+              "environment when the test is executed by `bazel test`. " +
+              "Setting this requires bazel version 5.3.0 or later.",
+        default = [],
+    ),
+)
 
 native_binary = rule(
     implementation = _impl_rule,
@@ -81,7 +117,7 @@ in genrule.tools for example. You can also augment the binary with runfiles.
 
 native_test = rule(
     implementation = _impl_rule,
-    attrs = _ATTRS,
+    attrs = _TEST_ATTRS,
     test = True,
     doc = """
 Wraps a pre-built binary or script with a test rule.
