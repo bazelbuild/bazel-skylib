@@ -63,6 +63,12 @@ stardoc_with_diff_test(
 )
 
 stardoc_with_diff_test(
+    name = "modules",
+    bzl_library_target = "//lib:modules",
+    out_label = "//docs:modules_doc.md",
+)
+
+stardoc_with_diff_test(
     name = "native_binary",
     bzl_library_target = "//rules:native_binary",
     out_label = "//docs:native_binary_doc.md",

@@ -48,6 +48,7 @@ s = shell.quote(p)
 * [paths](docs/paths_doc.md)
 * [selects](docs/selects_doc.md)
 * [sets](lib/sets.bzl) - _deprecated_, use `new_sets`
+* [modules](docs/modules_doc.md)
 * [new_sets](docs/new_sets_doc.md)
 * [shell](docs/shell_doc.md)
 * [structs](docs/structs_doc.md)
