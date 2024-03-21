@@ -246,6 +246,29 @@ Returns the union of several sets.
 The set union of all sets in `*args`.
 
 
+<a id="sets.mutable_union"></a>
+
+## sets.mutable_union
+
+<pre>
+sets.mutable_union(<a href="#sets.mutable_union-a">a</a>, <a href="#sets.mutable_union-b">b</a>)
+</pre>
+
+Modify set `a` adding elements from `b` to it.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="sets.mutable_union-a"></a>a |  A set, as returned by <code>sets.make()</code>.   |  none |
+| <a id="sets.mutable_union-b"></a>b |  A set, as returned by <code>sets.make()</code>.   |  none |
+
+**RETURNS**
+
+The set `a` with all elements appearing in `b` added to it.
+
+
 <a id="sets.difference"></a>
 
 ## sets.difference
@@ -267,6 +290,29 @@ Returns the elements in `a` that are not in `b`.
 **RETURNS**
 
 A set containing the elements that are in `a` but not in `b`.
+
+
+<a id="sets.mutable_difference"></a>
+
+## sets.mutable_difference
+
+<pre>
+sets.mutable_difference(<a href="#sets.mutable_difference-a">a</a>, <a href="#sets.mutable_difference-b">b</a>)
+</pre>
+
+Modify set `a` removing elements from `b` from it.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="sets.mutable_difference-a"></a>a |  A set, as returned by <code>sets.make()</code>.   |  none |
+| <a id="sets.mutable_difference-b"></a>b |  A set, as returned by <code>sets.make()</code>.   |  none |
+
+**RETURNS**
+
+The set `a` with all elements appearing in `b` removed from it.
 
 
 <a id="sets.length"></a>
