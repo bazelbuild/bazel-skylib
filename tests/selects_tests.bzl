@@ -86,16 +86,46 @@ def _create_config_setting_groups():
         match_all = [":condition1", ":condition2", ":condition3"],
     )
     selects.config_setting_group(
+        name = "not_1_and_2_and_3",
+        match_all = [":condition1", ":condition2", ":condition3"],
+        negated = [":condition1"],
+    )
+    selects.config_setting_group(
+        name = "1_and_2_and_not_3",
+        match_all = [":condition1", ":condition2", ":condition3"],
+        negated = [":condition3"],
+    )
+    selects.config_setting_group(
         name = "1_and_nothing_else",
         match_all = [":condition1"],
+    )
+    selects.config_setting_group(
+        name = "not_1_and_nothing_else",
+        match_all = [":condition1"],
+        negated = [":condition1"],
     )
     selects.config_setting_group(
         name = "1_or_2_or_3",
         match_any = [":condition1", ":condition2", ":condition3"],
     )
     selects.config_setting_group(
+        name = "1_or_not_2_or_3",
+        match_any = [":condition1", ":condition2", ":condition3"],
+        negated = [":condition2"],
+    )
+    selects.config_setting_group(
+        name = "1_or_2_or_not_3",
+        match_any = [":condition1", ":condition2", ":condition3"],
+        negated = [":condition3"],
+    )
+    selects.config_setting_group(
         name = "1_or_nothing_else",
         match_any = [":condition1"],
+    )
+    selects.config_setting_group(
+        name = "not_1_or_nothing_else",
+        match_any = [":condition1"],
+        negated = [":condition1"],
     )
 
 ###################################################
@@ -181,6 +211,54 @@ def _and_config_setting_group_matches_test():
     )
 
 ###################################################
+# and_not_1_config_setting_group_matches_test
+###################################################
+and_not_1_config_setting_group_matches_test = analysistest.make(
+    _expect_matches,
+    config_settings = _set_conditions([False, True, True]),
+)
+
+def _and_not_1_config_setting_group_matches_test():
+    """Test verifying match on an ANDing config_setting_group with negation."""
+    boolean_attr_rule(
+        name = "and_not_1_config_setting_group_matches_rule",
+        myboolean = select(
+            {
+                ":not_1_and_2_and_3": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    and_not_1_config_setting_group_matches_test(
+        name = "and_not_1_config_setting_group_matches_test",
+        target_under_test = ":and_not_1_config_setting_group_matches_rule",
+    )
+
+###################################################
+# and_not_3_config_setting_group_matches_test
+###################################################
+and_not_3_config_setting_group_matches_test = analysistest.make(
+    _expect_matches,
+    config_settings = _set_conditions([True, True, False]),
+)
+
+def _and_not_3_config_setting_group_matches_test():
+    """Test verifying match on an ANDing config_setting_group with negation."""
+    boolean_attr_rule(
+        name = "and_not_3_config_setting_group_matches_rule",
+        myboolean = select(
+            {
+                ":1_and_2_and_not_3": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    and_not_3_config_setting_group_matches_test(
+        name = "and_not_3_config_setting_group_matches_test",
+        target_under_test = ":and_not_3_config_setting_group_matches_rule",
+    )
+
+###################################################
 # and_config_setting_group_first_match_fails_test
 ###################################################
 and_config_setting_group_first_match_fails_test = analysistest.make(
@@ -202,6 +280,54 @@ def _and_config_setting_group_first_match_fails_test():
     and_config_setting_group_first_match_fails_test(
         name = "and_config_setting_group_first_match_fails_test",
         target_under_test = ":and_config_setting_group_first_match_fails_rule",
+    )
+
+###################################################
+# and_not_1_config_setting_group_first_match_fails_test
+###################################################
+and_not_1_config_setting_group_first_match_fails_test = analysistest.make(
+    _expect_doesnt_match,
+    config_settings = _set_conditions([True, True, True]),
+)
+
+def _and_not_1_config_setting_group_first_match_fails_test():
+    """Test verifying first condition mismatch on an ANDing config_setting_group."""
+    boolean_attr_rule(
+        name = "and_not_1_config_setting_group_first_match_fails_rule",
+        myboolean = select(
+            {
+                ":not_1_and_2_and_3": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    and_not_1_config_setting_group_first_match_fails_test(
+        name = "and_not_1_config_setting_group_first_match_fails_test",
+        target_under_test = ":and_not_1_config_setting_group_first_match_fails_rule",
+    )
+
+###################################################
+# and_not_3_config_setting_group_first_match_fails_test
+###################################################
+and_not_3_config_setting_group_first_match_fails_test = analysistest.make(
+    _expect_doesnt_match,
+    config_settings = _set_conditions([False, True, False]),
+)
+
+def _and_not_3_config_setting_group_first_match_fails_test():
+    """Test verifying first condition mismatch on an ANDing config_setting_group."""
+    boolean_attr_rule(
+        name = "and_not_3_config_setting_group_first_match_fails_rule",
+        myboolean = select(
+            {
+                ":1_and_2_and_not_3": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    and_not_3_config_setting_group_first_match_fails_test(
+        name = "and_not_3_config_setting_group_first_match_fails_test",
+        target_under_test = ":and_not_3_config_setting_group_first_match_fails_rule",
     )
 
 ###################################################
@@ -250,6 +376,54 @@ def _and_config_setting_group_last_match_fails_test():
     and_config_setting_group_last_match_fails_test(
         name = "and_config_setting_group_last_match_fails_test",
         target_under_test = ":and_config_setting_group_last_match_fails_rule",
+    )
+
+###################################################
+# and_not_1_config_setting_group_last_match_fails_test
+###################################################
+and_not_1_config_setting_group_last_match_fails_test = analysistest.make(
+    _expect_doesnt_match,
+    config_settings = _set_conditions([False, True, False]),
+)
+
+def _and_not_1_config_setting_group_last_match_fails_test():
+    """Test verifying last condition mismatch on an ANDing config_setting_group."""
+    boolean_attr_rule(
+        name = "and_not_1_config_setting_group_last_match_fails_rule",
+        myboolean = select(
+            {
+                ":not_1_and_2_and_3": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    and_not_1_config_setting_group_last_match_fails_test(
+        name = "and_not_1_config_setting_group_last_match_fails_test",
+        target_under_test = ":and_not_1_config_setting_group_last_match_fails_rule",
+    )
+
+###################################################
+# and_not_3_config_setting_group_last_match_fails_test
+###################################################
+and_not_3_config_setting_group_last_match_fails_test = analysistest.make(
+    _expect_doesnt_match,
+    config_settings = _set_conditions([True, True, True]),
+)
+
+def _and_not_3_config_setting_group_last_match_fails_test():
+    """Test verifying last condition mismatch on an ANDing config_setting_group."""
+    boolean_attr_rule(
+        name = "and_not_3_config_setting_group_last_match_fails_rule",
+        myboolean = select(
+            {
+                ":1_and_2_and_not_3": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    and_not_3_config_setting_group_last_match_fails_test(
+        name = "and_not_3_config_setting_group_last_match_fails_test",
+        target_under_test = ":and_not_3_config_setting_group_last_match_fails_rule",
     )
 
 ###################################################
@@ -325,6 +499,30 @@ def _and_config_setting_group_single_setting_matches_test():
     )
 
 ###################################################
+# and_config_setting_group_single_setting_matches_test
+###################################################
+and_not_config_setting_group_single_setting_matches_test = analysistest.make(
+    _expect_matches,
+    config_settings = {"//command_line_option:cpu": "x86"},
+)
+
+def _and_not_config_setting_group_single_setting_matches_test():
+    """Test verifying match on single-entry AND-NOT-ing config_setting_group."""
+    boolean_attr_rule(
+        name = "and_not_config_setting_group_single_setting_matches_rule",
+        myboolean = select(
+            {
+                ":not_1_and_nothing_else": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    and_not_config_setting_group_single_setting_matches_test(
+        name = "and_not_config_setting_group_single_setting_matches_test",
+        target_under_test = ":and_not_config_setting_group_single_setting_matches_rule",
+    )
+
+###################################################
 # and_config_setting_group_single_setting_fails_test
 ###################################################
 and_config_setting_group_single_setting_fails_test = analysistest.make(
@@ -349,6 +547,30 @@ def _and_config_setting_group_single_setting_fails_test():
     )
 
 ###################################################
+# and_not_config_setting_group_single_setting_fails_test
+###################################################
+and_not_config_setting_group_single_setting_fails_test = analysistest.make(
+    _expect_doesnt_match,
+    config_settings = {"//command_line_option:cpu": "ppc"},
+)
+
+def _and_not_config_setting_group_single_setting_fails_test():
+    """Test verifying no match on single-entry ANDing config_setting_group."""
+    boolean_attr_rule(
+        name = "and_not_config_setting_group_single_setting_fails_rule",
+        myboolean = select(
+            {
+                ":not_1_and_nothing_else": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    and_not_config_setting_group_single_setting_fails_test(
+        name = "and_not_config_setting_group_single_setting_fails_test",
+        target_under_test = ":and_not_config_setting_group_single_setting_fails_rule",
+    )
+
+###################################################
 # or_config_setting_group_no_match_test
 ###################################################
 or_config_setting_group_no_matches_test = analysistest.make(
@@ -370,6 +592,54 @@ def _or_config_setting_group_no_matches_test():
     or_config_setting_group_no_matches_test(
         name = "or_config_setting_group_no_matches_test",
         target_under_test = ":or_config_setting_group_no_matches_rule",
+    )
+
+###################################################
+# or_not_2_config_setting_group_no_match_test
+###################################################
+or_not_2_config_setting_group_no_matches_test = analysistest.make(
+    _expect_doesnt_match,
+    config_settings = _set_conditions([False, True, False]),
+)
+
+def _or_not_2_config_setting_group_no_matches_test():
+    """Test verifying no matches on an ORing config_setting_group."""
+    boolean_attr_rule(
+        name = "or_not_2_config_setting_group_no_matches_rule",
+        myboolean = select(
+            {
+                ":1_or_not_2_or_3": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    or_not_2_config_setting_group_no_matches_test(
+        name = "or_not_2_config_setting_group_no_matches_test",
+        target_under_test = ":or_not_2_config_setting_group_no_matches_rule",
+    )
+
+###################################################
+# or_not_3_config_setting_group_no_match_test
+###################################################
+or_not_3_config_setting_group_no_matches_test = analysistest.make(
+    _expect_doesnt_match,
+    config_settings = _set_conditions([False, False, True]),
+)
+
+def _or_not_3_config_setting_group_no_matches_test():
+    """Test verifying no matches on an ORing config_setting_group."""
+    boolean_attr_rule(
+        name = "or_not_3_config_setting_group_no_matches_rule",
+        myboolean = select(
+            {
+                ":1_or_2_or_not_3": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    or_not_3_config_setting_group_no_matches_test(
+        name = "or_not_3_config_setting_group_no_matches_test",
+        target_under_test = ":or_not_3_config_setting_group_no_matches_rule",
     )
 
 ###################################################
@@ -418,6 +688,54 @@ def _or_config_setting_group_middle_cond_matches_test():
     or_config_setting_group_middle_cond_matches_test(
         name = "or_config_setting_group_middle_cond_matches_test",
         target_under_test = ":or_config_setting_group_middle_cond_matches_rule",
+    )
+
+###################################################
+# or_not_2_config_setting_group_middle_cond_matches_test
+###################################################
+or_not_2_config_setting_group_middle_cond_matches_test = analysistest.make(
+    _expect_matches,
+    config_settings = _set_conditions([False, False, False]),
+)
+
+def _or_not_2_config_setting_group_middle_cond_matches_test():
+    """Test verifying middle condition matching on an ORing config_setting_group."""
+    boolean_attr_rule(
+        name = "or_not_2_config_setting_group_middle_cond_matches_rule",
+        myboolean = select(
+            {
+                ":1_or_not_2_or_3": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    or_not_2_config_setting_group_middle_cond_matches_test(
+        name = "or_not_2_config_setting_group_middle_cond_matches_test",
+        target_under_test = ":or_not_2_config_setting_group_middle_cond_matches_rule",
+    )
+
+###################################################
+# or_not_3_config_setting_group_last_cond_matches_test
+###################################################
+or_not_3_config_setting_group_last_cond_matches_test = analysistest.make(
+    _expect_matches,
+    config_settings = _set_conditions([False, False, False]),
+)
+
+def _or_not_3_config_setting_group_last_cond_matches_test():
+    """Test verifying middle condition matching on an ORing config_setting_group."""
+    boolean_attr_rule(
+        name = "or_not_3_config_setting_group_last_cond_matches_rule",
+        myboolean = select(
+            {
+                ":1_or_2_or_not_3": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    or_not_3_config_setting_group_last_cond_matches_test(
+        name = "or_not_3_config_setting_group_last_cond_matches_test",
+        target_under_test = ":or_not_3_config_setting_group_last_cond_matches_rule",
     )
 
 ###################################################
@@ -517,6 +835,30 @@ def _or_config_setting_group_single_setting_matches_test():
     )
 
 ###################################################
+# or_not_config_setting_group_single_setting_matches_test
+###################################################
+or_not_config_setting_group_single_setting_matches_test = analysistest.make(
+    _expect_matches,
+    config_settings = {"//command_line_option:cpu": "x86"},
+)
+
+def _or_not_config_setting_group_single_setting_matches_test():
+    """Test verifying match on single-entry ORing config_setting_group."""
+    boolean_attr_rule(
+        name = "or_not_config_setting_group_single_setting_matches_rule",
+        myboolean = select(
+            {
+                ":not_1_or_nothing_else": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    or_not_config_setting_group_single_setting_matches_test(
+        name = "or_not_config_setting_group_single_setting_matches_test",
+        target_under_test = ":or_not_config_setting_group_single_setting_matches_rule",
+    )
+
+###################################################
 # or_config_setting_group_single_setting_fails_test
 ###################################################
 or_config_setting_group_single_setting_fails_test = analysistest.make(
@@ -538,6 +880,30 @@ def _or_config_setting_group_single_setting_fails_test():
     or_config_setting_group_single_setting_fails_test(
         name = "or_config_setting_group_single_setting_fails_test",
         target_under_test = ":or_config_setting_group_single_setting_fails_rule",
+    )
+
+###################################################
+# or_not_config_setting_group_single_setting_fails_test
+###################################################
+or_not_config_setting_group_single_setting_fails_test = analysistest.make(
+    _expect_doesnt_match,
+    config_settings = {"//command_line_option:cpu": "ppc"},
+)
+
+def _or_not_config_setting_group_single_setting_fails_test():
+    """Test verifying no match on single-entry ORing config_setting_group."""
+    boolean_attr_rule(
+        name = "or_not_config_setting_group_single_setting_fails_rule",
+        myboolean = select(
+            {
+                ":not_1_or_nothing_else": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    or_not_config_setting_group_single_setting_fails_test(
+        name = "or_not_config_setting_group_single_setting_fails_test",
+        target_under_test = ":or_not_config_setting_group_single_setting_fails_rule",
     )
 
 ###################################################
@@ -619,22 +985,36 @@ def selects_test_suite():
     _create_config_setting_groups()
 
     _and_config_setting_group_matches_test()
+    _and_not_1_config_setting_group_matches_test()
+    _and_not_3_config_setting_group_matches_test()
     _and_config_setting_group_first_match_fails_test()
+    _and_not_1_config_setting_group_first_match_fails_test()
+    _and_not_3_config_setting_group_first_match_fails_test()
     _and_config_setting_group_middle_match_fails_test()
     _and_config_setting_group_last_match_fails_test()
+    _and_not_1_config_setting_group_last_match_fails_test()
+    _and_not_3_config_setting_group_last_match_fails_test()
     _and_config_setting_group_multiple_matches_fail_test()
     _and_config_setting_group_all_matches_fail_test()
     _and_config_setting_group_single_setting_matches_test()
+    _and_not_config_setting_group_single_setting_matches_test()
     _and_config_setting_group_single_setting_fails_test()
+    _and_not_config_setting_group_single_setting_fails_test()
 
     _or_config_setting_group_no_matches_test()
+    _or_not_2_config_setting_group_no_matches_test()
+    _or_not_3_config_setting_group_no_matches_test()
     _or_config_setting_group_first_cond_matches_test()
     _or_config_setting_group_middle_cond_matches_test()
+    _or_not_2_config_setting_group_middle_cond_matches_test()
     _or_config_setting_group_last_cond_matches_test()
+    _or_not_3_config_setting_group_last_cond_matches_test()
     _or_config_setting_group_multiple_conds_match_test()
     _or_config_setting_group_all_conds_match_test()
     _or_config_setting_group_single_setting_matches_test()
+    _or_not_config_setting_group_single_setting_matches_test()
     _or_config_setting_group_single_setting_fails_test()
+    _or_not_config_setting_group_single_setting_fails_test()
 
     _always_true_match_all_test()
     _always_true_match_any_test()
