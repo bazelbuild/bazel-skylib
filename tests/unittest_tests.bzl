@@ -194,19 +194,65 @@ def _inspect_actions_test(ctx):
     """Test verifying actions registered by a target."""
     env = analysistest.begin(ctx)
 
+    # Test getting all actions
     actions = analysistest.target_actions(env)
-    asserts.equals(env, 1, len(actions))
+    asserts.equals(env, 3, len(actions))
     action_output = actions[0].outputs.to_list()[0]
-    asserts.equals(env, "out.txt", action_output.basename)
+    asserts.equals(env, "out1.txt", action_output.basename)
+
+    # Test getting a list of 1 action by mnemonic
+    mnemonic_a_actions = analysistest.target_actions(
+        env, mnemonic = "MnemonicA")
+    asserts.equals(env, 1, len(mnemonic_a_actions))
+    asserts.equals(env, "MnemonicA", mnemonic_a_actions[0].mnemonic)
+
+    # Test getting multiple actions by mnemonic
+    mnemonic_b_actions = analysistest.target_actions(
+        env, mnemonic = "MnemonicB")
+    asserts.equals(env, 2, len(mnemonic_b_actions))
+    asserts.equals(env, "MnemonicB", mnemonic_b_actions[0].mnemonic)
+    asserts.equals(env, "MnemonicB", mnemonic_b_actions[1].mnemonic)
+
+    # Test getting no actions by mnemonic
+    mnemonic_c_actions = analysistest.target_actions(
+        env, mnemonic = "MnemonicC")
+    asserts.equals(env, 0, len(mnemonic_c_actions))
+
+    # Test getting a single action by mnemonic
+    mnemonic_a_action = analysistest.target_action(
+        env, mnemonic = "MnemonicA")
+    asserts.equals(env, "MnemonicA", mnemonic_a_action.mnemonic)
+
+    # Test getting a single action by output name
+    out2_txt_action = analysistest.target_action(
+        env, output_ending_with = "out2.txt")
+    asserts.equals(
+        env, "out2.txt", out2_txt_action.outputs.to_list()[0].basename)
+
     return analysistest.end(env)
 
 def _inspect_actions_fake_rule(ctx):
-    out_file = ctx.actions.declare_file("out.txt")
+    out1_file = ctx.actions.declare_file("out1.txt")
     ctx.actions.run_shell(
-        command = "echo 'hello' > %s" % out_file.basename,
-        outputs = [out_file],
+        command = "echo 'hello 1' > %s" % out1_file.basename,
+        outputs = [out1_file],
+        mnemonic = "MnemonicA",
     )
-    return [DefaultInfo(files = depset([out_file]))]
+    out2_file = ctx.actions.declare_file("out2.txt")
+    ctx.actions.run_shell(
+        command = "echo 'hello 2' > %s" % out2_file.basename,
+        outputs = [out2_file],
+        mnemonic = "MnemonicB",
+    )
+    out3_file = ctx.actions.declare_file("out3.txt")
+    ctx.actions.run_shell(
+        command = "echo 'hello 3' > %s" % out3_file.basename,
+        outputs = [out3_file],
+        mnemonic = "MnemonicB",  # two actions with same mnemonic
+    )
+    return [
+        DefaultInfo(files = depset([out1_file, out2_file, out3_file]))
+    ]
 
 inspect_actions_fake_rule = rule(
     implementation = _inspect_actions_fake_rule,

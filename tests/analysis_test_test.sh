@@ -51,6 +51,10 @@ function create_pkg() {
 
   cat > WORKSPACE <<EOF
 workspace(name = 'bazel_skylib')
+
+load("//lib:unittest.bzl", "register_unittest_toolchains")
+
+register_unittest_toolchains()
 EOF
 
   mkdir -p rules
@@ -74,10 +78,19 @@ types = struct(
 EOF
 
   ln -sf "$(rlocation $TEST_WORKSPACE/rules/analysis_test.bzl)" rules/analysis_test.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/unittest.bzl)" lib/unittest.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/new_sets.bzl)" lib/new_sets.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/partial.bzl)" lib/partial.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/types.bzl)" lib/types.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/dicts.bzl)" lib/dicts.bzl
+
+  mkdir -p toolchains/unittest
+  ln -sf "$(rlocation $TEST_WORKSPACE/toolchains/unittest/BUILD)" toolchains/unittest/BUILD
 
   mkdir -p fakerules
   cat > fakerules/rules.bzl <<EOF
 load("//rules:analysis_test.bzl", "analysis_test")
+load("//lib:unittest.bzl", "analysistest")
 
 def _fake_rule_impl(ctx):
     fail("This rule should never work")
@@ -93,6 +106,110 @@ fake_depending_rule = rule(
     implementation = _fake_depending_rule_impl,
     attrs = {"deps" : attr.label_list()},
 )
+
+############################################
+####### inspect actions failure tests ######
+############################################
+
+def _inspect_actions_fake_rule(ctx):
+    out1_file = ctx.actions.declare_file("out1.txt")
+    ctx.actions.run_shell(
+        command = "echo 'hello 1' > %s" % out1_file.basename,
+        outputs = [out1_file],
+        mnemonic = "MnemonicA",
+    )
+    out2_file = ctx.actions.declare_file("out2.txt")
+    ctx.actions.run_shell(
+        command = "echo 'hello 1' > %s" % out2_file.basename,
+        outputs = [out2_file],
+        mnemonic = "MnemonicA",
+    )
+    return [
+        DefaultInfo(files = depset([out1_file, out2_file]))
+    ]
+
+inspect_actions_fake_rule = rule(
+    implementation = _inspect_actions_fake_rule,
+)
+
+def _inspect_actions_no_mnemonic_test(ctx):
+    env = analysistest.begin(ctx)
+    # Should fail, no actions with MnemonicC
+    mnemonic_c_actions = analysistest.target_action(
+        env, mnemonic = "MnemonicC")
+    return analysistest.end(env)
+
+inspect_actions_no_mnemonic_test = analysistest.make(
+    _inspect_actions_no_mnemonic_test,
+)
+
+def _inspect_actions_multiple_actions_with_mnemonic_test(ctx):
+    env = analysistest.begin(ctx)
+    # Should fail, multiple actions with same mnemonic
+    output_foo_actions = analysistest.target_action(
+        env, mnemonic = "MnemonicA")
+    return analysistest.end(env)
+
+inspect_actions_multiple_actions_with_mnemonic_test = analysistest.make(
+    _inspect_actions_multiple_actions_with_mnemonic_test,
+)
+
+def _inspect_actions_no_output_test(ctx):
+    env = analysistest.begin(ctx)
+    # Should fail, no actions with output foo
+    output_foo_actions = analysistest.target_action(
+        env, output_ending_with = "foo")
+    return analysistest.end(env)
+
+inspect_actions_no_output_test = analysistest.make(
+    _inspect_actions_no_output_test,
+)
+
+def _inspect_actions_no_filter_test(ctx):
+    env = analysistest.begin(ctx)
+    # Should fail, need filter
+    output_foo_actions = analysistest.target_action(env)
+    return analysistest.end(env)
+
+inspect_actions_no_filter_test = analysistest.make(
+    _inspect_actions_no_filter_test,
+)
+
+def _inspect_actions_too_many_filters_test(ctx):
+    env = analysistest.begin(ctx)
+    # Should fail, can't specify both mnemonic and output_ending_with
+    output_foo_actions = analysistest.target_action(
+        env, mnemonic = "MnemonicC", output_ending_with = "out1.txt")
+    return analysistest.end(env)
+
+inspect_actions_too_many_filters_test = analysistest.make(
+    _inspect_actions_too_many_filters_test,
+)
+
+def action_inspection_failure_tests():
+  inspect_actions_fake_rule(name = "inspect_actions_fake_rule")
+
+  inspect_actions_no_mnemonic_test(
+      name = "inspect_actions_no_mnemonic_test",
+      target_under_test = "inspect_actions_fake_rule"
+  )
+  inspect_actions_no_output_test(
+      name = "inspect_actions_no_output_test",
+      target_under_test = "inspect_actions_fake_rule"
+  )
+  inspect_actions_multiple_actions_with_mnemonic_test(
+      name = "inspect_actions_multiple_actions_with_mnemonic_test",
+      target_under_test = "inspect_actions_fake_rule"
+  )
+  inspect_actions_no_filter_test(
+      name = "inspect_actions_no_filter_test",
+      target_under_test = "inspect_actions_fake_rule"
+  )
+  inspect_actions_too_many_filters_test(
+      name = "inspect_actions_too_many_filters_test",
+      target_under_test = "inspect_actions_fake_rule"
+  )
+
 EOF
 
   cat > fakerules/BUILD <<EOF
@@ -107,6 +224,7 @@ EOF
   cat > testdir/BUILD <<EOF
 load("//rules:analysis_test.bzl", "analysis_test")
 load("//fakerules:rules.bzl", "fake_rule", "fake_depending_rule")
+load("//fakerules:rules.bzl", "action_inspection_failure_tests")
 
 fake_rule(name = "target_fails")
 
@@ -133,6 +251,8 @@ analysis_test(
     name = "target_succeeds",
     targets = [":dummy_cc_library"],
 )
+
+action_inspection_failure_tests()
 EOF
 }
 
@@ -163,6 +283,31 @@ function test_transitive_target_fails() {
       >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
 
   expect_log "This rule should never work"
+}
+
+function test_inspect_actions_fails() {
+  local -r pkg="${FUNCNAME[0]}"
+  create_pkg "$pkg"
+
+  bazel test testdir:inspect_actions_no_mnemonic_test --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
+  expect_log "No action with mnemonic 'MnemonicC' found."
+
+  bazel test testdir:inspect_actions_multiple_actions_with_mnemonic_test --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
+  expect_log "Multiple actions with mnemonic 'MnemonicA' found."
+
+  bazel test testdir:inspect_actions_no_output_test --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
+  expect_log "No action with an output ending with 'foo' found."
+
+  bazel test testdir:inspect_actions_no_filter_test --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
+  expect_log "One of mnemonic or output_ending_with must be provided."
+
+  bazel test testdir:inspect_actions_too_many_filters_test --test_output=all --verbose_failures \
+      >"$TEST_log" 2>&1 && fail "Expected test to fail" || true
+  expect_log "Only one of mnemonic or output_ending_with may be provided."
 }
 
 cd "$TEST_TMPDIR"
