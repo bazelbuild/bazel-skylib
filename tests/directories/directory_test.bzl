@@ -86,3 +86,31 @@ def directory_test(env, targets):
     newdir.direct_files().contains_exactly([f3])
     newdir.transitive_files().contains_exactly([f3]).in_order()
     env.expect.that_str(newdir.actual.generated_path + "/f3").equals(f3.path)
+
+_NONEXISTENT_DIR_ERR = """@@//tests/directories/testdata/dir does not contain a directory named "nonexistent".
+Instead, it contains the directories ["subdir"]."""
+
+# buildifier: disable=function-docstring
+def nonexistent_subdirectory_test(env, target):
+    env.expect.that_target(target).failures().contains_exactly_predicates([
+        matching.contains(_NONEXISTENT_DIR_ERR),
+    ])
+
+# buildifier: disable=function-docstring
+def subdirectory_test(env, targets):
+    f2 = targets.f2.files.to_list()[0]
+
+    root = targets.root[DirectoryInfo]
+    want_dir = root.directories["dir"]
+    want_subdir = want_dir.directories["subdir"]
+
+    # Use that_str because it supports equality checks. They're not strings.
+    env.expect.that_str(targets.dir[DirectoryInfo]).equals(want_dir)
+    env.expect.that_str(targets.subdir[DirectoryInfo]).equals(want_subdir)
+
+    env.expect.that_collection(
+        targets.dir.files.to_list(),
+    ).contains_exactly([f2])
+    env.expect.that_collection(
+        targets.subdir.files.to_list(),
+    ).contains_exactly([f2])
