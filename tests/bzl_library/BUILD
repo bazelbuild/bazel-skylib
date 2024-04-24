@@ -1,6 +1,6 @@
-load(":bzl_library_consumer.bzl", "bzl_library_consumer")
 load("//:bzl_library.bzl", "bzl_library")
 load("//rules:build_test.bzl", "build_test")
+load(":bzl_library_consumer.bzl", "bzl_library_consumer")
 
 filegroup(
     name = "a",
