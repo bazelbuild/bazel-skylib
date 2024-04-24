@@ -96,6 +96,12 @@ native_binary(
     data = ["testdata.txt"],
 )
 
+native_binary(
+    name = "no_out_bin",
+    src = ":copy_assertdata_exe",
+    data = ["testdata.txt"],
+)
+
 native_test(
     name = "data_test",
     src = ":copy_assertdata_exe",
