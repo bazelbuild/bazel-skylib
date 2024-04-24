@@ -1,6 +1,5 @@
 load("//:bzl_library.bzl", "bzl_library")
-load("//rules:build_test.bzl", "build_test")
-load(":bzl_library_consumer.bzl", "bzl_library_consumer")
+load(":bzl_library_test.bzl", "bzl_library_test")
 
 filegroup(
     name = "a",
@@ -21,12 +20,13 @@ bzl_library(
     ],
 )
 
-bzl_library_consumer(
-    name = "consumer",
-    target = ":c",
-)
-
-build_test(
-    name = "test_bzl_library",
-    targets = [":consumer"],
+bzl_library_test(
+    name = "bzl_library_test",
+    expected_srcs = ["c.bzl"],
+    expected_transitive_srcs = [
+        "a.bzl",
+        "b.bzl",
+        "c.bzl",
+    ],
+    target_under_test = ":c",
 )
