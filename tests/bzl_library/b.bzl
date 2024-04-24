@@ -1,5 +1,3 @@
-"""b.bzl, which loads from a.bzl"""
+"""b.bzl, havin' a grand time"""
 
-load(":a.bzl", "A")
-
-B = A + 70
+B = 70

@@ -1,32 +1,32 @@
+load(":bzl_library_consumer.bzl", "bzl_library_consumer")
 load("//:bzl_library.bzl", "bzl_library")
 load("//rules:build_test.bzl", "build_test")
 
-bzl_library(
-    name = "a_bl",
-    srcs = ["a.bzl"],
-)
-
-bzl_library(
-    name = "b_bl",
-    srcs = ["b.bzl"],
-    deps = [":a_bl"],
-)
-
 filegroup(
-    name = "a_fg",
+    name = "a",
     srcs = ["a.bzl"],
 )
 
 bzl_library(
-    name = "b_fg",
+    name = "b",
     srcs = ["b.bzl"],
-    deps = [":a_fg"],
+)
+
+bzl_library(
+    name = "c",
+    srcs = ["c.bzl"],
+    deps = [
+        ":a",
+        ":b",
+    ],
+)
+
+bzl_library_consumer(
+    name = "consumer",
+    target = ":c",
 )
 
 build_test(
     name = "test_bzl_library",
-    targets = [
-        ":b_bl",
-        ":b_fg",
-    ],
+    targets = [":consumer"],
 )
