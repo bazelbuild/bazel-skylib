@@ -52,16 +52,6 @@ load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 
 rules_pkg_dependencies()
 
-maybe(
-    name = "rules_cc",
-    repo_rule = http_archive,
-    sha256 = "4dccbfd22c0def164c8f47458bd50e0c7148f3d92002cdb459c2a96a68498241",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_cc/releases/download/0.0.1/rules_cc-0.0.1.tar.gz",
-        "https://github.com/bazelbuild/rules_cc/releases/download/0.0.1/rules_cc-0.0.1.tar.gz",
-    ],
-)
-
 load("//lib:unittest.bzl", "register_unittest_toolchains")
 
 register_unittest_toolchains()
