@@ -28,7 +28,7 @@ rules_foo_deps_ext = modules.as_extension(rules_foo_deps)
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="modules.as_extension-macro"></a>macro |  A [WORKSPACE dependency macro](https://bazel.build/rules/deploying#dependencies), i.e., a function with no required parameters that instantiates one or more repository rules.   |  none |
-| <a id="modules.as_extension-doc"></a>doc |  A description of the module extension that can be extracted by documentation generating tools.   |  <code>None</code> |
+| <a id="modules.as_extension-doc"></a>doc |  A description of the module extension that can be extracted by documentation generating tools.   |  `None` |
 
 **RETURNS**
 
@@ -64,8 +64,8 @@ ext = module_extension(_ext_impl)
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="modules.use_all_repos-module_ctx"></a>module_ctx |  The [<code>module_ctx</code>](https://bazel.build/rules/lib/builtins/module_ctx) object passed to the module extension's implementation function.   |  none |
-| <a id="modules.use_all_repos-reproducible"></a>reproducible |  The value of the <code>reproducible</code> parameter to pass to the [<code>extension_metadata</code>](https://bazel.build/rules/lib/builtins/extension_metadata.html) object returned by this function. This is safe to set with Bazel versions that don't support this parameter and will be ignored in that case.   |  <code>False</code> |
+| <a id="modules.use_all_repos-module_ctx"></a>module_ctx |  The [`module_ctx`](https://bazel.build/rules/lib/builtins/module_ctx) object passed to the module extension's implementation function.   |  none |
+| <a id="modules.use_all_repos-reproducible"></a>reproducible |  The value of the `reproducible` parameter to pass to the [`extension_metadata`](https://bazel.build/rules/lib/builtins/extension_metadata.html) object returned by this function. This is safe to set with Bazel versions that don't support this parameter and will be ignored in that case.   |  `False` |
 
 **RETURNS**
 

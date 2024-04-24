@@ -5,7 +5,6 @@ A rule that copies a directory to another place.
 The rule uses a Bash command on Linux/macOS/non-Windows, and a cmd.exe command
 on Windows (no Bash is required).
 
-
 <a id="copy_directory"></a>
 
 ## copy_directory
@@ -33,7 +32,7 @@ for more context.
 | <a id="copy_directory-name"></a>name |  Name of the rule.   |  none |
 | <a id="copy_directory-src"></a>src |  The directory to make a copy of. Can be a source directory or TreeArtifact.   |  none |
 | <a id="copy_directory-out"></a>out |  Path of the output directory, relative to this package.   |  none |
-| <a id="copy_directory-kwargs"></a>kwargs |  further keyword arguments, e.g. <code>visibility</code>   |  none |
+| <a id="copy_directory-kwargs"></a>kwargs |  further keyword arguments, e.g. `visibility`   |  none |
 
 
 <a id="copy_directory_action"></a>
@@ -58,6 +57,6 @@ other rule implementations.
 | <a id="copy_directory_action-ctx"></a>ctx |  The rule context.   |  none |
 | <a id="copy_directory_action-src"></a>src |  The directory to make a copy of. Can be a source directory or TreeArtifact.   |  none |
 | <a id="copy_directory_action-dst"></a>dst |  The directory to copy to. Must be a TreeArtifact.   |  none |
-| <a id="copy_directory_action-is_windows"></a>is_windows |  If true, an cmd.exe action is created so there is no bash dependency.   |  <code>False</code> |
+| <a id="copy_directory_action-is_windows"></a>is_windows |  If true, an cmd.exe action is created so there is no bash dependency.   |  `False` |
 
 
