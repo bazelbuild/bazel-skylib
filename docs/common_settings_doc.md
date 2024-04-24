@@ -8,7 +8,6 @@ For label-typed settings, use the native label_flag and label_setting rules.
 More documentation on how to use build settings at
 https://bazel.build/extending/config#user-defined-build-settings
 
-
 <a id="bool_flag"></a>
 
 ## bool_flag
@@ -61,7 +60,7 @@ An int-typed build setting that can be set on the command line
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="int_flag-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="int_flag-make_variable"></a>make_variable |  If set, the build setting's value will be available as a Make variable with this name in the attributes of rules that list this build setting in their 'toolchains' attribute.   | String | optional | <code>""</code> |
+| <a id="int_flag-make_variable"></a>make_variable |  If set, the build setting's value will be available as a Make variable with this name in the attributes of rules that list this build setting in their 'toolchains' attribute.   | String | optional |  `""`  |
 
 
 <a id="int_setting"></a>
@@ -80,7 +79,7 @@ An int-typed build setting that cannot be set on the command line
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="int_setting-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="int_setting-make_variable"></a>make_variable |  If set, the build setting's value will be available as a Make variable with this name in the attributes of rules that list this build setting in their 'toolchains' attribute.   | String | optional | <code>""</code> |
+| <a id="int_setting-make_variable"></a>make_variable |  If set, the build setting's value will be available as a Make variable with this name in the attributes of rules that list this build setting in their 'toolchains' attribute.   | String | optional |  `""`  |
 
 
 <a id="string_flag"></a>
@@ -99,8 +98,8 @@ A string-typed build setting that can be set on the command line
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="string_flag-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="string_flag-make_variable"></a>make_variable |  If set, the build setting's value will be available as a Make variable with this name in the attributes of rules that list this build setting in their 'toolchains' attribute.   | String | optional | <code>""</code> |
-| <a id="string_flag-values"></a>values |  The list of allowed values for this setting. An error is raised if any other value is given.   | List of strings | optional | <code>[]</code> |
+| <a id="string_flag-make_variable"></a>make_variable |  If set, the build setting's value will be available as a Make variable with this name in the attributes of rules that list this build setting in their 'toolchains' attribute.   | String | optional |  `""`  |
+| <a id="string_flag-values"></a>values |  The list of allowed values for this setting. An error is raised if any other value is given.   | List of strings | optional |  `[]`  |
 
 
 <a id="string_list_flag"></a>
@@ -155,8 +154,8 @@ A string-typed build setting that cannot be set on the command line
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="string_setting-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="string_setting-make_variable"></a>make_variable |  If set, the build setting's value will be available as a Make variable with this name in the attributes of rules that list this build setting in their 'toolchains' attribute.   | String | optional | <code>""</code> |
-| <a id="string_setting-values"></a>values |  The list of allowed values for this setting. An error is raised if any other value is given.   | List of strings | optional | <code>[]</code> |
+| <a id="string_setting-make_variable"></a>make_variable |  If set, the build setting's value will be available as a Make variable with this name in the attributes of rules that list this build setting in their 'toolchains' attribute.   | String | optional |  `""`  |
+| <a id="string_setting-values"></a>values |  The list of allowed values for this setting. An error is raised if any other value is given.   | List of strings | optional |  `[]`  |
 
 
 <a id="BuildSettingInfo"></a>

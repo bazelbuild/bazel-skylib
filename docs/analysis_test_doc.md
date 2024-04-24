@@ -12,30 +12,30 @@ analysis_test(<a href="#analysis_test-name">name</a>, <a href="#analysis_test-ta
 
 Test rule checking that other targets can be successfully analyzed.
 
-    This rule essentially verifies that all targets under `targets` would
-    generate no errors when analyzed with `bazel build [targets] --nobuild`.
-    Action success/failure for the targets and their transitive dependencies
-    are not verified. An analysis test simply ensures that each target in the transitive
-    dependencies propagate providers appropriately and register actions for their outputs
-    appropriately.
+This rule essentially verifies that all targets under `targets` would
+generate no errors when analyzed with `bazel build [targets] --nobuild`.
+Action success/failure for the targets and their transitive dependencies
+are not verified. An analysis test simply ensures that each target in the transitive
+dependencies propagate providers appropriately and register actions for their outputs
+appropriately.
 
-    NOTE: If the targets fail to analyze, instead of the analysis_test failing, the analysis_test
-    will fail to build. Ideally, it would instead result in a test failure. This is a current
-    infrastructure limitation that may be fixed in the future.
+NOTE: If the targets fail to analyze, instead of the analysis_test failing, the analysis_test
+will fail to build. Ideally, it would instead result in a test failure. This is a current
+infrastructure limitation that may be fixed in the future.
 
-    Typical usage:
+Typical usage:
 
-      load("@bazel_skylib//rules:analysis_test.bzl", "analysis_test")
-      analysis_test(
-          name = "my_analysis_test",
-          targets = [
-              "//some/package:rule",
-          ],
-      )
+  load("@bazel_skylib//rules:analysis_test.bzl", "analysis_test")
+  analysis_test(
+      name = "my_analysis_test",
+      targets = [
+          "//some/package:rule",
+      ],
+  )
 
-    Args:
-      name: The name of the test rule.
-      targets: A list of targets to ensure build.
+Args:
+  name: The name of the test rule.
+  targets: A list of targets to ensure build.
 
 **ATTRIBUTES**
 

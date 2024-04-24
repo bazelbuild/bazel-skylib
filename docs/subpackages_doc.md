@@ -2,7 +2,6 @@
 
 Skylib module containing common functions for working with native.subpackages()
 
-
 <a id="subpackages.all"></a>
 
 ## subpackages.all
@@ -36,9 +35,9 @@ NOTE: fail()s if native.subpackages() is not supported.
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="subpackages.all-exclude"></a>exclude |  see native.subpackages(exclude)   |  <code>[]</code> |
-| <a id="subpackages.all-allow_empty"></a>allow_empty |  see native.subpackages(allow_empty)   |  <code>False</code> |
-| <a id="subpackages.all-fully_qualified"></a>fully_qualified |  It true return fully qualified Labels for subpackages, otherwise returns subpackage path relative to current package.   |  <code>True</code> |
+| <a id="subpackages.all-exclude"></a>exclude |  see native.subpackages(exclude)   |  `[]` |
+| <a id="subpackages.all-allow_empty"></a>allow_empty |  see native.subpackages(allow_empty)   |  `False` |
+| <a id="subpackages.all-fully_qualified"></a>fully_qualified |  It true return fully qualified Labels for subpackages, otherwise returns subpackage path relative to current package.   |  `True` |
 
 **RETURNS**
 
