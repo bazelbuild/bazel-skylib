@@ -35,19 +35,23 @@ def _as_extension(macro, doc = None):
     Returns:
       A module extension that generates the repositories instantiated by the given macro and also
       uses [`use_all_repos`](#use_all_repos) to indicate that all of those repositories should be
-      imported via `use_repo`.
+      imported via `use_repo`. The extension is marked as reproducible if supported by the current
+      version of Bazel and thus doesn't result in a lockfile entry.
     """
 
     def _ext_impl(module_ctx):
         macro()
-        return _use_all_repos(module_ctx)
+
+        # Setting `reproducible` is safe since `macro`, as a function without parameters, must be
+        # deterministic.
+        return _use_all_repos(module_ctx, reproducible = True)
 
     return module_extension(
         implementation = _ext_impl,
         doc = doc,
     )
 
-def _use_all_repos(module_ctx):
+def _use_all_repos(module_ctx, reproducible = False):
     """Return from a module extension that should have all its repositories imported via `use_repo`.
 
     Example:
@@ -63,6 +67,10 @@ def _use_all_repos(module_ctx):
     Args:
       module_ctx: The [`module_ctx`](https://bazel.build/rules/lib/builtins/module_ctx) object
           passed to the module extension's implementation function.
+      reproducible: The value of the `reproducible` parameter to pass to the
+          [`extension_metadata`](https://bazel.build/rules/lib/builtins/extension_metadata.html)
+          object returned by this function. This is safe to set with Bazel versions that don't
+          support this parameter and will be ignored in that case.
 
     Returns:
       An [`extension_metadata`](https://bazel.build/rules/lib/builtins/extension_metadata.html)
@@ -88,9 +96,18 @@ def _use_all_repos(module_ctx):
     if root_module_has_non_dev_dependency == None:
         return None
 
+    # module_ctx.extension_metadata has the paramater `reproducible` as of Bazel 7.1.0. We can't
+    # test for it directly and would ideally use bazel_features to check for it, but adding a
+    # dependency on it would require complicating the WORKSPACE setup for skylib. Thus, test for
+    # it by checking the availability of another feature introduced in 7.1.0.
+    extension_metadata_kwargs = {}
+    if hasattr(module_ctx, "watch"):
+        extension_metadata_kwargs["reproducible"] = reproducible
+
     return extension_metadata(
         root_module_direct_deps = "all" if root_module_has_non_dev_dependency else [],
         root_module_direct_dev_deps = [] if root_module_has_non_dev_dependency else "all",
+        **extension_metadata_kwargs
     )
 
 modules = struct(

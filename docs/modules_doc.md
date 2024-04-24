@@ -34,7 +34,8 @@ rules_foo_deps_ext = modules.as_extension(rules_foo_deps)
 
 A module extension that generates the repositories instantiated by the given macro and also
 uses [`use_all_repos`](#use_all_repos) to indicate that all of those repositories should be
-imported via `use_repo`.
+imported via `use_repo`. The extension is marked as reproducible if supported by the current
+version of Bazel and thus doesn't result in a lockfile entry.
 
 
 <a id="modules.use_all_repos"></a>
@@ -42,7 +43,7 @@ imported via `use_repo`.
 ## modules.use_all_repos
 
 <pre>
-modules.use_all_repos(<a href="#modules.use_all_repos-module_ctx">module_ctx</a>)
+modules.use_all_repos(<a href="#modules.use_all_repos-module_ctx">module_ctx</a>, <a href="#modules.use_all_repos-reproducible">reproducible</a>)
 </pre>
 
 Return from a module extension that should have all its repositories imported via `use_repo`.
@@ -64,6 +65,7 @@ ext = module_extension(_ext_impl)
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="modules.use_all_repos-module_ctx"></a>module_ctx |  The [`module_ctx`](https://bazel.build/rules/lib/builtins/module_ctx) object passed to the module extension's implementation function.   |  none |
+| <a id="modules.use_all_repos-reproducible"></a>reproducible |  The value of the `reproducible` parameter to pass to the [`extension_metadata`](https://bazel.build/rules/lib/builtins/extension_metadata.html) object returned by this function. This is safe to set with Bazel versions that don't support this parameter and will be ignored in that case.   |  `False` |
 
 **RETURNS**
 
