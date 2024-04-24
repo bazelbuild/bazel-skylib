@@ -40,9 +40,6 @@ if not exist \"{src}\\\" (
 )
 @robocopy \"{src}\" \"{dst}\" /E /MIR >NUL & @exit 0
 """
-    mnemonic = "CopyDirectory"
-    progress_message = "Copying directory %{input}"
-
     ctx.actions.write(
         output = bat,
         # Do not use lib/shell.bzl's shell.quote() method, because that uses
@@ -58,8 +55,8 @@ if not exist \"{src}\\\" (
         outputs = [dst],
         executable = "cmd.exe",
         arguments = ["/C", bat.path.replace("/", "\\")],
-        mnemonic = mnemonic,
-        progress_message = progress_message,
+        mnemonic = ctx.attr.mnemonic,
+        progress_message = ctx.attr.progress_message,
         use_default_shell_env = True,
         execution_requirements = COPY_EXECUTION_REQUIREMENTS,
     )
@@ -73,16 +70,13 @@ fi
 
 rm -rf \"$2\" && cp -fR \"$1/\" \"$2\"
 """
-    mnemonic = "CopyDirectory"
-    progress_message = "Copying directory %s" % src.path
-
     ctx.actions.run_shell(
         inputs = [src],
         outputs = [dst],
         command = cmd,
         arguments = [src.path, dst.path],
-        mnemonic = mnemonic,
-        progress_message = progress_message,
+        mnemonic = ctx.attr.mnemonic,
+        progress_message = ctx.attr.progress_message,
         use_default_shell_env = True,
         execution_requirements = COPY_EXECUTION_REQUIREMENTS,
     )
@@ -124,10 +118,12 @@ _copy_directory = rule(
         # Cannot declare out as an output here, because there's no API for declaring
         # TreeArtifact outputs.
         "out": attr.string(mandatory = True),
+        "mnemonic": attr.string(),
+        "progress_message": attr.string(),
     },
 )
 
-def copy_directory(name, src, out, **kwargs):
+def copy_directory(name, src, out, mnemonic = "CopyDirectory", progress_message = "Copying directory %{input}", **kwargs):
     """Copies a directory to another location.
 
     This rule uses a Bash command on Linux/macOS/non-Windows, and a cmd.exe command on Windows (no Bash is required).
@@ -142,6 +138,8 @@ def copy_directory(name, src, out, **kwargs):
       name: Name of the rule.
       src: The directory to make a copy of. Can be a source directory or TreeArtifact.
       out: Path of the output directory, relative to this package.
+      progress_message: A custom action progress message.
+      mnemonic: A custom action mnemonic.
       **kwargs: further keyword arguments, e.g. `visibility`
     """
     _copy_directory(
@@ -152,5 +150,7 @@ def copy_directory(name, src, out, **kwargs):
             "//conditions:default": False,
         }),
         out = out,
+        mnemonic = mnemonic,
+        progress_message = progress_message,
         **kwargs
     )
