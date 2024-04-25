@@ -79,7 +79,10 @@ EOF
   ln -sf "$(rlocation $TEST_WORKSPACE/lib/unittest.bzl)" lib/unittest.bzl
 
   mkdir -p toolchains/unittest
-  ln -sf "$(rlocation $TEST_WORKSPACE/toolchains/unittest/BUILD)" toolchains/unittest/BUILD
+  # Remove `package(default_applicable_license = ...)` line to avoid depending on rules_license inside this test
+  sed -e '/package(default_applicable_licenses = .*)/d' \
+    "$(rlocation $TEST_WORKSPACE/toolchains/unittest/BUILD)" \
+    > toolchains/unittest/BUILD
 
   # Create test files.
   mkdir -p testdir
