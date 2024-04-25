@@ -3,6 +3,9 @@ Release 1.6.1
 ## What's Changed
 * Fix `modules` Bazel 6 compatibility by @phst in https://github.com/bazelbuild/bazel-skylib/pull/499
 
+## New Contributors
+* @phst made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/499
+
 **Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.6.0...1.6.1
 
 Release 1.6.0
