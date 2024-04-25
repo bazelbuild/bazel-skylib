@@ -20,22 +20,6 @@ Runs a binary as a build action. This rule does not require Bash (unlike native.
 
 load("//lib:dicts.bzl", "dicts")
 
-_NOOPS = ("$(rlocationpath", "$(rootpath")
-_EXPANDS = ("$(execpath", "$(location")
-
-def _is_expandable(value):
-    for noop in _NOOPS:
-        if noop in value:
-            # buildifier: disable=print
-            print("The `{}` expansion value is unused by `run_binary`. It's use will not be expanded.".format(
-                noop,
-            ))
-    for prefix in _EXPANDS:
-        if prefix in value:
-            return True
-
-    return False
-
 def _run_binary_impl(ctx):
     tool_as_list = [ctx.attr.tool]
     args = [
@@ -49,12 +33,12 @@ def _run_binary_impl(ctx):
         # tokenization they would have to write args=["'a b'"] or args=["a\\ b"]. There's no
         # documented tokenization function anyway (as of 2019-05-21 ctx.tokenize exists but is
         # undocumented, see https://github.com/bazelbuild/bazel/issues/8389).
-        ctx.expand_location(a, tool_as_list) if _is_expandable(a) else a
+        ctx.expand_location(a, tool_as_list)
         for a in ctx.attr.args
     ]
     envs = {
         # Expand $(execpath) / $(execpaths) in the values.
-        k: ctx.expand_location(v, tool_as_list) if _is_expandable(v) else v
+        k: ctx.expand_location(v, tool_as_list)
         for k, v in ctx.attr.env.items()
     }
     ctx.actions.run(
