@@ -89,7 +89,7 @@ def update_docs(
     content = ["#!/usr/bin/env bash", "cd ${BUILD_WORKSPACE_DIRECTORY}"]
     data = []
     for r in native.existing_rules().values():
-        if r["kind"] == "stardoc":
+        if r["kind"] == "stardoc_markdown_renderer":
             doc_gen = r["out"]
             if doc_gen.startswith(":"):
                 doc_gen = doc_gen[1:]

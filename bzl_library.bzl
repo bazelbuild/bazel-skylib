@@ -54,10 +54,7 @@ bzl_library = rule(
         ),
         "deps": attr.label_list(
             allow_files = [".bzl", ".scl"],
-            providers = [
-                [StarlarkLibraryInfo],
-            ],
-            doc = """List of other `bzl_library` targets that are required by the
+            doc = """List of other `bzl_library` or `filegroup` targets that are required by the
 Starlark files listed in `srcs`.""",
         ),
     },

@@ -49,7 +49,7 @@ Returns a new `dict` that has all the entries of `dictionary` with keys not in `
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="dicts.omit-dictionary"></a>dictionary |  A <code>dict</code>.   |  none |
+| <a id="dicts.omit-dictionary"></a>dictionary |  A `dict`.   |  none |
 | <a id="dicts.omit-keys"></a>keys |  A sequence.   |  none |
 
 **RETURNS**
@@ -72,7 +72,7 @@ Returns a new `dict` that has all the entries of `dictionary` with keys in `keys
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="dicts.pick-dictionary"></a>dictionary |  A <code>dict</code>.   |  none |
+| <a id="dicts.pick-dictionary"></a>dictionary |  A `dict`.   |  none |
 | <a id="dicts.pick-keys"></a>keys |  A sequence.   |  none |
 
 **RETURNS**
