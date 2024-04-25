@@ -1,6 +1,8 @@
 load("//:bzl_library.bzl", "bzl_library")
 load(":bzl_library_test.bzl", "bzl_library_test")
 
+licenses(["notice"])
+
 filegroup(
     name = "a",
     srcs = ["testdata/a.bzl"],
