@@ -36,10 +36,10 @@ def _is_expandable(value):
 
     return False
 
-def _impl(ctx):
+def _run_binary_impl(ctx):
     tool_as_list = [ctx.attr.tool]
     args = [
-        # Expand $(location) / $(locations) in args.
+        # Expand $(execpath) / $(execpaths) in args.
         #
         # To keep the rule simple, do not expand Make Variables (like *_binary.args usually would).
         # (We can add this feature later if users ask for it.)
@@ -49,11 +49,11 @@ def _impl(ctx):
         # tokenization they would have to write args=["'a b'"] or args=["a\\ b"]. There's no
         # documented tokenization function anyway (as of 2019-05-21 ctx.tokenize exists but is
         # undocumented, see https://github.com/bazelbuild/bazel/issues/8389).
-        ctx.expand_location(a, tool_as_list) if _is_expandable("$(location") else a
+        ctx.expand_location(a, tool_as_list) if _is_expandable(a) else a
         for a in ctx.attr.args
     ]
     envs = {
-        # Expand $(location) / $(locations) in the values.
+        # Expand $(execpath) / $(execpaths) in the values.
         k: ctx.expand_location(v, tool_as_list) if _is_expandable(v) else v
         for k, v in ctx.attr.env.items()
     }
@@ -73,7 +73,7 @@ def _impl(ctx):
     )
 
 run_binary = rule(
-    implementation = _impl,
+    implementation = _run_binary_impl,
     doc = "Runs a binary as a build action.\n\nThis rule does not require Bash (unlike" +
           " `native.genrule`).",
     attrs = {
