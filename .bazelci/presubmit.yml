@@ -1,18 +1,22 @@
 ---
+.reusable_build_flags: &reusable_build_flags
+  ? "--incompatible_config_setting_private_default_visibility"
+  ? "--incompatible_disallow_empty_glob"
+
+.reusable_test_flags: &reusable_test_flags
+  <<: *reusable_build_flags
+  ? "--test_env=PATH"
+
+.reusable_targets: &reusable_targets
+  ? "--"
+  ? "//..."
+  ? "@bazel_skylib_gazelle_plugin//..."
+
 .reusable_config: &reusable_config
-  build_flags:
-    - "--incompatible_config_setting_private_default_visibility"
-    - "--incompatible_disallow_empty_glob"
-  test_flags:
-    - "--test_env=PATH"
-  build_targets:
-    - "--"
-    - "//..."
-    - "@bazel_skylib_gazelle_plugin//..."
-  test_targets:
-    - "--"
-    - "//..."
-    - "@bazel_skylib_gazelle_plugin//..."
+  build_flags: *reusable_build_flags
+  test_flags: *reusable_test_flags
+  build_targets: *reusable_targets
+  test_targets: *reusable_targets
 
 tasks:
   ubuntu2004_bazel5:
@@ -26,6 +30,14 @@ tasks:
     name: "Bazel 6.x"
     platform: ubuntu2004
     bazel: 6.x
+    build_targets:
+    <<: *reusable_targets
+    # rules_pkg fails with --noenable_bzlmod
+    ? "-//distribution/..."
+    test_targets:
+    <<: *reusable_targets
+    # rules_pkg fails with --noenable_bzlmod
+    ? "-//distribution/..."
 
   ubuntu2004_bazel6_enable_bzlmod:
     <<: *reusable_config
@@ -33,12 +45,11 @@ tasks:
     platform: ubuntu2004
     bazel: 6.x
     build_flags:
-    - "--enable_bzlmod"
-    - "--incompatible_config_setting_private_default_visibility"
-    - "--incompatible_disallow_empty_glob"
+    <<: *reusable_build_flags
+    ? "--enable_bzlmod"
     test_flags:
-    - "--enable_bzlmod"
-    - "--test_env=PATH"
+    <<: *reusable_test_flags
+    ? "--enable_bzlmod"
 
   ubuntu2004_latest:
     <<: *reusable_config
@@ -52,11 +63,19 @@ tasks:
     platform: ubuntu2004
     bazel: latest
     build_flags:
-    - "--noenable_bzlmod"
-    - "--incompatible_config_setting_private_default_visibility"
-    - "--incompatible_disallow_empty_glob"
+    <<: *reusable_build_flags
+    ? "--noenable_bzlmod"
     test_flags:
-    - "--test_env=PATH"
+    <<: *reusable_test_flags
+    ? "--noenable_bzlmod"
+    build_targets:
+    <<: *reusable_targets
+    # rules_pkg fails with --noenable_bzlmod
+    ? "-//distribution/..."
+    test_targets:
+    <<: *reusable_targets
+    # rules_pkg fails with --noenable_bzlmod
+    ? "-//distribution/..."
 
   ubuntu1804_latest:
     <<: *reusable_config
@@ -65,26 +84,18 @@ tasks:
     bazel: latest
 
   ubuntu1604_latest:
+    <<: *reusable_config
     name: "Latest Bazel"
     platform: ubuntu1604
     bazel: latest
-    build_flags:
-    - "--incompatible_config_setting_private_default_visibility"
-    - "--incompatible_disallow_empty_glob"
     build_targets:
-    - "--"
-    - "//..."
-    - "@bazel_skylib_gazelle_plugin//..."
+    <<: *reusable_targets
     # //distribution requires Python >= 3.6 for some rules_pkg scripts; Ubuntu 16.04 has Python 3.5
-    - "-//distribution/..."
-    test_flags:
-    - "--test_env=PATH"
+    ? "-//distribution/..."
     test_targets:
-    - "--"
-    - "//..."
-    - "@bazel_skylib_gazelle_plugin//..."
+    <<: *reusable_targets
     # //distribution requires Python >= 3.6 for some rules_pkg scripts; Ubuntu 16.04 has Python 3.5
-    - "-//distribution/..."
+    ? "-//distribution/..."
 
   macos_latest:
     <<: *reusable_config
@@ -97,14 +108,12 @@ tasks:
     name: "Latest Bazel"
     platform: windows
     bazel: latest
-    build_flags:
-    - "--incompatible_config_setting_private_default_visibility"
-    - "--incompatible_disallow_empty_glob"
     test_flags:
+    <<: *reusable_test_flags
     # TODO(laszlocsomor): remove "--test_env=LOCALAPPDATA" after
     # https://github.com/bazelbuild/bazel/issues/7761 is fixed
-    - "--test_env=LOCALAPPDATA"
-    - "--test_tag_filters=-no_windows"
+    ? "--test_env=LOCALAPPDATA"
+    ? "--test_tag_filters=-no_windows"
 
   ubuntu2004_last_green:
     <<: *reusable_config
@@ -123,13 +132,11 @@ tasks:
     name: "Last Green Bazel"
     platform: windows
     bazel: last_green
-    build_flags:
-    - "--incompatible_config_setting_private_default_visibility"
-    - "--incompatible_disallow_empty_glob"
     test_flags:
+    <<: *reusable_test_flags
     # TODO(laszlocsomor): remove "--test_env=LOCALAPPDATA" after
     # https://github.com/bazelbuild/bazel/issues/7761 is fixed
-    - "--test_env=LOCALAPPDATA"
-    - "--test_tag_filters=-no_windows"
+    ? "--test_env=LOCALAPPDATA"
+    ? "--test_tag_filters=-no_windows"
 
 buildifier: latest
