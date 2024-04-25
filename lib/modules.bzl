@@ -46,9 +46,13 @@ def _as_extension(macro, doc = None):
         # deterministic.
         return _use_all_repos(module_ctx, reproducible = True)
 
+    kwargs = {}
+    if doc != None:
+        kwargs["doc"] = doc
+
     return module_extension(
         implementation = _ext_impl,
-        doc = doc,
+        **kwargs
     )
 
 def _use_all_repos(module_ctx, reproducible = False):
