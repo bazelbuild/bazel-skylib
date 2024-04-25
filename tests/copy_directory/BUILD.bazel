@@ -3,9 +3,12 @@
 load("//rules:copy_directory.bzl", "copy_directory")
 load(":empty_directory.bzl", "empty_directory")
 
-licenses(["notice"])
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
 
-package(default_testonly = 1)
+licenses(["notice"])
 
 # Copy of directory containing files a and b, and a subdir containing c
 copy_directory(

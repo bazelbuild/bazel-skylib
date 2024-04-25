@@ -1,8 +1,11 @@
 load("//rules:common_settings.bzl", "int_flag", "string_flag")
 
-licenses(["notice"])
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
 
-package(default_testonly = 1)
+licenses(["notice"])
 
 int_flag(
     name = "my_int_flag",

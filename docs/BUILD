@@ -1,5 +1,7 @@
 load("//docs/private:stardoc_with_diff_test.bzl", "stardoc_with_diff_test", "update_docs")
 
+package(default_applicable_licenses = ["//:license"])
+
 licenses(["notice"])
 
 stardoc_with_diff_test(

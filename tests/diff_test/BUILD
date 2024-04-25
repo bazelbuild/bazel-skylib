@@ -2,9 +2,12 @@
 
 load("//rules:diff_test.bzl", "diff_test")
 
-licenses(["notice"])
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
 
-package(default_testonly = 1)
+licenses(["notice"])
 
 sh_test(
     name = "diff_test_tests",

@@ -1,6 +1,8 @@
 load("@bazel_gazelle//:def.bzl", "gazelle", "gazelle_binary")
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
+package(default_applicable_licenses = ["//:license"])
+
 # gazelle:exclude testdata
 
 go_library(

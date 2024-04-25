@@ -15,6 +15,11 @@ load(":types_tests.bzl", "types_test_suite")
 load(":unittest_tests.bzl", "unittest_passing_tests_suite")
 load(":versions_tests.bzl", "versions_test_suite")
 
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
+
 licenses(["notice"])
 
 exports_files(
