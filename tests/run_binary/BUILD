@@ -128,6 +128,7 @@ write_file(
         "arg11=($PATH)",
         "arg12=($$PATH)",
         "arg13=(${PATH})",
+        "arg14=($(echo hello))",
         # Add trailing newline, as printed by printargs.
         "",
     ],
@@ -160,6 +161,7 @@ run_binary(
         "$PATH",
         "$$PATH",
         "${PATH}",
+        "$(echo hello)",
     ],
     # Not testing any complex envvars here, because we already did in
     # "run_script".
