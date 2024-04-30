@@ -1,4 +1,4 @@
-# No targets in this package
+# This package only contains source targets
 
 package(default_applicable_licenses = ["//:license"])
 
