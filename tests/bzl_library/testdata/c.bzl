@@ -1,6 +1,6 @@
 """c.bzl, standin' on the shoulder of giants"""
 
-load(":a.bzl", "A")
-load(":b.bzl", "B")
+load(":testdata/a.bzl", "A")
+load(":testdata/b.bzl", "B")
 
 C = A + B
