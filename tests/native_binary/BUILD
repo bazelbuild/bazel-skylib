@@ -2,6 +2,7 @@ load("//rules:copy_file.bzl", "copy_file")
 load("//rules:native_binary.bzl", "native_binary", "native_test")
 
 package(
+    default_applicable_licenses = ["//:license"],
     default_testonly = 1,
     default_visibility = ["//visibility:private"],
 )

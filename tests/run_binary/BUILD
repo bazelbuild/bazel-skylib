@@ -3,6 +3,7 @@ load("//rules:run_binary.bzl", "run_binary")
 load("//rules:write_file.bzl", "write_file")
 
 package(
+    default_applicable_licenses = ["//:license"],
     default_testonly = 1,
     default_visibility = ["//visibility:private"],
 )

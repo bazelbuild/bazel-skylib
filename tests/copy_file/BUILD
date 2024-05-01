@@ -33,9 +33,10 @@
 
 load("//rules:copy_file.bzl", "copy_file")
 
-licenses(["notice"])
-
-package(default_testonly = 1)
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
 
 sh_test(
     name = "copy_file_tests",

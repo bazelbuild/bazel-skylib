@@ -11,6 +11,7 @@ register_toolchains(
 )
 
 bazel_dep(name = "platforms", version = "0.0.4")
+bazel_dep(name = "rules_license", version = "0.0.7")
 
 ### INTERNAL ONLY - lines after this are not included in the release packaging.
 

@@ -1,7 +1,10 @@
 load("//rules:diff_test.bzl", "diff_test")
 load("//rules:select_file.bzl", "select_file")
 
-licenses(["notice"])
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
 
 filegroup(
     name = "fg",

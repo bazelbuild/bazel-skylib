@@ -1,6 +1,11 @@
 load("//:bzl_library.bzl", "bzl_library")
 load(":bzl_library_test.bzl", "bzl_library_test")
 
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
+
 filegroup(
     name = "a",
     srcs = ["testdata/a.bzl"],

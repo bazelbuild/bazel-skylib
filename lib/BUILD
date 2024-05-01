@@ -1,8 +1,9 @@
 load("//:bzl_library.bzl", "bzl_library")
 
-licenses(["notice"])
-
-package(default_visibility = ["//visibility:public"])
+package(
+    default_applicable_licenses = ["//:license"],
+    default_visibility = ["//visibility:public"],
+)
 
 # export bzl files for the documentation
 exports_files(

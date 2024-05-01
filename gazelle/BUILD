@@ -1,4 +1,13 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("@rules_license//rules:license.bzl", "license")
+
+package(default_applicable_licenses = ["@bazel_skylib//:license"])
+
+license(
+    name = "license",
+    package_name = "bazelbuild/bazel_skylib_gazelle_module",
+    license_kinds = ["@rules_license//licenses/spdx:Apache-2.0"],
+)
 
 exports_files(["WORKSPACE.bzlmod"])
 
