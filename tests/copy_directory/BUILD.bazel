@@ -8,6 +8,8 @@ package(
     default_testonly = 1,
 )
 
+licenses(["notice"])
+
 # Copy of directory containing files a and b, and a subdir containing c
 copy_directory(
     name = "copy_of_dir_with_subdir",

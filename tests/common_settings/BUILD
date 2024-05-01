@@ -5,6 +5,8 @@ package(
     default_testonly = 1,
 )
 
+licenses(["notice"])
+
 int_flag(
     name = "my_int_flag",
     build_setting_default = 42,
