@@ -8,8 +8,6 @@ package(
     default_visibility = ["//visibility:private"],
 )
 
-licenses(["notice"])
-
 remove_internal_only(
     name = "distro_workspace",
     src = "//:WORKSPACE",

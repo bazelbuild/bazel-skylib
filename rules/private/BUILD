@@ -2,8 +2,6 @@ load("//:bzl_library.bzl", "bzl_library")
 
 package(default_applicable_licenses = ["//:license"])
 
-licenses(["notice"])
-
 bzl_library(
     name = "copy_common",
     srcs = ["copy_common.bzl"],

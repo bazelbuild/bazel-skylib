@@ -2,8 +2,6 @@ load("//lib:unittest.bzl", "TOOLCHAIN_TYPE", "unittest_toolchain")
 
 package(default_applicable_licenses = ["//:license"])
 
-licenses(["notice"])
-
 toolchain_type(
     name = "toolchain_type",
     visibility = ["//visibility:public"],

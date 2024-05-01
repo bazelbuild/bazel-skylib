@@ -5,8 +5,6 @@ package(
     default_visibility = ["//visibility:public"],
 )
 
-licenses(["notice"])
-
 bzl_library(
     name = "analysis_test",
     srcs = ["analysis_test.bzl"],

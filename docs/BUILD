@@ -2,8 +2,6 @@ load("//docs/private:stardoc_with_diff_test.bzl", "stardoc_with_diff_test", "upd
 
 package(default_applicable_licenses = ["//:license"])
 
-licenses(["notice"])
-
 stardoc_with_diff_test(
     name = "analysis_test",
     bzl_library_target = "//rules:analysis_test",

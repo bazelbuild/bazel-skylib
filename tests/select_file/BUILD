@@ -6,8 +6,6 @@ package(
     default_testonly = 1,
 )
 
-licenses(["notice"])
-
 filegroup(
     name = "fg",
     srcs = [

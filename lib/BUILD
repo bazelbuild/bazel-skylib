@@ -5,8 +5,6 @@ package(
     default_visibility = ["//visibility:public"],
 )
 
-licenses(["notice"])
-
 # export bzl files for the documentation
 exports_files(
     glob(["*.bzl"]),
