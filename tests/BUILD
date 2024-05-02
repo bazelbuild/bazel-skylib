@@ -20,6 +20,8 @@ package(
     default_testonly = 1,
 )
 
+licenses(["notice"])
+
 exports_files(
     ["unittest.bash"],
     visibility = ["//tests:__subpackages__"],

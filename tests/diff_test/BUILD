@@ -7,6 +7,8 @@ package(
     default_testonly = 1,
 )
 
+licenses(["notice"])
+
 sh_test(
     name = "diff_test_tests",
     srcs = ["diff_test_tests.sh"],

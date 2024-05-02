@@ -40,6 +40,8 @@ package(
     default_testonly = 1,
 )
 
+licenses(["notice"])
+
 sh_test(
     name = "write_file_tests",
     srcs = ["write_file_tests.sh"],

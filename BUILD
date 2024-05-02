@@ -12,6 +12,8 @@ license(
     license_kinds = ["@rules_license//licenses/spdx:Apache-2.0"],
 )
 
+licenses(["notice"])
+
 # buildifier: disable=skylark-comment
 # gazelle:exclude skylark_library.bzl
 
