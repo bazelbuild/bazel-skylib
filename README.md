@@ -69,6 +69,7 @@ s = shell.quote(p)
 * [native_binary and native_test](docs/native_binary_doc.md)
 * [run_binary](docs/run_binary_doc.md)
 * [select_file](docs/select_file_doc.md)
+* [select_files_by_extension](docs/select_files_by_extension_doc.md)
 * [write_file](docs/write_file_doc.md)
 
 ## Writing a new module

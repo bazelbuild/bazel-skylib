@@ -113,6 +113,12 @@ stardoc_with_diff_test(
 )
 
 stardoc_with_diff_test(
+    name = "select_files_by_extension",
+    bzl_library_target = "//rules:select_files_by_extension",
+    out_label = "//docs:select_files_by_extension_doc.md",
+)
+
+stardoc_with_diff_test(
     name = "shell",
     bzl_library_target = "//lib:shell",
     out_label = "//docs:shell_doc.md",

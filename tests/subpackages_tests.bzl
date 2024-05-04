@@ -28,6 +28,7 @@ def _all_test(env):
         "diff_test",
         "expand_template",
         "select_file",
+        "select_files_by_extension",
         "write_file",
     ]
 
@@ -46,6 +47,7 @@ def _all_test(env):
         "copy_file",
         "expand_template",
         "select_file",
+        "select_files_by_extension",
         "write_file",
     ]
 
