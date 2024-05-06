@@ -31,7 +31,7 @@ def _impl(ctx):
             normalized_extensions.append("." + ext)
         else:
             normalized_extensions.append(ext)
-            
+
     out = []
     for f in ctx.attr.srcs.files.to_list():
         _, extension = paths.split_extension(f.path)
