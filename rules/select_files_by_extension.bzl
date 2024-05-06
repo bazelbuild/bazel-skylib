@@ -28,16 +28,16 @@ def _impl(ctx):
     normalized_extensions = []
     for ext in extensions:
         if ext[0] != ".":
-            normalized_extensions += ["." + ext]
+            normalized_extensions.append("." + ext)
         else:
-            normalized_extensions += [ext]
+            normalized_extensions.append(ext)
             
     out = []
     for f in ctx.attr.srcs.files.to_list():
         _, extension = paths.split_extension(f.path)
         for ext in normalized_extensions:
             if ext == extension:
-                out += [f]
+                out.append(f)
 
     return [DefaultInfo(files = depset(out))]
 
