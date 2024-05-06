@@ -21,18 +21,23 @@ Selects a set of files from the outputs of a target by file extension.
 load("//lib:paths.bzl", "paths")
 
 def _impl(ctx):
-    if ctx.attr.extension and len(ctx.attr.extension) == 0:
-        fail("Subpath can not be empty.")
+    extensions = [ext for ext in ctx.attr.extensions if ext != ""]
+    if len(extensions) == 0:
+        fail("No extensions specified.")
 
-    extension = ctx.attr.extension
-    if extension[0] != ".":
-        extension = "." + extension
-
+    normalized_extensions = []
+    for ext in extensions:
+        if ext[0] != ".":
+            normalized_extensions += ["." + ext]
+        else:
+            normalized_extensions += [ext]
+            
     out = []
     for f in ctx.attr.srcs.files.to_list():
         _, extension = paths.split_extension(f.path)
-        if extension == ctx.attr.extension:
-            out += [f]
+        for ext in normalized_extensions:
+            if ext == extension:
+                out += [f]
 
     return [DefaultInfo(files = depset(out))]
 
@@ -45,9 +50,9 @@ select_files_by_extension = rule(
             mandatory = True,
             doc = "The target producing the file among other outputs",
         ),
-        "extension": attr.string(
+        "extensions": attr.string_list(
             mandatory = True,
-            doc = "Extension to select by",
+            doc = "Extensions to select by",
         ),
     },
 )

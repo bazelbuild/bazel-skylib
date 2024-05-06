@@ -19,13 +19,13 @@ filegroup(
 select_files_by_extension(
     name = "select_cpp",
     srcs = ":fg",
-    extension = ".cpp",
+    extensions = [".cpp"],
 )
 
 select_files_by_extension(
     name = "select_header",
     srcs = ":fg",
-    extension = ".h",
+    extensions = [".h"],
 )
 
 diff_test(
