@@ -43,12 +43,12 @@ def _impl(ctx):
 
 select_files_by_extension = rule(
     implementation = _impl,
-    doc = "Selects a single file from the outputs of a target by given relative path",
+    doc = "Selects a files from the outputs of a target by extension",
     attrs = {
         "srcs": attr.label(
             allow_files = True,
             mandatory = True,
-            doc = "The target producing the file among other outputs",
+            doc = "The target producing the files among other outputs",
         ),
         "extensions": attr.string_list(
             mandatory = True,

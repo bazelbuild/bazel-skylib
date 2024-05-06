@@ -12,7 +12,7 @@ Selects a set of files from the outputs of a target by file extension.
 select_files_by_extension(<a href="#select_files_by_extension-name">name</a>, <a href="#select_files_by_extension-srcs">srcs</a>, <a href="#select_files_by_extension-extensions">extensions</a>)
 </pre>
 
-Selects a single file from the outputs of a target by given relative path
+Selects a files from the outputs of a target by extension
 
 **ATTRIBUTES**
 
@@ -20,7 +20,7 @@ Selects a single file from the outputs of a target by given relative path
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="select_files_by_extension-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="select_files_by_extension-srcs"></a>srcs |  The target producing the file among other outputs   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="select_files_by_extension-srcs"></a>srcs |  The target producing the files among other outputs   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
 | <a id="select_files_by_extension-extensions"></a>extensions |  Extensions to select by   | List of strings | required |  |
 
 
