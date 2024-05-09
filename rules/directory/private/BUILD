@@ -9,6 +9,12 @@ exports_files(
 )
 
 bzl_library(
+    name = "glob",
+    srcs = ["glob.bzl"],
+    visibility = ["//visibility:public"],
+)
+
+bzl_library(
     name = "paths",
     srcs = ["paths.bzl"],
     visibility = ["//visibility:public"],

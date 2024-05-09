@@ -19,10 +19,20 @@ bzl_library(
 )
 
 bzl_library(
+    name = "glob",
+    srcs = ["glob.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":providers",
+    ],
+)
+
+bzl_library(
     name = "providers",
     srcs = ["providers.bzl"],
     visibility = ["//visibility:public"],
     deps = [
+        "//rules/directory/private:glob",
         "//rules/directory/private:paths",
     ],
 )

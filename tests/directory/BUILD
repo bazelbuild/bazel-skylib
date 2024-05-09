@@ -1,6 +1,7 @@
 load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("@bazel_skylib//rules/directory:directory.bzl", "directory")
 load(":directory_test.bzl", "directory_test_suite")
+load(":glob_test.bzl", "glob_test_suite")
 load(":subdirectory_test.bzl", "subdirectory_test_suite")
 
 directory(
@@ -26,6 +27,10 @@ copy_file(
 
 directory_test_suite(
     name = "directory_tests",
+)
+
+glob_test_suite(
+    name = "glob_tests",
 )
 
 subdirectory_test_suite(

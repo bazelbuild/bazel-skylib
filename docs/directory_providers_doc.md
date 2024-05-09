@@ -7,7 +7,8 @@ Skylib module containing providers for directories.
 ## DirectoryInfo
 
 <pre>
-DirectoryInfo(<a href="#DirectoryInfo-entries">entries</a>, <a href="#DirectoryInfo-transitive_files">transitive_files</a>, <a href="#DirectoryInfo-path">path</a>, <a href="#DirectoryInfo-human_readable">human_readable</a>, <a href="#DirectoryInfo-get_path">get_path</a>, <a href="#DirectoryInfo-get_file">get_file</a>, <a href="#DirectoryInfo-get_subdirectory">get_subdirectory</a>)
+DirectoryInfo(<a href="#DirectoryInfo-entries">entries</a>, <a href="#DirectoryInfo-transitive_files">transitive_files</a>, <a href="#DirectoryInfo-path">path</a>, <a href="#DirectoryInfo-human_readable">human_readable</a>, <a href="#DirectoryInfo-get_path">get_path</a>, <a href="#DirectoryInfo-get_file">get_file</a>, <a href="#DirectoryInfo-get_subdirectory">get_subdirectory</a>,
+              <a href="#DirectoryInfo-glob">glob</a>)
 </pre>
 
 Information about a directory
@@ -24,6 +25,7 @@ Information about a directory
 | <a id="DirectoryInfo-get_path"></a>get_path |  (Function(str) -> DirectoryInfo\|File) A function to return the entry corresponding to the joined path.    |
 | <a id="DirectoryInfo-get_file"></a>get_file |  (Function(str) -> File) A function to return the entry corresponding to the joined path.    |
 | <a id="DirectoryInfo-get_subdirectory"></a>get_subdirectory |  (Function(str) -> DirectoryInfo) A function to return the entry corresponding to the joined path.    |
+| <a id="DirectoryInfo-glob"></a>glob |  (Function(include, exclude, allow_empty=False)) A function that works the same as native.glob.    |
 
 
 <a id="create_directory_info"></a>

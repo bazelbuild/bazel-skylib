@@ -14,6 +14,7 @@
 
 """Skylib module containing providers for directories."""
 
+load("//rules/directory/private:glob.bzl", "glob")
 load("//rules/directory/private:paths.bzl", "DIRECTORY", "FILE", "get_path")
 
 def _init_directory_info(**kwargs):
@@ -22,6 +23,7 @@ def _init_directory_info(**kwargs):
         get_path = lambda path: get_path(self, path, require_type = None),
         get_file = lambda path: get_path(self, path, require_type = FILE),
         get_subdirectory = lambda path: get_path(self, path, require_type = DIRECTORY),
+        glob = lambda include, exclude = [], allow_empty = False: glob(self, include, exclude, allow_empty),
     )
     return kwargs
 
@@ -42,5 +44,6 @@ DirectoryInfo = provider(
         "get_path": "(Function(str) -> DirectoryInfo|File) A function to return the entry corresponding to the joined path.",
         "get_file": "(Function(str) -> File) A function to return the entry corresponding to the joined path.",
         "get_subdirectory": "(Function(str) -> DirectoryInfo) A function to return the entry corresponding to the joined path.",
+        "glob": "(Function(include, exclude, allow_empty=False)) A function that works the same as native.glob.",
     },
 )
