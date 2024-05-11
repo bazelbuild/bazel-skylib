@@ -15,7 +15,7 @@ _MOCK_RLOCATIONPATH_PATH_OF_DUMMY = "rlocationpath/path/of/dummy"
 _GENRULE_LOCATION_PATH_OF_DUMMY = "bazel-out/k8-fastbuild/bin/tests/dummy.txt"
 _GENRULE_EXECPATH_PATH_OF_DUMMY = "bazel-out/k8-fastbuild/bin/tests/dummy.txt"
 _GENRULE_ROOTPATH_PATH_OF_DUMMY = "tests/dummy.txt"
-_GENRULE_RLOCATIONPATH_PATH_OF_DUMMY = "bazel_skylib/tests/dummy.txt"
+_GENRULE_RLOCATIONPATH_PATH_OF_DUMMY = "_main/tests/dummy.txt"
 
 _LINUX_FASTBUILD_SUBPATH = "k8-fastbuild"
 _MAC_FASTBUILD_SUBPATH = "darwin_x86_64-fastbuild"
@@ -727,6 +727,9 @@ def _expand_with_toolchains_and_location_attr_test_impl(ctx):
         expected_val = _EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION[env_key]
         resolved_val = resolved_dict[env_key]
         resolved_val = _fix_platform_dependent_path_for_assertions(resolved_val)
+        # Replace `expected` with proper value given bazel version (may differ for rlocation path).
+        if "_main" in expected_val and "_main" not in resolved_val:
+            expected_val = expected_val.replace("_main", "bazel_skylib")
         asserts.equals(env, expected_val, resolved_val)
 
     return unittest.end(env)
