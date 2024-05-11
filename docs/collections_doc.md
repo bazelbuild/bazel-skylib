@@ -17,7 +17,7 @@ Inserts `separator` after each item in `iterable`.
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="collections.after_each-separator"></a>separator |  The value to insert after each item in <code>iterable</code>.   |  none |
+| <a id="collections.after_each-separator"></a>separator |  The value to insert after each item in `iterable`.   |  none |
 | <a id="collections.after_each-iterable"></a>iterable |  The list into which to intersperse the separator.   |  none |
 
 **RETURNS**
@@ -40,7 +40,7 @@ Inserts `separator` before each item in `iterable`.
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="collections.before_each-separator"></a>separator |  The value to insert before each item in <code>iterable</code>.   |  none |
+| <a id="collections.before_each-separator"></a>separator |  The value to insert before each item in `iterable`.   |  none |
 | <a id="collections.before_each-iterable"></a>iterable |  The list into which to intersperse the separator.   |  none |
 
 **RETURNS**

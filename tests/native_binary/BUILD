@@ -1,8 +1,8 @@
-load("@rules_cc//cc:defs.bzl", "cc_binary")
 load("//rules:copy_file.bzl", "copy_file")
 load("//rules:native_binary.bzl", "native_binary", "native_test")
 
 package(
+    default_applicable_licenses = ["//:license"],
     default_testonly = 1,
     default_visibility = ["//visibility:private"],
 )
@@ -94,6 +94,12 @@ native_binary(
     # On other platforms the extension doesn't matter.
     # Therefore we can use ".exe" on every platform.
     out = "data_bin.exe",
+    data = ["testdata.txt"],
+)
+
+native_binary(
+    name = "no_out_bin",
+    src = ":copy_assertdata_exe",
     data = ["testdata.txt"],
 )
 

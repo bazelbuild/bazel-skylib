@@ -16,6 +16,11 @@
 
 load("//rules:expand_template.bzl", "expand_template")
 
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
+
 expand_template(
     name = "filled_template",
     out = "foo/test.yaml",

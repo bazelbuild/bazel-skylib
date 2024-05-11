@@ -1,5 +1,7 @@
 load("//docs/private:stardoc_with_diff_test.bzl", "stardoc_with_diff_test", "update_docs")
 
+package(default_applicable_licenses = ["//:license"])
+
 licenses(["notice"])
 
 stardoc_with_diff_test(
@@ -60,6 +62,12 @@ stardoc_with_diff_test(
     name = "expand_template",
     bzl_library_target = "//rules:expand_template",
     out_label = "//docs:expand_template_doc.md",
+)
+
+stardoc_with_diff_test(
+    name = "modules",
+    bzl_library_target = "//lib:modules",
+    out_label = "//docs:modules_doc.md",
 )
 
 stardoc_with_diff_test(

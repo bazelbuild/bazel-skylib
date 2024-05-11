@@ -17,7 +17,7 @@ Converts a `struct` to a `dict`.
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="structs.to_dict-s"></a>s |  A <code>struct</code>.   |  none |
+| <a id="structs.to_dict-s"></a>s |  A `struct`.   |  none |
 
 **RETURNS**
 

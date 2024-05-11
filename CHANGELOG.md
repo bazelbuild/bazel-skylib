@@ -1,3 +1,29 @@
+Release 1.6.1
+
+## What's Changed
+* Fix `modules` Bazel 6 compatibility by @phst in https://github.com/bazelbuild/bazel-skylib/pull/499
+
+## New Contributors
+* @phst made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/499
+
+**Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.6.0...1.6.1
+
+Release 1.6.0
+
+## What's Changed
+* Add helper functions for module extensions as `modules` by @fmeum in https://github.com/bazelbuild/bazel-skylib/pull/457
+* Make `out` on `native_binary` optional by @tpudlik in https://github.com/bazelbuild/bazel-skylib/pull/474
+* Remove outdated rules_cc dependency @cpsauer in https://github.com/bazelbuild/bazel-skylib/pull/476
+* Add toolchains argument to unittests.make by @jylinv0 in https://github.com/bazelbuild/bazel-skylib/pull/483
+* Allow `bzl_library` to depend on non-`bzl_library` targets by @Wyverald in https://github.com/bazelbuild/bazel-skylib/pull/495
+
+## New Contributors
+* @jylinv0 made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/483
+* @tpudlik made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/474
+
+**Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.5.0...1.6.0
+
+
 Release 1.5.0
 
 ## What's Changed

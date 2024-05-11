@@ -6,7 +6,6 @@ NOTE: The functions in this module currently only support paths with Unix-style
 path separators (forward slash, "/"); they do not handle Windows-style paths
 with backslash separators or drive letters.
 
-
 <a id="paths.basename"></a>
 
 ## paths.basename

@@ -25,7 +25,7 @@ safety, even if they do not need to be.
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="shell.array_literal-iterable"></a>iterable |  A sequence of elements. Elements that are not strings will be converted to strings first, by calling <code>str()</code>.   |  none |
+| <a id="shell.array_literal-iterable"></a>iterable |  A sequence of elements. Elements that are not strings will be converted to strings first, by calling `str()`.   |  none |
 
 **RETURNS**
 
