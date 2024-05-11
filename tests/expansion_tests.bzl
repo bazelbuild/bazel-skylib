@@ -15,7 +15,7 @@ _MOCK_RLOCATIONPATH_PATH_OF_DUMMY = "rlocationpath/path/of/dummy"
 _GENRULE_LOCATION_PATH_OF_DUMMY = "bazel-out/k8-fastbuild/bin/tests/dummy.txt"
 _GENRULE_EXECPATH_PATH_OF_DUMMY = "bazel-out/k8-fastbuild/bin/tests/dummy.txt"
 _GENRULE_ROOTPATH_PATH_OF_DUMMY = "tests/dummy.txt"
-_GENRULE_RLOCATIONPATH_PATH_OF_DUMMY = "_main/tests/dummy.txt"
+_GENRULE_RLOCATIONPATH_PATH_OF_DUMMY = "bazel_skylib/tests/dummy.txt"
 
 _LINUX_FASTBUILD_SUBPATH = "k8-fastbuild"
 _MAC_FASTBUILD_SUBPATH = "darwin_x86_64-fastbuild"
