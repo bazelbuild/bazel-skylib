@@ -170,7 +170,7 @@ _EXPECTED_RESOLVED_DICT_NO_LOCATION = {
     "UNRECOGNIZED_FUNC": "$(nope :" + _TEST_DEP_TARGET_NAME + ")",
 }
 
-_EXPECTED_RESOLVED_DICT_WITH_MOCKED_LOCATION = dict(_EXPECTED_RESOLVED_DICT_NO_LOCATION).update({
+_EXPECTED_RESOLVED_DICT_WITH_MOCKED_LOCATION = _EXPECTED_RESOLVED_DICT_NO_LOCATION | {
     "LOCATION_VAL": _MOCK_LOCATION_PATH_OF_DUMMY,
     "EXECPATH_VAL": _MOCK_EXECPATH_PATH_OF_DUMMY,
     "ROOTPATH_VAL": _MOCK_ROOTPATH_PATH_OF_DUMMY,
@@ -217,9 +217,9 @@ _EXPECTED_RESOLVED_DICT_WITH_MOCKED_LOCATION = dict(_EXPECTED_RESOLVED_DICT_NO_L
         "-flag_value-" +
         _MOCK_LOCATION_PATH_OF_DUMMY
     ),
-})
+}
 
-_EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION = dict(_EXPECTED_RESOLVED_DICT_NO_LOCATION).update({
+_EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION = _EXPECTED_RESOLVED_DICT_NO_LOCATION | {
     "LOCATION_VAL": _GENRULE_LOCATION_PATH_OF_DUMMY,
     "EXECPATH_VAL": _GENRULE_EXECPATH_PATH_OF_DUMMY,
     "ROOTPATH_VAL": _GENRULE_ROOTPATH_PATH_OF_DUMMY,
@@ -266,7 +266,7 @@ _EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION = dict(_EXPECTED_RESOLVED_DICT_NO_
         "-flag_value-" +
         _GENRULE_LOCATION_PATH_OF_DUMMY
     ),
-})
+}
 
 # Unresolved/unterminated validation test input values and expected values
 
@@ -531,12 +531,12 @@ def _expand_with_toolchains_with_additional_dict_test_impl(ctx):
     # Check that the output has exact same key set as original input.
     asserts.equals(env, _ENV_DICT.keys(), resolved_dict.keys())
 
-    updated_expected_dict = dict(_EXPECTED_RESOLVED_DICT_NO_LOCATION).update({
+    updated_expected_dict = _EXPECTED_RESOLVED_DICT_NO_LOCATION | {
         "TOOLCHAIN_ENV_VAR2_RAW": "expanded from additional dict instead",
         "TOOLCHAIN_ENV_VAR2_PAREN": "expanded from additional dict instead",
         "TOOLCHAIN_ENV_VAR2_CURLY": "expanded from additional dict instead",
         "UNRECOGNIZED_VAR": "naw, it's fine now.",
-    })
+    }
 
     # Check all output resolved values against expected resolved values.
     for env_key, _ in _ENV_DICT.items():
@@ -613,12 +613,12 @@ def _expand_with_toolchains_attr_with_additional_dict_test_impl(ctx):
     # Check that the output has exact same key set as original input.
     asserts.equals(env, env.ctx.attr.env.keys(), resolved_dict.keys())
 
-    updated_expected_dict = dict(_EXPECTED_RESOLVED_DICT_NO_LOCATION).update({
+    updated_expected_dict = _EXPECTED_RESOLVED_DICT_NO_LOCATION | {
         "TOOLCHAIN_ENV_VAR2_RAW": "expanded from additional dict instead",
         "TOOLCHAIN_ENV_VAR2_PAREN": "expanded from additional dict instead",
         "TOOLCHAIN_ENV_VAR2_CURLY": "expanded from additional dict instead",
         "UNRECOGNIZED_VAR": "naw, it's fine now.",
-    })
+    }
 
     # Check all output resolved values against expected resolved values.
     for env_key, _ in env.ctx.attr.env.items():
@@ -704,12 +704,12 @@ def _expand_with_toolchains_and_location_with_additional_dict_test_impl(ctx):
     # Check that the output has exact same key set as original input.
     asserts.equals(env, _ENV_DICT.keys(), resolved_dict.keys())
 
-    updated_expected_dict = dict(_EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION).update({
+    updated_expected_dict = _EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION | {
         "TOOLCHAIN_ENV_VAR2_RAW": "expanded from additional dict instead",
         "TOOLCHAIN_ENV_VAR2_PAREN": "expanded from additional dict instead",
         "TOOLCHAIN_ENV_VAR2_CURLY": "expanded from additional dict instead",
         "UNRECOGNIZED_VAR": "naw, it's fine now.",
-    })
+    }
 
     # Check all output resolved values against expected resolved values.
     for env_key, _ in _ENV_DICT.items():
@@ -790,12 +790,12 @@ def _expand_with_toolchains_and_location_attr_with_additional_dict_test_impl(ctx
     # Check that the output has exact same key set as original input.
     asserts.equals(env, env.ctx.attr.env.keys(), resolved_dict.keys())
 
-    updated_expected_dict = dict(_EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION).update({
+    updated_expected_dict = _EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION | {
         "TOOLCHAIN_ENV_VAR2_RAW": "expanded from additional dict instead",
         "TOOLCHAIN_ENV_VAR2_PAREN": "expanded from additional dict instead",
         "TOOLCHAIN_ENV_VAR2_CURLY": "expanded from additional dict instead",
         "UNRECOGNIZED_VAR": "naw, it's fine now.",
-    })
+    }
 
     # Check all output resolved values against expected resolved values.
     for env_key, _ in env.ctx.attr.env.items():
