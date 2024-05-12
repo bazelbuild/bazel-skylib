@@ -601,7 +601,7 @@ def _expand_with_toolchains(
     """
     additional_lookup_dict = additional_lookup_dict or {}
     return _expand_with_manual_dict(
-        ctx.var | additional_lookup_dict,
+        dict(ctx.var, **additional_lookup_dict),
         source_env_dict,
         validate_expansion = validate_expansion,
     )
@@ -652,7 +652,7 @@ def _expand_with_toolchains_and_location(
     additional_lookup_dict = additional_lookup_dict or {}
     return _expand_with_manual_dict_and_location(
         _simpler_expand_location,
-        ctx.var | additional_lookup_dict,
+        dict(ctx.var, **additional_lookup_dict),
         source_env_dict,
         validate_expansion = validate_expansion,
     )
