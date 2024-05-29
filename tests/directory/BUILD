@@ -4,6 +4,8 @@ load(":directory_test.bzl", "directory_test_suite")
 load(":glob_test.bzl", "glob_test_suite")
 load(":subdirectory_test.bzl", "subdirectory_test_suite")
 
+package(default_applicable_licenses = ["@bazel_skylib//:license"])
+
 directory(
     name = "root",
     srcs = glob(["testdata/**"]),
