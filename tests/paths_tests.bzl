@@ -180,6 +180,55 @@ def _normalize_test(ctx):
 
 normalize_test = unittest.make(_normalize_test)
 
+def _is_normalized_test(ctx):
+    """Unit tests for paths.is_normalized."""
+    env = unittest.begin(ctx)
+
+    # Try the most basic cases.
+    asserts.true(env, paths.is_normalized(""))
+    asserts.false(env, paths.is_normalized("."))
+    asserts.true(env, paths.is_normalized("/"))
+    asserts.true(env, paths.is_normalized("/tmp"))
+    asserts.true(env, paths.is_normalized("tmp"))
+    asserts.true(env, paths.is_normalized("c:/"))
+    asserts.false(env, paths.is_normalized("../a"))
+    asserts.false(env, paths.is_normalized("a/.."))
+
+    # Try some basic adjacent-slash removal.
+    asserts.true(env, paths.is_normalized("foo//bar"))
+    asserts.true(env, paths.is_normalized("foo////bar"))
+
+    # Try some "." removal.
+    asserts.false(env, paths.is_normalized("foo/./bar"))
+    asserts.false(env, paths.is_normalized("./foo/bar"))
+    asserts.false(env, paths.is_normalized("foo/bar/."))
+    asserts.false(env, paths.is_normalized("/."))
+
+    # Try some ".." removal.
+    asserts.false(env, paths.is_normalized("foo/../bar"))
+    asserts.false(env, paths.is_normalized("foo/bar/.."))
+    asserts.false(env, paths.is_normalized("foo/.."))
+    asserts.false(env, paths.is_normalized("foo/bar/../.."))
+    asserts.false(env, paths.is_normalized("foo/../.."))
+    asserts.false(env, paths.is_normalized("/foo/../.."))
+    asserts.false(env, paths.is_normalized("a/b/../../../../c/d/.."))
+
+    # Make sure one or two initial slashes are preserved, but three or more are
+    # collapsed to a single slash.
+    asserts.true(env, paths.is_normalized("/foo"))
+    asserts.true(env, paths.is_normalized("//foo"))
+    asserts.true(env, paths.is_normalized("///foo"))
+
+    # Trailing slashes should be removed unless the entire path is a trailing
+    # slash.
+    asserts.true(env, paths.is_normalized("/"))
+    asserts.true(env, paths.is_normalized("foo/"))
+    asserts.true(env, paths.is_normalized("foo/bar/"))
+
+    return unittest.end(env)
+
+is_normalized_test = unittest.make(_is_normalized_test)
+
 def _relativize_test(ctx):
     """Unit tests for paths.relativize."""
     env = unittest.begin(ctx)
@@ -276,6 +325,31 @@ def _split_extension_test(ctx):
 
 split_extension_test = unittest.make(_split_extension_test)
 
+def _starts_with_test(ctx):
+    """Unit tests for paths.starts_with."""
+    env = unittest.begin(ctx)
+
+    # Make sure that relative-to-current-directory works in all forms.
+    asserts.true(env, paths.starts_with("foo", ""))
+    asserts.false(env, paths.starts_with("foo", "."))
+
+    # Try some regular cases.
+    asserts.true(env, paths.starts_with("foo/bar", "foo"))
+    asserts.false(env, paths.starts_with("foo/bar", "fo"))
+    asserts.true(env, paths.starts_with("foo/bar/baz", "foo/bar"))
+    asserts.true(env, paths.starts_with("foo/bar/baz", "foo"))
+
+    # Try a case where a parent directory is normalized away.
+    asserts.true(env, paths.starts_with("foo/bar/../baz", "foo"))
+
+    # Relative paths work, as long as they share a common start.
+    asserts.true(env, paths.starts_with("../foo/bar/baz/file", "../foo/bar/baz"))
+    asserts.true(env, paths.starts_with("../foo/bar/baz/file", "../foo/bar"))
+
+    return unittest.end(env)
+
+starts_with_test = unittest.make(_starts_with_test)
+
 def paths_test_suite():
     """Creates the test targets and test suite for paths.bzl tests."""
     unittest.suite(
@@ -285,7 +359,9 @@ def paths_test_suite():
         is_absolute_test,
         join_test,
         normalize_test,
+        is_normalized_test,
         relativize_test,
         replace_extension_test,
         split_extension_test,
+        starts_with_test,
     )
