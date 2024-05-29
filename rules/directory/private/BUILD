@@ -1,5 +1,7 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
+package(default_applicable_licenses = ["//:license"])
+
 licenses(["notice"])
 
 # export bzl files for the documentation
@@ -11,13 +13,13 @@ exports_files(
 bzl_library(
     name = "glob",
     srcs = ["glob.bzl"],
-    visibility = ["//visibility:public"],
+    visibility = ["//rules/directory:__pkg__"],
 )
 
 bzl_library(
     name = "paths",
     srcs = ["paths.bzl"],
-    visibility = ["//visibility:public"],
+    visibility = ["//rules/directory:__pkg__"],
     deps = [
         "//lib:paths",
     ],
