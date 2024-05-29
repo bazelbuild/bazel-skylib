@@ -68,6 +68,16 @@ load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 
 rules_pkg_dependencies()
 
+http_archive(
+    name = "rules_testing",
+    sha256 = "02c62574631876a4e3b02a1820cb51167bb9cdcdea2381b2fa9d9b8b11c407c4",
+    strip_prefix = "rules_testing-0.6.0",
+    url = "https://github.com/bazelbuild/rules_testing/releases/download/v0.6.0/rules_testing-v0.6.0.tar.gz",
+)
+
 load("//lib:unittest.bzl", "register_unittest_toolchains")
+load("//tests/directory:external_directory_tests.bzl", "external_directory_tests")
+
+external_directory_tests(name = "external_directory_tests")
 
 register_unittest_toolchains()

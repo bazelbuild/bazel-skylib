@@ -16,6 +16,7 @@ matrix:
 .reusable_targets: &reusable_targets
   ? "--"
   ? "//..."
+  ? "@external_directory_tests//..."
   ? "@bazel_skylib_gazelle_plugin//..."
 
 .reusable_config: &reusable_config
