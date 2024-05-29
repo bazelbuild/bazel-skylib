@@ -91,7 +91,7 @@ Returns `True` if `path` is an absolute path.
 paths.is_normalized(<a href="#paths.is_normalized-str">str</a>, <a href="#paths.is_normalized-look_for_same_level_references">look_for_same_level_references</a>)
 </pre>
 
-Returns true if the passed path contains uplevel references "..".
+Returns true if the passed path doesn't contain uplevel references "..".
 
 Also checks for single-dot references "." if look_for_same_level_references
 is `True.`
@@ -103,7 +103,7 @@ is `True.`
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
 | <a id="paths.is_normalized-str"></a>str |  The path string to check.   |  none |
-| <a id="paths.is_normalized-look_for_same_level_references"></a>look_for_same_level_references |  If True checks if path contains uplevel references ".." or single-dot references ".".   |  `True` |
+| <a id="paths.is_normalized-look_for_same_level_references"></a>look_for_same_level_references |  If True checks if path doesn't contain uplevel references ".." or single-dot references ".".   |  `True` |
 
 **RETURNS**
 

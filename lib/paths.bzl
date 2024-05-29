@@ -159,18 +159,18 @@ _DOT = 2
 _DOTDOT = 3
 
 def _is_normalized(str, look_for_same_level_references = True):
-    """Returns true if the passed path contains uplevel references "..".
+    """Returns true if the passed path doesn't contain uplevel references "..".
 
     Also checks for single-dot references "." if look_for_same_level_references
     is `True.`
 
     Args:
-        str: The path string to check.
-        look_for_same_level_references: If True checks if path contains uplevel
-          references ".." or single-dot references ".".
+      str: The path string to check.
+      look_for_same_level_references: If True checks if path doesn't contain
+        uplevel references ".." or single-dot references ".".
 
     Returns:
-        True if the path is normalized, False otherwise.
+      True if the path is normalized, False otherwise.
     """
     state = _SEPARATOR
     for c in str.elems():
