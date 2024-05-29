@@ -65,6 +65,12 @@ stardoc_with_diff_test(
 )
 
 stardoc_with_diff_test(
+    name = "directory_glob",
+    bzl_library_target = "//rules/directory:glob",
+    out_label = "//docs:directory_glob_doc.md",
+)
+
+stardoc_with_diff_test(
     name = "directory_providers",
     bzl_library_target = "//rules/directory:providers",
     out_label = "//docs:directory_providers_doc.md",

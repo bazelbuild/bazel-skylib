@@ -27,6 +27,7 @@ external_directory_tests = repository_rule(
         "files": attr.label_list(default = [
             "//tests/directory:BUILD",
             "//tests/directory:directory_test.bzl",
+            "//tests/directory:glob_test.bzl",
             "//tests/directory:subdirectory_test.bzl",
             "//tests/directory:testdata/f1",
             "//tests/directory:testdata/subdir/f2",
