@@ -67,7 +67,7 @@ def directory_glob_chunk(directory, chunk):
         left, right = chunk.split("*")
     entries = []
     for name, entry in directory.entries.items():
-        if name.startswith(left) and name.endswith(right) and len(left) + len(right) <= len(name) and middle in name[len(left):-len(right)]:
+        if name.startswith(left) and name.endswith(right) and len(left) + len(right) <= len(name) and middle in name[len(left):len(name) - len(right)]:
             entries.append(entry)
     return entries
 
