@@ -1,4 +1,4 @@
-# Release 1.6.2
+# Release 1.7.0
 
 **New features**
 * Implement `directory` rules by @matts1 in https://github.com/bazelbuild/bazel-skylib/pull/510
@@ -7,7 +7,7 @@
 **New Contributors**
 * @matts1 made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/510
 
-**Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.6.1...1.6.2
+**Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.6.1...1.7.0
 
 
 # Release 1.6.1
