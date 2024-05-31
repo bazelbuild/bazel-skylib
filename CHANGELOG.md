@@ -1,8 +1,8 @@
 # Release 1.6.2
 
 **New features**
-* Implement directory rules by @matts1 in https://github.com/bazelbuild/bazel-skylib/pull/510
-* Add is_normalized and starts_with to paths module by @comius in https://github.com/bazelbuild/bazel-skylib/pull/514
+* Implement `directory` rules by @matts1 in https://github.com/bazelbuild/bazel-skylib/pull/510
+* Add `is_normalized` and `starts_with` to paths module by @comius in https://github.com/bazelbuild/bazel-skylib/pull/514
 
 **New Contributors**
 * @matts1 made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/510
