@@ -47,9 +47,10 @@ def _directory_impl(ctx):
     f = ctx.actions.declare_file("_directory_rule_" + ctx.label.name)
     ctx.actions.write(f, "")
 
-    source_prefix = ctx.label.package + "/"
+    source_prefix = ctx.label.package
     if ctx.label.workspace_root:
         source_prefix = ctx.label.workspace_root + "/" + source_prefix
+    source_prefix = source_prefix.rstrip("/") + "/"
 
     # Mapping of a prefix to an arbitrary (but deterministic) file matching that path.
     # The arbitrary file is used to present error messages if we have both generated files and source files.
