@@ -14,9 +14,20 @@
 
 """Generates tests for the directory rules from outside the repository."""
 
+_ROOT_BUILD_FILE_CONTENTS = """
+load("@bazel_skylib//rules/directory:directory.bzl", "directory")
+
+directory(
+    name = "root",
+    srcs = ["BUILD"],
+)
+"""
+
 def _external_directory_tests_impl(repo_ctx):
     for f in repo_ctx.attr.files:
         repo_ctx.symlink(repo_ctx.path(f), f.package + "/" + f.name)
+
+    repo_ctx.file("BUILD", _ROOT_BUILD_FILE_CONTENTS)
 
 # Directory paths work differently while inside and outside the repository.
 # To properly test this, we copy all our test code to an external
