@@ -113,6 +113,22 @@ def _glob_test_impl(env, targets):
         "abbbc",
         "ab.b.bc",
     ])
+    _expect_glob_chunk(
+        env,
+        _with_children(["a", "ab", "ba"]),
+        "a*",
+    ).contains_exactly([
+        "a",
+        "ab",
+    ])
+    _expect_glob_chunk(
+        env,
+        _with_children(["a", "ab", "a.b.", "ba."]),
+        "a*b*",
+    ).contains_exactly([
+        "ab",
+        "a.b.",
+    ])
 
     _expect_glob(env, root, ["testdata/f1"]).contains_exactly([f1])
     _expect_glob(env, root, ["testdata/subdir/f2"]).contains_exactly([f2])
