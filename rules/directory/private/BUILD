@@ -24,3 +24,14 @@ bzl_library(
         "//lib:paths",
     ],
 )
+
+# The files needed for distribution
+filegroup(
+    name = "distribution",
+    srcs = [
+        "BUILD",
+    ] + glob(["*.bzl"]),
+    visibility = [
+        "//:__pkg__",
+    ],
+)
