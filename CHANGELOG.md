@@ -1,3 +1,10 @@
+# Release 1.7.1
+
+**What's Changed**
+* Fix distribution tarballs to include directory rules. (https://github.com/bazelbuild/bazel-skylib/pull/520)
+
+**Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.7.0...1.7.1
+
 # Release 1.7.0
 
 **New features**
