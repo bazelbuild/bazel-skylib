@@ -43,6 +43,7 @@ s = shell.quote(p)
 ## List of modules (in lib/)
 
 * [collections](docs/collections_doc.md)
+* [compatibility](docs/compatibility_doc.md)
 * [dicts](docs/dicts_doc.md)
 * [partial](docs/partial_doc.md)
 * [paths](docs/paths_doc.md)
