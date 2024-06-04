@@ -13,6 +13,12 @@ bzl_library(
 )
 
 bzl_library(
+    name = "analysis_failure_test",
+    srcs = ["analysis_failure_test.bzl"],
+    deps = ["//lib:unittest"],
+)
+
+bzl_library(
     name = "build_test",
     srcs = ["build_test.bzl"],
     deps = ["//lib:new_sets"],
