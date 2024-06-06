@@ -14,6 +14,7 @@
 
 """Skylib module containing a library rule for aggregating rules files."""
 
+# buildifier: disable=bzl-visibility
 load(
     "//rules/private:bzl_library.bzl",
     _bzl_library = "bzl_library",
@@ -23,6 +24,13 @@ load(
 StarlarkLibraryInfo = _StarlarkLibraryInfo
 
 def bzl_library(name, **kwargs):
+    """Wrapper for bzl_library.
+
+    Args:
+        name: name
+        **kwargs: see the generated doc for rules/private/bzl_library.
+    """
+    # buildifier: disable=unused-variable
     _ = kwargs.pop("compatible_with", None)
     _ = kwargs.pop("exec_compatible_with", None)
     _ = kwargs.pop("features", None)
