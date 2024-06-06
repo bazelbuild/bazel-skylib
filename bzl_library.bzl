@@ -17,8 +17,8 @@
 # buildifier: disable=bzl-visibility
 load(
     "//rules/private:bzl_library.bzl",
-    _bzl_library = "bzl_library",
     _StarlarkLibraryInfo = "StarlarkLibraryInfo",
+    _bzl_library = "bzl_library",
 )
 
 StarlarkLibraryInfo = _StarlarkLibraryInfo
@@ -30,6 +30,7 @@ def bzl_library(name, **kwargs):
         name: name
         **kwargs: see the generated doc for rules/private/bzl_library.
     """
+
     # buildifier: disable=unused-variable
     _ = kwargs.pop("compatible_with", None)
     _ = kwargs.pop("exec_compatible_with", None)
