@@ -8,12 +8,15 @@ bzl_library(
     name = "bzl_library",
     srcs = ["bzl_library.bzl"],
     visibility = [
-        "//docs:__pkg__",
         "//:__pkg__",
+        "//docs:__pkg__",
     ],
 )
 
-exports_files(["bzl_library.bzl"], visibility=["//docs:__pkg__"])
+exports_files(
+    ["bzl_library.bzl"],
+    visibility = ["//docs:__pkg__"],
+)
 
 bzl_library(
     name = "copy_common",
