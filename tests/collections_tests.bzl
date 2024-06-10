@@ -14,8 +14,8 @@
 
 """Unit tests for collections.bzl."""
 
-load("//lib:collections.bzl", "collections")
 load("@rules_testing//lib:unittest.bzl", "asserts", "unittest")
+load("//lib:collections.bzl", "collections")
 
 def _after_each_test(ctx):
     """Unit tests for collections.after_each."""

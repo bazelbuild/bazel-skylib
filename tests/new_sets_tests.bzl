@@ -14,8 +14,8 @@
 
 """Unit tests for new_sets.bzl."""
 
-load("//lib:new_sets.bzl", "sets")
 load("@rules_testing//lib:unittest.bzl", "asserts", "unittest")
+load("//lib:new_sets.bzl", "sets")
 
 def _is_equal_test(ctx):
     """Unit tests for sets.is_equal."""

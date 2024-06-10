@@ -14,8 +14,8 @@
 
 """Unit tests for selects.bzl."""
 
-load("//lib:selects.bzl", "selects")
 load("@rules_testing//lib:unittest.bzl", "analysistest", "asserts", "unittest")
+load("//lib:selects.bzl", "selects")
 
 ###################################################
 # with_or_test

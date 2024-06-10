@@ -14,8 +14,8 @@
 
 """Unit tests for subpackages.bzl."""
 
-load("//lib:subpackages.bzl", "subpackages")
 load("@rules_testing//lib:unittest.bzl", "loadingtest")
+load("//lib:subpackages.bzl", "subpackages")
 
 def _all_test(env):
     """Unit tests for subpackages.all."""

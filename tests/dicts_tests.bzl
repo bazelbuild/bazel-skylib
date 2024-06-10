@@ -14,8 +14,12 @@
 
 """Unit tests for dicts.bzl."""
 
-load("//lib:dicts.bzl", "dicts")
 load("@rules_testing//lib:unittest.bzl", "asserts", "unittest")
+load("//lib:dicts.bzl", "dicts")
+<<<<<<< HEAD
+load("@rules_testing//lib:unittest.bzl", "asserts", "unittest")
+=======
+>>>>>>> a03e850 (Replace Bazel Skylib implementation of unittest.bzl with an alias to the version in rules_testing.)
 
 def _add_test(ctx):
     """Unit tests for dicts.add."""
