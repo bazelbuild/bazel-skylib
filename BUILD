@@ -52,7 +52,6 @@ bzl_library(
         "//lib:shell",
         "//lib:structs",
         "//lib:types",
-        "//lib:unittest",
         "//lib:versions",
     ],
 )

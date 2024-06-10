@@ -14,7 +14,7 @@
 
 """Analysis tests for common_settings.bzl."""
 
-load("//lib:unittest.bzl", "analysistest", "asserts")
+load("@rules_testing//lib:unittest.bzl", "analysistest", "asserts")
 load("//rules:common_settings.bzl", "int_flag", "int_setting", "string_flag", "string_setting")
 
 def _template_variable_info_contents_test_impl(ctx):

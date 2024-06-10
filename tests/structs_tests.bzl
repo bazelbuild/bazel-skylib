@@ -15,7 +15,7 @@
 """Unit tests for structs.bzl."""
 
 load("//lib:structs.bzl", "structs")
-load("//lib:unittest.bzl", "asserts", "unittest")
+load("@rules_testing//lib:unittest.bzl", "asserts", "unittest")
 
 def _add_test(ctx):
     """Unit tests for dicts.add."""

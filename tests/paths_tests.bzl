@@ -15,7 +15,7 @@
 """Unit tests for paths.bzl."""
 
 load("//lib:paths.bzl", "paths")
-load("//lib:unittest.bzl", "asserts", "unittest")
+load("@rules_testing//lib:unittest.bzl", "asserts", "unittest")
 
 def _basename_test(ctx):
     """Unit tests for paths.basename."""

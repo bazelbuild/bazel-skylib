@@ -15,7 +15,7 @@
 
 load("//lib:new_sets.bzl", "sets")
 load("//lib:types.bzl", "types")
-load("//lib:unittest.bzl", "asserts", "unittest")
+load("@rules_testing//lib:unittest.bzl", "asserts", "unittest")
 
 def _a_function():
     """A dummy function for testing."""
