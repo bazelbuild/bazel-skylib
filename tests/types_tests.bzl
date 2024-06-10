@@ -16,10 +16,6 @@
 load("@rules_testing//lib:unittest.bzl", "asserts", "unittest")
 load("//lib:new_sets.bzl", "sets")
 load("//lib:types.bzl", "types")
-<<<<<<< HEAD
-load("@rules_testing//lib:unittest.bzl", "asserts", "unittest")
-=======
->>>>>>> a03e850 (Replace Bazel Skylib implementation of unittest.bzl with an alias to the version in rules_testing.)
 
 def _a_function():
     """A dummy function for testing."""
