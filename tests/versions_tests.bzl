@@ -14,7 +14,7 @@
 
 """Unit tests for versions.bzl."""
 
-load("//lib:unittest.bzl", "asserts", "unittest")
+load("@rules_testing//lib:unittest.bzl", "asserts", "unittest")
 load("//lib:versions.bzl", "versions")
 
 def _parse_test(ctx):

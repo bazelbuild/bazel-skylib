@@ -161,12 +161,6 @@ stardoc_with_diff_test(
 )
 
 stardoc_with_diff_test(
-    name = "unittest",
-    bzl_library_target = "//lib:unittest",
-    out_label = "//docs:unittest_doc.md",
-)
-
-stardoc_with_diff_test(
     name = "versions",
     bzl_library_target = "//lib:versions",
     out_label = "//docs:versions_doc.md",
