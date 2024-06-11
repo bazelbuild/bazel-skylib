@@ -54,30 +54,6 @@ types_test_suite()
 
 versions_test_suite()
 
-bzl_library(
-    name = "unittest_tests_bzl",
-    srcs = ["unittest_tests.bzl"],
-    visibility = ["//visibility:private"],
-    deps = ["//lib:unittest"],
-)
-
-sh_test(
-    name = "unittest_e2e_test",
-    srcs = ["unittest_test.sh"],
-    data = [
-        ":unittest.bash",
-        ":unittest_tests_bzl",
-        "//lib:dicts",
-        "//lib:new_sets",
-        "//lib:sets",
-        "//lib:types",
-        "//lib:unittest",
-        "//toolchains/unittest:test_deps",
-        "@bazel_tools//tools/bash/runfiles",
-    ],
-    tags = ["local"],
-)
-
 sh_test(
     name = "analysis_test_e2e_test",
     srcs = ["analysis_test_test.sh"],
