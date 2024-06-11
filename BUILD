@@ -41,19 +41,6 @@ bzl_library(
         "lib.bzl will go away in the future, please directly depend on the" +
         " module(s) needed as it is more efficient."
     ),
-    deps = [
-        "//lib:collections",
-        "//lib:dicts",
-        "//lib:new_sets",
-        "//lib:partial",
-        "//lib:paths",
-        "//lib:selects",
-        "//lib:sets",
-        "//lib:shell",
-        "//lib:structs",
-        "//lib:types",
-        "//lib:versions",
-    ],
 )
 
 bzl_library(
