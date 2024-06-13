@@ -140,12 +140,10 @@ native_test(
 native_test(
     name = "env_test",
     src = ":copy_assertenv_exe",
-    # On Windows we need the ".exe" extension.
-    # On other platforms the extension doesn't matter.
-    # Therefore we can use ".exe" on every platform.
-    out = "env_test.exe",
+    data = ["BUILD"],
     env = {
         "TEST_ENV_VAR": "test_env_var_value",
+        "TEST_ENV_VAR_WITH_EXPANSION": "|$(rlocationpath BUILD)|",
     },
     env_inherit = [
         "HOME",  # for POSIX

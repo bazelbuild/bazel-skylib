@@ -60,9 +60,11 @@ def _impl_rule(ctx):
         ),
     ]
     if bazel_features.globals.RunEnvironmentInfo:
+        targets = [ctx.attr.src] + ctx.attr.data
+        env = {k: ctx.expand_location(v, targets) for k, v in ctx.attr.env.items()}
         ret.append(
             bazel_features.globals.RunEnvironmentInfo(
-                environment = ctx.attr.env,
+                environment = env,
                 inherited_environment = getattr(ctx.attr, "env_inherit", []),
             ),
         )
@@ -93,7 +95,8 @@ _ATTRS = {
     ),
     "env": attr.string_dict(
         doc = "additional environment variables to set when the target is executed by " +
-              "`bazel`. Setting this requires bazel version 5.3.0 or later.",
+              "`bazel`. Setting this requires bazel version 5.3.0 or later. " +
+              "Values are subject to location expansion for labels in `data`.",
         default = {},
     ),
 }

@@ -8,24 +8,37 @@
 #define OS_VAR "HOME"
 #endif
 
+enum vars_to_be_found {
+  test_env_var = 0,
+  inherited,
+  test_env_var_with_expansion,
+  last,
+};
+
 int main(int argc, char **argv, char **envp) {
-  bool test_env_found = false;
-  bool inherited_var_found = false;
+  const char* expected[last] = {
+    "TEST_ENV_VAR=test_env_var_value",
+    OS_VAR "=",
+    "TEST_ENV_VAR_WITH_EXPANSION=|_main/tests/native_binary/BUILD|",
+  };
   for (char **env = envp; *env != NULL; ++env) {
     printf("%s\n", *env);
-    if (strcmp(*env, "TEST_ENV_VAR=test_env_var_value") == 0) {
-      test_env_found = true;
+    if (expected[test_env_var] && strcmp(*env, expected[test_env_var]) == 0) {
+      expected[test_env_var] = nullptr;
     }
-	if (strncasecmp(*env, OS_VAR "=", strlen(OS_VAR "=")) == 0) {
-      inherited_var_found = true;
+    if (expected[inherited] && strncasecmp(*env, expected[inherited], strlen(expected[inherited])) == 0) {
+      expected[inherited] = nullptr;
+    }
+    if (expected[test_env_var_with_expansion] && strcmp(*env, expected[test_env_var_with_expansion]) == 0) {
+      expected[test_env_var_with_expansion] = nullptr;
     }
   }
-  if (!test_env_found) {
-    fprintf(stderr,
-            "expected TEST_ENV_VAR=test_env_var_value in environment\n");
+  auto return_status = 0;
+  for (auto still_expected : expected) {
+    if (still_expected) {
+      fprintf(stderr, "expected %s\n", still_expected);
+      return_status = 1;
+    }
   }
-  if (!inherited_var_found) {
-    fprintf(stderr, "expected " OS_VAR " in environment\n");
-  }
-  return test_env_found && inherited_var_found ? 0 : 1;
+  return return_status;
 }
