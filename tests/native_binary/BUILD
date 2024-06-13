@@ -143,7 +143,7 @@ native_test(
     data = ["BUILD"],
     env = {
         "TEST_ENV_VAR": "test_env_var_value",
-        "TEST_ENV_VAR_WITH_EXPANSION": "|$(rlocationpath BUILD)|",
+        "TEST_ENV_VAR_WITH_EXPANSION": "|$(rootpath BUILD)|",
     },
     env_inherit = [
         "HOME",  # for POSIX

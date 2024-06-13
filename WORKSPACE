@@ -4,6 +4,10 @@ load(":workspace.bzl", "bazel_skylib_workspace")
 
 bazel_skylib_workspace()
 
+load("@bazel_features//:deps.bzl", "bazel_features_deps")
+
+bazel_features_deps()
+
 ### INTERNAL ONLY - lines after this are not included in the release packaging.
 # Lines below are for tests, documentation generation, and distribution archive
 # generation only, and should thus not be included by dependencies on bazel-skylib.

@@ -19,7 +19,7 @@ int main(int argc, char **argv, char **envp) {
   const char* expected[last] = {
     "TEST_ENV_VAR=test_env_var_value",
     OS_VAR "=",
-    "TEST_ENV_VAR_WITH_EXPANSION=|_main/tests/native_binary/BUILD|",
+    "TEST_ENV_VAR_WITH_EXPANSION=|tests/native_binary/BUILD|",
   };
   for (char **env = envp; *env != NULL; ++env) {
     printf("%s\n", *env);
