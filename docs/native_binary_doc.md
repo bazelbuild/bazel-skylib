@@ -33,7 +33,7 @@ in genrule.tools for example. You can also augment the binary with runfiles.
 | <a id="native_binary-src"></a>src |  path of the pre-built executable   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
 | <a id="native_binary-data"></a>data |  data dependencies. See https://bazel.build/reference/be/common-definitions#typical.data   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
 | <a id="native_binary-out"></a>out |  An output name for the copy of the binary. Defaults to name.exe. (We add .exe to the name by default because it's required on Windows and tolerated on other platforms.)   | String | optional |  `""`  |
-| <a id="native_binary-env"></a>env |  additional environment variables to set when the target is executed by `bazel`. Setting this requires bazel version 5.3.0 or later.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  `{}`  |
+| <a id="native_binary-env"></a>env |  additional environment variables to set when the target is executed by `bazel`. Setting this requires bazel version 5.3.0 or later. Values are subject to location expansion for labels in `data`.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  `{}`  |
 
 
 <a id="native_test"></a>
@@ -58,7 +58,7 @@ the binary with runfiles.
 | <a id="native_test-src"></a>src |  path of the pre-built executable   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
 | <a id="native_test-data"></a>data |  data dependencies. See https://bazel.build/reference/be/common-definitions#typical.data   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
 | <a id="native_test-out"></a>out |  An output name for the copy of the binary. Defaults to name.exe. (We add .exe to the name by default because it's required on Windows and tolerated on other platforms.)   | String | optional |  `""`  |
-| <a id="native_test-env"></a>env |  additional environment variables to set when the target is executed by `bazel`. Setting this requires bazel version 5.3.0 or later.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  `{}`  |
+| <a id="native_test-env"></a>env |  additional environment variables to set when the target is executed by `bazel`. Setting this requires bazel version 5.3.0 or later. Values are subject to location expansion for labels in `data`.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  `{}`  |
 | <a id="native_test-env_inherit"></a>env_inherit |  additional environment variables to inherit from the external environment when the test is executed by `bazel test`. Setting this requires bazel version 5.3.0 or later.   | List of strings | optional |  `[]`  |
 
 
