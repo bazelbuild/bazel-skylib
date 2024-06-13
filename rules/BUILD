@@ -92,3 +92,9 @@ bzl_library(
     name = "select_file",
     srcs = ["select_file.bzl"],
 )
+
+bzl_library(
+    name = "select_files_by_extension",
+    srcs = ["select_files_by_extension.bzl"],
+    deps = ["//lib:paths.bzl"],
+)

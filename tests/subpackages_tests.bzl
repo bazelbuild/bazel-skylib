@@ -29,6 +29,7 @@ def _all_test(env):
         "directory",
         "expand_template",
         "select_file",
+        "select_files_by_extension",
         "write_file",
     ]
 
@@ -48,6 +49,7 @@ def _all_test(env):
         "directory",
         "expand_template",
         "select_file",
+        "select_files_by_extension",
         "write_file",
     ]
 
