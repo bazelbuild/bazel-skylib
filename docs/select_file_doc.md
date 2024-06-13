@@ -1,10 +1,8 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
-
 select_file() build rule implementation.
 
 Selects a single file from the outputs of a target by given relative path.
-
 
 <a id="select_file"></a>
 

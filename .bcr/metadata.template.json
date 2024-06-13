@@ -1,0 +1,15 @@
+{
+  "homepage": "https://github.com/bazelbuild/bazel-skylib",
+  "maintainers": [
+    {
+      "email": "ilist@google.com",
+      "github": "comius",
+      "name": "Ivo Ristovski List"
+    }
+  ],
+  "versions": [],
+  "yanked_versions": {},
+  "repository": [
+    "github:bazelbuild/bazel-skylib"
+  ]
+}

@@ -1,20 +1,65 @@
-Release 1.5.0
+# Release 1.7.1
 
-## What's Changed
+**What's Changed**
+* Fix distribution tarballs to include directory rules. (https://github.com/bazelbuild/bazel-skylib/pull/520)
+
+**Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.7.0...1.7.1
+
+# Release 1.7.0
+
+**New features**
+* Implement `directory` rules by @matts1 in https://github.com/bazelbuild/bazel-skylib/pull/510
+* Add `is_normalized` and `starts_with` to paths module by @comius in https://github.com/bazelbuild/bazel-skylib/pull/514
+
+**New Contributors**
+* @matts1 made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/510
+
+**Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.6.1...1.7.0
+
+
+# Release 1.6.1
+
+**What's Changed**
+* Fix `modules` Bazel 6 compatibility by @phst in https://github.com/bazelbuild/bazel-skylib/pull/499
+
+**New Contributors**
+* @phst made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/499
+
+**Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.6.0...1.6.1
+
+# Release 1.6.0
+
+**What's Changed**
+* Add helper functions for module extensions as `modules` by @fmeum in https://github.com/bazelbuild/bazel-skylib/pull/457
+* Make `out` on `native_binary` optional by @tpudlik in https://github.com/bazelbuild/bazel-skylib/pull/474
+* Remove outdated rules_cc dependency @cpsauer in https://github.com/bazelbuild/bazel-skylib/pull/476
+* Add toolchains argument to unittests.make by @jylinv0 in https://github.com/bazelbuild/bazel-skylib/pull/483
+* Allow `bzl_library` to depend on non-`bzl_library` targets by @Wyverald in https://github.com/bazelbuild/bazel-skylib/pull/495
+
+**New Contributors**
+* @jylinv0 made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/483
+* @tpudlik made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/474
+
+**Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.5.0...1.6.0
+
+
+# Release 1.5.0
+
+**What's Changed**
 * Expose int- and string-valued build settings as Make variables by @fmeum in https://github.com/bazelbuild/bazel-skylib/pull/440
 * Modify actions in order not to need `toolchain` param  by @kotlaja in https://github.com/bazelbuild/bazel-skylib/pull/455
 * versions: Don't fail on Bazel dev builds by @fmeum in https://github.com/bazelbuild/bazel-skylib/pull/463
 * Add error for empty `bzl_library` by @keith in https://github.com/bazelbuild/bazel-skylib/pull/457
 * Add `doc` param to `unittest.make` by @UebelAndre in https://github.com/bazelbuild/bazel-skylib/pull/464
 
-## New Contributors
+**New Contributors**
 * @kotlaja made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/455
 * @keith made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/457
 
 **Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.4.2...1.5.0
 
 
-Release 1.4.2
+# Release 1.4.2
 
 Bugfix release: fixes `build_test` to respect `target_compatible_with` (#448)
 
@@ -26,7 +71,7 @@ Bugfix release: fixes `build_test` to respect `target_compatible_with` (#448)
 Alexandre Rostovtsev, UebelAndre, Vertexwahn, Xavier Bonaventura
 
 
-Release 1.4.1
+# Release 1.4.1
 
 Bugfix release: fixes gazelle plugin failure with
 `--incompatible_disallow_empty_glob` (#431) and (for released versions) with
@@ -36,7 +81,7 @@ Bugfix release: fixes gazelle plugin failure with
 Alexandre Rostovtsev, Chuck Grindel
 
 
-Release 1.4.0
+# Release 1.4.0
 
 **New Features**
 -   The Gazelle plugin is marked stable for general use (#400, #424)
@@ -48,7 +93,7 @@ Release 1.4.0
 Alexandre Rostovtsev, Nick Gooding, Simon Stewart, Xùdōng Yáng
 
 
-Release 1.3.0
+# Release 1.3.0
 
 **New Features**
 -   Added `dicts.omit` and `dicts.pick` (#304)
@@ -71,7 +116,7 @@ Meumertzheim, Geoffrey Martin-Noble, hchsiao, Kevin Kres, nickgooding,
 Vertexwahn, Vinh Tran
 
 
-Release 1.2.1
+# Release 1.2.1
 
 Bugfix release: fixes build failure with --incompatible_disallow_empty_glob
 (#359)
@@ -98,7 +143,7 @@ Alexandre Rostovtsev, Geoffrey Martin-Noble, Kevin Kress, Samuel Freilich,
 UebelAndre, Yesudeep Mangalapilly
 
 
-Release 1.1.1 (initially tagged as 1.1.0)
+# Release 1.1.1 (initially tagged as 1.1.0)
 
 **New Features**
 
@@ -122,7 +167,7 @@ Brun, Mansur, Olek Wojnar, Philipp Wollermann, River, Samuel Giddins, Thaler
 Benedek
 
 
-Release 1.0.3
+# Release 1.0.3
 
 **Significant Changes**
 
@@ -142,7 +187,7 @@ Release 1.0.3
 Andrew Z Allen, Bocete, Bor Kae Hwang, irengrig, Jay Conrod, Jonathan B Coe, Marc Plano-Lesay, Robbert van Ginkel, Thomas Van Lenten, Yannic
 
 
-Release 1.0.0
+# Release 1.0.0
 
 **Incompatible Changes**
 
@@ -155,7 +200,7 @@ Release 1.0.0
 -   Added types.is_set() to test whether an arbitrary object is a set as defined by sets.bzl.
 
 
-Release 0.9.0
+# Release 0.9.0
 
 **New Features**
 

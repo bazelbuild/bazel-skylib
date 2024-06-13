@@ -3,6 +3,7 @@ load(":build_test_tests.bzl", "build_test_test_suite")
 load(":collections_tests.bzl", "collections_test_suite")
 load(":common_settings_tests.bzl", "common_settings_test_suite")
 load(":dicts_tests.bzl", "dicts_test_suite")
+load(":modules_test.bzl", "modules_test_suite")
 load(":new_sets_tests.bzl", "new_sets_test_suite")
 load(":partial_tests.bzl", "partial_test_suite")
 load(":paths_tests.bzl", "paths_test_suite")
@@ -13,6 +14,11 @@ load(":subpackages_tests.bzl", "subpackages_test_suite")
 load(":types_tests.bzl", "types_test_suite")
 load(":unittest_tests.bzl", "unittest_passing_tests_suite")
 load(":versions_tests.bzl", "versions_test_suite")
+
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
 
 licenses(["notice"])
 
@@ -28,6 +34,8 @@ collections_test_suite()
 common_settings_test_suite()
 
 dicts_test_suite()
+
+modules_test_suite()
 
 new_sets_test_suite()
 

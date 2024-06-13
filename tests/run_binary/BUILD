@@ -1,9 +1,9 @@
-load("@rules_cc//cc:defs.bzl", "cc_binary")
 load("//rules:diff_test.bzl", "diff_test")
 load("//rules:run_binary.bzl", "run_binary")
 load("//rules:write_file.bzl", "write_file")
 
 package(
+    default_applicable_licenses = ["//:license"],
     default_testonly = 1,
     default_visibility = ["//visibility:private"],
 )
@@ -25,6 +25,8 @@ write_file(
         "arg2=(bar)",
         "ENV_LOCATION=(a tests/run_binary/BUILD)",
         "ENV_LOCATIONS=(b\\ tests/run_binary/BUILD tests/run_binary/printargs.cc)",
+        "ENV_EXECPATH=(a tests/run_binary/BUILD)",
+        "ENV_EXECPATHS=(b\\ tests/run_binary/BUILD tests/run_binary/printargs.cc)",
         "ENV_COMPLEX=(xx/yy \\\"zz)",
         "ENV_PATH_BASH=($PATH)",
         "ENV_PATH_CMD=(%PATH%)",
@@ -52,12 +54,14 @@ run_binary(
     # Bash-tokenized, and should appear the same for Windows .bat files and Bash
     # .sh scripts.
     env = {
+        "ENV_COMPLEX": "xx/yy \\\"zz",
+        "ENV_EXECPATH": "a $(execpath BUILD)",
+        "ENV_EXECPATHS": "b\\ $(execpaths :dummy_srcs)",
         # Testing $(location) expansion only on source files so the result is
         # predictable. The path of generated files depends on the target
         # platform.
         "ENV_LOCATION": "a $(location BUILD)",
         "ENV_LOCATIONS": "b\\ $(locations :dummy_srcs)",
-        "ENV_COMPLEX": "xx/yy \\\"zz",
         "ENV_PATH_BASH": "$PATH",
         "ENV_PATH_CMD": "%PATH%",
         "OUT": "$(location run_script.out)",
@@ -77,6 +81,8 @@ write_file(
             "@echo>>%OUT% arg2=(%2)",
             "@echo>>%OUT% ENV_LOCATION=(%ENV_LOCATION%)",
             "@echo>>%OUT% ENV_LOCATIONS=(%ENV_LOCATIONS%)",
+            "@echo>>%OUT% ENV_EXECPATH=(%ENV_EXECPATH%)",
+            "@echo>>%OUT% ENV_EXECPATHS=(%ENV_EXECPATHS%)",
             "@echo>>%OUT% ENV_COMPLEX=(%ENV_COMPLEX%)",
             "@echo>>%OUT% ENV_PATH_BASH=(%ENV_PATH_BASH%)",
             "@echo>>%OUT% ENV_PATH_CMD=(%ENV_PATH_CMD%)",
@@ -87,6 +93,8 @@ write_file(
             "echo >> \"$OUT\" \"arg2=($2)\"",
             "echo >> \"$OUT\" \"ENV_LOCATION=($ENV_LOCATION)\"",
             "echo >> \"$OUT\" \"ENV_LOCATIONS=($ENV_LOCATIONS)\"",
+            "echo >> \"$OUT\" \"ENV_EXECPATH=($ENV_EXECPATH)\"",
+            "echo >> \"$OUT\" \"ENV_EXECPATHS=($ENV_EXECPATHS)\"",
             "echo >> \"$OUT\" \"ENV_COMPLEX=($ENV_COMPLEX)\"",
             "echo >> \"$OUT\" \"ENV_PATH_BASH=($ENV_PATH_BASH)\"",
             "echo >> \"$OUT\" \"ENV_PATH_CMD=($ENV_PATH_CMD)\"",
@@ -115,9 +123,13 @@ write_file(
         "arg5=(tests/run_binary/BUILD)",
         "arg6=(tests/run_binary/BUILD tests/run_binary/printargs.cc)",
         "arg7=('tests/run_binary/BUILD $tests/run_binary/BUILD')",
-        "arg8=($PATH)",
-        "arg9=($$PATH)",
-        "arg10=(${PATH})",
+        "arg8=(tests/run_binary/BUILD)",
+        "arg9=(tests/run_binary/BUILD tests/run_binary/printargs.cc)",
+        "arg10=('tests/run_binary/BUILD $tests/run_binary/BUILD')",
+        "arg11=($PATH)",
+        "arg12=($$PATH)",
+        "arg13=(${PATH})",
+        "arg14=($(echo hello))",
         # Add trailing newline, as printed by printargs.
         "",
     ],
@@ -137,15 +149,20 @@ run_binary(
         "\"c d\"",
         "e\\ f",
         "xx/yy\\ \\\"zz",
-        # Testing $(location) expansion only on source files so the result is
+        # Testing $(execpath) expansion only on source files so the result is
         # predictable. The path of generated files depends on the target
         # platform.
+        "$(execpath BUILD)",
+        "$(execpaths :dummy_srcs)",
+        "'$(execpath BUILD) $$(execpath BUILD)'",
+        # Test the legacy 'location' expansions
         "$(location BUILD)",
         "$(locations :dummy_srcs)",
         "'$(location BUILD) $$(location BUILD)'",
         "$PATH",
         "$$PATH",
         "${PATH}",
+        "$(echo hello)",
     ],
     # Not testing any complex envvars here, because we already did in
     # "run_script".

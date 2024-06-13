@@ -21,10 +21,12 @@ def _all_test(env):
     """Unit tests for subpackages.all."""
 
     all_pkgs = [
+        "bzl_library",
         "common_settings",
         "copy_directory",
         "copy_file",
         "diff_test",
+        "directory",
         "expand_template",
         "select_file",
         "write_file",
@@ -39,9 +41,11 @@ def _all_test(env):
 
     # These exist in all cases
     filtered_pkgs = [
+        "bzl_library",
         "common_settings",
         "copy_directory",
         "copy_file",
+        "directory",
         "expand_template",
         "select_file",
         "write_file",

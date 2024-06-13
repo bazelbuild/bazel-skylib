@@ -56,15 +56,14 @@ Example:
   )
   ```
 
-
 **ATTRIBUTES**
 
 
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="bzl_library-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="bzl_library-deps"></a>deps |  List of other <code>bzl_library</code> targets that are required by the Starlark files listed in <code>srcs</code>.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional | <code>[]</code> |
-| <a id="bzl_library-srcs"></a>srcs |  List of <code>.bzl</code> and <code>.scl</code> files that are processed to create this target.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional | <code>[]</code> |
+| <a id="bzl_library-deps"></a>deps |  List of other `bzl_library` or `filegroup` targets that are required by the Starlark files listed in `srcs`.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
+| <a id="bzl_library-srcs"></a>srcs |  List of `.bzl` and `.scl` files that are processed to create this target.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
 
 
 <a id="StarlarkLibraryInfo"></a>

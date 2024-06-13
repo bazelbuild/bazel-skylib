@@ -24,6 +24,16 @@ def bazel_skylib_gazelle_plugin_workspace():
 
     maybe(
         http_archive,
+        name = "rules_license",
+        sha256 = "4531deccb913639c30e5c7512a054d5d875698daeb75d8cf90f284375fe7c360",
+        urls = [
+            "https://mirror.bazel.build/github.com/bazelbuild/rules_license/releases/download/0.0.7/rules_license-0.0.7.tar.gz",
+            "https://github.com/bazelbuild/rules_license/releases/download/0.0.7/rules_license-0.0.7.tar.gz",
+        ],
+    )
+
+    maybe(
+        http_archive,
         name = "io_bazel_rules_go",
         sha256 = "278b7ff5a826f3dc10f04feaf0b70d48b68748ccd512d7f98bf442077f043fe3",
         urls = [

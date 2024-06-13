@@ -1,5 +1,7 @@
 load("//docs/private:stardoc_with_diff_test.bzl", "stardoc_with_diff_test", "update_docs")
 
+package(default_applicable_licenses = ["//:license"])
+
 licenses(["notice"])
 
 stardoc_with_diff_test(
@@ -57,9 +59,39 @@ stardoc_with_diff_test(
 )
 
 stardoc_with_diff_test(
+    name = "directory",
+    bzl_library_target = "//rules/directory:directory",
+    out_label = "//docs:directory_doc.md",
+)
+
+stardoc_with_diff_test(
+    name = "directory_glob",
+    bzl_library_target = "//rules/directory:glob",
+    out_label = "//docs:directory_glob_doc.md",
+)
+
+stardoc_with_diff_test(
+    name = "directory_providers",
+    bzl_library_target = "//rules/directory:providers",
+    out_label = "//docs:directory_providers_doc.md",
+)
+
+stardoc_with_diff_test(
+    name = "directory_subdirectory",
+    bzl_library_target = "//rules/directory:subdirectory",
+    out_label = "//docs:directory_subdirectory_doc.md",
+)
+
+stardoc_with_diff_test(
     name = "expand_template",
     bzl_library_target = "//rules:expand_template",
     out_label = "//docs:expand_template_doc.md",
+)
+
+stardoc_with_diff_test(
+    name = "modules",
+    bzl_library_target = "//lib:modules",
+    out_label = "//docs:modules_doc.md",
 )
 
 stardoc_with_diff_test(

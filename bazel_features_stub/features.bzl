@@ -7,4 +7,7 @@ bazel_features = struct(
     globals = struct(
         RunEnvironmentInfo = RunEnvironmentInfo,
     ),
+    external_deps = struct(
+        extension_metadata_has_reproducible = False,
+    ),
 )

@@ -1,8 +1,11 @@
 load("//:bzl_library.bzl", "bzl_library")
 
-licenses(["notice"])
+package(
+    default_applicable_licenses = ["//:license"],
+    default_visibility = ["//visibility:public"],
+)
 
-package(default_visibility = ["//visibility:public"])
+licenses(["notice"])
 
 bzl_library(
     name = "analysis_test",

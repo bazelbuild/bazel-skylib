@@ -2,50 +2,6 @@
 
 Skylib module containing functions checking types.
 
-<a id="types.is_list"></a>
-
-## types.is_list
-
-<pre>
-types.is_list(<a href="#types.is_list-v">v</a>)
-</pre>
-
-Returns True if v is an instance of a list.
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="types.is_list-v"></a>v |  The value whose type should be checked.   |  none |
-
-**RETURNS**
-
-True if v is an instance of a list, False otherwise.
-
-
-<a id="types.is_string"></a>
-
-## types.is_string
-
-<pre>
-types.is_string(<a href="#types.is_string-v">v</a>)
-</pre>
-
-Returns True if v is an instance of a string.
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="types.is_string-v"></a>v |  The value whose type should be checked.   |  none |
-
-**RETURNS**
-
-True if v is an instance of a string, False otherwise.
-
-
 <a id="types.is_bool"></a>
 
 ## types.is_bool
@@ -68,70 +24,26 @@ Returns True if v is an instance of a bool.
 True if v is an instance of a bool, False otherwise.
 
 
-<a id="types.is_none"></a>
+<a id="types.is_depset"></a>
 
-## types.is_none
+## types.is_depset
 
 <pre>
-types.is_none(<a href="#types.is_none-v">v</a>)
+types.is_depset(<a href="#types.is_depset-v">v</a>)
 </pre>
 
-Returns True if v has the type of None.
+Returns True if v is an instance of a `depset`.
 
 **PARAMETERS**
 
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="types.is_none-v"></a>v |  The value whose type should be checked.   |  none |
+| <a id="types.is_depset-v"></a>v |  The value whose type should be checked.   |  none |
 
 **RETURNS**
 
-True if v is None, False otherwise.
-
-
-<a id="types.is_int"></a>
-
-## types.is_int
-
-<pre>
-types.is_int(<a href="#types.is_int-v">v</a>)
-</pre>
-
-Returns True if v is an instance of a signed integer.
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="types.is_int-v"></a>v |  The value whose type should be checked.   |  none |
-
-**RETURNS**
-
-True if v is an instance of a signed integer, False otherwise.
-
-
-<a id="types.is_tuple"></a>
-
-## types.is_tuple
-
-<pre>
-types.is_tuple(<a href="#types.is_tuple-v">v</a>)
-</pre>
-
-Returns True if v is an instance of a tuple.
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="types.is_tuple-v"></a>v |  The value whose type should be checked.   |  none |
-
-**RETURNS**
-
-True if v is an instance of a tuple, False otherwise.
+True if v is an instance of a `depset`, False otherwise.
 
 
 <a id="types.is_dict"></a>
@@ -178,26 +90,70 @@ Returns True if v is an instance of a function.
 True if v is an instance of a function, False otherwise.
 
 
-<a id="types.is_depset"></a>
+<a id="types.is_int"></a>
 
-## types.is_depset
+## types.is_int
 
 <pre>
-types.is_depset(<a href="#types.is_depset-v">v</a>)
+types.is_int(<a href="#types.is_int-v">v</a>)
 </pre>
 
-Returns True if v is an instance of a `depset`.
+Returns True if v is an instance of a signed integer.
 
 **PARAMETERS**
 
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="types.is_depset-v"></a>v |  The value whose type should be checked.   |  none |
+| <a id="types.is_int-v"></a>v |  The value whose type should be checked.   |  none |
 
 **RETURNS**
 
-True if v is an instance of a `depset`, False otherwise.
+True if v is an instance of a signed integer, False otherwise.
+
+
+<a id="types.is_list"></a>
+
+## types.is_list
+
+<pre>
+types.is_list(<a href="#types.is_list-v">v</a>)
+</pre>
+
+Returns True if v is an instance of a list.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="types.is_list-v"></a>v |  The value whose type should be checked.   |  none |
+
+**RETURNS**
+
+True if v is an instance of a list, False otherwise.
+
+
+<a id="types.is_none"></a>
+
+## types.is_none
+
+<pre>
+types.is_none(<a href="#types.is_none-v">v</a>)
+</pre>
+
+Returns True if v has the type of None.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="types.is_none-v"></a>v |  The value whose type should be checked.   |  none |
+
+**RETURNS**
+
+True if v is None, False otherwise.
 
 
 <a id="types.is_set"></a>
@@ -220,5 +176,49 @@ Returns True if v is a set created by sets.make().
 **RETURNS**
 
 True if v was created by sets.make(), False otherwise.
+
+
+<a id="types.is_string"></a>
+
+## types.is_string
+
+<pre>
+types.is_string(<a href="#types.is_string-v">v</a>)
+</pre>
+
+Returns True if v is an instance of a string.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="types.is_string-v"></a>v |  The value whose type should be checked.   |  none |
+
+**RETURNS**
+
+True if v is an instance of a string, False otherwise.
+
+
+<a id="types.is_tuple"></a>
+
+## types.is_tuple
+
+<pre>
+types.is_tuple(<a href="#types.is_tuple-v">v</a>)
+</pre>
+
+Returns True if v is an instance of a tuple.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="types.is_tuple-v"></a>v |  The value whose type should be checked.   |  none |
+
+**RETURNS**
+
+True if v is an instance of a tuple, False otherwise.
 
 
