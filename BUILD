@@ -86,6 +86,8 @@ filegroup(
         "WORKSPACE.bzlmod",
         "//lib:distribution",
         "//rules:distribution",
+        "//rules/directory:distribution",
+        "//rules/directory/private:distribution",
         "//rules/private:distribution",
         "//toolchains/unittest:distribution",
     ] + glob(["*.bzl"]),
