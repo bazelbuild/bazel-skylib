@@ -1,6 +1,6 @@
 --- MODULE.bazel
 +++ MODULE.bazel
-@@ -23,12 +23,3 @@
+@@ -24,16 +24,6 @@ bazel_dep(name = "rules_testing", version = "0.6.0", dev_dependency = True)
  # Needed for bazelci and for building distribution tarballs.
  # If using an unreleased version of bazel_skylib via git_override, apply
  # MODULE.bazel-remove-override.patch to remove the following lines:
@@ -9,7 +9,11 @@
 -    module_name = "bazel_skylib_gazelle_plugin",
 -    path = "gazelle",
 -)
+-
 -local_path_override(
 -    module_name = "bazel_features",
 -    path = "bazel_features_stub",
 -)
+ 
+ external_directory_tests_ext = use_extension("//tests/directory:external_directory_tests.bzl", "external_directory_tests_ext", dev_dependency = True)
+ use_repo(external_directory_tests_ext, "external_directory_tests")
