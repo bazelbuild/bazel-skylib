@@ -32,6 +32,8 @@ function test_expand_template() {
   cat "$(rlocation $TEST_WORKSPACE/tests/expand_template/foo/test.yaml)" >"$TEST_log"
   expect_log 'name: test'
   expect_log 'version: 1.1.1'
+  expect_log 'tests/expand_template/version.h'
+  expect_log 'toolchain: prefixVARsuffix'
 }
 
 run_suite "expand_template_tests test suite"
