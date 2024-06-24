@@ -14,6 +14,7 @@
 
 # This package aids testing the 'diff_test' rule.
 
+load("//rules:common_settings.bzl", "string_flag")
 load("//rules:expand_template.bzl", "expand_template")
 
 package(
@@ -21,14 +22,28 @@ package(
     default_testonly = 1,
 )
 
+string_flag(
+    name = "my_string_flag",
+    build_setting_default = "VAR",
+    make_variable = "SOMEVAR",
+)
+
 expand_template(
     name = "filled_template",
     out = "foo/test.yaml",
+    data = [
+        ":version",
+    ],
     substitutions = {
         "@name@": "test",
         "@version@": "1.1.1",
+        "@path@": "$(rlocationpath :version)",
+        "@toolchain@": "prefix$(SOMEVAR)suffix",
     },
     template = "test.tpl.yaml",
+    toolchains = [
+        ":my_string_flag",
+    ],
 )
 
 sh_test(
