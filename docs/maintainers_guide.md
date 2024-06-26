@@ -123,13 +123,6 @@ load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 bazel_skylib_workspace()
 ```
 
-***Additional WORKSPACE setup for `native_binary.bzl`***
-
-```starlark
-load("@bazel_features//:deps.bzl", "bazel_features_deps")
-bazel_features_deps()
-```
-
 ***Additional WORKSPACE setup for the Gazelle plugin***
 
 ```starlark

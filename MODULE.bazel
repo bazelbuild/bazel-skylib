@@ -11,7 +11,6 @@ register_toolchains(
 )
 
 bazel_dep(name = "platforms", version = "0.0.9")
-bazel_dep(name = "bazel_features", version = "1.12.0")
 bazel_dep(name = "rules_license", version = "0.0.7")
 
 ### INTERNAL ONLY - lines after this are not included in the release packaging.
@@ -28,11 +27,6 @@ bazel_dep(name = "bazel_skylib_gazelle_plugin", dev_dependency = True)
 local_path_override(
     module_name = "bazel_skylib_gazelle_plugin",
     path = "gazelle",
-)
-
-local_path_override(
-    module_name = "bazel_features",
-    path = "bazel_features_stub",
 )
 
 external_directory_tests_ext = use_extension("//tests/directory:external_directory_tests.bzl", "external_directory_tests_ext", dev_dependency = True)

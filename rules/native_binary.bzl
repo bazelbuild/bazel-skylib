@@ -18,20 +18,9 @@ These rules let you wrap a pre-built binary or script in a conventional binary
 and test rule respectively. They fulfill the same goal as sh_binary and sh_test
 do, but they run the wrapped binary directly, instead of through Bash, so they
 don't depend on Bash and work with --shell_executable="".
-
-If `bazel_skylib` is loaded from `WORKSPACE` rather than with bzlmod, using
-this library requires additional `WORKSPACE` setup as explained in the
-[release page](https://github.com/bazelbuild/bazel-skylib/releases).
 """
 
-load("@bazel_features//:features.bzl", "bazel_features")
-
 def _impl_rule(ctx):
-    if not bazel_features.globals.RunEnvironmentInfo:
-        for attr in ("env", "env_inherit"):
-            if getattr(ctx.attr, attr, None):
-                fail("Attribute %s specified for %s is only supported with bazel >= 5.3.0" %
-                     (attr, ctx.label))
     out = ctx.actions.declare_file(ctx.attr.out if (ctx.attr.out != "") else ctx.attr.name + ".exe")
     ctx.actions.symlink(
         target_file = ctx.executable.src,
@@ -40,35 +29,26 @@ def _impl_rule(ctx):
     )
     runfiles = ctx.runfiles(files = ctx.files.data)
 
-    # Bazel 4.x LTS does not support `merge_all`.
-    # TODO: remove `merge` branch once we drop support for Bazel 4.x.
-    if hasattr(runfiles, "merge_all"):
-        runfiles = runfiles.merge_all([
-            d[DefaultInfo].default_runfiles
-            for d in ctx.attr.data + [ctx.attr.src]
-        ])
-    else:
-        for d in ctx.attr.data:
-            runfiles = runfiles.merge(d[DefaultInfo].default_runfiles)
-        runfiles = runfiles.merge(ctx.attr.src[DefaultInfo].default_runfiles)
+    runfiles = runfiles.merge_all([
+        d[DefaultInfo].default_runfiles
+        for d in ctx.attr.data + [ctx.attr.src]
+    ])
 
-    ret = [
+
+    targets = [ctx.attr.src] + ctx.attr.data
+    env = {k: ctx.expand_location(v, targets) for k, v in ctx.attr.env.items()}
+
+    return [
         DefaultInfo(
             executable = out,
             files = depset([out]),
             runfiles = runfiles,
         ),
+        RunEnvironmentInfo(
+            environment = env,
+            inherited_environment = getattr(ctx.attr, "env_inherit", []),
+        ),
     ]
-    if bazel_features.globals.RunEnvironmentInfo:
-        targets = [ctx.attr.src] + ctx.attr.data
-        env = {k: ctx.expand_location(v, targets) for k, v in ctx.attr.env.items()}
-        ret.append(
-            bazel_features.globals.RunEnvironmentInfo(
-                environment = env,
-                inherited_environment = getattr(ctx.attr, "env_inherit", []),
-            ),
-        )
-    return ret
 
 _ATTRS = {
     "src": attr.label(
@@ -95,8 +75,8 @@ _ATTRS = {
     ),
     "env": attr.string_dict(
         doc = "additional environment variables to set when the target is executed by " +
-              "`bazel`. Setting this requires bazel version 5.3.0 or later. " +
-              "Values are subject to location expansion for labels in `data`.",
+              "`bazel`. Values are subject to location expansion for labels in `src` and " +
+              "`data`.",
         default = {},
     ),
 }
@@ -119,8 +99,7 @@ native_test = rule(
         _ATTRS,
         env_inherit = attr.string_list(
             doc = "additional environment variables to inherit from the external " +
-                  "environment when the test is executed by `bazel test`. " +
-                  "Setting this requires bazel version 5.3.0 or later.",
+                  "environment when the test is executed by `bazel test`. ",
             default = [],
         ),
     ),
