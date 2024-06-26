@@ -34,7 +34,6 @@ def _impl_rule(ctx):
         for d in ctx.attr.data + [ctx.attr.src]
     ])
 
-
     targets = [ctx.attr.src] + ctx.attr.data
     env = {k: ctx.expand_location(v, targets) for k, v in ctx.attr.env.items()}
 
