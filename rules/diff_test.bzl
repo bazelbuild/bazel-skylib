@@ -28,6 +28,7 @@ def _runfiles_path(f):
 
 def _diff_test_impl(ctx):
     if ctx.attr.is_windows:
+        bash_bin = ctx.toolchains["@bazel_tools//tools/sh:toolchain_type"].path
         test_bin = ctx.actions.declare_file(ctx.label.name + "-test.bat")
         ctx.actions.write(
             output = test_bin,
@@ -97,16 +98,16 @@ rem use tr command from msys64 package, msys64 is a bazel prerequisite
 rem todo: in future better to pull in a binary to do this
 if "{f1_to_lf}"=="1" (
   for %%f in (!RF1!) do set RF_TEMP=%TEST_TMPDIR%\\%%~nxf_lf
-  for %%f in (!BAZEL_SH!) do set "TR=%%~pf\\tr"
-  rem echo type "!RF1!" ^| !TR! -d "\\r"
+  for %%f in ({bash_bin}) do set "TR=%%~dpf\\tr"
+  echo type "!RF1!" ^| !TR! -d "\\r"
   type "!RF1!" | !TR! -d "\\r" > "!RF_TEMP!"
   rem echo original file !RF1! replaced by !RF_TEMP!
   set "RF1=!RF_TEMP!"
 )
 if "{f2_to_lf}"=="1" (
   for %%f in (!RF2!) do set RF_TEMP=%TEST_TMPDIR%\\%%~nxf_lf
-  for %%f in (!BAZEL_SH!) do set "TR=%%~dpf\\tr"
-  rem echo type "!RF2!" ^| !TR! -d "\\r"
+  for %%f in ({bash_bin}) do set "TR=%%~dpf\\tr"
+  echo type "!RF2!" ^| !TR! -d "\\r"
   type "!RF2!" | !TR! -d "\\r" > "!RF_TEMP!"
   rem echo original file !RF2! replaced by !RF_TEMP!
   set "RF2=!RF_TEMP!"
@@ -130,6 +131,7 @@ if %ERRORLEVEL% neq 0 (
                 file2 = _runfiles_path(ctx.file.file2),
                 f1_to_lf = "1" if ctx.attr.file1_to_lf else "0",
                 f2_to_lf = "1" if ctx.attr.file2_to_lf else "0",
+                bash_bin = bash_bin
             ),
             is_executable = True,
         )
@@ -192,6 +194,9 @@ _diff_test = rule(
         ),
         "is_windows": attr.bool(mandatory = True),
     },
+    toolchains = [
+        "@bazel_tools//tools/sh:toolchain_type",
+    ],
     test = True,
     implementation = _diff_test_impl,
 )
