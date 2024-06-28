@@ -58,6 +58,8 @@ def stardoc_with_diff_test(
         file1 = out_label,
         # Output from stardoc rule above
         file2 = out_file.replace(".md", "-docgen.md"),
+        # Stardoc generates CRLF line endings on windows. file1 has LF endings.
+        file2_to_lf = True,
         tags = ["no_windows"],
     )
 

@@ -35,8 +35,22 @@ def _diff_test_impl(ctx):
 @echo off
 SETLOCAL ENABLEEXTENSIONS
 SETLOCAL ENABLEDELAYEDEXPANSION
-set MF=%RUNFILES_MANIFEST_FILE:/=\\%
 set PATH=%SYSTEMROOT%\\system32
+if defined RUNFILES_MANIFEST_FILE (
+    set MF=%RUNFILES_MANIFEST_FILE:/=\\%
+) else (
+    if exist MANIFEST (
+        set MF=MANIFEST
+    ) else (
+        if exist ..\\MANIFEST (
+            set MF=..\\MANIFEST
+        )
+    )
+)
+if not exist %MF% (
+    echo Manifest file %MF% not found
+    exit /b 1
+)
 set F1={file1}
 set F2={file2}
 if "!F1:~0,9!" equ "external/" (set F1=!F1:~9!) else (set F1=!TEST_WORKSPACE!/!F1!)
@@ -79,10 +93,30 @@ if "!RF2!" equ "" (
     exit /b 1
   )
 )
+rem use tr command from msys64 package, msys64 is a bazel prerequisite
+rem todo: in future better to pull in a binary to do this
+if "{f1_to_lf}"=="1" (
+  for %%f in (!RF1!) do set RF_TEMP=%TEST_TMPDIR%\\%%~nxf_lf
+  for %%f in (!BAZEL_SH!) do set "TR=%%~pf\\tr"
+  rem echo type "!RF1!" ^| !TR! -d "\\r"
+  type "!RF1!" | !TR! -d "\\r" > "!RF_TEMP!"
+  rem echo original file !RF1! replaced by !RF_TEMP!
+  set "RF1=!RF_TEMP!"
+)
+if "{f2_to_lf}"=="1" (
+  for %%f in (!RF2!) do set RF_TEMP=%TEST_TMPDIR%\\%%~nxf_lf
+  for %%f in (!BAZEL_SH!) do set "TR=%%~dpf\\tr"
+  rem echo type "!RF2!" ^| !TR! -d "\\r"
+  type "!RF2!" | !TR! -d "\\r" > "!RF_TEMP!"
+  rem echo original file !RF2! replaced by !RF_TEMP!
+  set "RF2=!RF_TEMP!"
+)
+rem echo fc.exe /B "!RF1!" "!RF2!"
 fc.exe 2>NUL 1>NUL /B "!RF1!" "!RF2!"
 if %ERRORLEVEL% neq 0 (
   if %ERRORLEVEL% equ 1 (
     echo>&2 FAIL: files "{file1}" and "{file2}" differ. {fail_msg}
+    echo why? diff "!RF1!" "!RF2!" ^| cat -v
     exit /b 1
   ) else (
     fc.exe /B "!RF1!" "!RF2!"
@@ -94,6 +128,8 @@ if %ERRORLEVEL% neq 0 (
                 fail_msg = ctx.attr.failure_message,
                 file1 = _runfiles_path(ctx.file.file1),
                 file2 = _runfiles_path(ctx.file.file2),
+                f1_to_lf = "1" if ctx.attr.file1_to_lf else "0",
+                f2_to_lf = "1" if ctx.attr.file2_to_lf else "0",
             ),
             is_executable = True,
         )
@@ -148,13 +184,19 @@ _diff_test = rule(
             allow_single_file = True,
             mandatory = True,
         ),
+        "file1_to_lf": attr.bool(
+            default = False,
+        ),
+        "file2_to_lf": attr.bool(
+            default = False,
+        ),
         "is_windows": attr.bool(mandatory = True),
     },
     test = True,
     implementation = _diff_test_impl,
 )
 
-def diff_test(name, file1, file2, failure_message = None, **kwargs):
+def diff_test(name, file1, file2, failure_message = None, file1_to_lf = None, file2_to_lf = None, **kwargs):
     """A test that compares two files.
 
     The test succeeds if the files' contents match.
@@ -163,6 +205,8 @@ def diff_test(name, file1, file2, failure_message = None, **kwargs):
       name: The name of the test rule.
       file1: Label of the file to compare to `file2`.
       file2: Label of the file to compare to `file1`.
+      file1_to_lf: Convert file1 to LF line endings before comparison.
+      file2_to_lf: Convert file2 to LF line endings before comparison.
       failure_message: Additional message to log if the files' contents do not match.
       **kwargs: The [common attributes for tests](https://bazel.build/reference/be/common-definitions#common-attributes-tests).
     """
@@ -170,6 +214,8 @@ def diff_test(name, file1, file2, failure_message = None, **kwargs):
         name = name,
         file1 = file1,
         file2 = file2,
+        file1_to_lf = file1_to_lf,
+        file2_to_lf = file2_to_lf,
         failure_message = failure_message,
         is_windows = select({
             "@bazel_tools//src/conditions:host_windows": True,
