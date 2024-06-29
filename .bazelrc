@@ -1,0 +1,2 @@
+# symlinks required on windows by copy_directory
+startup --windows_enable_symlinks
