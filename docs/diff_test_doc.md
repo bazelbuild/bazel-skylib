@@ -10,7 +10,7 @@ command (fc.exe) on Windows (no Bash is required).
 ## diff_test
 
 <pre>
-diff_test(<a href="#diff_test-name">name</a>, <a href="#diff_test-file1">file1</a>, <a href="#diff_test-file2">file2</a>, <a href="#diff_test-failure_message">failure_message</a>, <a href="#diff_test-kwargs">kwargs</a>)
+diff_test(<a href="#diff_test-name">name</a>, <a href="#diff_test-file1">file1</a>, <a href="#diff_test-file2">file2</a>, <a href="#diff_test-failure_message">failure_message</a>, <a href="#diff_test-file1_to_lf">file1_to_lf</a>, <a href="#diff_test-file2_to_lf">file2_to_lf</a>, <a href="#diff_test-kwargs">kwargs</a>)
 </pre>
 
 A test that compares two files.
@@ -27,6 +27,8 @@ The test succeeds if the files' contents match.
 | <a id="diff_test-file1"></a>file1 |  Label of the file to compare to `file2`.   |  none |
 | <a id="diff_test-file2"></a>file2 |  Label of the file to compare to `file1`.   |  none |
 | <a id="diff_test-failure_message"></a>failure_message |  Additional message to log if the files' contents do not match.   |  `None` |
+| <a id="diff_test-file1_to_lf"></a>file1_to_lf |  Convert file1 to LF line endings before comparison.   |  `None` |
+| <a id="diff_test-file2_to_lf"></a>file2_to_lf |  Convert file2 to LF line endings before comparison.   |  `None` |
 | <a id="diff_test-kwargs"></a>kwargs |  The [common attributes for tests](https://bazel.build/reference/be/common-definitions#common-attributes-tests).   |  none |
 
 
