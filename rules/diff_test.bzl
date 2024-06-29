@@ -26,6 +26,12 @@ def _runfiles_path(f):
     else:
         return f.path  # source file
 
+def _ignore_line_endings(ctx):
+    ignore_line_endings = "0"
+    if ctx.attr.ignore_line_endings:
+        ignore_line_endings = "1"
+    return ignore_line_endings
+
 def _diff_test_impl(ctx):
     if ctx.attr.is_windows:
         bash_bin = ctx.toolchains["@bazel_tools//tools/sh:toolchain_type"].path
@@ -52,6 +58,7 @@ if not exist %MF% (
     echo Manifest file %MF% not found
     exit /b 1
 )
+echo using %MF%
 set F1={file1}
 set F2={file2}
 if "!F1:~0,9!" equ "external/" (set F1=!F1:~9!) else (set F1=!TEST_WORKSPACE!/!F1!)
@@ -94,30 +101,36 @@ if "!RF2!" equ "" (
     exit /b 1
   )
 )
-rem use tr command from msys64 package, msys64 is a bazel prerequisite
-rem todo: in future better to pull in a binary to do this
-if "{f1_to_lf}"=="1" (
-  for %%f in (!RF1!) do set RF_TEMP=%TEST_TMPDIR%\\%%~nxf_lf
-  for %%f in ({bash_bin}) do set "TR=%%~dpf\\tr"
-  echo type "!RF1!" ^| !TR! -d "\\r"
-  type "!RF1!" | !TR! -d "\\r" > "!RF_TEMP!"
-  rem echo original file !RF1! replaced by !RF_TEMP!
-  set "RF1=!RF_TEMP!"
+rem use tr command from msys64 package, msys64 is a bazel recommendation
+rem todo: in future better to pull in diff.exe to align with non-windows path
+if "{ignore_line_endings}"=="1" (
+  if exist {bash_bin} (
+    for %%f in ({bash_bin}) do set "TR=%%~dpf\\tr.exe"
+  ) else (
+    rem match bazel's algorithm to find unix tools
+    set "TR=C:\\msys64\\usr\\bin\\tr.exe"
+  )
+  if not exist !TR! (
+    echo>&2 WARNING: ignore_line_endings set but !TR! not found; line endings will be compared
+  ) else (
+    for %%f in (!RF1!) do set RF1_TEMP=%TEST_TMPDIR%\\%%~nxf_lf1
+    for %%f in (!RF2!) do set RF2_TEMP=%TEST_TMPDIR%\\%%~nxf_lf2
+    type "!RF1!" | !TR! -d "\\r" > "!RF1_TEMP!"
+    type "!RF2!" | !TR! -d "\\r" > "!RF2_TEMP!"
+    set "RF1=!RF1_TEMP!"
+    set "RF2=!RF2_TEMP!"
+    rem echo original file !RF1! replaced by !RF1_TEMP!
+    rem echo original file !RF2! replaced by !RF2_TEMP!
+  )
 )
-if "{f2_to_lf}"=="1" (
-  for %%f in (!RF2!) do set RF_TEMP=%TEST_TMPDIR%\\%%~nxf_lf
-  for %%f in ({bash_bin}) do set "TR=%%~dpf\\tr"
-  echo type "!RF2!" ^| !TR! -d "\\r"
-  type "!RF2!" | !TR! -d "\\r" > "!RF_TEMP!"
-  rem echo original file !RF2! replaced by !RF_TEMP!
-  set "RF2=!RF_TEMP!"
-)
-rem echo fc.exe /B "!RF1!" "!RF2!"
 fc.exe 2>NUL 1>NUL /B "!RF1!" "!RF2!"
 if %ERRORLEVEL% neq 0 (
   if %ERRORLEVEL% equ 1 (
-    echo>&2 FAIL: files "{file1}" and "{file2}" differ. {fail_msg}
-    echo why? diff "!RF1!" "!RF2!" ^| cat -v
+    set "FAIL_MSG={fail_msg}"
+    if "!FAIL_MSG!"=="" (
+        set "FAIL_MSG=why? diff ^"!RF1!^" ^"!RF2!^" ^| cat -v"
+    )
+    echo>&2 FAIL: files "{file1}" and "{file2}" differ. !FAIL_MSG!
     exit /b 1
   ) else (
     fc.exe /B "!RF1!" "!RF2!"
@@ -129,8 +142,7 @@ if %ERRORLEVEL% neq 0 (
                 fail_msg = ctx.attr.failure_message,
                 file1 = _runfiles_path(ctx.file.file1),
                 file2 = _runfiles_path(ctx.file.file2),
-                f1_to_lf = "1" if ctx.attr.file1_to_lf else "0",
-                f2_to_lf = "1" if ctx.attr.file2_to_lf else "0",
+                ignore_line_endings = _ignore_line_endings(ctx),
                 bash_bin = bash_bin
             ),
             is_executable = True,
@@ -158,14 +170,19 @@ else
   echo >&2 "ERROR: could not find \"{file1}\" and \"{file2}\""
   exit 1
 fi
-if ! diff "$RF1" "$RF2"; then
-  echo >&2 "FAIL: files \"{file1}\" and \"{file2}\" differ. "{fail_msg}
+if ! diff {strip_trailing_cr}"$RF1" "$RF2"; then
+  MSG={fail_msg}
+  if [[ "${{MSG}}"=="" (
+      MSG="why? diff {strip_trailing_cr}"${RF1}" "${RF2}" | cat -v"
+  )
+  echo >&2 "FAIL: files \"{file1}\" and \"{file2}\" differ. ${MSG}"
   exit 1
 fi
 """.format(
                 fail_msg = shell.quote(ctx.attr.failure_message),
                 file1 = _runfiles_path(ctx.file.file1),
                 file2 = _runfiles_path(ctx.file.file2),
+                strip_trailing_cr = "--strip-trailing-cr " if ctx.attr.ignore_line_endings else ""
             ),
             is_executable = True,
         )
@@ -186,11 +203,8 @@ _diff_test = rule(
             allow_single_file = True,
             mandatory = True,
         ),
-        "file1_to_lf": attr.bool(
-            default = False,
-        ),
-        "file2_to_lf": attr.bool(
-            default = False,
+        "ignore_line_endings": attr.bool(
+            default = True,
         ),
         "is_windows": attr.bool(mandatory = True),
     },
@@ -201,7 +215,7 @@ _diff_test = rule(
     implementation = _diff_test_impl,
 )
 
-def diff_test(name, file1, file2, failure_message = None, file1_to_lf = None, file2_to_lf = None, **kwargs):
+def diff_test(name, file1, file2, failure_message = None, ignore_line_endings = True, **kwargs):
     """A test that compares two files.
 
     The test succeeds if the files' contents match.
@@ -210,8 +224,8 @@ def diff_test(name, file1, file2, failure_message = None, file1_to_lf = None, fi
       name: The name of the test rule.
       file1: Label of the file to compare to `file2`.
       file2: Label of the file to compare to `file1`.
-      file1_to_lf: Convert file1 to LF line endings before comparison.
-      file2_to_lf: Convert file2 to LF line endings before comparison.
+      ignore_line_endings: Ignore differences between CRLF and LF line endings. On windows, this is 
+          forced to False if the 'tr' command can't be found in the bash installation on the host.
       failure_message: Additional message to log if the files' contents do not match.
       **kwargs: The [common attributes for tests](https://bazel.build/reference/be/common-definitions#common-attributes-tests).
     """
@@ -219,8 +233,7 @@ def diff_test(name, file1, file2, failure_message = None, file1_to_lf = None, fi
         name = name,
         file1 = file1,
         file2 = file2,
-        file1_to_lf = file1_to_lf,
-        file2_to_lf = file2_to_lf,
+        ignore_line_endings = ignore_line_endings,
         failure_message = failure_message,
         is_windows = select({
             "@bazel_tools//src/conditions:host_windows": True,

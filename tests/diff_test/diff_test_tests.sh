@@ -80,12 +80,13 @@ eof
   echo bar > "$ws/$subdir/b.txt"
 
   (cd "$ws" && \
-   bazel test ${flags} "//${subdir%/}:same" --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test ${flags} "//${subdir%/}:same" --test_output=errors --noshow_progress 1>>"$TEST_log" 2>&1 \
      || fail "expected success")
 
   (cd "$ws" && \
-   bazel test ${flags} "//${subdir%/}:different" --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test ${flags} "//${subdir%/}:different" --test_output=all --noshow_progress 1>>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
+
   expect_log "FAIL: files \"${subdir}a.txt\" and \"${subdir}b.txt\" differ"
 }
 
@@ -175,21 +176,21 @@ diff_test(
 eof
 
   (cd "$ws/main" && \
-   bazel test ${flags} //:same --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test ${flags} //:same --test_output=errors --noshow_progress 1>"$TEST_log" 2>&1 \
      || fail "expected success")
 
   (cd "$ws/main" && \
-   bazel test ${flags} //:different1 --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test ${flags} //:different1 --test_output=all --noshow_progress 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
   expect_log 'FAIL: files "external/ext1/foo/foo.txt" and "external/ext2/foo/bar.txt" differ'
 
   (cd "$ws/main" && \
-   bazel test ${flags} //:different2 --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test ${flags} //:different2 --test_output=all --noshow_progress 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
   expect_log 'FAIL: files "external/ext1/foo/foo.txt" and "ext1/foo/foo.txt" differ'
 
   (cd "$ws/main" && \
-   bazel test ${flags} //:different3 --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test ${flags} //:different3 --test_output=all --noshow_progress 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
   expect_log 'FAIL: files "ext2/foo/foo.txt" and "external/ext2/foo/foo.txt" differ'
 }
@@ -257,15 +258,15 @@ eof
   echo bar > "$ws/d.txt"
 
   (cd "$ws" && \
-   bazel test //:different_with_message --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test //:different_with_message --test_output=errors --noshow_progress 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
   # TODO(arostovtsev): also test Windows cmd.exe escapes when https://github.com/bazelbuild/bazel-skylib/pull/363 is merged
   expect_log "FAIL: files \"a.txt\" and \"b.txt\" differ. This is an \`\$error\`"
 
   (cd "$ws" && \
-   bazel test //:different_without_message --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel test //:different_without_message --test_output=all --noshow_progress 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
-  expect_log "FAIL: files \"c.txt\" and \"d.txt\" differ. $"
+  expect_log "FAIL: files \"c.txt\" and \"d.txt\" differ. why? diff"
 }
 
 cd "$TEST_TMPDIR"
