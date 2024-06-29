@@ -173,9 +173,9 @@ fi
 if ! diff {strip_trailing_cr}"$RF1" "$RF2"; then
   MSG={fail_msg}
   if [[ "${{MSG}}"=="" (
-      MSG="why? diff {strip_trailing_cr}"${RF1}" "${RF2}" | cat -v"
+      MSG="why? diff {strip_trailing_cr}"${{RF1}}" "${{RF2}}" | cat -v"
   )
-  echo >&2 "FAIL: files \"{file1}\" and \"{file2}\" differ. ${MSG}"
+  echo >&2 "FAIL: files \"{file1}\" and \"{file2}\" differ. ${{MSG}}"
   exit 1
 fi
 """.format(
