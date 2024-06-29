@@ -143,7 +143,7 @@ if %ERRORLEVEL% neq 0 (
                 file1 = _runfiles_path(ctx.file.file1),
                 file2 = _runfiles_path(ctx.file.file2),
                 ignore_line_endings = _ignore_line_endings(ctx),
-                bash_bin = bash_bin
+                bash_bin = bash_bin,
             ),
             is_executable = True,
         )
@@ -172,9 +172,9 @@ else
 fi
 if ! diff {strip_trailing_cr}"$RF1" "$RF2"; then
   MSG={fail_msg}
-  if [[ "${{MSG}}"=="" (
+  if [[ "${{MSG}}" == "" ]]; then
       MSG="why? diff {strip_trailing_cr}"${{RF1}}" "${{RF2}}" | cat -v"
-  )
+  fi
   echo >&2 "FAIL: files \"{file1}\" and \"{file2}\" differ. ${{MSG}}"
   exit 1
 fi
@@ -182,7 +182,7 @@ fi
                 fail_msg = shell.quote(ctx.attr.failure_message),
                 file1 = _runfiles_path(ctx.file.file1),
                 file2 = _runfiles_path(ctx.file.file2),
-                strip_trailing_cr = "--strip-trailing-cr " if ctx.attr.ignore_line_endings else ""
+                strip_trailing_cr = "--strip-trailing-cr " if ctx.attr.ignore_line_endings else "",
             ),
             is_executable = True,
         )
@@ -224,7 +224,7 @@ def diff_test(name, file1, file2, failure_message = None, ignore_line_endings = 
       name: The name of the test rule.
       file1: Label of the file to compare to `file2`.
       file2: Label of the file to compare to `file1`.
-      ignore_line_endings: Ignore differences between CRLF and LF line endings. On windows, this is 
+      ignore_line_endings: Ignore differences between CRLF and LF line endings. On windows, this is
           forced to False if the 'tr' command can't be found in the bash installation on the host.
       failure_message: Additional message to log if the files' contents do not match.
       **kwargs: The [common attributes for tests](https://bazel.build/reference/be/common-definitions#common-attributes-tests).
