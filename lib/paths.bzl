@@ -153,6 +153,67 @@ def _normalize(path):
 
     return path or "."
 
+_BASE = 0
+_SEPARATOR = 1
+_DOT = 2
+_DOTDOT = 3
+
+def _is_normalized(str, look_for_same_level_references = True):
+    """Returns true if the passed path doesn't contain uplevel references "..".
+
+    Also checks for single-dot references "." if look_for_same_level_references
+    is `True.`
+
+    Args:
+      str: The path string to check.
+      look_for_same_level_references: If True checks if path doesn't contain
+        uplevel references ".." or single-dot references ".".
+
+    Returns:
+      True if the path is normalized, False otherwise.
+    """
+    state = _SEPARATOR
+    for c in str.elems():
+        is_separator = False
+        if c == "/":
+            is_separator = True
+
+        if state == _BASE:
+            if is_separator:
+                state = _SEPARATOR
+            else:
+                state = _BASE
+        elif state == _SEPARATOR:
+            if is_separator:
+                state = _SEPARATOR
+            elif c == ".":
+                state = _DOT
+            else:
+                state = _BASE
+        elif state == _DOT:
+            if is_separator:
+                if look_for_same_level_references:
+                    # "." segment found.
+                    return False
+                state = _SEPARATOR
+            elif c == ".":
+                state = _DOTDOT
+            else:
+                state = _BASE
+        elif state == _DOTDOT:
+            if is_separator:
+                return False
+            else:
+                state = _BASE
+
+    if state == _DOT:
+        if look_for_same_level_references:
+            # "." segment found.
+            return False
+    elif state == _DOTDOT:
+        return False
+    return True
+
 def _relativize(path, start):
     """Returns the portion of `path` that is relative to `start`.
 
@@ -230,13 +291,30 @@ def _split_extension(p):
     dot_distance_from_end = len(b) - last_dot_in_basename
     return (p[:-dot_distance_from_end], p[-dot_distance_from_end:])
 
+def _starts_with(path_a, path_b):
+    """Returns True if and only if path_b is an ancestor of path_a.
+
+    Does not handle OS dependent case-insensitivity."""
+    if not path_b:
+        # all paths start with the empty string
+        return True
+    norm_a = _normalize(path_a)
+    norm_b = _normalize(path_b)
+    if len(norm_b) > len(norm_a):
+        return False
+    if not norm_a.startswith(norm_b):
+        return False
+    return len(norm_a) == len(norm_b) or norm_a[len(norm_b)] == "/"
+
 paths = struct(
     basename = _basename,
     dirname = _dirname,
     is_absolute = _is_absolute,
     join = _join,
     normalize = _normalize,
+    is_normalized = _is_normalized,
     relativize = _relativize,
     replace_extension = _replace_extension,
     split_extension = _split_extension,
+    starts_with = _starts_with,
 )
