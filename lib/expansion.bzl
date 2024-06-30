@@ -402,7 +402,7 @@ def _expand_all_keys_in_str_from_dict(replacement_dict, unexpanded_str):
     return expanded_val
 
 def _expand_all_keys_in_str(
-        expand_location,
+        wrapped_expand_location,
         resolved_replacement_dict,
         env_replacement_dict,
         unexpanded_str):
@@ -417,7 +417,7 @@ def _expand_all_keys_in_str(
     `unexpanded_str`.
 
     Expansion happens iteratively. In each iteration, three steps occur:
-    1) If `expand_location` is not `None`, it will be invoked to replace any occurrences of
+    1) If `wrapped_expand_location` is not `None`, it will be invoked to replace any occurrences of
         `$(location ...)` (or similar). Technically, this function can execute any high-priority
         expansion logic -- but it is intended for functionality similar to `ctx.expand_location()`.
     2) Each variable name key in `env_replacement_dict` will be searched for (in `unexpanded_str`)
@@ -430,7 +430,7 @@ def _expand_all_keys_in_str(
         resolved key/values (but supports any general "lower priority" dict replacement).
 
     Args:
-        expand_location:            (Required) A None-able function used for optional "location"
+        wrapped_expand_location:    (Required) A None-able function used for optional "location"
                                     expansion logic (`$(location ...)` or similar).
         resolved_replacement_dict:  (Required) A set of key/value pairs to be used for
                                     search/replacement within the given `unexpanded_str` string.
@@ -440,11 +440,11 @@ def _expand_all_keys_in_str(
                                 search/replacement within the given `unexpanded_str` string.
                                 Replacement logic will occur before (higher priority) replacement
                                 for `resolved_replacement_dict`.
-        unexpanded_str:     (Required) The string to perform expansion variable upon (optionally
-                            invoke `expand_location`, and search for the formatted versions of each
-                            key set within `env_replacement_dict` and `resolved_replacement_dict`,
-                            where each found occurence will be expanded/replaced with the
-                            associated value).
+        unexpanded_str:     (Required) The string to perform expansion variable upon. Expansion is
+                            done by optionally invoking `wrapped_expand_location` and search for
+                            the formatted versions of each key set within `env_replacement_dict`
+                            and `resolved_replacement_dict`, where each found occurence will be
+                            expanded/replaced with the associated value).
 
     Returns:
         A copy of `unexpanded_str` with all occurences of each key (when formatted into an
@@ -462,8 +462,8 @@ def _expand_all_keys_in_str(
     for _ in range(len(expanded_val)):
         # First let's try the safe `location` (et al) expansion logic.
         # `$VAR`, `$(VAR)`, and `${VAR}` will be left untouched.
-        if expand_location:
-            expanded_val = expand_location(expanded_val)
+        if wrapped_expand_location:
+            expanded_val = wrapped_expand_location(expanded_val)
 
         # Break early if nothing left to expand.
         if expanded_val.find("$") < 0:
@@ -480,7 +480,7 @@ def _expand_all_keys_in_str(
 
     return expanded_val
 
-def _expand_with_manual_dict(resolution_dict, source_env_dict, validate_expansion = False):
+def _expand_dict_strings_with_manual_dict(resolution_dict, source_env_dict, validate_expansion = False):
     """
     Recursively expands all values in `source_env_dict` using the given lookup data.
 
@@ -509,7 +509,7 @@ def _expand_with_manual_dict(resolution_dict, source_env_dict, validate_expansio
     expanded_envs = {}
     for env_key, unexpanded_val in source_env_dict.items():
         expanded_val = _expand_all_keys_in_str(
-            None,  # No `expand_location` available
+            None,  # No `wrapped_expand_location` available
             resolution_dict,
             source_env_dict,
             unexpanded_val,
@@ -519,8 +519,8 @@ def _expand_with_manual_dict(resolution_dict, source_env_dict, validate_expansio
         expanded_envs[env_key] = expanded_val
     return expanded_envs
 
-def _expand_with_manual_dict_and_location(
-        expand_location,
+def _expand_dict_strings_with_manual_dict_and_location(
+        wrapped_expand_location,
         resolution_dict,
         source_env_dict,
         validate_expansion = False):
@@ -528,20 +528,22 @@ def _expand_with_manual_dict_and_location(
     Recursively expands all values in `source_env_dict` using the given logic / lookup data.
 
     All keys of `source_env_dict` are returned in the resultant dict with values expanded by
-    location expansion logic via `expand_location` and by lookups via `resolution_dict` dict.
+    location expansion logic via `wrapped_expand_location` and by lookups via `resolution_dict`
+    dict.
     This function does not modify any of the given parameters.
 
     Args:
-        expand_location:    (Required) A function that takes in a string and properly replaces
-                            `$(location ...)` (and similar) with the corresponding values. This
-                            likely should correspond to `ctx.expand_location()`.
+        wrapped_expand_location:    (Required) A function that takes in a string and properly
+                                    replaces `$(location ...)` (and similar) with the corresponding
+                                    values. This likely should correspond to
+                                    `ctx.expand_location()` via `expansion.wrap_expand_location()`.
         resolution_dict:    (Required) A dictionary with resolved key/value pairs to be used for
                             lookup when resolving values. This may come from toolchains (via
                             `ctx.var`) or other sources.
         source_env_dict:    (Required) The source for all desired expansions. All key/value pairs
                             will appear within the returned dictionary, with all values fully
-                            expanded by the logic expansion logic of `expand_location` and by
-                            lookup in `resolution_dict`.
+                            expanded by the logic expansion logic of `wrapped_expand_location` and
+                            by lookup in `resolution_dict`.
         validate_expansion: (Optional) If set to True, all expanded strings will be validated to
                             ensure that no unexpanded (but seemingly expandable) values remain. If
                             any unexpanded values are found, `fail()` will be called. The
@@ -556,7 +558,7 @@ def _expand_with_manual_dict_and_location(
     expanded_envs = {}
     for env_key, unexpanded_val in source_env_dict.items():
         expanded_val = _expand_all_keys_in_str(
-            expand_location,
+            wrapped_expand_location,
             resolution_dict,
             source_env_dict,
             unexpanded_val,
@@ -566,7 +568,7 @@ def _expand_with_manual_dict_and_location(
         expanded_envs[env_key] = expanded_val
     return expanded_envs
 
-def _expand_with_toolchains(
+def _expand_dict_strings_with_toolchains(
         ctx,
         source_env_dict,
         additional_lookup_dict = None,
@@ -600,13 +602,13 @@ def _expand_with_toolchains(
       expanded.
     """
     additional_lookup_dict = additional_lookup_dict or {}
-    return _expand_with_manual_dict(
+    return _expand_dict_strings_with_manual_dict(
         dict(ctx.var, **additional_lookup_dict),
         source_env_dict,
         validate_expansion = validate_expansion,
     )
 
-def _expand_with_toolchains_and_location(
+def _expand_dict_strings_with_toolchains_and_location(
         ctx,
         deps,
         source_env_dict,
@@ -630,7 +632,7 @@ def _expand_with_toolchains_and_location(
                 `$(location ...)` (and similar) expressions.
         source_env_dict:    (Required) The source for all desired expansions. All key/value pairs
                             will appear within the returned dictionary, with all values fully
-                            expanded by the logic expansion logic of `expand_location` and by
+                            expanded by the logic expansion logic of `ctx.expand_location()` and by
                             lookups in `ctx.var` and optional `additional_lookup_dict`.
         additional_lookup_dict: (Optional) Additional dict to be used with `ctx.var` (union) for
                                 variable expansion.
@@ -646,18 +648,15 @@ def _expand_with_toolchains_and_location(
       expanded.
     """
 
-    def _simpler_expand_location(input_str):
-        return ctx.expand_location(input_str, deps)
-
     additional_lookup_dict = additional_lookup_dict or {}
-    return _expand_with_manual_dict_and_location(
-        _simpler_expand_location,
+    return _expand_dict_strings_with_manual_dict_and_location(
+        _wrap_expand_location(ctx, deps),
         dict(ctx.var, **additional_lookup_dict),
         source_env_dict,
         validate_expansion = validate_expansion,
     )
 
-def _expand_with_toolchains_attr(
+def _expand_dict_strings_with_toolchains_attr(
         ctx,
         env_attr_name = "env",
         additional_lookup_dict = None,
@@ -693,14 +692,14 @@ def _expand_with_toolchains_attr(
       A new dict with all key/values from source attribute (default "env" attribute), where all
       values have been recursively expanded.
     """
-    return _expand_with_toolchains(
+    return _expand_dict_strings_with_toolchains(
         ctx,
         getattr(ctx.attr, env_attr_name),
         additional_lookup_dict = additional_lookup_dict,
         validate_expansion = validate_expansion,
     )
 
-def _expand_with_toolchains_and_location_attr(
+def _expand_dict_strings_with_toolchains_and_location_attr(
         ctx,
         deps_attr_name = "deps",
         env_attr_name = "env",
@@ -743,7 +742,7 @@ def _expand_with_toolchains_and_location_attr(
       A new dict with all key/values from source attribute (default "env" attribute), where all
       values have been recursively expanded.
     """
-    return _expand_with_toolchains_and_location(
+    return _expand_dict_strings_with_toolchains_and_location(
         ctx,
         getattr(ctx.attr, deps_attr_name),
         getattr(ctx.attr, env_attr_name),
@@ -751,14 +750,107 @@ def _expand_with_toolchains_and_location_attr(
         validate_expansion = validate_expansion,
     )
 
+def _expand_list_strings_with_manual_dict(resolution_dict, source_strings, validate_expansion = False):
+    """
+    Recursively expands all values in `source_strings` using the given lookup data.
+
+    All values of `source_strings` are returned in the resultant list with values expanded by
+    lookups via `resolution_dict` dict.
+    Note that the recursion performed is only among `resolution_dict`, as lists are not associative
+    datatypes (no mapping via `source_strings`).
+    This function does not modify any of the given parameters.
+
+    Args:
+        resolution_dict:    (Required) A dictionary with resolved key/value pairs to be used for
+                            lookup when resolving values. This may come from toolchains (via
+                            `ctx.var`) or other sources.
+        source_strings:     (Required) The source for all desired expansions. All values will
+                            appear within the returned list, with all values fully expanded by
+                            lookups in `resolution_dict`.
+        validate_expansion: (Optional) If set to True, all expanded strings will be validated to
+                            ensure that no unexpanded (but seemingly expandable) values remain. If
+                            any unexpanded values are found, `fail()` will be called. The
+                            validation logic is the same as
+                            `expansion.validate_expansions_in_dict()`.
+                            Default value is False.
+
+    Returns:
+      A new list of strings with all values from `source_strings`, where all values have been
+      recursively expanded.
+    """
+    expanded_vals = []
+    for unexpanded_val in source_strings:
+        expanded_val = _expand_all_keys_in_str(
+            None,  # No `wrapped_expand_location` available
+            resolution_dict,
+            {},  # No `env_replacement_dict` used.
+            unexpanded_val,
+        )
+        if validate_expansion:
+            _validate_all_keys_expanded(expanded_val, fail_instead_of_return = True)
+        expanded_vals.append(expanded_val)
+    return expanded_vals
+
+def _expand_list_strings_with_manual_dict_and_location(
+        wrapped_expand_location,
+        resolution_dict,
+        source_strings,
+        validate_expansion = False):
+    """
+    Recursively expands all values in `source_strings` using the given logic / lookup data.
+
+    All values of `source_strings` are returned in the resultant dict with values expanded by
+    location expansion logic via `wrapped_expand_location` and by lookups via `resolution_dict`
+    dict.
+    Note that the recursion performed is only among `resolution_dict` and
+    `wrapped_expand_location`, as lists are not associative datatypes (no mapping via
+    `source_strings`).
+    This function does not modify any of the given parameters.
+
+    Args:
+        wrapped_expand_location:    (Required) A function that takes in a string and properly
+                                    replaces `$(location ...)` (and similar) with the corresponding
+                                    values. This likely should correspond to
+                                    `ctx.expand_location()` via `expansion.wrap_expand_location()`.
+        resolution_dict:    (Required) A dictionary with resolved key/value pairs to be used for
+                            lookup when resolving values. This may come from toolchains (via
+                            `ctx.var`) or other sources.
+        source_strings:     (Required) The source for all desired expansions. All values will
+                            appear within the returned list, with all values fully expanded by the
+                            logic expansion logic of `wrapped_expand_location` and by lookup in
+                            `resolution_dict`.
+        validate_expansion: (Optional) If set to True, all expanded strings will be validated to
+                            ensure that no unexpanded (but seemingly expandable) values remain. If
+                            any unexpanded values are found, `fail()` will be called. The
+                            validation logic is the same as
+                            `expansion.validate_expansions_in_dict()`.
+                            Default value is False.
+
+    Returns:
+      A new list of strings with all values from `source_strings`, where all values have been
+      recursively expanded.
+    """
+    expanded_vals = []
+    for unexpanded_val in source_strings:
+        expanded_val = _expand_all_keys_in_str(
+            wrapped_expand_location,
+            resolution_dict,
+            {},  # No `env_replacement_dict` used.
+            unexpanded_val,
+        )
+        if validate_expansion:
+            _validate_all_keys_expanded(expanded_val, fail_instead_of_return = True)
+        expanded_vals.append(expanded_val)
+    return expanded_vals
+
 def _validate_expansions(expanded_values, fail_instead_of_return = True):
     """
     Validates all given strings to no longer have unexpanded expressions.
 
     Validates all expanded strings in `expanded_values` to ensure that no unexpanded (but seemingly
     expandable) values remain.
-    Any unterminated or unexpanded expressions of the form `$VAR`, $(VAR)`, or `${VAR}` will result
-    in an error (with fail message).
+    Any unterminated or unexpanded expressions of the form `$VAR`, `$(VAR)`, or `${VAR}` will
+    result in an error (with fail message).
 
     Args:
         expanded_values:            (Required) List of string values to validate.
@@ -779,12 +871,39 @@ def _validate_expansions(expanded_values, fail_instead_of_return = True):
         found_errors += _validate_all_keys_expanded(expanded_val, fail_instead_of_return)
     return found_errors
 
+def _wrap_expand_location(ctx, deps):
+    """
+    Returns a function which is a wrapped version of `ctx.expand_location()`.
+
+    Creates a function which takes a single string input parameter and returns that string after
+    expanding all `$(location ...)` (and similar) substrings. The returned function is backed by
+    `ctx.expand_location()`, where the given `deps` are used for expansion.
+
+    Args:
+        ctx:    (Required) The bazel context object. This is used to access `ctx.expand_location`
+                method to handle `$(location ...)` (and similar) expansion logic.
+        deps:   (Required) The set of targets used with `ctx.expand_location` for expanding
+                `$(location ...)` (and similar) expressions.
+
+    Returns:
+      A wrapped function which works similar to `ctx.expand_location()`, but takes the input string
+      as the only argument.
+    """
+
+    def _wrapped_expand_location(input_str):
+        return ctx.expand_location(input_str, deps)
+
+    return _wrapped_expand_location
+
 expansion = struct(
-    expand_with_manual_dict = _expand_with_manual_dict,
-    expand_with_manual_dict_and_location = _expand_with_manual_dict_and_location,
-    expand_with_toolchains = _expand_with_toolchains,
-    expand_with_toolchains_attr = _expand_with_toolchains_attr,
-    expand_with_toolchains_and_location = _expand_with_toolchains_and_location,
-    expand_with_toolchains_and_location_attr = _expand_with_toolchains_and_location_attr,
+    expand_dict_strings_with_manual_dict = _expand_dict_strings_with_manual_dict,
+    expand_dict_strings_with_manual_dict_and_location = _expand_dict_strings_with_manual_dict_and_location,
+    expand_dict_strings_with_toolchains = _expand_dict_strings_with_toolchains,
+    expand_dict_strings_with_toolchains_attr = _expand_dict_strings_with_toolchains_attr,
+    expand_dict_strings_with_toolchains_and_location = _expand_dict_strings_with_toolchains_and_location,
+    expand_dict_strings_with_toolchains_and_location_attr = _expand_dict_strings_with_toolchains_and_location_attr,
+    expand_list_strings_with_manual_dict = _expand_list_strings_with_manual_dict,
+    expand_list_strings_with_manual_dict_and_location = _expand_list_strings_with_manual_dict_and_location,
     validate_expansions = _validate_expansions,
+    wrap_expand_location = _wrap_expand_location,
 )

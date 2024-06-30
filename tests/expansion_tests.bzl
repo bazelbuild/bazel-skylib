@@ -23,6 +23,7 @@ _WIN_FASTBUILD_SUBPATH = "x64_windows-fastbuild"
 
 # Test input dicts
 
+# buildifier: disable=unsorted-dict-items
 _ENV_DICT = {
     "SIMPLE_VAL": "hello_world",
     "ESCAPED_SIMPLE_VAL": "$$SIMPLE_VAL",
@@ -36,6 +37,9 @@ _ENV_DICT = {
     "TOOLCHAIN_ENV_VAR2_RAW": "$TOOLCHAIN_ENV_VAR2",
     "TOOLCHAIN_ENV_VAR2_PAREN": "$(TOOLCHAIN_ENV_VAR2)",
     "TOOLCHAIN_ENV_VAR2_CURLY": "${TOOLCHAIN_ENV_VAR2}",
+    "TOOLCHAIN_INDIRECT_ENV_VAR_RAW": "$TOOLCHAIN_INDIRECT_ENV_VAR_RAW",
+    "TOOLCHAIN_INDIRECT_ENV_VAR_PAREN": "$(TOOLCHAIN_INDIRECT_ENV_VAR_PAREN)",
+    "TOOLCHAIN_INDIRECT_ENV_VAR_CURLY": "${TOOLCHAIN_INDIRECT_ENV_VAR_CURLY}",
     "TOOLCHAIN_TO_LOCATION_ENV_VAR_RAW": "$TOOLCHAIN_TO_LOCATION_ENV_VAR",
     "TOOLCHAIN_TO_LOCATION_ENV_VAR_PAREN": "$(TOOLCHAIN_TO_LOCATION_ENV_VAR)",
     "TOOLCHAIN_TO_LOCATION_ENV_VAR_CURLY": "${TOOLCHAIN_TO_LOCATION_ENV_VAR}",
@@ -85,10 +89,14 @@ _ENV_DICT = {
     "UNRECOGNIZED_FUNC": "$(nope :" + _TEST_DEP_TARGET_NAME + ")",
 }
 
+# buildifier: disable=unsorted-dict-items
 _TOOLCHAIN_DICT = {
     "TOOLCHAIN_ENV_VAR": "flag_value",
     "TOOLCHAIN_ENV_VAR2": "flag_value_2",
     "TOOLCHAIN_TO_LOCATION_ENV_VAR": "$(location :" + _TEST_DEP_TARGET_NAME + ")",
+    "TOOLCHAIN_INDIRECT_ENV_VAR_RAW": "$TOOLCHAIN_ENV_VAR",
+    "TOOLCHAIN_INDIRECT_ENV_VAR_PAREN": "$(TOOLCHAIN_ENV_VAR)",
+    "TOOLCHAIN_INDIRECT_ENV_VAR_CURLY": "${TOOLCHAIN_ENV_VAR}",
     "BACK_TO_ENV_DICT_VAR_RAW": "$SIMPLE_VAL",
     "BACK_TO_ENV_DICT_VAR_PAREN": "$(SIMPLE_VAL)",
     "BACK_TO_ENV_DICT_VAR_CURLY": "${SIMPLE_VAL}",
@@ -96,6 +104,7 @@ _TOOLCHAIN_DICT = {
 
 # Test expected output dicts
 
+# buildifier: disable=unsorted-dict-items
 _EXPECTED_RESOLVED_DICT_NO_LOCATION = {
     "SIMPLE_VAL": "hello_world",
     "ESCAPED_SIMPLE_VAL": "$$SIMPLE_VAL",
@@ -109,6 +118,9 @@ _EXPECTED_RESOLVED_DICT_NO_LOCATION = {
     "TOOLCHAIN_ENV_VAR2_RAW": "flag_value_2",
     "TOOLCHAIN_ENV_VAR2_PAREN": "flag_value_2",
     "TOOLCHAIN_ENV_VAR2_CURLY": "flag_value_2",
+    "TOOLCHAIN_INDIRECT_ENV_VAR_RAW": "flag_value",
+    "TOOLCHAIN_INDIRECT_ENV_VAR_PAREN": "flag_value",
+    "TOOLCHAIN_INDIRECT_ENV_VAR_CURLY": "flag_value",
     "TOOLCHAIN_TO_LOCATION_ENV_VAR_RAW": "$(location :" + _TEST_DEP_TARGET_NAME + ")",
     "TOOLCHAIN_TO_LOCATION_ENV_VAR_PAREN": "$(location :" + _TEST_DEP_TARGET_NAME + ")",
     "TOOLCHAIN_TO_LOCATION_ENV_VAR_CURLY": "$(location :" + _TEST_DEP_TARGET_NAME + ")",
@@ -170,6 +182,7 @@ _EXPECTED_RESOLVED_DICT_NO_LOCATION = {
     "UNRECOGNIZED_FUNC": "$(nope :" + _TEST_DEP_TARGET_NAME + ")",
 }
 
+# buildifier: disable=unsorted-dict-items
 _EXPECTED_RESOLVED_DICT_WITH_MOCKED_LOCATION = dict(_EXPECTED_RESOLVED_DICT_NO_LOCATION, **{
     "LOCATION_VAL": _MOCK_LOCATION_PATH_OF_DUMMY,
     "EXECPATH_VAL": _MOCK_EXECPATH_PATH_OF_DUMMY,
@@ -219,6 +232,7 @@ _EXPECTED_RESOLVED_DICT_WITH_MOCKED_LOCATION = dict(_EXPECTED_RESOLVED_DICT_NO_L
     ),
 })
 
+# buildifier: disable=unsorted-dict-items
 _EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION = dict(_EXPECTED_RESOLVED_DICT_NO_LOCATION, **{
     "LOCATION_VAL": _GENRULE_LOCATION_PATH_OF_DUMMY,
     "EXECPATH_VAL": _GENRULE_EXECPATH_PATH_OF_DUMMY,
@@ -266,6 +280,43 @@ _EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION = dict(_EXPECTED_RESOLVED_DICT_NO_
         "-flag_value-" +
         _GENRULE_LOCATION_PATH_OF_DUMMY
     ),
+})
+
+# "No recursion" dicts leave most ("TO_ENV_DICT" and "INDIRECT") entries unexpanded.
+# buildifier: disable=unsorted-dict-items
+_EXPECTED_RESOLVED_DICT_NO_LOCATION_NO_RECURSION = dict(_ENV_DICT, **{
+    "SIMPLE_VAL": "hello_world",
+    "ESCAPED_SIMPLE_VAL": "$$SIMPLE_VAL",
+    "LOCATION_VAL": "$(location :" + _TEST_DEP_TARGET_NAME + ")",
+    "EXECPATH_VAL": "$(execpath :" + _TEST_DEP_TARGET_NAME + ")",
+    "ROOTPATH_VAL": "$(rootpath :" + _TEST_DEP_TARGET_NAME + ")",
+    "RLOCATIONPATH_VAL": "$(rlocationpath :" + _TEST_DEP_TARGET_NAME + ")",
+    "TOOLCHAIN_ENV_VAR_RAW": "flag_value",
+    "TOOLCHAIN_ENV_VAR_PAREN": "flag_value",
+    "TOOLCHAIN_ENV_VAR_CURLY": "flag_value",
+    "TOOLCHAIN_ENV_VAR2_RAW": "flag_value_2",
+    "TOOLCHAIN_ENV_VAR2_PAREN": "flag_value_2",
+    "TOOLCHAIN_ENV_VAR2_CURLY": "flag_value_2",
+    "TOOLCHAIN_INDIRECT_ENV_VAR_RAW": "flag_value",
+    "TOOLCHAIN_INDIRECT_ENV_VAR_PAREN": "flag_value",
+    "TOOLCHAIN_INDIRECT_ENV_VAR_CURLY": "flag_value",
+    "TOOLCHAIN_TO_LOCATION_ENV_VAR_RAW": "$(location :" + _TEST_DEP_TARGET_NAME + ")",
+    "TOOLCHAIN_TO_LOCATION_ENV_VAR_PAREN": "$(location :" + _TEST_DEP_TARGET_NAME + ")",
+    "TOOLCHAIN_TO_LOCATION_ENV_VAR_CURLY": "$(location :" + _TEST_DEP_TARGET_NAME + ")",
+    "TOOLCHAIN_TO_ENV_DICT_ENV_VAR_RAW": "$SIMPLE_VAL",
+    "TOOLCHAIN_TO_ENV_DICT_ENV_VAR_PAREN": "$(SIMPLE_VAL)",
+    "TOOLCHAIN_TO_ENV_DICT_ENV_VAR_CURLY": "${SIMPLE_VAL}",
+})
+
+# buildifier: disable=unsorted-dict-items
+_EXPECTED_RESOLVED_DICT_WITH_MOCKED_LOCATION_NO_RECURSION = dict(_EXPECTED_RESOLVED_DICT_NO_LOCATION_NO_RECURSION, **{
+    "LOCATION_VAL": _MOCK_LOCATION_PATH_OF_DUMMY,
+    "EXECPATH_VAL": _MOCK_EXECPATH_PATH_OF_DUMMY,
+    "ROOTPATH_VAL": _MOCK_ROOTPATH_PATH_OF_DUMMY,
+    "RLOCATIONPATH_VAL": _MOCK_RLOCATIONPATH_PATH_OF_DUMMY,
+    "TOOLCHAIN_TO_LOCATION_ENV_VAR_RAW": _MOCK_LOCATION_PATH_OF_DUMMY,
+    "TOOLCHAIN_TO_LOCATION_ENV_VAR_PAREN": _MOCK_LOCATION_PATH_OF_DUMMY,
+    "TOOLCHAIN_TO_LOCATION_ENV_VAR_CURLY": _MOCK_LOCATION_PATH_OF_DUMMY,
 })
 
 # Unresolved/unterminated validation test input values and expected values
@@ -384,7 +435,7 @@ _test_toolchain = rule(
     implementation = _test_toolchain_impl,
 )
 
-def _mock_expand_location(input_str):
+def _mock_wrapped_expand_location(input_str):
     return input_str.replace(
         "$(location :" + _TEST_DEP_TARGET_NAME + ")",
         _MOCK_LOCATION_PATH_OF_DUMMY,
@@ -410,14 +461,14 @@ def _fix_platform_dependent_path_for_assertions(platform_dependent_val):
 
 # Test cases
 
-def _expand_with_manual_dict_test_impl(ctx):
-    """Test `expansion.expand_with_manual_dict()`"""
+def _expand_dict_strings_with_manual_dict_test_impl(ctx):
+    """Test `expansion.expand_dict_strings_with_manual_dict()`"""
     env = unittest.begin(ctx)
 
     env_dict_copy = dict(_ENV_DICT)
     toolchain_dict_copy = dict(_TOOLCHAIN_DICT)
 
-    resolved_dict = expansion.expand_with_manual_dict(_TOOLCHAIN_DICT, _ENV_DICT)
+    resolved_dict = expansion.expand_dict_strings_with_manual_dict(_TOOLCHAIN_DICT, _ENV_DICT)
 
     # Check that the inputs are not mutated.
     asserts.equals(env, env_dict_copy, _ENV_DICT)
@@ -439,17 +490,17 @@ def _expand_with_manual_dict_test_impl(ctx):
 
     return unittest.end(env)
 
-_expand_with_manual_dict_test = unittest.make(_expand_with_manual_dict_test_impl)
+_expand_dict_strings_with_manual_dict_test = unittest.make(_expand_dict_strings_with_manual_dict_test_impl)
 
-def _expand_with_manual_dict_and_location_test_impl(ctx):
-    """Test `expansion.expand_with_manual_dict_and_location()`"""
+def _expand_dict_strings_with_manual_dict_and_location_test_impl(ctx):
+    """Test `expansion.expand_dict_strings_with_manual_dict_and_location()`"""
     env = unittest.begin(ctx)
 
     env_dict_copy = dict(_ENV_DICT)
     toolchain_dict_copy = dict(_TOOLCHAIN_DICT)
 
-    resolved_dict = expansion.expand_with_manual_dict_and_location(
-        _mock_expand_location,
+    resolved_dict = expansion.expand_dict_strings_with_manual_dict_and_location(
+        _mock_wrapped_expand_location,
         _TOOLCHAIN_DICT,
         _ENV_DICT,
     )
@@ -474,18 +525,18 @@ def _expand_with_manual_dict_and_location_test_impl(ctx):
 
     return unittest.end(env)
 
-_expand_with_manual_dict_and_location_test = unittest.make(
-    _expand_with_manual_dict_and_location_test_impl,
+_expand_dict_strings_with_manual_dict_and_location_test = unittest.make(
+    _expand_dict_strings_with_manual_dict_and_location_test_impl,
 )
 
-def _expand_with_toolchains_test_impl(ctx):
-    """Test `expansion.expand_with_toolchains()` without extra dict"""
+def _expand_dict_strings_with_toolchains_test_impl(ctx):
+    """Test `expansion.expand_dict_strings_with_toolchains()` without extra dict"""
     env = unittest.begin(ctx)
 
     env_dict_copy = dict(_ENV_DICT)
     toolchain_dict_copy = dict(env.ctx.var)
 
-    resolved_dict = expansion.expand_with_toolchains(env.ctx, _ENV_DICT)
+    resolved_dict = expansion.expand_dict_strings_with_toolchains(env.ctx, _ENV_DICT)
 
     # Check that the inputs are not mutated.
     asserts.equals(env, env_dict_copy, _ENV_DICT)
@@ -507,21 +558,22 @@ def _expand_with_toolchains_test_impl(ctx):
 
     return unittest.end(env)
 
-_expand_with_toolchains_test = unittest.make(_expand_with_toolchains_test_impl)
+_expand_dict_strings_with_toolchains_test = unittest.make(_expand_dict_strings_with_toolchains_test_impl)
 
-def _expand_with_toolchains_with_additional_dict_test_impl(ctx):
-    """Test `expansion.expand_with_toolchains()` with extra dict"""
+def _expand_dict_strings_with_toolchains_with_additional_dict_test_impl(ctx):
+    """Test `expansion.expand_dict_strings_with_toolchains()` with extra dict"""
     env = unittest.begin(ctx)
 
     env_dict_copy = dict(_ENV_DICT)
     toolchain_dict_copy = dict(env.ctx.var)
 
+    # buildifier: disable=unsorted-dict-items
     additional_lookup_dict = {
         "TOOLCHAIN_ENV_VAR2": "expanded from additional dict instead",
         "NOPE": "naw, it's fine now.",
     }
 
-    resolved_dict = expansion.expand_with_toolchains(
+    resolved_dict = expansion.expand_dict_strings_with_toolchains(
         env.ctx,
         _ENV_DICT,
         additional_lookup_dict = additional_lookup_dict,
@@ -534,6 +586,7 @@ def _expand_with_toolchains_with_additional_dict_test_impl(ctx):
     # Check that the output has exact same key set as original input.
     asserts.equals(env, _ENV_DICT.keys(), resolved_dict.keys())
 
+    # buildifier: disable=unsorted-dict-items
     updated_expected_dict = dict(_EXPECTED_RESOLVED_DICT_NO_LOCATION, **{
         "TOOLCHAIN_ENV_VAR2_RAW": "expanded from additional dict instead",
         "TOOLCHAIN_ENV_VAR2_PAREN": "expanded from additional dict instead",
@@ -554,18 +607,18 @@ def _expand_with_toolchains_with_additional_dict_test_impl(ctx):
 
     return unittest.end(env)
 
-_expand_with_toolchains_with_additional_dict_test = unittest.make(
-    _expand_with_toolchains_with_additional_dict_test_impl,
+_expand_dict_strings_with_toolchains_with_additional_dict_test = unittest.make(
+    _expand_dict_strings_with_toolchains_with_additional_dict_test_impl,
 )
 
-def _expand_with_toolchains_attr_test_impl(ctx):
-    """Test `expansion.expand_with_toolchains_attr()` without extra dict"""
+def _expand_dict_strings_with_toolchains_attr_test_impl(ctx):
+    """Test `expansion.expand_dict_strings_with_toolchains_attr()` without extra dict"""
     env = unittest.begin(ctx)
 
     env_dict_copy = dict(env.ctx.attr.env)
     toolchain_dict_copy = dict(env.ctx.var)
 
-    resolved_dict = expansion.expand_with_toolchains_attr(env.ctx)
+    resolved_dict = expansion.expand_dict_strings_with_toolchains_attr(env.ctx)
 
     # Check that the inputs are not mutated.
     asserts.equals(env, env_dict_copy, env.ctx.attr.env)
@@ -587,26 +640,27 @@ def _expand_with_toolchains_attr_test_impl(ctx):
 
     return unittest.end(env)
 
-_expand_with_toolchains_attr_test = unittest.make(
-    _expand_with_toolchains_attr_test_impl,
+_expand_dict_strings_with_toolchains_attr_test = unittest.make(
+    _expand_dict_strings_with_toolchains_attr_test_impl,
     attrs = {
         "env": attr.string_dict(),
     },
 )
 
-def _expand_with_toolchains_attr_with_additional_dict_test_impl(ctx):
-    """Test `expansion.expand_with_toolchains_attr()` with extra dict"""
+def _expand_dict_strings_with_toolchains_attr_with_additional_dict_test_impl(ctx):
+    """Test `expansion.expand_dict_strings_with_toolchains_attr()` with extra dict"""
     env = unittest.begin(ctx)
 
     env_dict_copy = dict(env.ctx.attr.env)
     toolchain_dict_copy = dict(env.ctx.var)
 
+    # buildifier: disable=unsorted-dict-items
     additional_lookup_dict = {
         "TOOLCHAIN_ENV_VAR2": "expanded from additional dict instead",
         "NOPE": "naw, it's fine now.",
     }
 
-    resolved_dict = expansion.expand_with_toolchains_attr(
+    resolved_dict = expansion.expand_dict_strings_with_toolchains_attr(
         env.ctx,
         additional_lookup_dict = additional_lookup_dict,
     )
@@ -618,6 +672,7 @@ def _expand_with_toolchains_attr_with_additional_dict_test_impl(ctx):
     # Check that the output has exact same key set as original input.
     asserts.equals(env, env.ctx.attr.env.keys(), resolved_dict.keys())
 
+    # buildifier: disable=unsorted-dict-items
     updated_expected_dict = dict(_EXPECTED_RESOLVED_DICT_NO_LOCATION, **{
         "TOOLCHAIN_ENV_VAR2_RAW": "expanded from additional dict instead",
         "TOOLCHAIN_ENV_VAR2_PAREN": "expanded from additional dict instead",
@@ -638,21 +693,21 @@ def _expand_with_toolchains_attr_with_additional_dict_test_impl(ctx):
 
     return unittest.end(env)
 
-_expand_with_toolchains_attr_with_additional_dict_test = unittest.make(
-    _expand_with_toolchains_attr_with_additional_dict_test_impl,
+_expand_dict_strings_with_toolchains_attr_with_additional_dict_test = unittest.make(
+    _expand_dict_strings_with_toolchains_attr_with_additional_dict_test_impl,
     attrs = {
         "env": attr.string_dict(),
     },
 )
 
-def _expand_with_toolchains_and_location_test_impl(ctx):
-    """Test `expansion.expand_with_toolchains_and_location()` without extra dict"""
+def _expand_dict_strings_with_toolchains_and_location_test_impl(ctx):
+    """Test `expansion.expand_dict_strings_with_toolchains_and_location()` without extra dict"""
     env = unittest.begin(ctx)
 
     env_dict_copy = dict(_ENV_DICT)
     toolchain_dict_copy = dict(env.ctx.var)
 
-    resolved_dict = expansion.expand_with_toolchains_and_location(
+    resolved_dict = expansion.expand_dict_strings_with_toolchains_and_location(
         env.ctx,
         [ctx.attr.target],
         _ENV_DICT,
@@ -678,26 +733,27 @@ def _expand_with_toolchains_and_location_test_impl(ctx):
 
     return unittest.end(env)
 
-_expand_with_toolchains_and_location_test = unittest.make(
-    _expand_with_toolchains_and_location_test_impl,
+_expand_dict_strings_with_toolchains_and_location_test = unittest.make(
+    _expand_dict_strings_with_toolchains_and_location_test_impl,
     attrs = {
         "target": attr.label(),
     },
 )
 
-def _expand_with_toolchains_and_location_with_additional_dict_test_impl(ctx):
-    """Test `expansion.expand_with_toolchains_and_location()` with extra dict"""
+def _expand_dict_strings_with_toolchains_and_location_with_additional_dict_test_impl(ctx):
+    """Test `expansion.expand_dict_strings_with_toolchains_and_location()` with extra dict"""
     env = unittest.begin(ctx)
 
     env_dict_copy = dict(_ENV_DICT)
     toolchain_dict_copy = dict(env.ctx.var)
 
+    # buildifier: disable=unsorted-dict-items
     additional_lookup_dict = {
         "TOOLCHAIN_ENV_VAR2": "expanded from additional dict instead",
         "NOPE": "naw, it's fine now.",
     }
 
-    resolved_dict = expansion.expand_with_toolchains_and_location(
+    resolved_dict = expansion.expand_dict_strings_with_toolchains_and_location(
         env.ctx,
         [ctx.attr.target],
         _ENV_DICT,
@@ -711,6 +767,7 @@ def _expand_with_toolchains_and_location_with_additional_dict_test_impl(ctx):
     # Check that the output has exact same key set as original input.
     asserts.equals(env, _ENV_DICT.keys(), resolved_dict.keys())
 
+    # buildifier: disable=unsorted-dict-items
     updated_expected_dict = dict(_EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION, **{
         "TOOLCHAIN_ENV_VAR2_RAW": "expanded from additional dict instead",
         "TOOLCHAIN_ENV_VAR2_PAREN": "expanded from additional dict instead",
@@ -731,21 +788,21 @@ def _expand_with_toolchains_and_location_with_additional_dict_test_impl(ctx):
 
     return unittest.end(env)
 
-_expand_with_toolchains_and_location_with_additional_dict_test = unittest.make(
-    _expand_with_toolchains_and_location_with_additional_dict_test_impl,
+_expand_dict_strings_with_toolchains_and_location_with_additional_dict_test = unittest.make(
+    _expand_dict_strings_with_toolchains_and_location_with_additional_dict_test_impl,
     attrs = {
         "target": attr.label(),
     },
 )
 
-def _expand_with_toolchains_and_location_attr_test_impl(ctx):
-    """Test `expansion.expand_with_toolchains_and_location_attr()` without extra dict"""
+def _expand_dict_strings_with_toolchains_and_location_attr_test_impl(ctx):
+    """Test `expansion.expand_dict_strings_with_toolchains_and_location_attr()` without extra dict"""
     env = unittest.begin(ctx)
 
     env_dict_copy = dict(env.ctx.attr.env)
     toolchain_dict_copy = dict(env.ctx.var)
 
-    resolved_dict = expansion.expand_with_toolchains_and_location_attr(env.ctx)
+    resolved_dict = expansion.expand_dict_strings_with_toolchains_and_location_attr(env.ctx)
 
     # Check that the inputs are not mutated.
     asserts.equals(env, env_dict_copy, env.ctx.attr.env)
@@ -767,27 +824,28 @@ def _expand_with_toolchains_and_location_attr_test_impl(ctx):
 
     return unittest.end(env)
 
-_expand_with_toolchains_and_location_attr_test = unittest.make(
-    _expand_with_toolchains_and_location_attr_test_impl,
+_expand_dict_strings_with_toolchains_and_location_attr_test = unittest.make(
+    _expand_dict_strings_with_toolchains_and_location_attr_test_impl,
     attrs = {
         "deps": attr.label_list(),
         "env": attr.string_dict(),
     },
 )
 
-def _expand_with_toolchains_and_location_attr_with_additional_dict_test_impl(ctx):
-    """Test `expansion.expand_with_toolchains_and_location_attr()` with extra dict"""
+def _expand_dict_strings_with_toolchains_and_location_attr_with_additional_dict_test_impl(ctx):
+    """Test `expansion.expand_dict_strings_with_toolchains_and_location_attr()` with extra dict"""
     env = unittest.begin(ctx)
 
     env_dict_copy = dict(env.ctx.attr.env)
     toolchain_dict_copy = dict(env.ctx.var)
 
+    # buildifier: disable=unsorted-dict-items
     additional_lookup_dict = {
         "TOOLCHAIN_ENV_VAR2": "expanded from additional dict instead",
         "NOPE": "naw, it's fine now.",
     }
 
-    resolved_dict = expansion.expand_with_toolchains_and_location_attr(
+    resolved_dict = expansion.expand_dict_strings_with_toolchains_and_location_attr(
         env.ctx,
         additional_lookup_dict = additional_lookup_dict,
     )
@@ -799,6 +857,7 @@ def _expand_with_toolchains_and_location_attr_with_additional_dict_test_impl(ctx
     # Check that the output has exact same key set as original input.
     asserts.equals(env, env.ctx.attr.env.keys(), resolved_dict.keys())
 
+    # buildifier: disable=unsorted-dict-items
     updated_expected_dict = dict(_EXPECTED_RESOLVED_DICT_WITH_GENRULE_LOCATION, **{
         "TOOLCHAIN_ENV_VAR2_RAW": "expanded from additional dict instead",
         "TOOLCHAIN_ENV_VAR2_PAREN": "expanded from additional dict instead",
@@ -819,12 +878,84 @@ def _expand_with_toolchains_and_location_attr_with_additional_dict_test_impl(ctx
 
     return unittest.end(env)
 
-_expand_with_toolchains_and_location_attr_with_additional_dict_test = unittest.make(
-    _expand_with_toolchains_and_location_attr_with_additional_dict_test_impl,
+_expand_dict_strings_with_toolchains_and_location_attr_with_additional_dict_test = unittest.make(
+    _expand_dict_strings_with_toolchains_and_location_attr_with_additional_dict_test_impl,
     attrs = {
         "deps": attr.label_list(),
         "env": attr.string_dict(),
     },
+)
+
+def _expand_list_strings_with_manual_dict_test_impl(ctx):
+    """Test `expansion.expand_dict_strings_with_manual_dict()`"""
+    env = unittest.begin(ctx)
+
+    env_dict_values = _ENV_DICT.values()
+    env_dict_values_copy = list(env_dict_values)
+    toolchain_dict_copy = dict(_TOOLCHAIN_DICT)
+
+    resolved_list = expansion.expand_list_strings_with_manual_dict(_TOOLCHAIN_DICT, env_dict_values)
+
+    # Check that the inputs are not mutated.
+    asserts.equals(env, env_dict_values_copy, env_dict_values)
+    asserts.equals(env, toolchain_dict_copy, _TOOLCHAIN_DICT)
+
+    # Check that the output has exact same length as original input.
+    asserts.equals(env, len(env_dict_values), len(resolved_list))
+
+    # Check all output resolved values against expected resolved values.
+    for env_key, env_orig_val in _ENV_DICT.items():
+        index_in_unexpanded = env_dict_values.index(env_orig_val)
+        expected_val = _EXPECTED_RESOLVED_DICT_NO_LOCATION_NO_RECURSION[env_key]
+        resolved_val = resolved_list[index_in_unexpanded]
+        resolved_val = _fix_platform_dependent_path_for_assertions(resolved_val)
+
+        # Replace `expected` with proper value given bazel version (may differ for rlocation path).
+        if "_main" in expected_val and "_main" not in resolved_val:
+            expected_val = expected_val.replace("_main", "bazel_skylib")
+        asserts.equals(env, expected_val, resolved_val)
+
+    return unittest.end(env)
+
+_expand_list_strings_with_manual_dict_test = unittest.make(_expand_list_strings_with_manual_dict_test_impl)
+
+def _expand_list_strings_with_manual_dict_and_location_test_impl(ctx):
+    """Test `expansion.expand_dict_strings_with_manual_dict_and_location()`"""
+    env = unittest.begin(ctx)
+
+    env_dict_values = _ENV_DICT.values()
+    env_dict_values_copy = list(env_dict_values)
+    toolchain_dict_copy = dict(_TOOLCHAIN_DICT)
+
+    resolved_list = expansion.expand_list_strings_with_manual_dict_and_location(
+        _mock_wrapped_expand_location,
+        _TOOLCHAIN_DICT,
+        env_dict_values,
+    )
+
+    # Check that the inputs are not mutated.
+    asserts.equals(env, env_dict_values_copy, env_dict_values)
+    asserts.equals(env, toolchain_dict_copy, _TOOLCHAIN_DICT)
+
+    # Check that the output has exact same length as original input.
+    asserts.equals(env, len(env_dict_values), len(resolved_list))
+
+    # Check all output resolved values against expected resolved values.
+    for env_key, env_orig_val in _ENV_DICT.items():
+        index_in_unexpanded = env_dict_values.index(env_orig_val)
+        expected_val = _EXPECTED_RESOLVED_DICT_WITH_MOCKED_LOCATION_NO_RECURSION[env_key]
+        resolved_val = resolved_list[index_in_unexpanded]
+        resolved_val = _fix_platform_dependent_path_for_assertions(resolved_val)
+
+        # Replace `expected` with proper value given bazel version (may differ for rlocation path).
+        if "_main" in expected_val and "_main" not in resolved_val:
+            expected_val = expected_val.replace("_main", "bazel_skylib")
+        asserts.equals(env, expected_val, resolved_val)
+
+    return unittest.end(env)
+
+_expand_list_strings_with_manual_dict_and_location_test = unittest.make(
+    _expand_list_strings_with_manual_dict_and_location_test_impl,
 )
 
 def _validate_expansions_on_fully_resolved_values_test_impl(ctx):
@@ -949,51 +1080,57 @@ def expansion_test_suite():
         name = "expansion_tests__test_toolchain",
     )
 
-    _expand_with_manual_dict_test(
-        name = "expansion_tests__expand_with_manual_dict_test",
+    _expand_dict_strings_with_manual_dict_test(
+        name = "expansion_tests__expand_dict_strings_with_manual_dict_test",
     )
-    _expand_with_manual_dict_and_location_test(
-        name = "expansion_tests__expand_with_manual_dict_and_location_test",
+    _expand_dict_strings_with_manual_dict_and_location_test(
+        name = "expansion_tests__expand_dict_strings_with_manual_dict_and_location_test",
     )
-    _expand_with_toolchains_test(
-        name = "expansion_tests__expand_with_toolchains_test",
+    _expand_dict_strings_with_toolchains_test(
+        name = "expansion_tests__expand_dict_strings_with_toolchains_test",
         toolchains = [":expansion_tests__test_toolchain"],
     )
-    _expand_with_toolchains_with_additional_dict_test(
-        name = "expansion_tests__expand_with_toolchains_with_additional_dict_test",
+    _expand_dict_strings_with_toolchains_with_additional_dict_test(
+        name = "expansion_tests__expand_dict_strings_with_toolchains_with_additional_dict_test",
         toolchains = [":expansion_tests__test_toolchain"],
     )
-    _expand_with_toolchains_attr_test(
-        name = "expansion_tests__expand_with_toolchains_attr_test",
+    _expand_dict_strings_with_toolchains_attr_test(
+        name = "expansion_tests__expand_dict_strings_with_toolchains_attr_test",
         env = _ENV_DICT,
         toolchains = [":expansion_tests__test_toolchain"],
     )
-    _expand_with_toolchains_attr_with_additional_dict_test(
-        name = "expansion_tests__expand_with_toolchains_attr_with_additional_dict_test",
+    _expand_dict_strings_with_toolchains_attr_with_additional_dict_test(
+        name = "expansion_tests__expand_dict_strings_with_toolchains_attr_with_additional_dict_test",
         env = _ENV_DICT,
         toolchains = [":expansion_tests__test_toolchain"],
     )
-    _expand_with_toolchains_and_location_test(
-        name = "expansion_tests__expand_with_toolchains_and_location_test",
+    _expand_dict_strings_with_toolchains_and_location_test(
+        name = "expansion_tests__expand_dict_strings_with_toolchains_and_location_test",
         target = ":" + _TEST_DEP_TARGET_NAME,
         toolchains = [":expansion_tests__test_toolchain"],
     )
-    _expand_with_toolchains_and_location_with_additional_dict_test(
-        name = "expansion_tests__expand_with_toolchains_and_location_with_additional_dict_test",
+    _expand_dict_strings_with_toolchains_and_location_with_additional_dict_test(
+        name = "expansion_tests__expand_dict_strings_with_toolchains_and_location_with_additional_dict_test",
         target = ":" + _TEST_DEP_TARGET_NAME,
         toolchains = [":expansion_tests__test_toolchain"],
     )
-    _expand_with_toolchains_and_location_attr_test(
-        name = "expansion_tests__expand_with_toolchains_and_location_attr_test",
+    _expand_dict_strings_with_toolchains_and_location_attr_test(
+        name = "expansion_tests__expand_dict_strings_with_toolchains_and_location_attr_test",
         deps = [":" + _TEST_DEP_TARGET_NAME],
         env = _ENV_DICT,
         toolchains = [":expansion_tests__test_toolchain"],
     )
-    _expand_with_toolchains_and_location_attr_with_additional_dict_test(
-        name = "expansion_tests__expand_with_toolchains_and_location_attr_with_additional_dict_test",
+    _expand_dict_strings_with_toolchains_and_location_attr_with_additional_dict_test(
+        name = "expansion_tests__expand_dict_strings_with_toolchains_and_location_attr_with_additional_dict_test",
         deps = [":" + _TEST_DEP_TARGET_NAME],
         env = _ENV_DICT,
         toolchains = [":expansion_tests__test_toolchain"],
+    )
+    _expand_list_strings_with_manual_dict_test(
+        name = "expansion_tests__expand_list_strings_with_manual_dict_test",
+    )
+    _expand_list_strings_with_manual_dict_and_location_test(
+        name = "expansion_tests__expand_list_strings_with_manual_dict_and_location_test",
     )
     _validate_expansions_on_fully_resolved_values_test(
         name = "expansion_tests__validate_expansions_on_fully_resolved_values_test",
@@ -1031,16 +1168,18 @@ def expansion_test_suite():
     native.test_suite(
         name = "expansion_tests",
         tests = [
-            ":expansion_tests__expand_with_manual_dict_test",
-            ":expansion_tests__expand_with_manual_dict_and_location_test",
-            ":expansion_tests__expand_with_toolchains_test",
-            ":expansion_tests__expand_with_toolchains_with_additional_dict_test",
-            ":expansion_tests__expand_with_toolchains_attr_test",
-            ":expansion_tests__expand_with_toolchains_attr_with_additional_dict_test",
-            ":expansion_tests__expand_with_toolchains_and_location_test",
-            ":expansion_tests__expand_with_toolchains_and_location_with_additional_dict_test",
-            ":expansion_tests__expand_with_toolchains_and_location_attr_test",
-            ":expansion_tests__expand_with_toolchains_and_location_attr_with_additional_dict_test",
+            ":expansion_tests__expand_dict_strings_with_manual_dict_test",
+            ":expansion_tests__expand_dict_strings_with_manual_dict_and_location_test",
+            ":expansion_tests__expand_dict_strings_with_toolchains_test",
+            ":expansion_tests__expand_dict_strings_with_toolchains_with_additional_dict_test",
+            ":expansion_tests__expand_dict_strings_with_toolchains_attr_test",
+            ":expansion_tests__expand_dict_strings_with_toolchains_attr_with_additional_dict_test",
+            ":expansion_tests__expand_dict_strings_with_toolchains_and_location_test",
+            ":expansion_tests__expand_dict_strings_with_toolchains_and_location_with_additional_dict_test",
+            ":expansion_tests__expand_dict_strings_with_toolchains_and_location_attr_test",
+            ":expansion_tests__expand_dict_strings_with_toolchains_and_location_attr_with_additional_dict_test",
+            ":expansion_tests__expand_list_strings_with_manual_dict_test",
+            ":expansion_tests__expand_list_strings_with_manual_dict_and_location_test",
             ":expansion_tests__validate_expansions_on_fully_resolved_values_test",
             ":expansion_tests__validate_expansions_on_unresolved_values_test",
             ":expansion_tests__validate_expansions_on_two_unresolved_values_test",
