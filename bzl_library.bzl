@@ -14,94 +14,33 @@
 
 """Skylib module containing a library rule for aggregating rules files."""
 
-StarlarkLibraryInfo = provider(
-    "Information on contained Starlark rules.",
-    fields = {
-        "srcs": "Top level rules files.",
-        "transitive_srcs": "Transitive closure of rules files required for " +
-                           "interpretation of the srcs",
-    },
+# buildifier: disable=bzl-visibility
+load(
+    "//rules/private:bzl_library.bzl",
+    _StarlarkLibraryInfo = "StarlarkLibraryInfo",
+    _bzl_library = "bzl_library",
 )
 
-def _bzl_library_impl(ctx):
-    deps_files = [x.files for x in ctx.attr.deps]
-    all_files = depset(ctx.files.srcs, order = "postorder", transitive = deps_files)
-    return [
-        # All dependent files should be listed in both `files` and in `runfiles`;
-        # this ensures that a `bzl_library` can be referenced as `data` from
-        # a separate program, or from `tools` of a genrule().
-        DefaultInfo(
-            files = all_files,
-            runfiles = ctx.runfiles(transitive_files = all_files),
-        ),
+StarlarkLibraryInfo = _StarlarkLibraryInfo
 
-        # We also define our own provider struct, for aggregation and testing.
-        StarlarkLibraryInfo(
-            srcs = ctx.files.srcs,
-            transitive_srcs = all_files,
-        ),
-    ]
+def bzl_library(name, **kwargs):
+    """Wrapper for bzl_library.
 
-bzl_library = rule(
-    implementation = _bzl_library_impl,
-    attrs = {
-        "srcs": attr.label_list(
-            allow_files = [".bzl"],
-            doc = "List of `.bzl` files that are processed to create this target.",
-        ),
-        "deps": attr.label_list(
-            allow_files = [".bzl"],
-            providers = [
-                [StarlarkLibraryInfo],
-            ],
-            doc = """List of other `bzl_library` targets that are required by the
-Starlark files listed in `srcs`.""",
-        ),
-    },
-    doc = """Creates a logical collection of Starlark .bzl files.
+    Args:
+        name: name
+        **kwargs: see the generated doc for rules/private/bzl_library.
+    """
 
-Example:
-  Suppose your project has the following structure:
-
-  ```
-  [workspace]/
-      WORKSPACE
-      BUILD
-      checkstyle/
-          BUILD
-          checkstyle.bzl
-      lua/
-          BUILD
-          lua.bzl
-          luarocks.bzl
-  ```
-
-  In this case, you can have `bzl_library` targets in `checkstyle/BUILD` and
-  `lua/BUILD`:
-
-  `checkstyle/BUILD`:
-
-  ```python
-  load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-
-  bzl_library(
-      name = "checkstyle-rules",
-      srcs = ["checkstyle.bzl"],
-  )
-  ```
-
-  `lua/BUILD`:
-
-  ```python
-  load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-
-  bzl_library(
-      name = "lua-rules",
-      srcs = [
-          "lua.bzl",
-          "luarocks.bzl",
-      ],
-  )
-  ```
-""",
-)
+    # buildifier: disable=unused-variable
+    _ = kwargs.pop("compatible_with", None)
+    _ = kwargs.pop("exec_compatible_with", None)
+    _ = kwargs.pop("features", None)
+    _ = kwargs.pop("target_compatible_with", None)
+    _bzl_library(
+        name = name,
+        compatible_with = [],
+        exec_compatible_with = [],
+        features = [],
+        target_compatible_with = [],
+        **kwargs
+    )

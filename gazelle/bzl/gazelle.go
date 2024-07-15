@@ -173,7 +173,7 @@ func (*bzlLibraryLang) Resolve(c *config.Config, ix *resolve.RuleIndex, rc *repo
 
 		if impLabel.Repo != "" || !c.IndexLibraries {
 			// This is a dependency that is external to the current repo, or indexing
-			// is disabled so take a guess at what hte target name should be.
+			// is disabled so take a guess at what the target name should be.
 			deps = append(deps, strings.TrimSuffix(imp, fileType))
 			continue
 		}

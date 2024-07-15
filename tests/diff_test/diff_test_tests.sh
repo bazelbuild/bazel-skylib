@@ -37,7 +37,7 @@ else
 fi
 # --- end runfiles.bash initialization ---
 
-source "$(rlocation bazel_skylib/tests/unittest.bash)" \
+source "$(rlocation $TEST_WORKSPACE/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
 
 function import_diff_test() {
@@ -46,9 +46,9 @@ function import_diff_test() {
   mkdir -p "${repo}/lib"
   touch "${repo}/lib/BUILD"
   touch "${repo}/WORKSPACE"
-  ln -sf "$(rlocation bazel_skylib/rules/diff_test.bzl)" \
+  ln -sf "$(rlocation $TEST_WORKSPACE/rules/diff_test.bzl)" \
          "${repo}/rules/diff_test.bzl"
-  ln -sf "$(rlocation bazel_skylib/lib/shell.bzl)" \
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/shell.bzl)" \
          "${repo}/lib/shell.bzl"
   echo "exports_files(['diff_test.bzl'])" > "${repo}/rules/BUILD"
 }
@@ -207,15 +207,15 @@ function test_simple_diff_test_with_manifest() {
 }
 
 function test_directory_named_external_with_legacy_external_runfiles() {
-  assert_simple_diff_test "--enable_runfiles --legacy_external_runfiles" "${FUNCNAME[0]}" "path/to/direcotry/external/in/name/"
+  assert_simple_diff_test "--enable_runfiles --legacy_external_runfiles" "${FUNCNAME[0]}" "path/to/directory/external/in/name/"
 }
 
 function test_directory_named_external_without_legacy_external_runfiles() {
-  assert_simple_diff_test "--enable_runfiles --nolegacy_external_runfiles" "${FUNCNAME[0]}" "path/to/direcotry/external/in/name/"
+  assert_simple_diff_test "--enable_runfiles --nolegacy_external_runfiles" "${FUNCNAME[0]}" "path/to/directory/external/in/name/"
 }
 
 function test_directory_named_external_with_manifest() {
-  assert_simple_diff_test "--noenable_runfiles" "${FUNCNAME[0]}" "path/to/direcotry/external/in/name/"
+  assert_simple_diff_test "--noenable_runfiles" "${FUNCNAME[0]}" "path/to/directory/external/in/name/"
 }
 
 function test_from_ext_repo_with_legacy_external_runfiles() {

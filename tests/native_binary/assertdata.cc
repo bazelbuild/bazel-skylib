@@ -30,10 +30,17 @@ int main(int argc, char **argv) {
     return 1;
   }
 
+  char* workspace = getenv("TEST_WORKSPACE");
+  if (workspace == nullptr) {
+    fprintf(stderr, "ERROR(" __FILE__ ":%d): envvar TEST_WORKSPACE is undefined\n",
+            __LINE__);
+    return 1;
+  }
+
   // This should have runfiles, either from the binary itself or from the
   // native_test.
   std::string path =
-      runfiles->Rlocation("bazel_skylib/tests/native_binary/testdata.txt");
+      runfiles->Rlocation(std::string(workspace) + "/tests/native_binary/testdata.txt");
   FILE *f = fopen(path.c_str(), "rt");
   if (!f) {
     fprintf(stderr, "ERROR(" __FILE__ ":%d): Could not find runfile '%s'\n",

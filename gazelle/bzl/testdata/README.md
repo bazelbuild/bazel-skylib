@@ -3,7 +3,7 @@
 This directory contains a suite of test cases for the Skylark language plugin
 for Gazelle.
 
-Please note that there are no `BUILD` or `BUILD.bazel` files in subdirs, insted
+Please note that there are no `BUILD` or `BUILD.bazel` files in subdirs, instead
 there are `BUILD.in` and `BUILD.out` describing what the `BUILD` should look
 like initially and what the `BUILD` file should look like after the run. These
 names are special because they are not recognized by Bazel as a proper `BUILD`

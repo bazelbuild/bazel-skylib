@@ -39,8 +39,7 @@ def copy_cmd(ctx, src, dst):
         is_executable = True,
     )
     ctx.actions.run(
-        inputs = [src],
-        tools = [bat],
+        inputs = [src, bat],
         outputs = [dst],
         executable = "cmd.exe",
         arguments = ["/C", bat.path.replace("/", "\\")],
@@ -52,7 +51,7 @@ def copy_cmd(ctx, src, dst):
 
 def copy_bash(ctx, src, dst):
     ctx.actions.run_shell(
-        tools = [src],
+        inputs = [src],
         outputs = [dst],
         command = "cp -f \"$1\" \"$2\"",
         arguments = [src.path, dst.path],

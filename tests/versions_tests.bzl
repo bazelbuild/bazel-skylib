@@ -26,6 +26,9 @@ def _parse_test(ctx):
     asserts.equals(env, (0, 4, 0), versions.parse("0.4.0"))
     asserts.equals(env, (0, 4, 0), versions.parse("0.4.0rc"))
 
+    # Verify that this doesn't fail - it corresponds to a dev build of Bazel.
+    versions.parse("")
+
     return unittest.end(env)
 
 def _version_comparison_test(ctx):
@@ -36,11 +39,13 @@ def _version_comparison_test(ctx):
     asserts.true(env, versions.is_at_least("0.9.0", "0.10.0rc2"))
     asserts.true(env, versions.is_at_least("0.9.0", "0.9.0rc3"))
     asserts.true(env, versions.is_at_least("0.9.0", "1.2.3"))
+    asserts.true(env, versions.is_at_least("0.9.0", ""))
 
     asserts.false(env, versions.is_at_most("0.4.0 123abcd", "0.10.0rc1 abcd123"))
     asserts.true(env, versions.is_at_most("0.4.0", "0.3.0rc2"))
     asserts.true(env, versions.is_at_most("0.4.0", "0.4.0rc3"))
     asserts.true(env, versions.is_at_most("1.4.0", "0.4.0rc3"))
+    asserts.false(env, versions.is_at_most("1.4.0", ""))
 
     return unittest.end(env)
 

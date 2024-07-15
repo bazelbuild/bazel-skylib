@@ -37,7 +37,7 @@ else
 fi
 # --- end runfiles.bash initialization ---
 
-source "$(rlocation bazel_skylib/tests/unittest.bash)" \
+source "$(rlocation $TEST_WORKSPACE/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
 
 function assert_empty_file() {
@@ -47,21 +47,21 @@ function assert_empty_file() {
 }
 
 function test_write_empty_text() {
-  assert_empty_file "$(rlocation bazel_skylib/tests/write_file/out/empty.txt)"
+  assert_empty_file "$(rlocation $TEST_WORKSPACE/tests/write_file/out/empty.txt)"
 }
 
 function test_write_nonempty_text() {
-  cat "$(rlocation bazel_skylib/tests/write_file/out/nonempty.txt)" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/write_file/out/nonempty.txt)" >"$TEST_log"
   expect_log '^aaa'
   expect_log '^bbb'
 }
 
 function test_write_empty_bin() {
-  assert_empty_file "$(rlocation bazel_skylib/tests/write_file/empty-bin-out.txt)"
+  assert_empty_file "$(rlocation $TEST_WORKSPACE/tests/write_file/empty-bin-out.txt)"
 }
 
 function test_write_nonempty_bin() {
-  cat "$(rlocation bazel_skylib/tests/write_file/nonempty-bin-out.txt)" >"$TEST_log"
+  cat "$(rlocation $TEST_WORKSPACE/tests/write_file/nonempty-bin-out.txt)" >"$TEST_log"
   expect_log '^potato'
 }
 

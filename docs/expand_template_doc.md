@@ -1,7 +1,6 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
-A rule that performes template expansion.
-
+A rule that performs template expansion.
 
 <a id="expand_template"></a>
 
@@ -24,9 +23,9 @@ explicitly add delimiters to the key strings, for example "{KEY}" or "@KEY@".
 
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
-| <a id="expand_template-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/docs/build-ref.html#name">Name</a> | required |  |
-| <a id="expand_template-out"></a>out |  The destination of the expanded file.   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | required |  |
-| <a id="expand_template-substitutions"></a>substitutions |  A dictionary mapping strings to their substitutions.   | <a href="https://bazel.build/docs/skylark/lib/dict.html">Dictionary: String -> String</a> | required |  |
-| <a id="expand_template-template"></a>template |  The template file to expand.   | <a href="https://bazel.build/docs/build-ref.html#labels">Label</a> | required |  |
+| <a id="expand_template-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
+| <a id="expand_template-out"></a>out |  The destination of the expanded file.   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="expand_template-substitutions"></a>substitutions |  A dictionary mapping strings to their substitutions.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | required |  |
+| <a id="expand_template-template"></a>template |  The template file to expand.   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
 
 

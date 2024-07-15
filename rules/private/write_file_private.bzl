@@ -88,7 +88,7 @@ def write_file(
           sources.
       newline: one of ["auto", "unix", "windows"]: line endings to use. "auto"
           for platform-determined, "unix" for LF, and "windows" for CRLF.
-      **kwargs: further keyword arguments, e.g. <code>visibility</code>
+      **kwargs: further keyword arguments, e.g. `visibility`
     """
     if is_executable:
         _write_xfile(

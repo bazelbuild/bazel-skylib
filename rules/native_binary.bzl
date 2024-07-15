@@ -21,7 +21,7 @@ don't depend on Bash and work with --shell_executable="".
 """
 
 def _impl_rule(ctx):
-    out = ctx.actions.declare_file(ctx.attr.out)
+    out = ctx.actions.declare_file(ctx.attr.out if (ctx.attr.out != "") else ctx.attr.name + ".exe")
     ctx.actions.symlink(
         target_file = ctx.executable.src,
         output = out,
@@ -64,7 +64,12 @@ _ATTRS = {
               " https://bazel.build/reference/be/common-definitions#typical.data",
     ),
     # "out" is attr.string instead of attr.output, so that it is select()'able.
-    "out": attr.string(mandatory = True, doc = "An output name for the copy of the binary"),
+    "out": attr.string(
+        default = "",
+        doc = "An output name for the copy of the binary. Defaults to " +
+              "name.exe. (We add .exe to the name by default because it's " +
+              "required on Windows and tolerated on other platforms.)",
+    ),
 }
 
 native_binary = rule(

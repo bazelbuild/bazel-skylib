@@ -23,9 +23,9 @@ available from a third-party:
 https://github.com/aspect-build/bazel-lib/blob/main/docs/docs.md
 """
 
-load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
-load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
+load("@bazel_skylib//rules:write_file.bzl", "write_file")
+load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
 
 def stardoc_with_diff_test(
         name,
@@ -33,7 +33,7 @@ def stardoc_with_diff_test(
         out_label):
     """Creates a stardoc target coupled with a `diff_test` for a given `bzl_library`.
 
-    This is helpful for minimizing boilerplate in repos wih lots of stardoc targets.
+    This is helpful for minimizing boilerplate in repos with lots of stardoc targets.
 
     Args:
         name: the stardoc target name
@@ -89,7 +89,7 @@ def update_docs(
     content = ["#!/usr/bin/env bash", "cd ${BUILD_WORKSPACE_DIRECTORY}"]
     data = []
     for r in native.existing_rules().values():
-        if r["kind"] == "stardoc":
+        if r["kind"] == "stardoc_markdown_renderer":
             doc_gen = r["out"]
             if doc_gen.startswith(":"):
                 doc_gen = doc_gen[1:]

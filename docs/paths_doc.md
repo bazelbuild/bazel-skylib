@@ -6,7 +6,6 @@ NOTE: The functions in this module currently only support paths with Unix-style
 path separators (forward slash, "/"); they do not handle Windows-style paths
 with backslash separators or drive letters.
 
-
 <a id="paths.basename"></a>
 
 ## paths.basename
@@ -82,6 +81,33 @@ Returns `True` if `path` is an absolute path.
 **RETURNS**
 
 `True` if `path` is an absolute path.
+
+
+<a id="paths.is_normalized"></a>
+
+## paths.is_normalized
+
+<pre>
+paths.is_normalized(<a href="#paths.is_normalized-str">str</a>, <a href="#paths.is_normalized-look_for_same_level_references">look_for_same_level_references</a>)
+</pre>
+
+Returns true if the passed path doesn't contain uplevel references "..".
+
+Also checks for single-dot references "." if look_for_same_level_references
+is `True.`
+
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="paths.is_normalized-str"></a>str |  The path string to check.   |  none |
+| <a id="paths.is_normalized-look_for_same_level_references"></a>look_for_same_level_references |  If True checks if path doesn't contain uplevel references ".." or single-dot references ".".   |  `True` |
+
+**RETURNS**
+
+True if the path is normalized, False otherwise.
 
 
 <a id="paths.join"></a>
@@ -238,5 +264,26 @@ A tuple `(root, ext)` such that the root is the path without the file
 extension, and `ext` is the file extension (which, if non-empty, contains
 the leading dot). The returned tuple always satisfies the relationship
 `root + ext == p`.
+
+
+<a id="paths.starts_with"></a>
+
+## paths.starts_with
+
+<pre>
+paths.starts_with(<a href="#paths.starts_with-path_a">path_a</a>, <a href="#paths.starts_with-path_b">path_b</a>)
+</pre>
+
+Returns True if and only if path_b is an ancestor of path_a.
+
+Does not handle OS dependent case-insensitivity.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="paths.starts_with-path_a"></a>path_a |  <p align="center"> - </p>   |  none |
+| <a id="paths.starts_with-path_b"></a>path_b |  <p align="center"> - </p>   |  none |
 
 

@@ -48,7 +48,7 @@ s = shell.quote(p)
 * [paths](docs/paths_doc.md)
 * [selects](docs/selects_doc.md)
 * [sets](lib/sets.bzl)
-* [new_sets](docs/new_sets_doc.md) - _deprecated_, use `sets`
+* [modules](docs/modules_doc.md)
 * [shell](docs/shell_doc.md)
 * [structs](docs/structs_doc.md)
 * [subpackages](docs/subpackages_doc.md)
@@ -61,6 +61,10 @@ s = shell.quote(p)
 * [analysis_test](docs/analysis_test_doc.md)
 * [build_test](docs/build_test_doc.md)
 * [common_settings](docs/common_settings_doc.md)
+* [directories](docs/copy_directory_doc.md)
+    * [directory](docs/directory_doc.md)
+    * [directory_glob](docs/directory_glob.md)
+    * [subdirectory](docs/subdirectory_doc.md)
 * [copy_directory](docs/copy_directory_doc.md)
 * [copy_file](docs/copy_file_doc.md)
 * [diff_test](docs/diff_test_doc.md)
@@ -74,7 +78,7 @@ s = shell.quote(p)
 
 The criteria for adding a new function or module to this repository are:
 
-1. Is it widely needed? The new code must solve a problem that occurs often during the development of Bazel build rules. It is not sufficient that the new code is merely useful.  Candidate code should generally have been proven to be necessary across several projects, either because it provides indispensible common functionality, or because it requires a single standardized implementation.
+1. Is it widely needed? The new code must solve a problem that occurs often during the development of Bazel build rules. It is not sufficient that the new code is merely useful. Candidate code should generally have been proven to be necessary across several projects, either because it provides indispensable common functionality, or because it requires a single standardized implementation.
 
 1. Is its interface simpler than its implementation? A good abstraction provides a simple interface to a complex implementation, relieving the user from the burden of understanding. By contrast, a shallow abstraction provides little that the user could not easily have written out for themselves. If a function's doc comment is longer than its body, it's a good sign that the abstraction is too shallow.
 
@@ -132,3 +136,38 @@ then you probably forgot to load and call `bazel_skylib_workspace()` in your
 
 See the [maintaner's guide](docs/maintainers_guide.md) for instructions for
 cutting a new release.
+
+## Gazelle Plugin
+
+`bazel_skylib` ships with a [gazelle](https://github.com/bazelbuild/bazel-gazelle)
+plugin to generate `bzl_library` entries in build files. To use this, in your
+`WORKSPACE`:
+
+```starlark
+load("@bazel_skylib_gazelle_plugin//:workspace.bzl", "bazel_skylib_gazelle_plugin_workspace")
+
+bazel_skylib_gazelle_plugin_workspace()
+
+load("@bazel_skylib_gazelle_plugin//:setup.bzl", "bazel_skylib_gazelle_plugin_setup")
+
+bazel_skylib_gazelle_plugin_setup()
+```
+
+You may then include the plugin using code similar to this in your `BUILD.bazel`
+file:
+
+```starlark
+load("@bazel_gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle", "gazelle_binary")
+
+gazelle(
+    name = "gazelle",
+    gazelle = ":gazelle_bin",
+)
+
+gazelle_binary(
+    name = "gazelle_bin",
+    languages = DEFAULT_LANGUAGES + [
+        "@bazel_skylib_gazelle_plugin//bzl",
+    ],
+)
+```

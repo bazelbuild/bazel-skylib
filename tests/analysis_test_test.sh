@@ -41,7 +41,7 @@ else
 fi
 # --- end runfiles.bash initialization ---
 
-source "$(rlocation bazel_skylib/tests/unittest.bash)" \
+source "$(rlocation $TEST_WORKSPACE/tests/unittest.bash)" \
   || { echo "Could not source bazel_skylib/tests/unittest.bash" >&2; exit 1; }
 
 function create_pkg() {
@@ -58,7 +58,22 @@ EOF
 exports_files(["*.bzl"])
 EOF
 
-  ln -sf "$(rlocation bazel_skylib/rules/analysis_test.bzl)" rules/analysis_test.bzl
+  mkdir -p lib
+  cat > lib/BUILD <<EOF
+exports_files(["*.bzl"])
+EOF
+  cat > lib/types.bzl <<EOF
+_a_tuple_type = type(())
+
+def _is_tuple(v):
+    return type(v) == _a_tuple_type
+
+types = struct(
+    is_tuple = _is_tuple,
+)
+EOF
+
+  ln -sf "$(rlocation $TEST_WORKSPACE/rules/analysis_test.bzl)" rules/analysis_test.bzl
 
   mkdir -p fakerules
   cat > fakerules/rules.bzl <<EOF

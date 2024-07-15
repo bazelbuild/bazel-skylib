@@ -6,6 +6,51 @@ Partial function objects allow some parameters are bound before the call.
 
 Similar to https://docs.python.org/3/library/functools.html#functools.partial.
 
+<a id="partial.call"></a>
+
+## partial.call
+
+<pre>
+partial.call(<a href="#partial.call-partial">partial</a>, <a href="#partial.call-args">args</a>, <a href="#partial.call-kwargs">kwargs</a>)
+</pre>
+
+Calls a partial created using `make`.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="partial.call-partial"></a>partial |  The partial to be called.   |  none |
+| <a id="partial.call-args"></a>args |  Additional positional arguments to be appended to the ones given to make.   |  none |
+| <a id="partial.call-kwargs"></a>kwargs |  Additional keyword arguments to augment and override the ones given to make.   |  none |
+
+**RETURNS**
+
+Whatever the function in the partial returns.
+
+
+<a id="partial.is_instance"></a>
+
+## partial.is_instance
+
+<pre>
+partial.is_instance(<a href="#partial.is_instance-v">v</a>)
+</pre>
+
+Returns True if v is a partial created using `make`.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="partial.is_instance-v"></a>v |  The value to check.   |  none |
+
+**RETURNS**
+
+True if v was created by `make`, False otherwise.
+
 
 <a id="partial.make"></a>
 
@@ -121,51 +166,5 @@ partial.call(func, x=2)
 **RETURNS**
 
 A new `partial` that can be called using `call`
-
-
-<a id="partial.call"></a>
-
-## partial.call
-
-<pre>
-partial.call(<a href="#partial.call-partial">partial</a>, <a href="#partial.call-args">args</a>, <a href="#partial.call-kwargs">kwargs</a>)
-</pre>
-
-Calls a partial created using `make`.
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="partial.call-partial"></a>partial |  The partial to be called.   |  none |
-| <a id="partial.call-args"></a>args |  Additional positional arguments to be appended to the ones given to make.   |  none |
-| <a id="partial.call-kwargs"></a>kwargs |  Additional keyword arguments to augment and override the ones given to make.   |  none |
-
-**RETURNS**
-
-Whatever the function in the partial returns.
-
-
-<a id="partial.is_instance"></a>
-
-## partial.is_instance
-
-<pre>
-partial.is_instance(<a href="#partial.is_instance-v">v</a>)
-</pre>
-
-Returns True if v is a partial created using `make`.
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="partial.is_instance-v"></a>v |  The value to check.   |  none |
-
-**RETURNS**
-
-True if v was created by `make`, False otherwise.
 
 
