@@ -60,6 +60,9 @@ bzl_library(
 bzl_library(
     name = "bzl_library",
     srcs = ["bzl_library.bzl"],
+    deps = [
+        "//rules/private:bzl_library",
+    ],
 )
 
 bzl_library(
