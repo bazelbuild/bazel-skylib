@@ -49,6 +49,17 @@ bzl_library(
     srcs = ["maprule_util.bzl"],
 )
 
+filegroup(
+    name = "test_deps",
+    testonly = True,
+    srcs = [
+        "BUILD",
+    ] + glob(["*.bzl"]),
+    visibility = [
+        "//rules:__pkg__",
+    ],
+)
+
 # The files needed for distribution
 filegroup(
     name = "distribution",
