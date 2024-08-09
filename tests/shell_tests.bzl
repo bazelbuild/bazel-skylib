@@ -14,8 +14,8 @@
 
 """Unit tests for shell.bzl."""
 
+load("@rules_testing//lib:unittest.bzl", "asserts", "unittest")
 load("//lib:shell.bzl", "shell")
-load("//lib:unittest.bzl", "asserts", "unittest")
 
 def _shell_array_literal_test(ctx):
     """Unit tests for shell.array_literal."""
