@@ -1,44 +1,31 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
+bool check(const char *var, const char *expected = nullptr);
+
+int main() {
+  bool ok = true;
+  ok = ok && check("TEST_ENV_VAR", "test_env_var_value");
 #ifdef _WIN32
-#define OS_VAR "APPDATA"
-#define strncasecmp _strnicmp
+  ok = ok && check("APPDATA");
 #else
-#define OS_VAR "HOME"
+  ok = ok && check("HOME");
 #endif
+  ok =
+      ok && check("TEST_ENV_VAR_WITH_EXPANSION", "|tests/native_binary/BUILD|");
+  return ok ? 0 : 1;
+}
 
-enum vars_to_be_found {
-  test_env_var = 0,
-  inherited,
-  test_env_var_with_expansion,
-  last,
-};
-
-int main(int argc, char **argv, char **envp) {
-  const char* expected[last] = {
-    "TEST_ENV_VAR=test_env_var_value",
-    OS_VAR "=",
-    "TEST_ENV_VAR_WITH_EXPANSION=|tests/native_binary/BUILD|",
-  };
-  for (char **env = envp; *env != NULL; ++env) {
-    printf("%s\n", *env);
-    if (expected[test_env_var] && strcmp(*env, expected[test_env_var]) == 0) {
-      expected[test_env_var] = nullptr;
-    }
-    if (expected[inherited] && strncasecmp(*env, expected[inherited], strlen(expected[inherited])) == 0) {
-      expected[inherited] = nullptr;
-    }
-    if (expected[test_env_var_with_expansion] && strcmp(*env, expected[test_env_var_with_expansion]) == 0) {
-      expected[test_env_var_with_expansion] = nullptr;
-    }
+bool check(const char *var, const char *expected) {
+  const char *actual = getenv(var);
+  if (actual == nullptr) {
+    fprintf(stderr, "expected %s\n", var);
+    return false;
   }
-  auto return_status = 0;
-  for (auto still_expected : expected) {
-    if (still_expected) {
-      fprintf(stderr, "expected %s\n", still_expected);
-      return_status = 1;
-    }
+  if (expected && strcmp(actual, expected) != 0) {
+    fprintf(stderr, "expected %s=%s, got %s\n", var, expected, actual);
+    return false;
   }
-  return return_status;
+  return true;
 }
