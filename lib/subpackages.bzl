@@ -62,7 +62,10 @@ def _all(exclude = [], allow_empty = False, fully_qualified = True):
     return subs
 
 def _fully_qualified(relative_path):
-    return "//%s/%s" % (native.package_name(), relative_path)
+    package_name = native.package_name()
+    if package_name:
+        return "//%s/%s" % (package_name, relative_path)
+    return "//" + relative_path
 
 def _exists(relative_path):
     """Checks to see if relative_path is a direct subpackage of the current package.

@@ -68,7 +68,9 @@ filegroup(
     testonly = True,
     srcs = [
         "BUILD",
+        "//rules/private:test_deps",
     ] + glob(["*.bzl"]),
+    visibility = ["//:__subpackages__"],  # Needs skylib's root BUILD file for default_applicable_licenses
 )
 
 # The files needed for distribution
