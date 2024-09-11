@@ -54,6 +54,7 @@ workspace(name = 'bazel_skylib')
 load("//lib:unittest.bzl", "register_unittest_toolchains")
 register_unittest_toolchains()
 EOF
+  touch WORKSPACE.bzlmod
   cat > MODULE.bazel <<EOF
 module(name="bazel_skylib_test", repo_name="bazel_skylib")
 bazel_dep(name = "platforms", version = "0.0.10")
