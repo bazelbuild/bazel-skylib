@@ -45,7 +45,7 @@ function import_diff_test() {
   mkdir -p "${repo}/rules"
   mkdir -p "${repo}/lib"
   touch "${repo}/lib/BUILD"
-  touch "${repo}/WORKSPACE"
+  touch "${repo}/MODULE.bazel"
   ln -sf "$(rlocation $TEST_WORKSPACE/rules/diff_test.bzl)" \
          "${repo}/rules/diff_test.bzl"
   ln -sf "$(rlocation $TEST_WORKSPACE/lib/shell.bzl)" \
@@ -59,7 +59,7 @@ function assert_simple_diff_test() {
   local -r subdir="$3"
 
   import_diff_test "$ws"
-  touch "$ws/WORKSPACE"
+  touch "$ws/MODULE.bazel"
   mkdir -p "$ws/$subdir"
   cat >"$ws/${subdir}BUILD" <<'eof'
 load("//rules:diff_test.bzl", "diff_test")
@@ -96,7 +96,8 @@ function assert_from_ext_repo() {
   # Import the rule to an external repository.
   import_diff_test "$ws/bzl"
   mkdir -p "$ws/ext1/foo" "$ws/main/ext1/foo" "$ws/ext2/foo" "$ws/main/ext2/foo"
-  cat >"$ws/main/WORKSPACE" <<'eof'
+  cat >"$ws/main/MODULE.bazel" <<'eof'
+local_repository = use_repo_rule("@bazel_tools//tools/build_defs/repo:local.bzl", "local_repository")
 local_repository(
     name = "bzl",
     path = "../bzl",
@@ -114,7 +115,7 @@ local_repository(
 eof
 
   # @ext1 has source files
-  touch "$ws/ext1/WORKSPACE"
+  touch "$ws/ext1/MODULE.bazel"
   echo 'exports_files(["foo.txt"])' >"$ws/ext1/foo/BUILD"
   echo 'foo' > "$ws/ext1/foo/foo.txt"
 
@@ -123,7 +124,7 @@ eof
   echo 'not foo' > "$ws/main/ext1/foo/foo.txt"
 
   # @ext2 has generated files
-  touch "$ws/ext2/WORKSPACE"
+  touch "$ws/ext2/MODULE.bazel"
   cat >"$ws/ext2/foo/BUILD" <<'eof'
 genrule(
     name = "gen",
@@ -181,17 +182,17 @@ eof
   (cd "$ws/main" && \
    bazel test ${flags} //:different1 --test_output=errors 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
-  expect_log 'FAIL: files "external/ext1/foo/foo.txt" and "external/ext2/foo/bar.txt" differ'
+  expect_log 'FAIL: files "external/+_repo_rules+ext1/foo/foo.txt" and "external/+_repo_rules+ext2/foo/bar.txt" differ'
 
   (cd "$ws/main" && \
    bazel test ${flags} //:different2 --test_output=errors 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
-  expect_log 'FAIL: files "external/ext1/foo/foo.txt" and "ext1/foo/foo.txt" differ'
+  expect_log 'FAIL: files "external/+_repo_rules+ext1/foo/foo.txt" and "ext1/foo/foo.txt" differ'
 
   (cd "$ws/main" && \
    bazel test ${flags} //:different3 --test_output=errors 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
-  expect_log 'FAIL: files "ext2/foo/foo.txt" and "external/ext2/foo/foo.txt" differ'
+  expect_log 'FAIL: files "ext2/foo/foo.txt" and "external/+_repo_rules+ext2/foo/foo.txt" differ'
 }
 
 function test_simple_diff_test_with_legacy_external_runfiles() {
@@ -234,7 +235,7 @@ function test_failure_message() {
   local -r ws="${TEST_TMPDIR}/${FUNCNAME[0]}"
 
   import_diff_test "$ws"
-  touch "$ws/WORKSPACE"
+  touch "$ws/MODULE.bazel"
   cat >"$ws/BUILD" <<'eof'
 load("//rules:diff_test.bzl", "diff_test")
 
