@@ -49,7 +49,11 @@ function create_pkg() {
   local -r pkg="$1"
   mkdir -p "$pkg"
   cd "$pkg"
-
+  cat > WORKSPACE <<EOF
+workspace(name = 'bazel_skylib')
+load("//lib:unittest.bzl", "register_unittest_toolchains")
+register_unittest_toolchains()
+EOF
   cat > MODULE.bazel <<EOF
 module(name="bazel_skylib_test", repo_name="bazel_skylib")
 bazel_dep(name = "platforms", version = "0.0.10")
