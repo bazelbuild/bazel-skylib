@@ -72,9 +72,11 @@ tasks:
     build_flags:
       <<: *reusable_build_flags
       ? "--noenable_bzlmod"
+      ? "--enable_workspace"
     test_flags:
       <<: *reusable_test_flags
       ? "--noenable_bzlmod"
+      ? "--enable_workspace"
     build_targets:
       <<: *reusable_targets
       # rules_pkg fails with --noenable_bzlmod
