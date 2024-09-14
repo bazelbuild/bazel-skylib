@@ -152,6 +152,13 @@ func (*bzlLibraryLang) Resolve(c *config.Config, ix *resolve.RuleIndex, rc *repo
 
 	deps := make([]string, 0, len(imports))
 	for _, imp := range imports {
+
+		if l, ok := resolve.FindRuleWithOverride(c, resolve.ImportSpec{Lang: languageName, Imp: imp}, languageName); ok {
+			depLabel := l.Rel(from.Repo, from.Pkg)
+			deps = append(deps, depLabel.String())
+			continue
+		}
+
 		impLabel, err := label.Parse(imp)
 		if err != nil {
 			log.Printf("%s: import of %q is invalid: %v", from.String(), imp, err)
