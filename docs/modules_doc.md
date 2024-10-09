@@ -2,6 +2,80 @@
 
 Skylib module containing utilities for Bazel modules and module extensions.
 
+<a id="modules.adjust_main_repo_prefix"></a>
+
+## modules.adjust_main_repo_prefix
+
+<pre>
+modules.adjust_main_repo_prefix(<a href="#modules.adjust_main_repo_prefix-target_pattern">target_pattern</a>)
+</pre>
+
+Updates the main repo prefix to match the current Bazel version.
+
+Used to automatically update strings representing include/exclude target
+patterns so that they match actual main repo target Labels correctly. The
+main repo prefix will be "@//" for Bazel < 7.1.0, and "@@//" for Bazel >=
+7.1.0 under Bzlmod.
+
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="modules.adjust_main_repo_prefix-target_pattern"></a>target_pattern |  a string used to match a BUILD target pattern   |  none |
+
+**RETURNS**
+
+the string with any main repository prefix updated to match the current
+      Bazel version
+
+
+<a id="modules.apparent_repo_label_string"></a>
+
+## modules.apparent_repo_label_string
+
+<pre>
+modules.apparent_repo_label_string(<a href="#modules.apparent_repo_label_string-label">label</a>)
+</pre>
+
+Return a Label string starting with its apparent repo name.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="modules.apparent_repo_label_string-label"></a>label |  a Label instance   |  none |
+
+**RETURNS**
+
+str(label) with its canonical repository name replaced with its apparent
+      repository name
+
+
+<a id="modules.apparent_repo_name"></a>
+
+## modules.apparent_repo_name
+
+<pre>
+modules.apparent_repo_name(<a href="#modules.apparent_repo_name-label_or_name">label_or_name</a>)
+</pre>
+
+Return a repository's apparent repository name.
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="modules.apparent_repo_name-label_or_name"></a>label_or_name |  a Label or repository name string   |  none |
+
+**RETURNS**
+
+The apparent repository name
+
+
 <a id="modules.as_extension"></a>
 
 ## modules.as_extension
