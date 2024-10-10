@@ -29,23 +29,25 @@ def _impl_rule(ctx):
     )
     runfiles = ctx.runfiles(files = ctx.files.data)
 
-    # Bazel 4.x LTS does not support `merge_all`.
-    # TODO: remove `merge` branch once we drop support for Bazel 4.x.
-    if hasattr(runfiles, "merge_all"):
-        runfiles = runfiles.merge_all([
-            d[DefaultInfo].default_runfiles
-            for d in ctx.attr.data + [ctx.attr.src]
-        ])
-    else:
-        for d in ctx.attr.data:
-            runfiles = runfiles.merge(d[DefaultInfo].default_runfiles)
-        runfiles = runfiles.merge(ctx.attr.src[DefaultInfo].default_runfiles)
+    runfiles = runfiles.merge_all([
+        d[DefaultInfo].default_runfiles
+        for d in ctx.attr.data + [ctx.attr.src]
+    ])
 
-    return DefaultInfo(
-        executable = out,
-        files = depset([out]),
-        runfiles = runfiles,
-    )
+    targets = [ctx.attr.src] + ctx.attr.data
+    env = {k: ctx.expand_location(v, targets) for k, v in ctx.attr.env.items()}
+
+    return [
+        DefaultInfo(
+            executable = out,
+            files = depset([out]),
+            runfiles = runfiles,
+        ),
+        RunEnvironmentInfo(
+            environment = env,
+            inherited_environment = getattr(ctx.attr, "env_inherit", []),
+        ),
+    ]
 
 _ATTRS = {
     "src": attr.label(
@@ -70,6 +72,12 @@ _ATTRS = {
               "name.exe. (We add .exe to the name by default because it's " +
               "required on Windows and tolerated on other platforms.)",
     ),
+    "env": attr.string_dict(
+        doc = "additional environment variables to set when the target is executed by " +
+              "`bazel`. Values are subject to location expansion for labels in `src` and " +
+              "`data`.",
+        default = {},
+    ),
 }
 
 native_binary = rule(
@@ -86,7 +94,14 @@ in genrule.tools for example. You can also augment the binary with runfiles.
 
 native_test = rule(
     implementation = _impl_rule,
-    attrs = _ATTRS,
+    attrs = dict(
+        _ATTRS,
+        env_inherit = attr.string_list(
+            doc = "additional environment variables to inherit from the external " +
+                  "environment when the test is executed by `bazel test`. ",
+            default = [],
+        ),
+    ),
     test = True,
     doc = """
 Wraps a pre-built binary or script with a test rule.
