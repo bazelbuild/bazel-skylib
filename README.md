@@ -61,7 +61,7 @@ s = shell.quote(p)
 * [analysis_test](docs/analysis_test_doc.md)
 * [build_test](docs/build_test_doc.md)
 * [common_settings](docs/common_settings_doc.md)
-* [directories](docs/copy_directory_doc.md)
+* directories
     * [directory](docs/directory_doc.md)
     * [directory_glob](docs/directory_glob_doc.md)
     * [subdirectory](docs/directory_subdirectory_doc.md)
