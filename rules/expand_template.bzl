@@ -16,10 +16,21 @@
 """
 
 def _expand_template_impl(ctx):
+    expanded_substitutions = {}
+    for key, value in ctx.attr.substitutions.items():
+        expanded_substitutions[key] = ctx.expand_make_variables(
+            "substitutions",
+            ctx.expand_location(
+                value,
+                targets = ctx.attr.data,
+            ),
+            {},
+        )
+
     ctx.actions.expand_template(
         template = ctx.file.template,
         output = ctx.outputs.out,
-        substitutions = ctx.attr.substitutions,
+        substitutions = expanded_substitutions,
     )
 
 expand_template = rule(
@@ -32,6 +43,11 @@ substitutions, and replaces them with the corresponding values.
 There is no special syntax for the keys. To avoid conflicts, you would need to
 explicitly add delimiters to the key strings, for example "{KEY}" or "@KEY@".""",
     attrs = {
+        "data": attr.label_list(
+            allow_files = True,
+            doc = "data dependencies. See" +
+                  " https://bazel.build/reference/be/common-definitions#typical.data",
+        ),
         "template": attr.label(
             mandatory = True,
             allow_single_file = True,
