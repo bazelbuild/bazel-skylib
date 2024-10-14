@@ -10,12 +10,12 @@ Skylib module containing utilities for Bazel modules and module extensions.
 modules.adjust_main_repo_prefix(<a href="#modules.adjust_main_repo_prefix-target_pattern">target_pattern</a>)
 </pre>
 
-Updates the main repo prefix to match the current Bazel version.
+Updates the main repository prefix to match the current Bazel version.
 
-Used to automatically update strings representing include/exclude target
-patterns so that they match actual main repo target Labels correctly. The
-main repo prefix will be "@//" for Bazel < 7.1.0, and "@@//" for Bazel >=
-7.1.0 under Bzlmod.
+The main repo prefix will be "@//" for Bazel < 7.1.0, and "@@//" for Bazel
+>= 7.1.0 under Bzlmod. This macro automatically updates strings representing
+include/exclude target patterns so that they match actual main repository
+target Labels correctly.
 
 
 **PARAMETERS**

@@ -53,34 +53,46 @@ def _apparent_repo_name_test(ctx):
     env = unittest.begin(ctx)
 
     asserts.equals(
-        env, "", modules.apparent_repo_name(""),
+        env,
+        "",
+        modules.apparent_repo_name(""),
         msg = "Handles the empty string as input",
     )
 
     asserts.equals(
-        env, "foo", modules.apparent_repo_name("foo"),
+        env,
+        "foo",
+        modules.apparent_repo_name("foo"),
         msg = (
             "Return the original name unchanged if it doesn't start with `@`.",
         ),
     )
 
     asserts.equals(
-        env, "foo", modules.apparent_repo_name("@foo"),
+        env,
+        "foo",
+        modules.apparent_repo_name("@foo"),
         msg = "Return the original name without `@` if already apparent.",
     )
 
     asserts.equals(
-        env, "foo", modules.apparent_repo_name(Label("@foo").repo_name),
+        env,
+        "foo",
+        modules.apparent_repo_name(Label("@foo").repo_name),
         msg = "Return the apparent name from a canonical name string.",
     )
 
     asserts.equals(
-        env, "", modules.apparent_repo_name(Label("@@//:all")),
+        env,
+        "",
+        modules.apparent_repo_name(Label("@@//:all")),
         msg = "Returns the empty string for a main repository Label.",
     )
 
     asserts.equals(
-        env, "", modules.apparent_repo_name(Label("@bazel_skylib//:all")),
+        env,
+        "",
+        modules.apparent_repo_name(Label("@bazel_skylib//:all")),
         msg = " ".join([
             "Returns the empty string for a Label containing the main",
             "repository's module name.",
@@ -88,12 +100,16 @@ def _apparent_repo_name_test(ctx):
     )
 
     asserts.equals(
-        env, "foo", modules.apparent_repo_name(Label("@foo")),
+        env,
+        "foo",
+        modules.apparent_repo_name(Label("@foo")),
         msg = "Return the apparent name from a Label.",
     )
 
     asserts.equals(
-        env, "rules_pkg", modules.apparent_repo_name(Label("@rules_pkg")),
+        env,
+        "rules_pkg",
+        modules.apparent_repo_name(Label("@rules_pkg")),
         msg = " ".join([
             "Top level module repos have the canonical name delimiter at the",
             "end. Therefore, this should not return the empty string, but the",
@@ -107,12 +123,14 @@ def _apparent_repo_name_test(ctx):
         modules.apparent_repo_name(Label("@io_bazel_stardoc")),
         msg = " ".join([
             "Label values will already map bazel_dep repo_names to",
-            "actual repo names under Bzlmod (no-op under WORKSPACE)."
-        ])
+            "actual repo names under Bzlmod (no-op under WORKSPACE).",
+        ]),
     )
 
     asserts.equals(
-        env, "foo", modules.apparent_repo_name("foo+1.2.3"),
+        env,
+        "foo",
+        modules.apparent_repo_name("foo+1.2.3"),
         msg = "Ignores version numbers in canonical repo names",
     )
 
@@ -126,13 +144,17 @@ def _apparent_repo_label_string_test(ctx):
 
     main_repo = str(Label("//:all"))
     asserts.equals(
-        env, main_repo, modules.apparent_repo_label_string(Label("//:all")),
+        env,
+        main_repo,
+        modules.apparent_repo_label_string(Label("//:all")),
         msg = "Returns top level target with leading `@` or `@@`",
     )
 
     main_module_label = Label("@bazel_skylib//:all")
     asserts.equals(
-        env, main_repo, modules.apparent_repo_label_string(main_module_label),
+        env,
+        main_repo,
+        modules.apparent_repo_label_string(main_module_label),
         msg = " ".join([
             "Returns top level target with leading `@` or `@@`",
             "for a Label containing the main module's name",
@@ -141,7 +163,9 @@ def _apparent_repo_label_string_test(ctx):
 
     rules_pkg = "@rules_pkg//:all"
     asserts.equals(
-        env, rules_pkg, modules.apparent_repo_label_string(Label(rules_pkg)),
+        env,
+        rules_pkg,
+        modules.apparent_repo_label_string(Label(rules_pkg)),
         msg = "Returns original repo name",
     )
 
@@ -158,7 +182,7 @@ def _apparent_repo_label_string_test(ctx):
     return unittest.end(env)
 
 apparent_repo_label_string_test = unittest.make(
-    _apparent_repo_label_string_test
+    _apparent_repo_label_string_test,
 )
 
 def _adjust_main_repo_prefix_test(ctx):
@@ -167,25 +191,31 @@ def _adjust_main_repo_prefix_test(ctx):
 
     expected = modules.main_repo_prefix + ":all"
     asserts.equals(
-        env, expected, modules.adjust_main_repo_prefix("@//:all"),
+        env,
+        expected,
+        modules.adjust_main_repo_prefix("@//:all"),
         msg = "Normalizes a target pattern starting with `@//`.",
     )
 
     asserts.equals(
-        env, expected, modules.adjust_main_repo_prefix("@@//:all"),
+        env,
+        expected,
+        modules.adjust_main_repo_prefix("@@//:all"),
         msg = "Normalizes a target pattern starting with `@@//`.",
     )
 
     original = "@not_the_main_repo"
     asserts.equals(
-        env, original, modules.adjust_main_repo_prefix(original),
+        env,
+        original,
+        modules.adjust_main_repo_prefix(original),
         msg = "Returns non main repo target patterns unchanged.",
     )
 
     return unittest.end(env)
 
 adjust_main_repo_prefix_test = unittest.make(
-    _adjust_main_repo_prefix_test
+    _adjust_main_repo_prefix_test,
 )
 
 # buildifier: disable=unnamed-macro

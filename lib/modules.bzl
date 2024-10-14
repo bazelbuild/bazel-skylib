@@ -187,5 +187,5 @@ modules = struct(
     apparent_repo_name = _apparent_repo_name,
     apparent_repo_label_string = _apparent_repo_label_string,
     main_repo_prefix = _main_repo_prefix,
-    adjust_main_repo_prefix = _adjust_main_repo_prefix
+    adjust_main_repo_prefix = _adjust_main_repo_prefix,
 )
