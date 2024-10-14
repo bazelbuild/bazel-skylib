@@ -112,6 +112,33 @@ imported via `use_repo`. The extension is marked as reproducible if supported by
 version of Bazel and thus doesn't result in a lockfile entry.
 
 
+<a id="modules.repo_name"></a>
+
+## modules.repo_name
+
+<pre>
+modules.repo_name(<a href="#modules.repo_name-label_or_name">label_or_name</a>)
+</pre>
+
+Utility to provide Label compatibility with Bazel 5.
+
+Under Bazel 5, calls `Label.workspace_name`. Otherwise calls
+`Label.repo_name`.
+
+
+**PARAMETERS**
+
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="modules.repo_name-label_or_name"></a>label_or_name |  a Label or repository name string   |  none |
+
+**RETURNS**
+
+The repository name returned directly from the Label API, or the
+      original string if not a Label
+
+
 <a id="modules.use_all_repos"></a>
 
 ## modules.use_all_repos

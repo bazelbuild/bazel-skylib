@@ -78,14 +78,14 @@ def _apparent_repo_name_test(ctx):
     asserts.equals(
         env,
         "foo",
-        modules.apparent_repo_name(Label("@foo").repo_name),
+        modules.apparent_repo_name(modules.repo_name(Label("@foo"))),
         msg = "Return the apparent name from a canonical name string.",
     )
 
     asserts.equals(
         env,
         "",
-        modules.apparent_repo_name(Label("@@//:all")),
+        modules.apparent_repo_name(Label("//:all")),
         msg = "Returns the empty string for a main repository Label.",
     )
 

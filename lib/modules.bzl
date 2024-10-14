@@ -114,6 +114,24 @@ def _use_all_repos(module_ctx, reproducible = False):
         **extension_metadata_kwargs
     )
 
+def _repo_name(label_or_name):
+    """Utility to provide Label compatibility with Bazel 5.
+
+    Under Bazel 5, calls `Label.workspace_name`. Otherwise calls
+    `Label.repo_name`.
+
+    Args:
+        label_or_name: a Label or repository name string
+
+    Returns:
+        The repository name returned directly from the Label API, or the
+            original string if not a Label
+    """
+    if hasattr(label_or_name, "repo_name"):
+        return label_or_name.repo_name
+
+    return getattr(label_or_name, "workspace_name", label_or_name)
+
 def _apparent_repo_name(label_or_name):
     """Return a repository's apparent repository name.
 
@@ -123,7 +141,7 @@ def _apparent_repo_name(label_or_name):
     Returns:
         The apparent repository name
     """
-    repo_name = getattr(label_or_name, "repo_name", label_or_name).lstrip("@")
+    repo_name = _repo_name(label_or_name).lstrip("@")
     delimiter_indices = []
 
     # Bazed on this pattern from the Bazel source:
@@ -153,13 +171,14 @@ def _apparent_repo_label_string(label):
         str(label) with its canonical repository name replaced with its apparent
             repository name
     """
-    if len(label.repo_name) == 0:
+    repo_name = _repo_name(label)
+    if len(repo_name) == 0:
         return str(label)
 
     label_str = "@" + str(label).lstrip("@")
-    return label_str.replace(label.repo_name, _apparent_repo_name(label))
+    return label_str.replace(repo_name, _apparent_repo_name(label))
 
-_main_repo_prefix = str(Label("@@//:all")).split(":")[0]
+_main_repo_prefix = str(Label("//:all")).split(":")[0]
 
 def _adjust_main_repo_prefix(target_pattern):
     """Updates the main repository prefix to match the current Bazel version.
@@ -184,6 +203,7 @@ def _adjust_main_repo_prefix(target_pattern):
 modules = struct(
     as_extension = _as_extension,
     use_all_repos = _use_all_repos,
+    repo_name = _repo_name,
     apparent_repo_name = _apparent_repo_name,
     apparent_repo_label_string = _apparent_repo_label_string,
     main_repo_prefix = _main_repo_prefix,
