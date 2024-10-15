@@ -2,29 +2,6 @@
 
 Skylib module containing utilities for Bazel modules and module extensions.
 
-<a id="modules.apparent_repo_label_string"></a>
-
-## modules.apparent_repo_label_string
-
-<pre>
-modules.apparent_repo_label_string(<a href="#modules.apparent_repo_label_string-label">label</a>)
-</pre>
-
-Return a Label string starting with its apparent repo name.
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="modules.apparent_repo_label_string-label"></a>label |  a Label instance   |  none |
-
-**RETURNS**
-
-str(label) with its canonical repository name replaced with its apparent
-      repository name
-
-
 <a id="modules.apparent_repo_name"></a>
 
 ## modules.apparent_repo_name

@@ -147,26 +147,8 @@ def _apparent_repo_name(label_or_name):
 
     return repo_name[delimiter_indices[-1] + 1:]
 
-def _apparent_repo_label_string(label):
-    """Return a Label string starting with its apparent repo name.
-
-    Args:
-        label: a Label instance
-
-    Returns:
-        str(label) with its canonical repository name replaced with its apparent
-            repository name
-    """
-    repo_name = getattr(label, _repo_attr).lstrip("@")
-    if len(repo_name) == 0:
-        return str(label)
-
-    label_str = "@" + str(label).lstrip("@")
-    return label_str.replace(repo_name, _apparent_repo_name(label))
-
 modules = struct(
     as_extension = _as_extension,
     use_all_repos = _use_all_repos,
     apparent_repo_name = _apparent_repo_name,
-    apparent_repo_label_string = _apparent_repo_label_string,
 )

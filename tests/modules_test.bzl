@@ -143,55 +143,6 @@ def _apparent_repo_name_test(ctx):
 
 apparent_repo_name_test = unittest.make(_apparent_repo_name_test)
 
-def _apparent_repo_label_string_test(ctx):
-    """Unit tests for modules.apparent_repo_label_string."""
-    env = unittest.begin(ctx)
-
-    main_repo = str(Label("//:all"))
-    asserts.equals(
-        env,
-        main_repo,
-        modules.apparent_repo_label_string(Label("//:all")),
-        msg = "Returns top level target with leading `@` or `@@`",
-    )
-
-    main_module_label = Label("@bazel_skylib//:all")
-    asserts.equals(
-        env,
-        main_repo,
-        modules.apparent_repo_label_string(main_module_label),
-        msg = " ".join([
-            "Returns top level target with leading `@` or `@@`",
-            "for a Label containing the main module's name",
-        ]),
-    )
-
-    rules_pkg = "@rules_pkg//:all"
-    asserts.equals(
-        env,
-        rules_pkg,
-        modules.apparent_repo_label_string(Label(rules_pkg)),
-        msg = "Returns original repo name",
-    )
-
-    asserts.equals(
-        env,
-        "@%s//:all" % (
-            "stardoc" if _is_bzlmod_enabled else "io_bazel_stardoc"
-        ),
-        modules.apparent_repo_label_string(Label("@io_bazel_stardoc//:all")),
-        msg = " ".join([
-            "Returns the actual module name instead of",
-            "repo_name from bazel_dep() (no-op under WORKSPACE).",
-        ]),
-    )
-
-    return unittest.end(env)
-
-apparent_repo_label_string_test = unittest.make(
-    _apparent_repo_label_string_test,
-)
-
 # buildifier: disable=unnamed-macro
 def modules_test_suite():
     """Creates the tests for modules.bzl if Bzlmod is enabled."""
@@ -199,7 +150,6 @@ def modules_test_suite():
     unittest.suite(
         "modules_tests",
         apparent_repo_name_test,
-        apparent_repo_label_string_test,
     )
 
     if not _is_bzlmod_enabled:
