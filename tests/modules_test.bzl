@@ -18,6 +18,8 @@ load("//lib:modules.bzl", "modules")
 load("//lib:unittest.bzl", "asserts", "unittest")
 load("//rules:build_test.bzl", "build_test")
 
+_is_bzlmod_enabled = str(Label("//tests:module_tests.bzl")).startswith("@@")
+
 def _repo_rule_impl(repository_ctx):
     repository_ctx.file("WORKSPACE")
     repository_ctx.file("BUILD", """exports_files(["hello"])""")
@@ -73,10 +75,15 @@ def _apparent_repo_name_test(ctx):
         msg = "Return the original name without `@` if already apparent.",
     )
 
+    foo_label = Label("@foo")
+    foo_canonical_name = getattr(
+        foo_label,
+        "repo_name" if hasattr(foo_label, "repo_name") else "workspace_name",
+    )
     asserts.equals(
         env,
         "foo",
-        modules.apparent_repo_name(modules.repo_name(Label("@foo"))),
+        modules.apparent_repo_name(foo_canonical_name),
         msg = "Return the apparent name from a canonical name string.",
     )
 
@@ -117,7 +124,7 @@ def _apparent_repo_name_test(ctx):
 
     asserts.equals(
         env,
-        "stardoc" if modules.is_bzlmod_enabled else "io_bazel_stardoc",
+        "stardoc" if _is_bzlmod_enabled else "io_bazel_stardoc",
         modules.apparent_repo_name(Label("@io_bazel_stardoc")),
         msg = " ".join([
             "Label values will already map bazel_dep repo_names to",
@@ -170,7 +177,7 @@ def _apparent_repo_label_string_test(ctx):
     asserts.equals(
         env,
         "@%s//:all" % (
-            "stardoc" if modules.is_bzlmod_enabled else "io_bazel_stardoc"
+            "stardoc" if _is_bzlmod_enabled else "io_bazel_stardoc"
         ),
         modules.apparent_repo_label_string(Label("@io_bazel_stardoc//:all")),
         msg = " ".join([
@@ -185,39 +192,6 @@ apparent_repo_label_string_test = unittest.make(
     _apparent_repo_label_string_test,
 )
 
-def _adjust_main_repo_prefix_test(ctx):
-    """Unit tests for modules.apparent_repo_label_string."""
-    env = unittest.begin(ctx)
-
-    expected = modules.main_repo_prefix + ":all"
-    asserts.equals(
-        env,
-        expected,
-        modules.adjust_main_repo_prefix("@//:all"),
-        msg = "Normalizes a target pattern starting with `@//`.",
-    )
-
-    asserts.equals(
-        env,
-        expected,
-        modules.adjust_main_repo_prefix("@@//:all"),
-        msg = "Normalizes a target pattern starting with `@@//`.",
-    )
-
-    original = "@not_the_main_repo"
-    asserts.equals(
-        env,
-        original,
-        modules.adjust_main_repo_prefix(original),
-        msg = "Returns non main repo target patterns unchanged.",
-    )
-
-    return unittest.end(env)
-
-adjust_main_repo_prefix_test = unittest.make(
-    _adjust_main_repo_prefix_test,
-)
-
 # buildifier: disable=unnamed-macro
 def modules_test_suite():
     """Creates the tests for modules.bzl if Bzlmod is enabled."""
@@ -226,10 +200,9 @@ def modules_test_suite():
         "modules_tests",
         apparent_repo_name_test,
         apparent_repo_label_string_test,
-        adjust_main_repo_prefix_test,
     )
 
-    if not modules.is_bzlmod_enabled:
+    if not _is_bzlmod_enabled:
         return
 
     build_test(

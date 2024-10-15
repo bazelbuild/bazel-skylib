@@ -2,35 +2,6 @@
 
 Skylib module containing utilities for Bazel modules and module extensions.
 
-<a id="modules.adjust_main_repo_prefix"></a>
-
-## modules.adjust_main_repo_prefix
-
-<pre>
-modules.adjust_main_repo_prefix(<a href="#modules.adjust_main_repo_prefix-target_pattern">target_pattern</a>)
-</pre>
-
-Updates the main repository prefix to match the current Bazel version.
-
-The main repo prefix will be "@//" for Bazel < 7.1.0, and "@@//" for Bazel
->= 7.1.0 under Bzlmod. This macro automatically updates strings representing
-include/exclude target patterns so that they match actual main repository
-target Labels correctly.
-
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="modules.adjust_main_repo_prefix-target_pattern"></a>target_pattern |  a string used to match a BUILD target pattern   |  none |
-
-**RETURNS**
-
-the string with any main repository prefix updated to match the current
-      Bazel version
-
-
 <a id="modules.apparent_repo_label_string"></a>
 
 ## modules.apparent_repo_label_string
@@ -110,33 +81,6 @@ A module extension that generates the repositories instantiated by the given mac
 uses [`use_all_repos`](#use_all_repos) to indicate that all of those repositories should be
 imported via `use_repo`. The extension is marked as reproducible if supported by the current
 version of Bazel and thus doesn't result in a lockfile entry.
-
-
-<a id="modules.repo_name"></a>
-
-## modules.repo_name
-
-<pre>
-modules.repo_name(<a href="#modules.repo_name-label_or_name">label_or_name</a>)
-</pre>
-
-Utility to provide Label compatibility with Bazel 5.
-
-Under Bazel 5, calls `Label.workspace_name`. Otherwise calls
-`Label.repo_name`.
-
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="modules.repo_name-label_or_name"></a>label_or_name |  a Label or repository name string   |  none |
-
-**RETURNS**
-
-The repository name returned directly from the Label API, or the
-      original string if not a Label
 
 
 <a id="modules.use_all_repos"></a>

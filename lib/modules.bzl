@@ -114,23 +114,9 @@ def _use_all_repos(module_ctx, reproducible = False):
         **extension_metadata_kwargs
     )
 
-def _repo_name(label_or_name):
-    """Utility to provide Label compatibility with Bazel 5.
-
-    Under Bazel 5, calls `Label.workspace_name`. Otherwise calls
-    `Label.repo_name`.
-
-    Args:
-        label_or_name: a Label or repository name string
-
-    Returns:
-        The repository name returned directly from the Label API, or the
-            original string if not a Label
-    """
-    if hasattr(label_or_name, "repo_name"):
-        return label_or_name.repo_name
-
-    return getattr(label_or_name, "workspace_name", label_or_name)
+_repo_attr = (
+    "repo_name" if hasattr(Label("//:all"), "repo_name") else "workspace_name"
+)
 
 def _apparent_repo_name(label_or_name):
     """Return a repository's apparent repository name.
@@ -141,7 +127,7 @@ def _apparent_repo_name(label_or_name):
     Returns:
         The apparent repository name
     """
-    repo_name = _repo_name(label_or_name).lstrip("@")
+    repo_name = getattr(label_or_name, _repo_attr, label_or_name).lstrip("@")
     delimiter_indices = []
 
     # Bazed on this pattern from the Bazel source:
@@ -171,44 +157,16 @@ def _apparent_repo_label_string(label):
         str(label) with its canonical repository name replaced with its apparent
             repository name
     """
-    repo_name = _repo_name(label)
+    repo_name = getattr(label, _repo_attr).lstrip("@")
     if len(repo_name) == 0:
         return str(label)
 
     label_str = "@" + str(label).lstrip("@")
     return label_str.replace(repo_name, _apparent_repo_name(label))
 
-_is_bzlmod_enabled = str(Label("//:all")).startswith("@@")
-
-_main_repo_prefix = "@@//" if _is_bzlmod_enabled else "@//"
-
-def _adjust_main_repo_prefix(target_pattern):
-    """Updates the main repository prefix to match the current Bazel version.
-
-    The main repo prefix will be "@//" for Bazel < 7.1.0, and "@@//" for Bazel
-    >= 7.1.0 under Bzlmod. This macro automatically updates strings representing
-    include/exclude target patterns so that they match actual main repository
-    target Labels correctly.
-
-    Args:
-        target_pattern: a string used to match a BUILD target pattern
-
-    Returns:
-        the string with any main repository prefix updated to match the current
-            Bazel version
-    """
-    if target_pattern.startswith("@//") or target_pattern.startswith("@@//"):
-        return _main_repo_prefix + target_pattern.lstrip("@/")
-
-    return target_pattern
-
 modules = struct(
     as_extension = _as_extension,
     use_all_repos = _use_all_repos,
-    repo_name = _repo_name,
     apparent_repo_name = _apparent_repo_name,
     apparent_repo_label_string = _apparent_repo_label_string,
-    is_bzlmod_enabled = _is_bzlmod_enabled,
-    main_repo_prefix = _main_repo_prefix,
-    adjust_main_repo_prefix = _adjust_main_repo_prefix,
 )
