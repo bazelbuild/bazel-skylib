@@ -178,7 +178,9 @@ def _apparent_repo_label_string(label):
     label_str = "@" + str(label).lstrip("@")
     return label_str.replace(repo_name, _apparent_repo_name(label))
 
-_main_repo_prefix = str(Label("//:all")).split(":")[0]
+_is_bzlmod_enabled = str(Label("//:all")).startswith("@@")
+
+_main_repo_prefix = "@@//" if _is_bzlmod_enabled else "@//"
 
 def _adjust_main_repo_prefix(target_pattern):
     """Updates the main repository prefix to match the current Bazel version.
@@ -206,6 +208,7 @@ modules = struct(
     repo_name = _repo_name,
     apparent_repo_name = _apparent_repo_name,
     apparent_repo_label_string = _apparent_repo_label_string,
+    is_bzlmod_enabled = _is_bzlmod_enabled,
     main_repo_prefix = _main_repo_prefix,
     adjust_main_repo_prefix = _adjust_main_repo_prefix,
 )

@@ -18,8 +18,6 @@ load("//lib:modules.bzl", "modules")
 load("//lib:unittest.bzl", "asserts", "unittest")
 load("//rules:build_test.bzl", "build_test")
 
-_is_bzlmod_enabled = str(Label("//tests:module_tests.bzl")).startswith("@@")
-
 def _repo_rule_impl(repository_ctx):
     repository_ctx.file("WORKSPACE")
     repository_ctx.file("BUILD", """exports_files(["hello"])""")
@@ -119,7 +117,7 @@ def _apparent_repo_name_test(ctx):
 
     asserts.equals(
         env,
-        "stardoc" if _is_bzlmod_enabled else "io_bazel_stardoc",
+        "stardoc" if modules.is_bzlmod_enabled else "io_bazel_stardoc",
         modules.apparent_repo_name(Label("@io_bazel_stardoc")),
         msg = " ".join([
             "Label values will already map bazel_dep repo_names to",
@@ -171,7 +169,9 @@ def _apparent_repo_label_string_test(ctx):
 
     asserts.equals(
         env,
-        "@%s//:all" % ("stardoc" if _is_bzlmod_enabled else "io_bazel_stardoc"),
+        "@%s//:all" % (
+            "stardoc" if modules.is_bzlmod_enabled else "io_bazel_stardoc"
+        ),
         modules.apparent_repo_label_string(Label("@io_bazel_stardoc//:all")),
         msg = " ".join([
             "Returns the actual module name instead of",
@@ -229,7 +229,7 @@ def modules_test_suite():
         adjust_main_repo_prefix_test,
     )
 
-    if not _is_bzlmod_enabled:
+    if not modules.is_bzlmod_enabled:
         return
 
     build_test(
