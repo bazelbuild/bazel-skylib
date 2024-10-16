@@ -37,3 +37,6 @@ use_repo(as_extension_test_ext, "bar", "foo")
 
 use_all_repos_test_ext = use_extension("//tests:modules_test.bzl", "use_all_repos_test_ext", dev_dependency = True)
 use_repo(use_all_repos_test_ext, "baz", "qux")
+
+apparent_repo_name_test_ext = use_extension("//tests:extensions/apparent_repo_name.bzl", "apparent_repo_name_test_ext", dev_dependency = True)
+use_repo(apparent_repo_name_test_ext, "apparent-repo-name-test")

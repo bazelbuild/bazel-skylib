@@ -81,3 +81,7 @@ load("//tests/directory:external_directory_tests.bzl", "external_directory_tests
 external_directory_tests(name = "external_directory_tests")
 
 register_unittest_toolchains()
+
+load("//tests:extensions/apparent_repo_name.bzl", "apparent_repo_name_test_macro")
+
+apparent_repo_name_test_macro()

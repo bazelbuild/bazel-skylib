@@ -14,6 +14,7 @@
 
 """Test usage of modules.bzl."""
 
+load("@apparent-repo-name-test//:repo-name.bzl", "REPO_NAME")
 load("//lib:modules.bzl", "modules")
 load("//lib:unittest.bzl", "asserts", "unittest")
 load("//rules:build_test.bzl", "build_test")
@@ -54,89 +55,12 @@ def _apparent_repo_name_test(ctx):
 
     asserts.equals(
         env,
-        "",
-        modules.apparent_repo_name(""),
-        msg = "Handles the empty string as input",
-    )
-
-    asserts.equals(
-        env,
-        "foo",
-        modules.apparent_repo_name("foo"),
-        msg = (
-            "Return the original name unchanged if it doesn't start with `@`.",
-        ),
-    )
-
-    asserts.equals(
-        env,
-        "foo",
-        modules.apparent_repo_name("@foo"),
-        msg = "Return the original name without `@` if already apparent.",
-    )
-
-    foo_label = Label("@foo")
-    foo_canonical_name = getattr(
-        foo_label,
-        "repo_name" if hasattr(foo_label, "repo_name") else "workspace_name",
-    )
-    asserts.equals(
-        env,
-        "foo",
-        modules.apparent_repo_name(foo_canonical_name),
-        msg = "Return the apparent name from a canonical name string.",
-    )
-
-    asserts.equals(
-        env,
-        "",
-        modules.apparent_repo_name(Label("//:all")),
-        msg = "Returns the empty string for a main repository Label.",
-    )
-
-    asserts.equals(
-        env,
-        "",
-        modules.apparent_repo_name(Label("@bazel_skylib//:all")),
+        "apparent-repo-name-test",
+        REPO_NAME,
         msg = " ".join([
-            "Returns the empty string for a Label containing the main",
-            "repository's module name.",
+            "Returns the original name unchanged under WORKSPACE, and",
+            "the apparent repo name under Bzlmod.",
         ]),
-    )
-
-    asserts.equals(
-        env,
-        "foo",
-        modules.apparent_repo_name(Label("@foo")),
-        msg = "Return the apparent name from a Label.",
-    )
-
-    asserts.equals(
-        env,
-        "rules_pkg",
-        modules.apparent_repo_name(Label("@rules_pkg")),
-        msg = " ".join([
-            "Top level module repos have the canonical name delimiter at the",
-            "end. Therefore, this should not return the empty string, but the",
-            "name without the leading `@` and trailing delimiter.",
-        ]),
-    )
-
-    asserts.equals(
-        env,
-        "stardoc" if _is_bzlmod_enabled else "io_bazel_stardoc",
-        modules.apparent_repo_name(Label("@io_bazel_stardoc")),
-        msg = " ".join([
-            "Label values will already map bazel_dep repo_names to",
-            "actual repo names under Bzlmod (no-op under WORKSPACE).",
-        ]),
-    )
-
-    asserts.equals(
-        env,
-        "foo",
-        modules.apparent_repo_name("foo+1.2.3"),
-        msg = "Ignores version numbers in canonical repo names",
     )
 
     return unittest.end(env)

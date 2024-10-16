@@ -7,21 +7,41 @@ Skylib module containing utilities for Bazel modules and module extensions.
 ## modules.apparent_repo_name
 
 <pre>
-modules.apparent_repo_name(<a href="#modules.apparent_repo_name-label_or_name">label_or_name</a>)
+modules.apparent_repo_name(<a href="#modules.apparent_repo_name-repository_ctx">repository_ctx</a>)
 </pre>
 
-Return a repository's apparent repository name.
+Generates a repository's apparent name from a repository_ctx object.
+
+Useful when generating the default top level `BUILD` target for the
+repository.
+
+Example:
+```starlark
+_ALIAS_TARGET_TEMPLATE = """alias(
+    name = "{name}",
+    actual = "@{target_repo_name}",
+    visibility = ["//visibility:public"],
+)
+"""
+
+def _alias_repository_impl(repository_ctx):
+    repository_ctx.file("BUILD", _ALIAS_TARGET_TEMPLATE.format(
+        name = apparent_repo_name(rctx),
+        target = rctx.attr.target_repo_name,
+    ))
+```
+
 
 **PARAMETERS**
 
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="modules.apparent_repo_name-label_or_name"></a>label_or_name |  a Label or repository name string   |  none |
+| <a id="modules.apparent_repo_name-repository_ctx"></a>repository_ctx |  a repository_ctx object   |  none |
 
 **RETURNS**
 
-The apparent repository name
+An apparent repo name derived from repository_ctx.name
 
 
 <a id="modules.as_extension"></a>
