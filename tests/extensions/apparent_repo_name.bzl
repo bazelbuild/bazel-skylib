@@ -13,7 +13,7 @@ apparent_repo_name_test_repo = repository_rule(
     _apparent_repo_name_test_repo_impl,
 )
 
-def apparent_repo_name_test_macro(*args):
+def apparent_repo_name_test_macro():
     apparent_repo_name_test_repo(name = "apparent-repo-name-test")
 
 apparent_repo_name_test_ext = module_extension(
