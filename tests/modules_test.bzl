@@ -14,8 +14,12 @@
 
 """Test usage of modules.bzl."""
 
+load("@apparent-repo-name-test//:repo-name.bzl", "REPO_NAME")
 load("//lib:modules.bzl", "modules")
+load("//lib:unittest.bzl", "asserts", "unittest")
 load("//rules:build_test.bzl", "build_test")
+
+_is_bzlmod_enabled = str(Label("//tests:module_tests.bzl")).startswith("@@")
 
 def _repo_rule_impl(repository_ctx):
     repository_ctx.file("WORKSPACE")
@@ -45,12 +49,34 @@ use_all_repos_test_ext = module_extension(
     doc = "Only used for testing modules.use_all_repos().",
 )
 
+def _apparent_repo_name_test(ctx):
+    """Unit tests for modules.apparent_repo_name."""
+    env = unittest.begin(ctx)
+
+    asserts.equals(
+        env,
+        "apparent-repo-name-test",
+        REPO_NAME,
+        msg = " ".join([
+            "Returns the original name unchanged under WORKSPACE, and",
+            "the apparent repo name under Bzlmod.",
+        ]),
+    )
+
+    return unittest.end(env)
+
+apparent_repo_name_test = unittest.make(_apparent_repo_name_test)
+
 # buildifier: disable=unnamed-macro
 def modules_test_suite():
     """Creates the tests for modules.bzl if Bzlmod is enabled."""
 
-    is_bzlmod_enabled = str(Label("//tests:module_tests.bzl")).startswith("@@")
-    if not is_bzlmod_enabled:
+    unittest.suite(
+        "modules_tests",
+        apparent_repo_name_test,
+    )
+
+    if not _is_bzlmod_enabled:
         return
 
     build_test(

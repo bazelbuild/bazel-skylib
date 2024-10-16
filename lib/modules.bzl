@@ -114,7 +114,47 @@ def _use_all_repos(module_ctx, reproducible = False):
         **extension_metadata_kwargs
     )
 
+def _apparent_repo_name(repository_ctx):
+    """Generates a repository's apparent name from a repository_ctx object.
+
+    Useful when generating the default top level `BUILD` target for the
+    repository.
+
+    Example:
+    ```starlark
+    _ALIAS_TARGET_TEMPLATE = \"\"\"alias(
+        name = "{name}",
+        actual = "@{target_repo_name}",
+        visibility = ["//visibility:public"],
+    )
+    \"\"\"
+
+    def _alias_repository_impl(repository_ctx):
+        repository_ctx.file("BUILD", _ALIAS_TARGET_TEMPLATE.format(
+            name = apparent_repo_name(rctx),
+            target = rctx.attr.target_repo_name,
+        ))
+    ```
+
+    Args:
+        repository_ctx: a repository_ctx object
+
+    Returns:
+        An apparent repo name derived from repository_ctx.name
+    """
+    repo_name = repository_ctx.name
+
+    # Bazed on this pattern from the Bazel source:
+    # com.google.devtools.build.lib.cmdline.RepositoryName.VALID_REPO_NAME
+    for i in range(len(repo_name) - 1, -1, -1):
+        c = repo_name[i]
+        if not (c.isalnum() or c in "_-."):
+            return repo_name[i + 1:]
+
+    return repo_name
+
 modules = struct(
     as_extension = _as_extension,
     use_all_repos = _use_all_repos,
+    apparent_repo_name = _apparent_repo_name,
 )
