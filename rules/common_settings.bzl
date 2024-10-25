@@ -123,6 +123,12 @@ string_list_flag = rule(
     doc = "A string list-typed build setting that can be set on the command line",
 )
 
+string_list_repeatable_flag = rule(
+    implementation = _impl,
+    build_setting = config.string_list(flag = True, repeatable = True),
+    doc = "A string list-typed build setting that can be accumulated on the command line",
+)
+
 string_list_setting = rule(
     implementation = _impl,
     build_setting = config.string_list(),
