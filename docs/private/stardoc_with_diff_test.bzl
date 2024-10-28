@@ -24,6 +24,7 @@ https://github.com/aspect-build/bazel-lib/blob/main/docs/docs.md
 """
 
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
+load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
 
@@ -102,10 +103,11 @@ def update_docs(
         name = "gen_" + name,
         out = update_script,
         content = content,
+        is_executable = True,
     )
 
-    native.sh_binary(
+    native_binary(
         name = name,
-        srcs = [update_script],
+        src = update_script,
         data = data,
     )
