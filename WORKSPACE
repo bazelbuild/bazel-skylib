@@ -36,19 +36,6 @@ maybe(
 
 load("@io_bazel_stardoc//:setup.bzl", "stardoc_repositories")
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-maybe(
-   http_archive,
-   name = "rules_shell",
-   sha256 = "0d0c56d01c3c40420bf7bf14d73113f8a92fbd9f5cd13205a3b89f72078f0321",
-   url = "https://github.com/bazelbuild/rules_shell/releases/download/v0.1.1/rules_shell-v0.1.1.tar.gz",
-)
-
-load("@rules_shell//shell:repositories.bzl", "rules_shell_dependencies", "rules_shell_toolchains")
-rules_shell_dependencies()
-rules_shell_toolchains()
-
-
 stardoc_repositories()
 
 load("@rules_jvm_external//:repositories.bzl", "rules_jvm_external_deps")
