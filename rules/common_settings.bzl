@@ -66,6 +66,10 @@ int_flag = rule(
     build_setting = config.int(flag = True),
     attrs = {
         "make_variable": _MAKE_VARIABLE_ATTR,
+        "scope": attr.string(
+            doc = "The scope indicates where a flag can propagate to",
+            default = "universal",
+        ),
     },
     doc = "An int-typed build setting that can be set on the command line",
 )
@@ -75,6 +79,10 @@ int_setting = rule(
     build_setting = config.int(),
     attrs = {
         "make_variable": _MAKE_VARIABLE_ATTR,
+        "scope": attr.string(
+            doc = "The scope indicates where a flag can propagate to",
+            default = "universal",
+        ),
     },
     doc = "An int-typed build setting that cannot be set on the command line",
 )
@@ -82,24 +90,48 @@ int_setting = rule(
 bool_flag = rule(
     implementation = _impl,
     build_setting = config.bool(flag = True),
+    attrs = {
+        "scope": attr.string(
+            doc = "The scope indicates where a flag can propagate to",
+            default = "universal",
+        ),
+    },
     doc = "A bool-typed build setting that can be set on the command line",
 )
 
 bool_setting = rule(
     implementation = _impl,
     build_setting = config.bool(),
+    attrs = {
+        "scope": attr.string(
+            doc = "The scope indicates where a flag can propagate to",
+            default = "universal",
+        ),
+    },
     doc = "A bool-typed build setting that cannot be set on the command line",
 )
 
 string_list_flag = rule(
     implementation = _impl,
     build_setting = config.string_list(flag = True),
+    attrs = {
+        "scope": attr.string(
+            doc = "The scope indicates where a flag can propagate to",
+            default = "universal",
+        ),
+    },
     doc = "A string list-typed build setting that can be set on the command line",
 )
 
 string_list_setting = rule(
     implementation = _impl,
     build_setting = config.string_list(),
+    attrs = {
+        "scope": attr.string(
+            doc = "The scope indicates where a flag can propagate to",
+            default = "universal",
+        ),
+    },
     doc = "A string list-typed build setting that cannot be set on the command line",
 )
 
@@ -128,6 +160,10 @@ string_flag = rule(
             doc = "The list of allowed values for this setting. An error is raised if any other value is given.",
         ),
         "make_variable": _MAKE_VARIABLE_ATTR,
+        "scope": attr.string(
+            doc = "The scope indicates where a flag can propagate to",
+            default = "universal",
+        ),
     },
     doc = "A string-typed build setting that can be set on the command line",
 )
