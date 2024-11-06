@@ -150,7 +150,7 @@ A string list-typed build setting that cannot be set on the command line
 ## string_setting
 
 <pre>
-string_setting(<a href="#string_setting-name">name</a>, <a href="#string_setting-make_variable">make_variable</a>, <a href="#string_setting-values">values</a>)
+string_setting(<a href="#string_setting-name">name</a>, <a href="#string_setting-make_variable">make_variable</a>, <a href="#string_setting-scope">scope</a>, <a href="#string_setting-values">values</a>)
 </pre>
 
 A string-typed build setting that cannot be set on the command line
@@ -162,6 +162,7 @@ A string-typed build setting that cannot be set on the command line
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="string_setting-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
 | <a id="string_setting-make_variable"></a>make_variable |  If set, the build setting's value will be available as a Make variable with this name in the attributes of rules that list this build setting in their 'toolchains' attribute.   | String | optional |  `""`  |
+| <a id="string_setting-scope"></a>scope |  The scope indicates where a flag can propagate to   | String | optional |  `"universal"`  |
 | <a id="string_setting-values"></a>values |  The list of allowed values for this setting. An error is raised if any other value is given.   | List of strings | optional |  `[]`  |
 
 

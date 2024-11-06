@@ -176,6 +176,10 @@ string_setting = rule(
             doc = "The list of allowed values for this setting. An error is raised if any other value is given.",
         ),
         "make_variable": _MAKE_VARIABLE_ATTR,
+        "scope": attr.string(
+            doc = "The scope indicates where a flag can propagate to",
+            default = "universal",
+        ),
     },
     doc = "A string-typed build setting that cannot be set on the command line",
 )
