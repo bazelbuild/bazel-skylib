@@ -1,0 +1,151 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+load("//rules:build_test.bzl", "build_test")
+load("//rules:diff_test.bzl", "diff_test")
+load("//tests/process_wrapper:process_wrapper_tester.bzl", "process_wrapper_tester")
+
+cc_binary(
+    name = "process_wrapper_tester",
+    srcs = [
+        "process_wrapper_tester.cc",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "env_files",
+    srcs = [
+        "test_files/env_file1",
+        "test_files/env_file2",
+        "test_files/env_file3",
+    ],
+)
+
+filegroup(
+    name = "arg_files",
+    srcs = [
+        "test_files/arg_file1",
+        "test_files/arg_file2",
+        "test_files/arg_file3",
+    ],
+)
+
+filegroup(
+    name = "stdout_file",
+    srcs = [
+        "test_files/stdout",
+    ],
+)
+
+filegroup(
+    name = "stderr_file",
+    srcs = [
+        "test_files/stderr",
+    ],
+)
+
+
+process_wrapper_tester(
+    name = "process_wrapper_basic",
+    test_config = "basic",
+)
+
+process_wrapper_tester(
+    name = "process_wrapper_subst_pwd",
+    test_config = "subst-pwd",
+)
+
+process_wrapper_tester(
+    name = "process_wrapper_stdout",
+    test_config = "stdout",
+)
+
+process_wrapper_tester(
+    name = "process_wrapper_stderr",
+    test_config = "stderr",
+)
+
+process_wrapper_tester(
+    name = "process_wrapper_env_files",
+    env_files = [
+        ":env_files",
+    ],
+    test_config = "env-files",
+)
+
+process_wrapper_tester(
+    name = "process_wrapper_arg_files",
+    arg_files = [
+        ":arg_files",
+    ],
+    test_config = "arg-files",
+)
+
+process_wrapper_tester(
+    name = "process_wrapper_copy_output",
+    test_config = "copy-output",
+)
+
+process_wrapper_tester(
+    name = "process_wrapper_combined",
+    arg_files = [
+        ":arg_files",
+    ],
+    env_files = [
+        ":env_files",
+    ],
+    test_config = "combined",
+)
+
+build_test(
+    name = "basic_test",
+    targets = [
+        ":process_wrapper_basic",
+    ],
+)
+
+build_test(
+    name = "subst_pwd_test",
+    targets = [
+        ":process_wrapper_subst_pwd",
+    ],
+)
+
+diff_test(
+    name = "stdout_test",
+    file1 = ":stdout_file",
+    file2 = ":process_wrapper_stdout",
+)
+
+diff_test(
+    name = "stderr_test",
+    file1 = ":stderr_file",
+    file2 = ":process_wrapper_stderr",
+)
+
+build_test(
+    name = "env_files_test",
+    targets = [
+        ":process_wrapper_env_files",
+    ],
+)
+
+build_test(
+    name = "arg_files_test",
+    targets = [
+        ":process_wrapper_arg_files",
+    ],
+)
+
+build_test(
+    name = "copy_output_test",
+    targets = [
+        ":process_wrapper_copy_output",
+    ],
+)
+
+build_test(
+    name = "combined_test",
+    targets = [
+        ":process_wrapper_combined",
+    ],
+)
