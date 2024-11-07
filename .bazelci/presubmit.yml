@@ -110,7 +110,6 @@ tasks:
       # TODO(laszlocsomor): remove "--test_env=LOCALAPPDATA" after
       # https://github.com/bazelbuild/bazel/issues/7761 is fixed
       ? "--test_env=LOCALAPPDATA"
-      ? "--test_tag_filters=-no_windows"
 
   last_green:
     <<: *reusable_config
@@ -128,6 +127,5 @@ tasks:
       # TODO(laszlocsomor): remove "--test_env=LOCALAPPDATA" after
       # https://github.com/bazelbuild/bazel/issues/7761 is fixed
       ? "--test_env=LOCALAPPDATA"
-      ? "--test_tag_filters=-no_windows"
 
 buildifier: latest
