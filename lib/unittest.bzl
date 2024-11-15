@@ -227,6 +227,7 @@ def _make_analysis_test(
         fragments = [],
         config_settings = {},
         extra_target_under_test_aspects = [],
+        target_under_test_for_dependency_resolution = False,
         doc = ""):
     """Creates an analysis test rule from its implementation function.
 
@@ -267,6 +268,9 @@ def _make_analysis_test(
           flags in a single build
       extra_target_under_test_aspects: An optional list of aspects to apply to the target_under_test
           in addition to those set up by default for the test harness itself.
+      target_under_test_for_dependency_resolution: If true, the target_under_test will be used for
+          dependency resolution. See
+          https://bazel.build/rules/lib/toplevel/attr#label.for_dependency_resolution for more info.
       doc: A description of the rule that can be extracted by documentation generating tools.
 
     Returns:
@@ -287,6 +291,9 @@ def _make_analysis_test(
         )
         target_attr_kwargs["cfg"] = test_transition
 
+    if target_under_test_for_dependency_resolution:
+        target_attr_kwargs["for_dependency_resolution"] = True
+       
     attrs["target_under_test"] = attr.label(
         aspects = [_action_retrieving_aspect] + extra_target_under_test_aspects,
         mandatory = True,
