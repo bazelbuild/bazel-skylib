@@ -293,7 +293,7 @@ _DormantTargetTestDependencyInfo = provider(
     },
 )
 
-def _inspect_dormant_target_fake_dependency_rule_impl(unused_ctx):
+def _inspect_dormant_target_fake_dependency_rule_impl(_unused_ctx):
     return [
         _DormantTargetTestDependencyInfo(
             value = "i am material",
