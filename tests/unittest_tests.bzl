@@ -261,6 +261,67 @@ inspect_aspect_test = analysistest.make(
     extra_target_under_test_aspects = [example_aspect],
 )
 
+###########################################
+####### inspect_dormant_target_test #######
+###########################################
+_DormantTargetTestDormantInfo = provider(
+    doc = "Example provider that contains a dormant target",
+    fields = {
+        "dormant_dep": "(DormantDependency)",
+    },
+)
+
+def _inspect_dormant_target_fake_rule_impl(ctx):
+    return [
+        _DormantTargetTestDormantInfo(
+            dormant_dep = ctx.attr.dormant_dep,
+        ),
+    ]
+
+inspect_dormant_target_fake_rule = rule(
+    implementation = _inspect_dormant_target_fake_rule_impl,
+    attrs = {
+        "dormant_dep": attr.dormant_label(),
+    },
+    dependency_resolution_rule = True,
+)
+
+_DormantTargetTestDependencyInfo = provider(
+    doc = "Example provider returned by the fake dependency target, once materialized",
+    fields = {},
+)
+
+def _inspect_dormant_target_fake_dependency_rule_impl(ctx):
+    return [
+        _DormantTargetTestDependencyInfo(
+            value = "i am material",
+        ),
+    ]
+
+inspect_dormant_target_fake_dependency_rule = rule(
+    implementation = _inspect_dormant_target_fake_dependency_rule_impl,
+)
+
+def _inspect_dormant_target_test(ctx):
+    """Test verifying dormant target is materialized."""
+    env = analysistest.begin(ctx)
+
+    materialized_dep = ctx.attr._materialized_dormant_dep
+    asserts.equals(env, "i am material", materialized_dep[_DormantTargetTestDependencyInfo].value)
+    return analysistest.end(env)
+
+def _dormant_dep_materializer(ctx):
+    tut = ctx.attr.target_under_test
+    return tut[_DormantTargetTestDormantInfo].dormant_dep
+
+inspect_dormant_target_test = analysistest.make(
+    _inspect_dormant_target_test,
+    attrs = {
+        "_materialized_dormant_dep": attr.label(materializer = _dormant_dep_materializer),
+    },
+    target_under_test_for_dependency_resolution = True,
+)
+
 ########################################
 ####### inspect_output_dirs_test #######
 ########################################
@@ -373,6 +434,20 @@ def unittest_passing_tests_suite():
     )
     inspect_aspect_fake_rule(
         name = "inspect_aspect_fake_target",
+        tags = ["manual"],
+    )
+    
+    inspect_dormant_target_test(
+        name = "inspect_dormant_target_test",
+        target_under_test = ":inspect_dormant_target_fake_target",
+    )
+    inspect_dormant_target_fake_rule(
+        name = "inspect_dormant_target_fake_target",
+        dormant_dep = ":inspect_dormant_target_fake_dependency_target",
+        tags = ["manual"],
+    )
+    inspect_dormant_target_fake_dependency_rule(
+        name = "inspect_dormant_target_fake_dependency_target",
         tags = ["manual"],
     )
 
