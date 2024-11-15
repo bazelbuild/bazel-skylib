@@ -288,10 +288,12 @@ inspect_dormant_target_fake_rule = rule(
 
 _DormantTargetTestDependencyInfo = provider(
     doc = "Example provider returned by the fake dependency target, once materialized",
-    fields = {},
+    fields = {
+        "value": "(str)",
+    },
 )
 
-def _inspect_dormant_target_fake_dependency_rule_impl(ctx):
+def _inspect_dormant_target_fake_dependency_rule_impl(unused_ctx):
     return [
         _DormantTargetTestDependencyInfo(
             value = "i am material",
