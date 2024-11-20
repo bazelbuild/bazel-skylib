@@ -264,6 +264,10 @@ inspect_aspect_test = analysistest.make(
 ###########################################
 ####### inspect_dormant_target_test #######
 ###########################################
+def _dormant_deps_supported():
+    # Dormant deps are only supported in newer versions of Blaze.
+    return hasattr(attr, "dormant_label")
+
 _DormantTargetTestDormantInfo = provider(
     doc = "Example provider that contains a dormant target",
     fields = {
@@ -282,6 +286,9 @@ inspect_dormant_target_fake_rule = rule(
     implementation = _inspect_dormant_target_fake_rule_impl,
     attrs = {
         "dormant_dep": attr.dormant_label(),
+    } if _dormant_deps_supported() else {
+        # To keep skylib compatible with blaze versions that don't support dormant deps yet
+        "dormant_dep": attr.label(),
     },
     dependency_resolution_rule = True,
 )
@@ -320,6 +327,8 @@ inspect_dormant_target_test = analysistest.make(
     _inspect_dormant_target_test,
     attrs = {
         "_materialized_dormant_dep": attr.label(materializer = _dormant_dep_materializer),
+    } if _dormant_deps_supported() else {
+        # To keep skylib compatible with blaze versions that don't support dormant deps yet
     },
     target_under_test_for_dependency_resolution = True,
 )
@@ -438,20 +447,21 @@ def unittest_passing_tests_suite():
         name = "inspect_aspect_fake_target",
         tags = ["manual"],
     )
-    
-    inspect_dormant_target_test(
-        name = "inspect_dormant_target_test",
-        target_under_test = ":inspect_dormant_target_fake_target",
-    )
-    inspect_dormant_target_fake_rule(
-        name = "inspect_dormant_target_fake_target",
-        dormant_dep = ":inspect_dormant_target_fake_dependency_target",
-        tags = ["manual"],
-    )
-    inspect_dormant_target_fake_dependency_rule(
-        name = "inspect_dormant_target_fake_dependency_target",
-        tags = ["manual"],
-    )
+
+    if _dormant_deps_supported():
+      inspect_dormant_target_test(
+          name = "inspect_dormant_target_test",
+          target_under_test = ":inspect_dormant_target_fake_target",
+      )
+      inspect_dormant_target_fake_rule(
+          name = "inspect_dormant_target_fake_target",
+          dormant_dep = ":inspect_dormant_target_fake_dependency_target",
+          tags = ["manual"],
+      )
+      inspect_dormant_target_fake_dependency_rule(
+          name = "inspect_dormant_target_fake_dependency_target",
+          tags = ["manual"],
+      )
 
     inspect_output_dirs_test(
         name = "inspect_output_dirs_test",
