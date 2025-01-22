@@ -26,8 +26,8 @@ package bzl
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -39,7 +39,6 @@ import (
 	"github.com/bazelbuild/bazel-gazelle/repo"
 	"github.com/bazelbuild/bazel-gazelle/resolve"
 	"github.com/bazelbuild/bazel-gazelle/rule"
-
 	"github.com/bazelbuild/buildtools/build"
 )
 
@@ -182,8 +181,7 @@ func (*bzlLibraryLang) Resolve(c *config.Config, ix *resolve.RuleIndex, rc *repo
 			Lang: languageName,
 			Imp:  impLabel.String(),
 		}
-		matches := ix.FindRulesByImport(res, languageName)
-
+		matches := ix.FindRulesByImportWithConfig(c, res, languageName)
 		if len(matches) == 0 {
 			log.Printf("%s: %q (%s) was not found in dependency index. Skipping. This may result in an incomplete deps section and require manual BUILD file intervention.\n", from.String(), imp, impLabel.String())
 		}
@@ -259,9 +257,9 @@ func (*bzlLibraryLang) GenerateRules(args language.GenerateArgs) language.Genera
 }
 
 func getBzlFileLoads(path string) ([]string, error) {
-	f, err := ioutil.ReadFile(path)
+	f, err := os.ReadFile(path)
 	if err != nil {
-		return nil, fmt.Errorf("ioutil.ReadFile(%q) error: %v", path, err)
+		return nil, fmt.Errorf("os.ReadFile(%q) error: %v", path, err)
 	}
 	ast, err := build.ParseBuild(path, f)
 	if err != nil {
