@@ -11,15 +11,16 @@ register_toolchains(
 )
 
 bazel_dep(name = "platforms", version = "0.0.10")
-bazel_dep(name = "rules_license", version = "0.0.7")
-bazel_dep(name = "rules_cc", version = "0.0.17")
+bazel_dep(name = "rules_license", version = "1.0.0")
 
 ### INTERNAL ONLY - lines after this are not included in the release packaging.
 
 # Build-only / test-only dependencies
-bazel_dep(name = "stardoc", version = "0.6.2", dev_dependency = True, repo_name = "io_bazel_stardoc")
-bazel_dep(name = "rules_pkg", version = "0.9.1", dev_dependency = True)
+bazel_dep(name = "stardoc", version = "0.8.0", dev_dependency = True, repo_name = "io_bazel_stardoc")
+bazel_dep(name = "rules_pkg", version = "1.0.1", dev_dependency = True)
 bazel_dep(name = "rules_testing", version = "0.6.0", dev_dependency = True)
+bazel_dep(name = "rules_cc", version = "0.0.17", dev_dependency = True)
+bazel_dep(name = "rules_shell", version = "0.3.0", dev_dependency = True)
 
 # Needed for bazelci and for building distribution tarballs.
 # If using an unreleased version of bazel_skylib via git_override, apply

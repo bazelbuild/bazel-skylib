@@ -32,6 +32,8 @@
 #   field of it, so we assert that that field contains the output file of the
 #   rule
 
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 load("//rules:diff_test.bzl", "diff_test")
 load("//rules:write_file.bzl", "write_file")
 
