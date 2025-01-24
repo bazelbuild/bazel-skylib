@@ -14,9 +14,19 @@ matrix:
   <<: *reusable_build_flags
   ? "--test_env=PATH"
 
-.reusable_targets: &reusable_targets
+.workspace_targets: &workspace_targets
   ? "--"
   ? "//..."
+  # No longer run all the tests with WORKSPACE
+  ? "-//docs/..."
+  ? "-//tests/..."
+  ? "-//distribution/..."
+
+.bzlmod_targets: &bzlmod_targets
+  ? "--"
+  ? "//..."
+  ? "@external_directory_tests//..."
+  ? "@bazel_skylib_gazelle_plugin//..."
 
 tasks:
   run_presubmit_bazel_6:
@@ -25,11 +35,7 @@ tasks:
     bazel: 6.x
     build_flags: *reusable_build_flags
     test_flags: *reusable_test_flags
-    build_targets:
-      <<: *reusable_targets
-      ? "-//docs/..."
-      ? "-//tests/..."
-      ? "-//distribution/..."
+    build_targets: *workspace_targets
 
   run_presubmit_bazel_7_workspace:
     name: "Bazel 7 (WORKSPACE)"
@@ -43,11 +49,7 @@ tasks:
       <<: *reusable_test_flags
       ? "--enable_workspace"
       ? "--noenable_bzlmod"
-    build_targets:
-      <<: *reusable_targets
-      ? "-//docs/..."
-      ? "-//tests/..."
-      ? "-//distribution/..."
+    build_targets: *workspace_targets
 
   run_presubmit_bazel_7_bzlmod:
     name: "Bazel 7 (Bzlmod)"
@@ -59,9 +61,9 @@ tasks:
     test_flags:
       <<: *reusable_test_flags
       ? "--noenable_workspace"
-    build_targets: *reusable_targets
+    build_targets: *bzlmod_targets
     test_targets:
-      <<: *reusable_targets
+      <<: *bzlmod_targets
       ? "-//docs/..."
 
   run_presubmit_bazel_8:
@@ -70,7 +72,7 @@ tasks:
     bazel: 8.x
     build_flags: *reusable_build_flags
     test_flags: *reusable_test_flags
-    build_targets: *reusable_targets
-    test_targets: *reusable_targets
+    build_targets: *bzlmod_targets
+    test_targets: *bzlmod_targets
 
 buildifier: latest
