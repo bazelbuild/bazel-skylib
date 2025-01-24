@@ -12,6 +12,8 @@ don't depend on Bash and work with --shell_executable="".
 ## native_binary
 
 <pre>
+load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
+
 native_binary(<a href="#native_binary-name">name</a>, <a href="#native_binary-src">src</a>, <a href="#native_binary-data">data</a>, <a href="#native_binary-out">out</a>)
 </pre>
 
@@ -36,6 +38,8 @@ in genrule.tools for example. You can also augment the binary with runfiles.
 ## native_test
 
 <pre>
+load("@bazel_skylib//rules:native_binary.bzl", "native_test")
+
 native_test(<a href="#native_test-name">name</a>, <a href="#native_test-src">src</a>, <a href="#native_test-data">data</a>, <a href="#native_test-out">out</a>)
 </pre>
 

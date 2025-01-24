@@ -7,7 +7,9 @@ Skylib module containing functions that operate on dictionaries.
 ## dicts.add
 
 <pre>
-dicts.add(<a href="#dicts.add-dictionaries">dictionaries</a>, <a href="#dicts.add-kwargs">kwargs</a>)
+load("@bazel_skylib//lib:dicts.bzl", "dicts")
+
+dicts.add(<a href="#dicts.add-dictionaries">*dictionaries</a>, <a href="#dicts.add-kwargs">**kwargs</a>)
 </pre>
 
 Returns a new `dict` that has all the entries of the given dictionaries.
@@ -39,6 +41,8 @@ A new `dict` that has all the entries of the given dictionaries.
 ## dicts.omit
 
 <pre>
+load("@bazel_skylib//lib:dicts.bzl", "dicts")
+
 dicts.omit(<a href="#dicts.omit-dictionary">dictionary</a>, <a href="#dicts.omit-keys">keys</a>)
 </pre>
 
@@ -62,6 +66,8 @@ A new `dict` that has all the entries of `dictionary` with keys not in `keys`.
 ## dicts.pick
 
 <pre>
+load("@bazel_skylib//lib:dicts.bzl", "dicts")
+
 dicts.pick(<a href="#dicts.pick-dictionary">dictionary</a>, <a href="#dicts.pick-keys">keys</a>)
 </pre>
 

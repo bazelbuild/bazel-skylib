@@ -7,6 +7,8 @@ Rules to filter files from a directory.
 ## directory_glob
 
 <pre>
+load("@bazel_skylib//rules/directory:glob.bzl", "directory_glob")
+
 directory_glob(<a href="#directory_glob-name">name</a>, <a href="#directory_glob-srcs">srcs</a>, <a href="#directory_glob-data">data</a>, <a href="#directory_glob-allow_empty">allow_empty</a>, <a href="#directory_glob-directory">directory</a>, <a href="#directory_glob-exclude">exclude</a>)
 </pre>
 

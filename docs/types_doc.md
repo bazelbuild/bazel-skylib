@@ -7,6 +7,8 @@ Skylib module containing functions checking types.
 ## types.is_bool
 
 <pre>
+load("@bazel_skylib//lib:types.bzl", "types")
+
 types.is_bool(<a href="#types.is_bool-v">v</a>)
 </pre>
 
@@ -29,6 +31,8 @@ True if v is an instance of a bool, False otherwise.
 ## types.is_depset
 
 <pre>
+load("@bazel_skylib//lib:types.bzl", "types")
+
 types.is_depset(<a href="#types.is_depset-v">v</a>)
 </pre>
 
@@ -51,6 +55,8 @@ True if v is an instance of a `depset`, False otherwise.
 ## types.is_dict
 
 <pre>
+load("@bazel_skylib//lib:types.bzl", "types")
+
 types.is_dict(<a href="#types.is_dict-v">v</a>)
 </pre>
 
@@ -73,6 +79,8 @@ True if v is an instance of a dict, False otherwise.
 ## types.is_function
 
 <pre>
+load("@bazel_skylib//lib:types.bzl", "types")
+
 types.is_function(<a href="#types.is_function-v">v</a>)
 </pre>
 
@@ -95,6 +103,8 @@ True if v is an instance of a function, False otherwise.
 ## types.is_int
 
 <pre>
+load("@bazel_skylib//lib:types.bzl", "types")
+
 types.is_int(<a href="#types.is_int-v">v</a>)
 </pre>
 
@@ -117,6 +127,8 @@ True if v is an instance of a signed integer, False otherwise.
 ## types.is_list
 
 <pre>
+load("@bazel_skylib//lib:types.bzl", "types")
+
 types.is_list(<a href="#types.is_list-v">v</a>)
 </pre>
 
@@ -139,6 +151,8 @@ True if v is an instance of a list, False otherwise.
 ## types.is_none
 
 <pre>
+load("@bazel_skylib//lib:types.bzl", "types")
+
 types.is_none(<a href="#types.is_none-v">v</a>)
 </pre>
 
@@ -161,6 +175,8 @@ True if v is None, False otherwise.
 ## types.is_set
 
 <pre>
+load("@bazel_skylib//lib:types.bzl", "types")
+
 types.is_set(<a href="#types.is_set-v">v</a>)
 </pre>
 
@@ -183,6 +199,8 @@ True if v was created by sets.make(), False otherwise.
 ## types.is_string
 
 <pre>
+load("@bazel_skylib//lib:types.bzl", "types")
+
 types.is_string(<a href="#types.is_string-v">v</a>)
 </pre>
 
@@ -205,6 +223,8 @@ True if v is an instance of a string, False otherwise.
 ## types.is_tuple
 
 <pre>
+load("@bazel_skylib//lib:types.bzl", "types")
+
 types.is_tuple(<a href="#types.is_tuple-v">v</a>)
 </pre>
 

@@ -7,6 +7,8 @@ Skylib module containing rules to create metadata about directories.
 ## directory
 
 <pre>
+load("@bazel_skylib//rules/directory:directory.bzl", "directory")
+
 directory(<a href="#directory-name">name</a>, <a href="#directory-srcs">srcs</a>)
 </pre>
 

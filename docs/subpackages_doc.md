@@ -7,6 +7,8 @@ Skylib module containing common functions for working with native.subpackages()
 ## subpackages.all
 
 <pre>
+load("@bazel_skylib//lib:subpackages.bzl", "subpackages")
+
 subpackages.all(<a href="#subpackages.all-exclude">exclude</a>, <a href="#subpackages.all-allow_empty">allow_empty</a>, <a href="#subpackages.all-fully_qualified">fully_qualified</a>)
 </pre>
 
@@ -50,6 +52,8 @@ package.
 ## subpackages.exists
 
 <pre>
+load("@bazel_skylib//lib:subpackages.bzl", "subpackages")
+
 subpackages.exists(<a href="#subpackages.exists-relative_path">relative_path</a>)
 </pre>
 
@@ -86,6 +90,8 @@ True if 'relative_path' is a subpackage of the current package.
 ## subpackages.supported
 
 <pre>
+load("@bazel_skylib//lib:subpackages.bzl", "subpackages")
+
 subpackages.supported()
 </pre>
 

@@ -7,7 +7,9 @@ A test verifying other targets build as part of a `bazel test`
 ## build_test
 
 <pre>
-build_test(<a href="#build_test-name">name</a>, <a href="#build_test-targets">targets</a>, <a href="#build_test-kwargs">kwargs</a>)
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+
+build_test(<a href="#build_test-name">name</a>, <a href="#build_test-targets">targets</a>, <a href="#build_test-kwargs">**kwargs</a>)
 </pre>
 
 Test rule checking that other targets build.

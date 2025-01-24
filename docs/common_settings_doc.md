@@ -13,6 +13,8 @@ https://bazel.build/extending/config#user-defined-build-settings
 ## bool_flag
 
 <pre>
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
+
 bool_flag(<a href="#bool_flag-name">name</a>, <a href="#bool_flag-scope">scope</a>)
 </pre>
 
@@ -32,6 +34,8 @@ A bool-typed build setting that can be set on the command line
 ## bool_setting
 
 <pre>
+load("@bazel_skylib//rules:common_settings.bzl", "bool_setting")
+
 bool_setting(<a href="#bool_setting-name">name</a>, <a href="#bool_setting-scope">scope</a>)
 </pre>
 
@@ -51,6 +55,8 @@ A bool-typed build setting that cannot be set on the command line
 ## int_flag
 
 <pre>
+load("@bazel_skylib//rules:common_settings.bzl", "int_flag")
+
 int_flag(<a href="#int_flag-name">name</a>, <a href="#int_flag-make_variable">make_variable</a>, <a href="#int_flag-scope">scope</a>)
 </pre>
 
@@ -71,6 +77,8 @@ An int-typed build setting that can be set on the command line
 ## int_setting
 
 <pre>
+load("@bazel_skylib//rules:common_settings.bzl", "int_setting")
+
 int_setting(<a href="#int_setting-name">name</a>, <a href="#int_setting-make_variable">make_variable</a>, <a href="#int_setting-scope">scope</a>)
 </pre>
 
@@ -91,6 +99,8 @@ An int-typed build setting that cannot be set on the command line
 ## string_flag
 
 <pre>
+load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
+
 string_flag(<a href="#string_flag-name">name</a>, <a href="#string_flag-make_variable">make_variable</a>, <a href="#string_flag-scope">scope</a>, <a href="#string_flag-values">values</a>)
 </pre>
 
@@ -112,6 +122,8 @@ A string-typed build setting that can be set on the command line
 ## string_list_flag
 
 <pre>
+load("@bazel_skylib//rules:common_settings.bzl", "string_list_flag")
+
 string_list_flag(<a href="#string_list_flag-name">name</a>, <a href="#string_list_flag-scope">scope</a>)
 </pre>
 
@@ -131,6 +143,8 @@ A string list-typed build setting that can be set on the command line
 ## string_list_setting
 
 <pre>
+load("@bazel_skylib//rules:common_settings.bzl", "string_list_setting")
+
 string_list_setting(<a href="#string_list_setting-name">name</a>, <a href="#string_list_setting-scope">scope</a>)
 </pre>
 
@@ -150,6 +164,8 @@ A string list-typed build setting that cannot be set on the command line
 ## string_setting
 
 <pre>
+load("@bazel_skylib//rules:common_settings.bzl", "string_setting")
+
 string_setting(<a href="#string_setting-name">name</a>, <a href="#string_setting-make_variable">make_variable</a>, <a href="#string_setting-scope">scope</a>, <a href="#string_setting-values">values</a>)
 </pre>
 
@@ -171,13 +187,14 @@ A string-typed build setting that cannot be set on the command line
 ## BuildSettingInfo
 
 <pre>
+load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
+
 BuildSettingInfo(<a href="#BuildSettingInfo-value">value</a>)
 </pre>
 
 A singleton provider that contains the raw value of a build setting
 
 **FIELDS**
-
 
 | Name  | Description |
 | :------------- | :------------- |
