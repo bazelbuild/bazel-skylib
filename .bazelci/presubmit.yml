@@ -1,9 +1,14 @@
 ---
 matrix:
   platform:
-    - ubuntu1804
     - ubuntu2004
-    - macos
+    - ubuntu2204
+    - macos_arm64
+    - windows
+  bazel:
+    - 6.x
+    - 7.x
+    - 8.x
 
 .reusable_build_flags: &reusable_build_flags
   ? "--incompatible_config_setting_private_default_visibility"
@@ -26,108 +31,11 @@ matrix:
   test_targets: *reusable_targets
 
 tasks:
-  ubuntu2004_bazel5:
+  run_presubmit:
     <<: *reusable_config
-    name: "Bazel 5.x"
-    platform: ubuntu2004
-    bazel: 5.x
-
-  ubuntu2004_bazel6:
-    <<: *reusable_config
-    name: "Bazel 6.x"
-    platform: ubuntu2004
-    bazel: 6.x
-    build_targets:
-      <<: *reusable_targets
-      # rules_pkg fails with --noenable_bzlmod
-      ? "-//distribution/..."
-    test_targets:
-      <<: *reusable_targets
-      # rules_pkg fails with --noenable_bzlmod
-      ? "-//distribution/..."
-
-  ubuntu2004_bazel6_enable_bzlmod:
-    <<: *reusable_config
-    name: "Bazel 6.x with --enable_bzlmod"
-    platform: ubuntu2004
-    bazel: 6.x
-    build_flags:
-      <<: *reusable_build_flags
-      ? "--enable_bzlmod"
-    test_flags:
-      <<: *reusable_test_flags
-      ? "--enable_bzlmod"
-
-  latest:
-    <<: *reusable_config
-    name: "Latest Bazel"
+    name: ${{ bazel }}
     platform: ${{ platform }}
-    bazel: latest
+    bazel: ${{ bazel }}
 
-  ubuntu2004_latest_noenable_bzlmod:
-    <<: *reusable_config
-    name: "Latest Bazel with --noenable_bzlmod"
-    platform: ubuntu2004
-    bazel: latest
-    build_flags:
-      <<: *reusable_build_flags
-      ? "--noenable_bzlmod"
-      ? "--enable_workspace"
-    test_flags:
-      <<: *reusable_test_flags
-      ? "--noenable_bzlmod"
-      ? "--enable_workspace"
-    build_targets:
-      <<: *reusable_targets
-      # rules_pkg fails with --noenable_bzlmod
-      ? "-//distribution/..."
-    test_targets:
-      <<: *reusable_targets
-      # rules_pkg fails with --noenable_bzlmod
-      ? "-//distribution/..."
-
-  ubuntu1604_latest:
-    <<: *reusable_config
-    name: "Latest Bazel"
-    platform: ubuntu1604
-    bazel: latest
-    build_targets:
-      <<: *reusable_targets
-      # //distribution requires Python >= 3.6 for some rules_pkg scripts; Ubuntu 16.04 has Python 3.5
-      ? "-//distribution/..."
-    test_targets:
-      <<: *reusable_targets
-      # //distribution requires Python >= 3.6 for some rules_pkg scripts; Ubuntu 16.04 has Python 3.5
-      ? "-//distribution/..."
-
-  windows_latest:
-    <<: *reusable_config
-    name: "Latest Bazel"
-    platform: windows
-    bazel: latest
-    test_flags:
-      <<: *reusable_test_flags
-      # TODO(laszlocsomor): remove "--test_env=LOCALAPPDATA" after
-      # https://github.com/bazelbuild/bazel/issues/7761 is fixed
-      ? "--test_env=LOCALAPPDATA"
-      ? "--test_tag_filters=-no_windows"
-
-  last_green:
-    <<: *reusable_config
-    name: "Last Green Bazel"
-    platform: ${{ platform }}
-    bazel: last_green
-
-  windows_last_green:
-    <<: *reusable_config
-    name: "Last Green Bazel"
-    platform: windows
-    bazel: last_green
-    test_flags:
-      <<: *reusable_test_flags
-      # TODO(laszlocsomor): remove "--test_env=LOCALAPPDATA" after
-      # https://github.com/bazelbuild/bazel/issues/7761 is fixed
-      ? "--test_env=LOCALAPPDATA"
-      ? "--test_tag_filters=-no_windows"
 
 buildifier: latest
