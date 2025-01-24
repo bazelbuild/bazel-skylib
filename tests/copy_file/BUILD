@@ -31,8 +31,8 @@
 # - the 'copy_nonempty_text' rule, and thereby on the DefaultInfo.runfiles field
 #   of it, so we assert that that field contains the output file of the rule
 
-load("@rules_shell//shell:sh_test.bzl", "sh_test")
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
 load("//rules:copy_file.bzl", "copy_file")
 
 package(
