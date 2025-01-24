@@ -5,10 +5,6 @@ matrix:
     - ubuntu2204
     - macos_arm64
     - windows
-  bazel:
-    - 6.x
-    - 7.x
-    - 8.x
 
 .reusable_build_flags: &reusable_build_flags
   ? "--incompatible_config_setting_private_default_visibility"
@@ -24,18 +20,51 @@ matrix:
   ? "@external_directory_tests//..."
   ? "@bazel_skylib_gazelle_plugin//..."
 
-.reusable_config: &reusable_config
-  build_flags: *reusable_build_flags
-  test_flags: *reusable_test_flags
-  build_targets: *reusable_targets
-  test_targets: *reusable_targets
-
 tasks:
-  run_presubmit:
-    <<: *reusable_config
-    name: ${{ bazel }}
+  run_presubmit_bazel_6:
+    name: "Bazel 6 (WORKSPACE)"
     platform: ${{ platform }}
-    bazel: ${{ bazel }}
+    bazel: 6.x
+    build_flags: *reusable_build_flags
+    test_flags: *reusable_test_flags
+    build_targets: *reusable_targets
+    test_targets: *reusable_targets
 
+  run_presubmit_bazel_7_workspace:
+    name: "Bazel 7 (WORKSPACE)"
+    platform: ${{ platform }}
+    bazel: 7.x
+    build_flags:
+      <<: *reusable_build_flags
+      ? "--enable_workspace"
+      ? "--noenable_bzlmod"
+    test_flags:
+      <<: *reusable_test_flags
+      ? "--enable_workspace"
+      ? "--noenable_bzlmod"
+    build_targets: *reusable_targets
+    test_targets: *reusable_targets
+
+  run_presubmit_bazel_7_bzlmod:
+    name: "Bazel 7 (Bzlmod)"
+    platform: ${{ platform }}
+    bazel: 7.x
+    build_flags:
+      <<: *reusable_build_flags
+      ? "--noenable_workspace"
+    test_flags:
+      <<: *reusable_test_flags
+      ? "--noenable_workspace"
+    build_targets: *reusable_targets
+    test_targets: *reusable_targets
+
+  run_presubmit_bazel_8:
+    name: "Bazel 8 (Bzlmod)"
+    platform: ${{ platform }}
+    bazel: 8.x
+    build_flags: *reusable_build_flags
+    test_flags: *reusable_test_flags
+    build_targets: *reusable_targets
+    test_targets: *reusable_targets
 
 buildifier: latest
