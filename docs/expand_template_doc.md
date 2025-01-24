@@ -7,6 +7,8 @@ A rule that performs template expansion.
 ## expand_template
 
 <pre>
+load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
+
 expand_template(<a href="#expand_template-name">name</a>, <a href="#expand_template-out">out</a>, <a href="#expand_template-substitutions">substitutions</a>, <a href="#expand_template-template">template</a>)
 </pre>
 
@@ -24,7 +26,7 @@ explicitly add delimiters to the key strings, for example "{KEY}" or "@KEY@".
 | Name  | Description | Type | Mandatory | Default |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | <a id="expand_template-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
-| <a id="expand_template-out"></a>out |  The destination of the expanded file.   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="expand_template-out"></a>out |  The destination of the expanded file.   | <a href="https://bazel.build/concepts/labels">Label</a>; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a> | required |  |
 | <a id="expand_template-substitutions"></a>substitutions |  A dictionary mapping strings to their substitutions.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | required |  |
 | <a id="expand_template-template"></a>template |  The template file to expand.   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
 

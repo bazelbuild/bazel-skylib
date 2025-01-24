@@ -7,6 +7,8 @@ Skylib module containing utilities for Bazel modules and module extensions.
 ## modules.as_extension
 
 <pre>
+load("@bazel_skylib//lib:modules.bzl", "modules")
+
 modules.as_extension(<a href="#modules.as_extension-macro">macro</a>, <a href="#modules.as_extension-doc">doc</a>)
 </pre>
 
@@ -43,6 +45,8 @@ version of Bazel and thus doesn't result in a lockfile entry.
 ## modules.use_all_repos
 
 <pre>
+load("@bazel_skylib//lib:modules.bzl", "modules")
+
 modules.use_all_repos(<a href="#modules.use_all_repos-module_ctx">module_ctx</a>, <a href="#modules.use_all_repos-reproducible">reproducible</a>)
 </pre>
 

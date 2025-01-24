@@ -7,6 +7,8 @@ Skylib module containing rules to create metadata about subdirectories.
 ## subdirectory
 
 <pre>
+load("@bazel_skylib//rules/directory:subdirectory.bzl", "subdirectory")
+
 subdirectory(<a href="#subdirectory-name">name</a>, <a href="#subdirectory-parent">parent</a>, <a href="#subdirectory-path">path</a>)
 </pre>
 

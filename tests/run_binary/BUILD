@@ -1,3 +1,4 @@
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
 load("//rules:diff_test.bzl", "diff_test")
 load("//rules:run_binary.bzl", "run_binary")
 load("//rules:write_file.bzl", "write_file")

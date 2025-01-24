@@ -20,6 +20,8 @@ and the different phases of a build.
 ## unittest_toolchain
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "unittest_toolchain")
+
 unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unittest_toolchain-escape_chars_with">escape_chars_with</a>, <a href="#unittest_toolchain-escape_other_chars_with">escape_other_chars_with</a>, <a href="#unittest_toolchain-failure_templ">failure_templ</a>, <a href="#unittest_toolchain-file_ext">file_ext</a>,
                    <a href="#unittest_toolchain-join_on">join_on</a>, <a href="#unittest_toolchain-success_templ">success_templ</a>)
 </pre>
@@ -45,6 +47,8 @@ unittest_toolchain(<a href="#unittest_toolchain-name">name</a>, <a href="#unitte
 ## analysistest.begin
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "analysistest")
+
 analysistest.begin(<a href="#analysistest.begin-ctx">ctx</a>)
 </pre>
 
@@ -75,6 +79,8 @@ struct as it may change.
 ## analysistest.end
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "analysistest")
+
 analysistest.end(<a href="#analysistest.end-env">env</a>)
 </pre>
 
@@ -101,6 +107,8 @@ A list of providers needed to automatically register the analysis test result.
 ## analysistest.fail
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "analysistest")
+
 analysistest.fail(<a href="#analysistest.fail-env">env</a>, <a href="#analysistest.fail-msg">msg</a>)
 </pre>
 
@@ -120,6 +128,8 @@ Unconditionally causes the current test to fail.
 ## analysistest.make
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "analysistest")
+
 analysistest.make(<a href="#analysistest.make-impl">impl</a>, <a href="#analysistest.make-expect_failure">expect_failure</a>, <a href="#analysistest.make-attrs">attrs</a>, <a href="#analysistest.make-fragments">fragments</a>, <a href="#analysistest.make-config_settings">config_settings</a>,
                   <a href="#analysistest.make-extra_target_under_test_aspects">extra_target_under_test_aspects</a>, <a href="#analysistest.make-doc">doc</a>)
 </pre>
@@ -174,6 +184,8 @@ A rule definition that should be stored in a global whose name ends in
 ## analysistest.target_actions
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "analysistest")
+
 analysistest.target_actions(<a href="#analysistest.target_actions-env">env</a>)
 </pre>
 
@@ -196,6 +208,8 @@ A list of actions registered by the target under test
 ## analysistest.target_bin_dir_path
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "analysistest")
+
 analysistest.target_bin_dir_path(<a href="#analysistest.target_bin_dir_path-env">env</a>)
 </pre>
 
@@ -218,6 +232,8 @@ Output bin dir path string.
 ## analysistest.target_under_test
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "analysistest")
+
 analysistest.target_under_test(<a href="#analysistest.target_under_test-env">env</a>)
 </pre>
 
@@ -240,6 +256,8 @@ The target under test.
 ## asserts.equals
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "asserts")
+
 asserts.equals(<a href="#asserts.equals-env">env</a>, <a href="#asserts.equals-expected">expected</a>, <a href="#asserts.equals-actual">actual</a>, <a href="#asserts.equals-msg">msg</a>)
 </pre>
 
@@ -261,6 +279,8 @@ Asserts that the given `expected` and `actual` values are equal.
 ## asserts.expect_failure
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "asserts")
+
 asserts.expect_failure(<a href="#asserts.expect_failure-env">env</a>, <a href="#asserts.expect_failure-expected_failure_msg">expected_failure_msg</a>)
 </pre>
 
@@ -284,6 +304,8 @@ This requires that the analysis test is created with `analysistest.make()` and
 ## asserts.false
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "asserts")
+
 asserts.false(<a href="#asserts.false-env">env</a>, <a href="#asserts.false-condition">condition</a>, <a href="#asserts.false-msg">msg</a>)
 </pre>
 
@@ -304,6 +326,8 @@ Asserts that the given `condition` is false.
 ## asserts.new_set_equals
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "asserts")
+
 asserts.new_set_equals(<a href="#asserts.new_set_equals-env">env</a>, <a href="#asserts.new_set_equals-expected">expected</a>, <a href="#asserts.new_set_equals-actual">actual</a>, <a href="#asserts.new_set_equals-msg">msg</a>)
 </pre>
 
@@ -325,6 +349,8 @@ Asserts that the given `expected` and `actual` sets are equal.
 ## asserts.set_equals
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "asserts")
+
 asserts.set_equals(<a href="#asserts.set_equals-env">env</a>, <a href="#asserts.set_equals-expected">expected</a>, <a href="#asserts.set_equals-actual">actual</a>, <a href="#asserts.set_equals-msg">msg</a>)
 </pre>
 
@@ -346,6 +372,8 @@ Asserts that the given `expected` and `actual` sets are equal.
 ## asserts.true
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "asserts")
+
 asserts.true(<a href="#asserts.true-env">env</a>, <a href="#asserts.true-condition">condition</a>, <a href="#asserts.true-msg">msg</a>)
 </pre>
 
@@ -366,6 +394,8 @@ Asserts that the given `condition` is true.
 ## loadingtest.equals
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "loadingtest")
+
 loadingtest.equals(<a href="#loadingtest.equals-env">env</a>, <a href="#loadingtest.equals-test_case">test_case</a>, <a href="#loadingtest.equals-expected">expected</a>, <a href="#loadingtest.equals-actual">actual</a>)
 </pre>
 
@@ -391,6 +421,8 @@ None, creates test case
 ## loadingtest.make
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "loadingtest")
+
 loadingtest.make(<a href="#loadingtest.make-name">name</a>)
 </pre>
 
@@ -413,6 +445,8 @@ loading phase environment passed to other loadingtest functions
 ## register_unittest_toolchains
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "register_unittest_toolchains")
+
 register_unittest_toolchains()
 </pre>
 
@@ -425,6 +459,8 @@ Registers the toolchains for unittest users.
 ## unittest.begin
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "unittest")
+
 unittest.begin(<a href="#unittest.begin-ctx">ctx</a>)
 </pre>
 
@@ -455,6 +491,8 @@ struct as it may change.
 ## unittest.end
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "unittest")
+
 unittest.end(<a href="#unittest.end-env">env</a>)
 </pre>
 
@@ -481,6 +519,8 @@ A list of providers needed to automatically register the test result.
 ## unittest.fail
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "unittest")
+
 unittest.fail(<a href="#unittest.fail-env">env</a>, <a href="#unittest.fail-msg">msg</a>)
 </pre>
 
@@ -500,6 +540,8 @@ Unconditionally causes the current test to fail.
 ## unittest.make
 
 <pre>
+load("@bazel_skylib//lib:unittest.bzl", "unittest")
+
 unittest.make(<a href="#unittest.make-impl">impl</a>, <a href="#unittest.make-attrs">attrs</a>, <a href="#unittest.make-doc">doc</a>, <a href="#unittest.make-toolchains">toolchains</a>)
 </pre>
 
@@ -553,7 +595,9 @@ A rule definition that should be stored in a global whose name ends in
 ## unittest.suite
 
 <pre>
-unittest.suite(<a href="#unittest.suite-name">name</a>, <a href="#unittest.suite-test_rules">test_rules</a>)
+load("@bazel_skylib//lib:unittest.bzl", "unittest")
+
+unittest.suite(<a href="#unittest.suite-name">name</a>, <a href="#unittest.suite-test_rules">*test_rules</a>)
 </pre>
 
 Defines a `test_suite` target that contains multiple tests.

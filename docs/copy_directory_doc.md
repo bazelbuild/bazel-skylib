@@ -10,7 +10,9 @@ on Windows (no Bash is required).
 ## copy_directory
 
 <pre>
-copy_directory(<a href="#copy_directory-name">name</a>, <a href="#copy_directory-src">src</a>, <a href="#copy_directory-out">out</a>, <a href="#copy_directory-kwargs">kwargs</a>)
+load("@bazel_skylib//rules:copy_directory.bzl", "copy_directory")
+
+copy_directory(<a href="#copy_directory-name">name</a>, <a href="#copy_directory-src">src</a>, <a href="#copy_directory-out">out</a>, <a href="#copy_directory-kwargs">**kwargs</a>)
 </pre>
 
 Copies a directory to another location.
@@ -40,6 +42,8 @@ for more context.
 ## copy_directory_action
 
 <pre>
+load("@bazel_skylib//rules:copy_directory.bzl", "copy_directory_action")
+
 copy_directory_action(<a href="#copy_directory_action-ctx">ctx</a>, <a href="#copy_directory_action-src">src</a>, <a href="#copy_directory_action-dst">dst</a>, <a href="#copy_directory_action-is_windows">is_windows</a>)
 </pre>
 

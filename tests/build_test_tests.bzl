@@ -14,6 +14,7 @@
 
 """Unit tests for build_test.bzl."""
 
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("//rules:build_test.bzl", "build_test")
 
 # buildifier: disable=unnamed-macro
@@ -30,7 +31,7 @@ def build_test_test_suite():
     )
 
     # Use it in a non-test target
-    native.cc_library(
+    cc_library(
         name = "build_test__build_target",
         srcs = [":build_test__make_src"],
     )

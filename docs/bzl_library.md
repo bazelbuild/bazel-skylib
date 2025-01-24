@@ -7,6 +7,8 @@ Skylib module containing a library rule for aggregating rules files.
 ## bzl_library
 
 <pre>
+load("@bazel_skylib//rules/private:bzl_library.bzl", "bzl_library")
+
 bzl_library(<a href="#bzl_library-name">name</a>, <a href="#bzl_library-deps">deps</a>, <a href="#bzl_library-srcs">srcs</a>)
 </pre>
 
@@ -71,13 +73,14 @@ Example:
 ## StarlarkLibraryInfo
 
 <pre>
+load("@bazel_skylib//rules/private:bzl_library.bzl", "StarlarkLibraryInfo")
+
 StarlarkLibraryInfo(<a href="#StarlarkLibraryInfo-srcs">srcs</a>, <a href="#StarlarkLibraryInfo-transitive_srcs">transitive_srcs</a>)
 </pre>
 
 Information on contained Starlark rules.
 
 **FIELDS**
-
 
 | Name  | Description |
 | :------------- | :------------- |

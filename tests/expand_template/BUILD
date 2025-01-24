@@ -14,6 +14,8 @@
 
 # This package aids testing the 'diff_test' rule.
 
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
 load("//rules:expand_template.bzl", "expand_template")
 
 package(
