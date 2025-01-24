@@ -1,3 +1,4 @@
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
 load("//rules:copy_file.bzl", "copy_file")
 load("//rules:native_binary.bzl", "native_binary", "native_test")
 

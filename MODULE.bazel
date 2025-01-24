@@ -10,8 +10,9 @@ register_toolchains(
     "//toolchains/unittest:bash_toolchain",
 )
 
-bazel_dep(name = "platforms", version = "0.0.4")
+bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "rules_license", version = "0.0.7")
+bazel_dep(name = "rules_cc", version = "0.0.17")
 
 ### INTERNAL ONLY - lines after this are not included in the release packaging.
 
