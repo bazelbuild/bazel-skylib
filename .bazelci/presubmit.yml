@@ -17,8 +17,6 @@ matrix:
 .reusable_targets: &reusable_targets
   ? "--"
   ? "//..."
-  ? "@external_directory_tests//..."
-  ? "@bazel_skylib_gazelle_plugin//..."
 
 tasks:
   run_presubmit_bazel_6:
