@@ -28,7 +28,9 @@ tasks:
     build_flags: *reusable_build_flags
     test_flags: *reusable_test_flags
     build_targets: *reusable_targets
-    test_targets: *reusable_targets
+    test_targets:
+      <<: *reusable_targets
+      ? "-//docs/..."
 
   run_presubmit_bazel_7_workspace:
     name: "Bazel 7 (WORKSPACE)"
@@ -43,7 +45,9 @@ tasks:
       ? "--enable_workspace"
       ? "--noenable_bzlmod"
     build_targets: *reusable_targets
-    test_targets: *reusable_targets
+    test_targets:
+      <<: *reusable_targets
+      ? "-//docs/..."
 
   run_presubmit_bazel_7_bzlmod:
     name: "Bazel 7 (Bzlmod)"
@@ -56,7 +60,9 @@ tasks:
       <<: *reusable_test_flags
       ? "--noenable_workspace"
     build_targets: *reusable_targets
-    test_targets: *reusable_targets
+    test_targets:
+      <<: *reusable_targets
+      ? "-//docs/..."
 
   run_presubmit_bazel_8:
     name: "Bazel 8 (Bzlmod)"
