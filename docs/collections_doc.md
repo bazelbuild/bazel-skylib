@@ -7,6 +7,8 @@ Skylib module containing functions that operate on collections.
 ## collections.after_each
 
 <pre>
+load("@bazel_skylib//lib:collections.bzl", "collections")
+
 collections.after_each(<a href="#collections.after_each-separator">separator</a>, <a href="#collections.after_each-iterable">iterable</a>)
 </pre>
 
@@ -30,6 +32,8 @@ A new list with `separator` after each item in `iterable`.
 ## collections.before_each
 
 <pre>
+load("@bazel_skylib//lib:collections.bzl", "collections")
+
 collections.before_each(<a href="#collections.before_each-separator">separator</a>, <a href="#collections.before_each-iterable">iterable</a>)
 </pre>
 
@@ -53,6 +57,8 @@ A new list with `separator` before each item in `iterable`.
 ## collections.uniq
 
 <pre>
+load("@bazel_skylib//lib:collections.bzl", "collections")
+
 collections.uniq(<a href="#collections.uniq-iterable">iterable</a>)
 </pre>
 

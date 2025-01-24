@@ -7,6 +7,8 @@ A test verifying other targets can be successfully analyzed as part of a `bazel 
 ## analysis_test
 
 <pre>
+load("@bazel_skylib//rules:analysis_test.bzl", "analysis_test")
+
 analysis_test(<a href="#analysis_test-name">name</a>, <a href="#analysis_test-targets">targets</a>)
 </pre>
 

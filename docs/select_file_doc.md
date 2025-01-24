@@ -9,6 +9,8 @@ Selects a single file from the outputs of a target by given relative path.
 ## select_file
 
 <pre>
+load("@bazel_skylib//rules:select_file.bzl", "select_file")
+
 select_file(<a href="#select_file-name">name</a>, <a href="#select_file-srcs">srcs</a>, <a href="#select_file-subpath">subpath</a>)
 </pre>
 

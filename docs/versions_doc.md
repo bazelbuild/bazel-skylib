@@ -7,6 +7,8 @@ Skylib module containing functions for checking Bazel versions.
 ## versions.check
 
 <pre>
+load("@bazel_skylib//lib:versions.bzl", "versions")
+
 versions.check(<a href="#versions.check-minimum_bazel_version">minimum_bazel_version</a>, <a href="#versions.check-maximum_bazel_version">maximum_bazel_version</a>, <a href="#versions.check-bazel_version">bazel_version</a>)
 </pre>
 
@@ -27,6 +29,8 @@ Check that the version of Bazel is valid within the specified range.
 ## versions.get
 
 <pre>
+load("@bazel_skylib//lib:versions.bzl", "versions")
+
 versions.get()
 </pre>
 
@@ -39,6 +43,8 @@ Returns the current Bazel version
 ## versions.is_at_least
 
 <pre>
+load("@bazel_skylib//lib:versions.bzl", "versions")
+
 versions.is_at_least(<a href="#versions.is_at_least-threshold">threshold</a>, <a href="#versions.is_at_least-version">version</a>)
 </pre>
 
@@ -62,6 +68,8 @@ True if version >= threshold.
 ## versions.is_at_most
 
 <pre>
+load("@bazel_skylib//lib:versions.bzl", "versions")
+
 versions.is_at_most(<a href="#versions.is_at_most-threshold">threshold</a>, <a href="#versions.is_at_most-version">version</a>)
 </pre>
 
@@ -85,6 +93,8 @@ True if version <= threshold.
 ## versions.parse
 
 <pre>
+load("@bazel_skylib//lib:versions.bzl", "versions")
+
 versions.parse(<a href="#versions.parse-bazel_version">bazel_version</a>)
 </pre>
 

@@ -11,7 +11,9 @@ Similar to https://docs.python.org/3/library/functools.html#functools.partial.
 ## partial.call
 
 <pre>
-partial.call(<a href="#partial.call-partial">partial</a>, <a href="#partial.call-args">args</a>, <a href="#partial.call-kwargs">kwargs</a>)
+load("@bazel_skylib//lib:partial.bzl", "partial")
+
+partial.call(<a href="#partial.call-partial">partial</a>, <a href="#partial.call-args">*args</a>, <a href="#partial.call-kwargs">**kwargs</a>)
 </pre>
 
 Calls a partial created using `make`.
@@ -35,6 +37,8 @@ Whatever the function in the partial returns.
 ## partial.is_instance
 
 <pre>
+load("@bazel_skylib//lib:partial.bzl", "partial")
+
 partial.is_instance(<a href="#partial.is_instance-v">v</a>)
 </pre>
 
@@ -57,7 +61,9 @@ True if v was created by `make`, False otherwise.
 ## partial.make
 
 <pre>
-partial.make(<a href="#partial.make-func">func</a>, <a href="#partial.make-args">args</a>, <a href="#partial.make-kwargs">kwargs</a>)
+load("@bazel_skylib//lib:partial.bzl", "partial")
+
+partial.make(<a href="#partial.make-func">func</a>, <a href="#partial.make-args">*args</a>, <a href="#partial.make-kwargs">**kwargs</a>)
 </pre>
 
 Creates a partial that can be called using `call`.

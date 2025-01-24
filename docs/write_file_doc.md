@@ -14,7 +14,9 @@ file. Instead they use Starlark's built-in file writing action
 ## write_file
 
 <pre>
-write_file(<a href="#write_file-name">name</a>, <a href="#write_file-out">out</a>, <a href="#write_file-content">content</a>, <a href="#write_file-is_executable">is_executable</a>, <a href="#write_file-newline">newline</a>, <a href="#write_file-kwargs">kwargs</a>)
+load("@bazel_skylib//rules:write_file.bzl", "write_file")
+
+write_file(<a href="#write_file-name">name</a>, <a href="#write_file-out">out</a>, <a href="#write_file-content">content</a>, <a href="#write_file-is_executable">is_executable</a>, <a href="#write_file-newline">newline</a>, <a href="#write_file-kwargs">**kwargs</a>)
 </pre>
 
 Creates a UTF-8 encoded text file.

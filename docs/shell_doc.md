@@ -7,6 +7,8 @@ Skylib module containing shell utility functions.
 ## shell.array_literal
 
 <pre>
+load("@bazel_skylib//lib:shell.bzl", "shell")
+
 shell.array_literal(<a href="#shell.array_literal-iterable">iterable</a>)
 </pre>
 
@@ -38,6 +40,8 @@ parentheses containing the quoted elements.
 ## shell.quote
 
 <pre>
+load("@bazel_skylib//lib:shell.bzl", "shell")
+
 shell.quote(<a href="#shell.quote-s">s</a>)
 </pre>
 

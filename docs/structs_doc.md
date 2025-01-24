@@ -7,6 +7,8 @@ Skylib module containing functions that operate on structs.
 ## structs.to_dict
 
 <pre>
+load("@bazel_skylib//lib:structs.bzl", "structs")
+
 structs.to_dict(<a href="#structs.to_dict-s">s</a>)
 </pre>
 

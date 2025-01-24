@@ -7,6 +7,8 @@ Skylib module containing convenience interfaces for select().
 ## selects.config_setting_group
 
 <pre>
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
 selects.config_setting_group(<a href="#selects.config_setting_group-name">name</a>, <a href="#selects.config_setting_group-match_any">match_any</a>, <a href="#selects.config_setting_group-match_all">match_all</a>, <a href="#selects.config_setting_group-visibility">visibility</a>)
 </pre>
 
@@ -50,6 +52,8 @@ Example:
 ## selects.with_or
 
 <pre>
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
 selects.with_or(<a href="#selects.with_or-input_dict">input_dict</a>, <a href="#selects.with_or-no_match_error">no_match_error</a>)
 </pre>
 
@@ -96,6 +100,8 @@ to
 ## selects.with_or_dict
 
 <pre>
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
 selects.with_or_dict(<a href="#selects.with_or_dict-input_dict">input_dict</a>)
 </pre>
 

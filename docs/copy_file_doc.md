@@ -13,7 +13,9 @@ on Windows (no Bash is required).
 ## copy_file
 
 <pre>
-copy_file(<a href="#copy_file-name">name</a>, <a href="#copy_file-src">src</a>, <a href="#copy_file-out">out</a>, <a href="#copy_file-is_executable">is_executable</a>, <a href="#copy_file-allow_symlink">allow_symlink</a>, <a href="#copy_file-kwargs">kwargs</a>)
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
+
+copy_file(<a href="#copy_file-name">name</a>, <a href="#copy_file-src">src</a>, <a href="#copy_file-out">out</a>, <a href="#copy_file-is_executable">is_executable</a>, <a href="#copy_file-allow_symlink">allow_symlink</a>, <a href="#copy_file-kwargs">**kwargs</a>)
 </pre>
 
 Copies a file to another location.

@@ -7,6 +7,8 @@ Skylib module containing providers for directories.
 ## DirectoryInfo
 
 <pre>
+load("@bazel_skylib//rules/directory:providers.bzl", "DirectoryInfo")
+
 DirectoryInfo(<a href="#DirectoryInfo-entries">entries</a>, <a href="#DirectoryInfo-transitive_files">transitive_files</a>, <a href="#DirectoryInfo-path">path</a>, <a href="#DirectoryInfo-human_readable">human_readable</a>, <a href="#DirectoryInfo-get_path">get_path</a>, <a href="#DirectoryInfo-get_file">get_file</a>, <a href="#DirectoryInfo-get_subdirectory">get_subdirectory</a>,
               <a href="#DirectoryInfo-glob">glob</a>)
 </pre>
@@ -14,7 +16,6 @@ DirectoryInfo(<a href="#DirectoryInfo-entries">entries</a>, <a href="#DirectoryI
 Information about a directory
 
 **FIELDS**
-
 
 | Name  | Description |
 | :------------- | :------------- |
@@ -33,7 +34,9 @@ Information about a directory
 ## create_directory_info
 
 <pre>
-create_directory_info(<a href="#create_directory_info-kwargs">kwargs</a>)
+load("@bazel_skylib//rules/directory:providers.bzl", "create_directory_info")
+
+create_directory_info(<a href="#create_directory_info-kwargs">**kwargs</a>)
 </pre>
 
 

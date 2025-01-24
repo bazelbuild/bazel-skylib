@@ -10,7 +10,9 @@ command (fc.exe) on Windows (no Bash is required).
 ## diff_test
 
 <pre>
-diff_test(<a href="#diff_test-name">name</a>, <a href="#diff_test-file1">file1</a>, <a href="#diff_test-file2">file2</a>, <a href="#diff_test-failure_message">failure_message</a>, <a href="#diff_test-kwargs">kwargs</a>)
+load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
+
+diff_test(<a href="#diff_test-name">name</a>, <a href="#diff_test-file1">file1</a>, <a href="#diff_test-file2">file2</a>, <a href="#diff_test-failure_message">failure_message</a>, <a href="#diff_test-kwargs">**kwargs</a>)
 </pre>
 
 A test that compares two files.

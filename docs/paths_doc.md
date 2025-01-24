@@ -11,6 +11,8 @@ with backslash separators or drive letters.
 ## paths.basename
 
 <pre>
+load("@bazel_skylib//lib:paths.bzl", "paths")
+
 paths.basename(<a href="#paths.basename-p">p</a>)
 </pre>
 
@@ -39,6 +41,8 @@ The basename of the path, which includes the extension.
 ## paths.dirname
 
 <pre>
+load("@bazel_skylib//lib:paths.bzl", "paths")
+
 paths.dirname(<a href="#paths.dirname-p">p</a>)
 </pre>
 
@@ -66,6 +70,8 @@ The dirname of the path.
 ## paths.is_absolute
 
 <pre>
+load("@bazel_skylib//lib:paths.bzl", "paths")
+
 paths.is_absolute(<a href="#paths.is_absolute-path">path</a>)
 </pre>
 
@@ -88,6 +94,8 @@ Returns `True` if `path` is an absolute path.
 ## paths.is_normalized
 
 <pre>
+load("@bazel_skylib//lib:paths.bzl", "paths")
+
 paths.is_normalized(<a href="#paths.is_normalized-str">str</a>, <a href="#paths.is_normalized-look_for_same_level_references">look_for_same_level_references</a>)
 </pre>
 
@@ -115,7 +123,9 @@ True if the path is normalized, False otherwise.
 ## paths.join
 
 <pre>
-paths.join(<a href="#paths.join-path">path</a>, <a href="#paths.join-others">others</a>)
+load("@bazel_skylib//lib:paths.bzl", "paths")
+
+paths.join(<a href="#paths.join-path">path</a>, <a href="#paths.join-others">*others</a>)
 </pre>
 
 Joins one or more path components intelligently.
@@ -147,6 +157,8 @@ A string containing the joined paths.
 ## paths.normalize
 
 <pre>
+load("@bazel_skylib//lib:paths.bzl", "paths")
+
 paths.normalize(<a href="#paths.normalize-path">path</a>)
 </pre>
 
@@ -184,6 +196,8 @@ The normalized path.
 ## paths.relativize
 
 <pre>
+load("@bazel_skylib//lib:paths.bzl", "paths")
+
 paths.relativize(<a href="#paths.relativize-path">path</a>, <a href="#paths.relativize-start">start</a>)
 </pre>
 
@@ -216,6 +230,8 @@ The portion of `path` that is relative to `start`.
 ## paths.replace_extension
 
 <pre>
+load("@bazel_skylib//lib:paths.bzl", "paths")
+
 paths.replace_extension(<a href="#paths.replace_extension-p">p</a>, <a href="#paths.replace_extension-new_extension">new_extension</a>)
 </pre>
 
@@ -242,6 +258,8 @@ The path with the extension replaced (or added, if it did not have one).
 ## paths.split_extension
 
 <pre>
+load("@bazel_skylib//lib:paths.bzl", "paths")
+
 paths.split_extension(<a href="#paths.split_extension-p">p</a>)
 </pre>
 
@@ -271,6 +289,8 @@ the leading dot). The returned tuple always satisfies the relationship
 ## paths.starts_with
 
 <pre>
+load("@bazel_skylib//lib:paths.bzl", "paths")
+
 paths.starts_with(<a href="#paths.starts_with-path_a">path_a</a>, <a href="#paths.starts_with-path_b">path_b</a>)
 </pre>
 
