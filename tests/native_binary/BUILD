@@ -55,6 +55,23 @@ copy_file(
     is_executable = True,
 )
 
+cc_binary(
+    name = "assertenv",
+    srcs = ["assertenv.cc"],
+)
+
+# A rule that copies "assertenv"'s output as an opaque executable, simulating a
+# binary that's not built from source and needs to be wrapped in native_binary.
+copy_file(
+    name = "copy_assertenv_exe",
+    src = ":assertenv",
+    # On Windows we need the ".exe" extension.
+    # On other platforms the extension doesn't matter.
+    # Therefore we can use ".exe" on every platform.
+    out = "assertenv_copy.exe",
+    is_executable = True,
+)
+
 _ARGS = [
     "'a b'",
     "c\\ d",
@@ -121,4 +138,24 @@ native_test(
     # On other platforms the extension doesn't matter.
     # Therefore we can use ".exe" on every platform.
     out = "data_from_binary_test.exe",
+)
+
+native_binary(
+    name = "env_bin",
+    src = ":copy_assertenv_exe",
+    # On Windows we need the ".exe" extension.
+    # On other platforms the extension doesn't matter.
+    # Therefore we can use ".exe" on every platform.
+    out = "env_bin.exe",
+    env = {"TEST_ENV_VAR": "ENV_VALUE"},
+)
+
+native_test(
+    name = "env_test",
+    src = ":copy_assertenv_exe",
+    # On Windows we need the ".exe" extension.
+    # On other platforms the extension doesn't matter.
+    # Therefore we can use ".exe" on every platform.
+    out = "env_test.exe",
+    env = {"TEST_ENV_VAR": "ENV_VALUE"},
 )
