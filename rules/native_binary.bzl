@@ -34,11 +34,16 @@ def _impl_rule(ctx):
         for d in ctx.attr.data + [ctx.attr.src]
     ])
 
-    return DefaultInfo(
-        executable = out,
-        files = depset([out]),
-        runfiles = runfiles,
-    )
+    return [
+        DefaultInfo(
+            executable = out,
+            files = depset([out]),
+            runfiles = runfiles,
+        ),
+        RunEnvironmentInfo(
+            environment = ctx.attr.env,
+        ),
+    ]
 
 _ATTRS = {
     "src": attr.label(
@@ -62,6 +67,9 @@ _ATTRS = {
         doc = "An output name for the copy of the binary. Defaults to " +
               "name.exe. (We add .exe to the name by default because it's " +
               "required on Windows and tolerated on other platforms.)",
+    ),
+    "env": attr.string_dict(
+        doc = "Environment variables to set when running the binary.",
     ),
 }
 
