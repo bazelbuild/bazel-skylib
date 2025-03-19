@@ -34,7 +34,7 @@ This rule uses a Bash command on Linux/macOS/non-Windows, and a cmd.exe command 
 | <a id="copy_file-src"></a>src |  A Label. The file to make a copy of. (Can also be the label of a rule that generates a file.)   |  none |
 | <a id="copy_file-out"></a>out |  Path of the output file, relative to this package.   |  none |
 | <a id="copy_file-is_executable"></a>is_executable |  A boolean. Whether to make the output file executable. When True, the rule's output can be executed using `bazel run` and can be in the srcs of binary and test rules that require executable sources. WARNING: If `allow_symlink` is True, `src` must also be executable.   |  `False` |
-| <a id="copy_file-allow_symlink"></a>allow_symlink |  A boolean. Whether to allow symlinking instead of copying. When False, the output is always a hard copy. When True, the output *can* be a symlink, but there is no guarantee that a symlink is created (i.e., at the time of writing, we don't create symlinks on Windows). Set this to True if you need fast copying and your tools can handle symlinks (which most UNIX tools can).   |  `False` |
+| <a id="copy_file-allow_symlink"></a>allow_symlink |  A boolean. Whether to allow symlinking instead of copying. When False, the output is always a hard copy, but actions consuming that output as an input may still see a symlink (e.g. when using sandboxed excution). When True, the output *can* be a symlink, but there is no guarantee that a symlink is created (i.e., at the time of writing, we don't create symlinks on Windows by default). This defaults to True if `is_executable` is False, and False otherwise.   |  `None` |
 | <a id="copy_file-kwargs"></a>kwargs |  further keyword arguments, e.g. `visibility`   |  none |
 
 
