@@ -19,8 +19,6 @@ cmd.exe (on Windows). '_copy_xfile' marks the resulting file executable,
 '_copy_file' does not.
 """
 
-load(":copy_common.bzl", "COPY_EXECUTION_REQUIREMENTS")
-
 def copy_cmd(ctx, src, dst):
     # Most Windows binaries built with MSVC use a certain argument quoting
     # scheme. Bazel uses that scheme too to quote arguments. However,
@@ -46,7 +44,6 @@ def copy_cmd(ctx, src, dst):
         mnemonic = "CopyFile",
         progress_message = "Copying files",
         use_default_shell_env = True,
-        execution_requirements = COPY_EXECUTION_REQUIREMENTS,
     )
 
 def copy_bash(ctx, src, dst):
@@ -58,7 +55,6 @@ def copy_bash(ctx, src, dst):
         mnemonic = "CopyFile",
         progress_message = "Copying files",
         use_default_shell_env = True,
-        execution_requirements = COPY_EXECUTION_REQUIREMENTS,
     )
 
 def _copy_file_impl(ctx):
@@ -104,7 +100,7 @@ _copy_xfile = rule(
     attrs = _ATTRS,
 )
 
-def copy_file(name, src, out, is_executable = False, allow_symlink = False, **kwargs):
+def copy_file(name, src, out, is_executable = False, allow_symlink = None, **kwargs):
     """Copies a file to another location.
 
     `native.genrule()` is sometimes used to copy files (often wishing to rename them). The 'copy_file' rule does this with a simpler interface than genrule.
@@ -121,11 +117,12 @@ def copy_file(name, src, out, is_executable = False, allow_symlink = False, **kw
           in the srcs of binary and test rules that require executable sources.
           WARNING: If `allow_symlink` is True, `src` must also be executable.
       allow_symlink: A boolean. Whether to allow symlinking instead of copying.
-          When False, the output is always a hard copy. When True, the output
-          *can* be a symlink, but there is no guarantee that a symlink is
-          created (i.e., at the time of writing, we don't create symlinks on
-          Windows). Set this to True if you need fast copying and your tools can
-          handle symlinks (which most UNIX tools can).
+          When False, the output is always a hard copy, but actions consuming
+          that output as an input may still see a symlink (e.g. when using
+          sandboxed excution). When True, the output *can* be a symlink, but
+          there is no guarantee that a symlink is created (i.e., at the time of
+          writing, we don't create symlinks on Windows by default). This
+          defaults to True if `is_executable` is False, and False otherwise.
       **kwargs: further keyword arguments, e.g. `visibility`
     """
 
@@ -142,6 +139,9 @@ def copy_file(name, src, out, is_executable = False, allow_symlink = False, **kw
             "//conditions:default": False,
         }),
         is_executable = is_executable,
-        allow_symlink = allow_symlink,
+        # Default to True if is_executable is False since symlinking avoids
+        # running a full action to copy the file. If the output needs to be
+        # executable, a copy may be required if the input isn't.
+        allow_symlink = allow_symlink if allow_symlink != None else not is_executable,
         **kwargs
     )
