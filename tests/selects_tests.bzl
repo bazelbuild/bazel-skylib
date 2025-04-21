@@ -69,7 +69,7 @@ with_or_test = unittest.make(_with_or_test)
 def _create_config_settings():
     native.config_setting(
         name = "condition1",
-        values = {"cpu": "ppc"},
+        values = {"stamp": "1"},
     )
     native.config_setting(
         name = "condition2",
@@ -116,9 +116,9 @@ def _set_conditions(condition_list):
         fail("condition_list must be a list of 3 booleans")
     ans = {}
     if condition_list[0]:
-        ans["//command_line_option:cpu"] = "ppc"
+        ans["//command_line_option:stamp"] = "1"
     else:
-        ans["//command_line_option:cpu"] = "k8"
+        ans["//command_line_option:stamp"] = "0"
     if condition_list[1]:
         ans["//command_line_option:compilation_mode"] = "opt"
     else:
@@ -305,7 +305,7 @@ def _and_config_setting_group_all_matches_fail_test():
 ###################################################
 and_config_setting_group_single_setting_matches_test = analysistest.make(
     _expect_matches,
-    config_settings = {"//command_line_option:cpu": "ppc"},
+    config_settings = {"//command_line_option:stamp": "1"},
 )
 
 def _and_config_setting_group_single_setting_matches_test():
@@ -329,7 +329,7 @@ def _and_config_setting_group_single_setting_matches_test():
 ###################################################
 and_config_setting_group_single_setting_fails_test = analysistest.make(
     _expect_doesnt_match,
-    config_settings = {"//command_line_option:cpu": "x86"},
+    config_settings = {"//command_line_option:stamp": "0"},
 )
 
 def _and_config_setting_group_single_setting_fails_test():
@@ -497,7 +497,7 @@ def _or_config_setting_group_all_conds_match_test():
 ###################################################
 or_config_setting_group_single_setting_matches_test = analysistest.make(
     _expect_matches,
-    config_settings = {"//command_line_option:cpu": "ppc"},
+    config_settings = {"//command_line_option:stamp": "1"},
 )
 
 def _or_config_setting_group_single_setting_matches_test():
@@ -521,7 +521,7 @@ def _or_config_setting_group_single_setting_matches_test():
 ###################################################
 or_config_setting_group_single_setting_fails_test = analysistest.make(
     _expect_doesnt_match,
-    config_settings = {"//command_line_option:cpu": "x86"},
+    config_settings = {"//command_line_option:stamp": "0"},
 )
 
 def _or_config_setting_group_single_setting_fails_test():
