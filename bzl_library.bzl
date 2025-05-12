@@ -20,7 +20,6 @@ load(
     _StarlarkLibraryInfo = "StarlarkLibraryInfo",
     _bzl_library = "bzl_library",
 )
-load("@bazel_features//:features.bzl", "bazel_features")
 
 StarlarkLibraryInfo = _StarlarkLibraryInfo
 
@@ -49,9 +48,7 @@ def bzl_library(name, srcs = [], deps = [], **kwargs):
         **kwargs
     )
     
-    # Detect starlark_doc_extract
-    # TODO: use symbol introduced in https://github.com/bazel-contrib/bazel_features/pull/99
-    if bazel_features.proto.starlark_proto_info:
+    if hasattr(native, "starlark_doc_extract"):
         for i, src in enumerate(srcs):
             native.starlark_doc_extract(
                 name = "{}.doc_extract{}".format(name, i if i > 0 else ""),
