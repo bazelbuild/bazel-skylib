@@ -48,9 +48,9 @@ def bzl_library(name, srcs = [], deps = [], **kwargs):
         **kwargs
     )
     
-    for src in srcs:
+    for i, src in enumerate(srcs):
         native.starlark_doc_extract(
-            name = "{}.doc_extract{}".format(name, "_" + src if len(srcs) > 1 else ""),
+            name = "{}.doc_extract{}".format(name, i if i > 0 else ""),
             src = src,
             deps = deps,
         )
