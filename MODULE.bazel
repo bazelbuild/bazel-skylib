@@ -10,6 +10,7 @@ register_toolchains(
     "//toolchains/unittest:bash_toolchain",
 )
 
+bazel_dep(name = "bazel_features", version = "1.29.0")
 bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "rules_license", version = "1.0.0")
 
