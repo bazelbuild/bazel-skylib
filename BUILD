@@ -61,6 +61,7 @@ bzl_library(
     name = "bzl_library",
     srcs = ["bzl_library.bzl"],
     deps = [
+        "@bazel_features//:features",
         "//rules/private:bzl_library",
     ],
 )
