@@ -69,6 +69,7 @@ int_flag = rule(
         "scope": attr.string(
             doc = "The scope indicates where a flag can propagate to",
             default = "universal",
+            values = ["universal", "project", "exec"],
         ),
     },
     doc = "An int-typed build setting that can be set on the command line",
@@ -83,6 +84,7 @@ int_setting = rule(
             doc = "The scope indicates where a flag can propagate to",
             default = "universal",
         ),
+        values = ["universal", "project", "exec"],
     },
     doc = "An int-typed build setting that cannot be set on the command line",
 )
@@ -94,6 +96,7 @@ bool_flag = rule(
         "scope": attr.string(
             doc = "The scope indicates where a flag can propagate to",
             default = "universal",
+            values = ["universal", "project", "exec"],
         ),
     },
     doc = "A bool-typed build setting that can be set on the command line",
@@ -106,6 +109,7 @@ bool_setting = rule(
         "scope": attr.string(
             doc = "The scope indicates where a flag can propagate to",
             default = "universal",
+            values = ["universal", "project", "exec"],
         ),
     },
     doc = "A bool-typed build setting that cannot be set on the command line",
@@ -118,6 +122,7 @@ string_list_flag = rule(
         "scope": attr.string(
             doc = "The scope indicates where a flag can propagate to",
             default = "universal",
+            values = ["universal", "project", "exec"],
         ),
     },
     doc = "A string list-typed build setting that can be set on the command line",
@@ -130,6 +135,7 @@ string_list_setting = rule(
         "scope": attr.string(
             doc = "The scope indicates where a flag can propagate to",
             default = "universal",
+            values = ["universal", "project", "exec"],
         ),
     },
     doc = "A string list-typed build setting that cannot be set on the command line",
@@ -163,6 +169,7 @@ string_flag = rule(
         "scope": attr.string(
             doc = "The scope indicates where a flag can propagate to",
             default = "universal",
+            values = ["universal", "project", "exec"],
         ),
     },
     doc = "A string-typed build setting that can be set on the command line",
@@ -179,6 +186,7 @@ string_setting = rule(
         "scope": attr.string(
             doc = "The scope indicates where a flag can propagate to",
             default = "universal",
+            values = ["universal", "project", "exec"],
         ),
     },
     doc = "A string-typed build setting that cannot be set on the command line",
