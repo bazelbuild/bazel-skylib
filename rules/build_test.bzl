@@ -17,8 +17,9 @@
 load("//lib:new_sets.bzl", "sets")
 
 def _empty_test_impl(ctx):
-    extension = ".bat" if ctx.attr.is_windows else ".sh"
-    content = "exit 0" if ctx.attr.is_windows else "#!/usr/bin/env bash\nexit 0"
+    is_windows = ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo])
+    extension = ".bat" if is_windows else ".sh"
+    content = "exit 0" if is_windows else "#!/usr/bin/env bash\nexit 0"
     executable = ctx.actions.declare_file(ctx.label.name + extension)
     ctx.actions.write(
         output = executable,
@@ -36,7 +37,7 @@ _empty_test = rule(
     implementation = _empty_test_impl,
     attrs = {
         "data": attr.label_list(allow_files = True),
-        "is_windows": attr.bool(mandatory = True),
+        "_windows_constraint": attr.label(default = "@platforms//os:windows"),
     },
     test = True,
 )
@@ -121,9 +122,5 @@ def build_test(name, targets, **kwargs):
         name = name,
         data = test_data,
         size = kwargs.pop("size", "small"),  # Default to small for test size
-        is_windows = select({
-            "@bazel_tools//src/conditions:host_windows": True,
-            "//conditions:default": False,
-        }),
         **kwargs
     )
