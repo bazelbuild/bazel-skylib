@@ -60,6 +60,9 @@ function assert_simple_diff_test() {
 
   import_diff_test "$ws"
   touch "$ws/WORKSPACE"
+  cat >"$ws/MODULE.bazel" <<'eof'
+bazel_dep(name = "platforms", version = "0.0.10")
+eof
   mkdir -p "$ws/$subdir"
   cat >"$ws/${subdir}BUILD" <<'eof'
 load("//rules:diff_test.bzl", "diff_test")
@@ -113,6 +116,7 @@ local_repository(
 )
 eof
   cat >"$ws/main/MODULE.bazel" <<'eof'
+bazel_dep(name = "platforms", version = "0.0.10")
 local_repository = use_repo_rule("@bazel_tools//tools/build_defs/repo:local.bzl", "local_repository")
 local_repository(
     name = "bzl",
@@ -249,6 +253,9 @@ function test_failure_message() {
 
   import_diff_test "$ws"
   touch "$ws/WORKSPACE"
+  cat >"$ws/MODULE.bazel" <<'eof'
+bazel_dep(name = "platforms", version = "0.0.10")
+eof
   cat >"$ws/BUILD" <<'eof'
 load("//rules:diff_test.bzl", "diff_test")
 

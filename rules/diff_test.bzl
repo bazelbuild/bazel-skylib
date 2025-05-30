@@ -27,7 +27,7 @@ def _runfiles_path(f):
         return f.path  # source file
 
 def _diff_test_impl(ctx):
-    if ctx.attr.is_windows:
+    if ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo]):
         test_bin = ctx.actions.declare_file(ctx.label.name + "-test.bat")
         ctx.actions.write(
             output = test_bin,
@@ -137,43 +137,27 @@ fi
         runfiles = ctx.runfiles(files = [test_bin, ctx.file.file1, ctx.file.file2]),
     )
 
-_diff_test = rule(
+diff_test = rule(
+    doc = """A test that compares two files.
+
+    The test succeeds if the files' contents match.
+    """,
     attrs = {
-        "failure_message": attr.string(),
         "file1": attr.label(
+            doc = "Label of the file to compare to `file2`.",
             allow_single_file = True,
             mandatory = True,
         ),
         "file2": attr.label(
+            doc = "Label of the file to compare to `file1`.",
             allow_single_file = True,
             mandatory = True,
         ),
-        "is_windows": attr.bool(mandatory = True),
+        "failure_message": attr.string(
+            doc = "Additional message to log if the files' contents do not match.",
+        ),
+        "_windows_constraint": attr.label(default = "@platforms//os:windows"),
     },
     test = True,
     implementation = _diff_test_impl,
 )
-
-def diff_test(name, file1, file2, failure_message = None, **kwargs):
-    """A test that compares two files.
-
-    The test succeeds if the files' contents match.
-
-    Args:
-      name: The name of the test rule.
-      file1: Label of the file to compare to `file2`.
-      file2: Label of the file to compare to `file1`.
-      failure_message: Additional message to log if the files' contents do not match.
-      **kwargs: The [common attributes for tests](https://bazel.build/reference/be/common-definitions#common-attributes-tests).
-    """
-    _diff_test(
-        name = name,
-        file1 = file1,
-        file2 = file2,
-        failure_message = failure_message,
-        is_windows = select({
-            "@bazel_tools//src/conditions:host_windows": True,
-            "//conditions:default": False,
-        }),
-        **kwargs
-    )
