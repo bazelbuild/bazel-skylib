@@ -34,7 +34,7 @@ def _impl(ctx):
             for f in ctx.attr.srcs.files.to_list()
         ])
         fail("Can not find specified file in [%s]" % files_str)
-    return [DefaultInfo(files = depset([out]))]
+    return [DefaultInfo(files = depset([out]), runfiles = ctx.runfiles(files = [out]))]
 
 select_file = rule(
     implementation = _impl,
