@@ -178,7 +178,7 @@ def _config_setting_or_group(name, settings, visibility):
         native.alias(
             name = name if i == 1 else name + "_" + str(i),
             actual = select({
-                settings[i - 1]: settings[i - 1],
+                native.package_relative_label(settings[i - 1]): settings[i - 1],
                 "//conditions:default": actual[i - 1],
             }),
             visibility = visibility if i == 1 else ["//visibility:private"],
@@ -218,7 +218,7 @@ def _config_setting_and_group(name, settings, visibility):
         native.alias(
             name = name if i == 1 else name + "_" + str(i),
             actual = select({
-                settings[i - 1]: actual[i - 1],
+                native.package_relative_label(settings[i - 1]): actual[i - 1],
                 "//conditions:default": settings[i - 1],
             }),
             visibility = visibility if i == 1 else ["//visibility:private"],
