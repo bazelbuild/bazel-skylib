@@ -76,8 +76,8 @@ def _glob_test(name):
     )
 
 def _glob_test_impl(env, targets):
-    f1 = targets.f1.files.to_list()[0]
-    f2 = targets.f2.files.to_list()[0]
+    f1 = targets.f1[DefaultInfo].files.to_list()[0]
+    f2 = targets.f2[DefaultInfo].files.to_list()[0]
     root = targets.root[DirectoryInfo]
     testdata = root.entries["testdata"]
     subdir = testdata.entries["subdir"]
