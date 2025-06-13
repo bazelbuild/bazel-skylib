@@ -14,6 +14,20 @@
 
 """Skylib module containing functions that operate on structs."""
 
+_built_in_function = type(str)
+
+def _is_built_in_function(v):
+    """Returns True if v is an instance of a built-in function.
+
+    Args:
+      v: The value whose type should be checked.
+
+    Returns:
+      True if v is an instance of a built-in function, False otherwise.
+    """
+
+    return type(v) == _built_in_function
+
 def _to_dict(s):
     """Converts a `struct` to a `dict`.
 
@@ -31,7 +45,7 @@ def _to_dict(s):
     return {
         key: getattr(s, key)
         for key in dir(s)
-        if key != "to_json" and key != "to_proto"
+        if not ((key == "to_json" or key == "to_proto") and _is_built_in_function(getattr(s, key)))
     }
 
 def _merge(first, *rest):
