@@ -17,8 +17,8 @@
 load("//lib:structs.bzl", "structs")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
-def _add_test(ctx):
-    """Unit tests for dicts.add."""
+def _to_dict_test(ctx):
+    """Unit tests for structs.to_dict."""
     env = unittest.begin(ctx)
 
     # Test zero- and one-argument behavior.
@@ -44,7 +44,7 @@ def _add_test(ctx):
 
     return unittest.end(env)
 
-add_test = unittest.make(_add_test)
+to_dict_test = unittest.make(_to_dict_test)
 
 def _merge_test(ctx):
     """Unit tests for structs.merge."""
@@ -73,6 +73,6 @@ def structs_test_suite():
     """Creates the test targets and test suite for structs.bzl tests."""
     unittest.suite(
         "structs_tests",
-        add_test,
+        to_dict_test,
         merge_test,
     )
