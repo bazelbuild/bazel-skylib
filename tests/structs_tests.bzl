@@ -14,8 +14,12 @@
 
 """Unit tests for structs.bzl."""
 
+load("@bazel_features//:features.bzl", "bazel_features")
 load("//lib:structs.bzl", "structs")
 load("//lib:unittest.bzl", "asserts", "unittest")
+
+def _placeholder():
+    pass
 
 def _to_dict_test(ctx):
     """Unit tests for structs.to_dict."""
@@ -40,6 +44,24 @@ def _to_dict_test(ctx):
         env,
         {"a": 1, "b": struct(bb = 1)},
         structs.to_dict(struct(a = 1, b = struct(bb = 1))),
+    )
+
+    # Older Bazel denied creating `struct` with `to_json`/`to_proto`
+    if not bazel_features.rules.no_struct_field_denylist:
+        return unittest.end(env)
+
+    # Test `to_json`/`to_proto` values are propagated
+    asserts.equals(
+        env,
+        {"to_json": 1, "to_proto": 2},
+        structs.to_dict(struct(to_json = 1, to_proto = 2)),
+    )
+
+    # Test `to_json`/`to_proto` functions are propagated
+    asserts.equals(
+        env,
+        {"to_json": _placeholder, "to_proto": _placeholder},
+        structs.to_dict(struct(to_json = _placeholder, to_proto = _placeholder)),
     )
 
     return unittest.end(env)
