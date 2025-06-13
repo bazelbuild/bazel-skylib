@@ -46,9 +46,33 @@ def _add_test(ctx):
 
 add_test = unittest.make(_add_test)
 
+def _merge_test(ctx):
+    """Unit tests for structs.merge."""
+    env = unittest.begin(ctx)
+
+    # Fixtures
+    a = struct(a = 1)
+    b = struct(b = 2)
+    c = struct(a = 3)
+
+    # Test one argument
+    asserts.equals(env, {"a": 1}, structs.to_dict(structs.merge(a)))
+
+    # Test two arguments
+    asserts.equals(env, {"a": 1}, structs.to_dict(structs.merge(a, a)))
+    asserts.equals(env, {"a": 1, "b": 2}, structs.to_dict(structs.merge(a, b)))
+
+    # Test overwrite
+    asserts.equals(env, {"a": 3}, structs.to_dict(structs.merge(a, c)))
+
+    return unittest.end(env)
+
+merge_test = unittest.make(_merge_test)
+
 def structs_test_suite():
     """Creates the test targets and test suite for structs.bzl tests."""
     unittest.suite(
         "structs_tests",
         add_test,
+        merge_test,
     )

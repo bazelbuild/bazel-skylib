@@ -34,6 +34,22 @@ def _to_dict(s):
         if key != "to_json" and key != "to_proto"
     }
 
+def _merge(first, *rest):
+    """Merges multiple `struct` instances together. Later `struct` keys overwrite early `struct` keys.
+
+    Args:
+      first: The initial `struct` to merge keys/values into.
+      *rest: Other `struct` instances to merge.
+
+    Returns:
+      A merged `struct`.
+    """
+    map = _to_dict(first)
+    for r in rest:
+        map |= _to_dict(r)
+    return struct(**map)
+
 structs = struct(
     to_dict = _to_dict,
+    merge = _merge,
 )
