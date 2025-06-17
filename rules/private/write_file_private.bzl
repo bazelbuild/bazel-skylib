@@ -18,7 +18,8 @@ These rules write a UTF-8 encoded text file, using Bazel's FileWriteAction.
 '_write_xfile' marks the resulting file executable, '_write_file' does not.
 """
 
-def _common_impl(ctx, is_windows, is_executable):
+def _common_impl(ctx, is_executable):
+    is_windows = ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo])
     if ctx.attr.newline == "auto":
         newline = "\r\n" if is_windows else "\n"
     elif ctx.attr.newline == "windows":
@@ -43,16 +44,16 @@ def _common_impl(ctx, is_windows, is_executable):
         return [DefaultInfo(files = files, data_runfiles = runfiles)]
 
 def _impl(ctx):
-    return _common_impl(ctx, ctx.attr.is_windows, False)
+    return _common_impl(ctx, False)
 
 def _ximpl(ctx):
-    return _common_impl(ctx, ctx.attr.is_windows, True)
+    return _common_impl(ctx, True)
 
 _ATTRS = {
     "out": attr.output(mandatory = True),
     "content": attr.string_list(mandatory = False, allow_empty = True),
     "newline": attr.string(values = ["unix", "windows", "auto"], default = "auto"),
-    "is_windows": attr.bool(mandatory = True),
+    "_windows_constraint": attr.label(default = "@platforms//os:windows"),
 }
 
 _write_file = rule(
@@ -96,10 +97,6 @@ def write_file(
             content = content,
             out = out,
             newline = newline or "auto",
-            is_windows = select({
-                "@bazel_tools//src/conditions:host_windows": True,
-                "//conditions:default": False,
-            }),
             **kwargs
         )
     else:
@@ -108,9 +105,5 @@ def write_file(
             content = content,
             out = out,
             newline = newline or "auto",
-            is_windows = select({
-                "@bazel_tools//src/conditions:host_windows": True,
-                "//conditions:default": False,
-            }),
             **kwargs
         )
