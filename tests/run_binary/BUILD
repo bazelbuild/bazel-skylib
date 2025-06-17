@@ -77,7 +77,7 @@ write_file(
     # Therefore we can use ".bat" on every platform.
     out = "script.bat",
     content = select({
-        "@bazel_tools//src/conditions:host_windows": [
+        "@platforms//os:windows": [
             "@echo>%OUT% arg1=(%1)",
             "@echo>>%OUT% arg2=(%2)",
             "@echo>>%OUT% ENV_LOCATION=(%ENV_LOCATION%)",
