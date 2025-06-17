@@ -24,14 +24,14 @@ def _impl(ctx):
 
     out = None
     canonical = ctx.attr.subpath.replace("\\", "/")
-    for file_ in ctx.attr.srcs.files.to_list():
+    for file_ in ctx.attr.srcs[DefaultInfo].files.to_list():
         if file_.path.replace("\\", "/").endswith(canonical):
             out = file_
             break
     if not out:
         files_str = ",\n".join([
             str(f.path)
-            for f in ctx.attr.srcs.files.to_list()
+            for f in ctx.attr.srcs[DefaultInfo].files.to_list()
         ])
         fail("Can not find specified file in [%s]" % files_str)
     return [DefaultInfo(files = depset([out]))]
