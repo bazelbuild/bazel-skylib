@@ -1,8 +1,11 @@
 load("//:bzl_library.bzl", "bzl_library")
+load(":copy_file_private.bzl", "is_windows")
 
 package(default_applicable_licenses = ["//:license"])
 
 licenses(["notice"])
+
+is_windows(name = "is_windows")
 
 bzl_library(
     name = "bzl_library",

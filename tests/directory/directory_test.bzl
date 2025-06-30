@@ -32,10 +32,10 @@ def _source_root_test(name):
     )
 
 def _source_root_test_impl(env, targets):
-    f1 = targets.f1.files.to_list()[0]
-    f2 = targets.f2.files.to_list()[0]
+    f1 = targets.f1[DefaultInfo].files.to_list()[0]
+    f2 = targets.f2[DefaultInfo].files.to_list()[0]
 
-    env.expect.that_collection(targets.root.files.to_list()).contains_exactly(
+    env.expect.that_collection(targets.root[DefaultInfo].files.to_list()).contains_exactly(
         [f1, f2],
     )
 
@@ -73,9 +73,9 @@ def _generated_root_test(name):
     )
 
 def _generated_root_test_impl(env, targets):
-    generated = targets.generated.files.to_list()[0]
+    generated = targets.generated[DefaultInfo].files.to_list()[0]
 
-    env.expect.that_collection(targets.root.files.to_list()).contains_exactly(
+    env.expect.that_collection(targets.root[DefaultInfo].files.to_list()).contains_exactly(
         [generated],
     )
 
@@ -109,9 +109,9 @@ def _no_srcs_test(name):
     )
 
 def _no_srcs_test_impl(env, targets):
-    f1 = targets.f1.files.to_list()[0]
+    f1 = targets.f1[DefaultInfo].files.to_list()[0]
 
-    env.expect.that_collection(targets.root.files.to_list()).contains_exactly([])
+    env.expect.that_collection(targets.root[DefaultInfo].files.to_list()).contains_exactly([])
 
     d = directory_subject(env, targets.root[DirectoryInfo])
     d.entries().contains_exactly({})
