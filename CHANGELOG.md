@@ -1,3 +1,37 @@
+# Release 1.8.0
+
+## What's Changed
+* fix: subpackages.all works for root packages by @kilian-funk in https://github.com/bazelbuild/bazel-skylib/pull/531
+* Strip compatible_with from bzl_library rules by @aiuto in https://github.com/bazelbuild/bazel-skylib/pull/522
+* Make only root test_deps externally visible by @tetromino in https://github.com/bazelbuild/bazel-skylib/pull/508
+* Update README.md by @BoleynSu in https://github.com/bazelbuild/bazel-skylib/pull/380
+* Add test_deps to rules/private by @aiuto in https://github.com/bazelbuild/bazel-skylib/pull/534
+* Fix bazel_skylib with Bazel@HEAD by @meteorcloudy in https://github.com/bazelbuild/bazel-skylib/pull/538
+* Explicitly enable workspace for some tasks by @meteorcloudy in https://github.com/bazelbuild/bazel-skylib/pull/540
+* README.md: fix broken directory rule links by @lukasoyen in https://github.com/bazelbuild/bazel-skylib/pull/544
+* Remove sh_binary usage for Bazel 8 friendliness by @tetromino in https://github.com/bazelbuild/bazel-skylib/pull/550
+* adding scope attributes for starlark flags by @aranguyen in https://github.com/bazelbuild/bazel-skylib/pull/546
+* Update common_settings.bzl by @aranguyen in https://github.com/bazelbuild/bazel-skylib/pull/552
+* Simplify CI steup and make presubmit green again by @meteorcloudy in https://github.com/bazelbuild/bazel-skylib/pull/557
+* fix(gazelle): remove deprecated function call by @tyler-french in https://github.com/bazelbuild/bazel-skylib/pull/556
+* Remove obsolete bazel 4.x compat code by @lukasoyen in https://github.com/bazelbuild/bazel-skylib/pull/560
+* Add new "env" variable to native_* rules by @gioachin in https://github.com/bazelbuild/bazel-skylib/pull/561
+* Replace outdated `select() on --cpu` with another flag ref by @gregestren in https://github.com/bazelbuild/bazel-skylib/pull/570
+* Migrate away from `@bazel_tools//src/conditions:host_windows` by @fmeum in https://github.com/bazelbuild/bazel-skylib/pull/574
+* Use DefaultInfo directly by @keith in https://github.com/bazelbuild/bazel-skylib/pull/577
+* Use `native.package_relative_label` in `selects.bzl` by @fmeum in https://github.com/bazelbuild/bazel-skylib/pull/576
+* Add BCR publishing workflow by @fmeum in https://github.com/bazelbuild/bazel-skylib/pull/581
+
+## New Contributors
+* @kilian-funk made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/531
+* @BoleynSu made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/380
+* @lukasoyen made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/544
+* @aranguyen made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/546
+* @tyler-french made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/556
+* @gioachin made their first contribution in https://github.com/bazelbuild/bazel-skylib/pull/561
+
+**Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.7.1...1.8.0
+
 # Release 1.7.1
 
 **What's Changed**
