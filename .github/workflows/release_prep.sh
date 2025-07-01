@@ -14,6 +14,10 @@ bazel build //distribution:bazel-skylib-gazelle-plugin
 ARCHIVE_GAZELLE_PLUGIN="$(bazel cquery --output=files //distribution:bazel-skylib-gazelle-plugin)"
 SHA256SUM_GAZELLE_PLUGIN=$(shasum -a 256 "$ARCHIVE_GAZELLE_PLUGIN" | awk '{print $1}')
 
+# Move the archives to the root so that they are discoverable for upload
+mv "$ARCHIVE" .
+mv "$ARCHIVE_GAZELLE_PLUGIN" .
+
 cat << EOF
 **MODULE.bazel setup**
 
