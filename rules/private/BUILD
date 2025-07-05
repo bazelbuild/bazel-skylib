@@ -5,7 +5,10 @@ package(default_applicable_licenses = ["//:license"])
 
 licenses(["notice"])
 
-is_windows(name = "is_windows")
+is_windows(
+    name = "is_windows",
+    visibility = ["//visibility:public"],
+)
 
 bzl_library(
     name = "bzl_library",
