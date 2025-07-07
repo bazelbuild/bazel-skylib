@@ -1,3 +1,10 @@
+# Release 1.8.1
+
+**What's Changed**
+* Make `is_windows` public (https://github.com/bazelbuild/bazel-skylib/pull/584)
+
+**Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.8.0...1.8.1
+
 # Release 1.8.0
 
 ## What's Changed

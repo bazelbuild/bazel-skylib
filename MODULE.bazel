@@ -1,7 +1,7 @@
 module(
     name = "bazel_skylib",
     # Keep in sync with version.bzl and @bazel_skylib_gazelle_plugin//:MODULE.bazel
-    version = "1.8.0",
+    version = "1.8.1",
     compatibility_level = 1,
 )
 
