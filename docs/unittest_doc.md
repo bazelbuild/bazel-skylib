@@ -396,7 +396,7 @@ Asserts that the given `condition` is true.
 <pre>
 load("@bazel_skylib//lib:unittest.bzl", "loadingtest")
 
-loadingtest.equals(<a href="#loadingtest.equals-env">env</a>, <a href="#loadingtest.equals-test_case">test_case</a>, <a href="#loadingtest.equals-expected">expected</a>, <a href="#loadingtest.equals-actual">actual</a>)
+loadingtest.equals(<a href="#loadingtest.equals-env">env</a>, <a href="#loadingtest.equals-test_case">test_case</a>, <a href="#loadingtest.equals-expected">expected</a>, <a href="#loadingtest.equals-actual">actual</a>, <a href="#loadingtest.equals-timeout">timeout</a>)
 </pre>
 
 Creates a test case for asserting state at LOADING phase.
@@ -410,6 +410,7 @@ Creates a test case for asserting state at LOADING phase.
 | <a id="loadingtest.equals-test_case"></a>test_case |  Name of the test case   |  none |
 | <a id="loadingtest.equals-expected"></a>expected |  Expected value to test   |  none |
 | <a id="loadingtest.equals-actual"></a>actual |  Actual value received.   |  none |
+| <a id="loadingtest.equals-timeout"></a>timeout |  Test timeout passed into the generated rule.   |  `"short"` |
 
 **RETURNS**
 
