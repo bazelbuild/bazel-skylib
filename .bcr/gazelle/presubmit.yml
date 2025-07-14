@@ -1,11 +1,14 @@
 matrix:
   platform:
-  - centos7
+  - rockylinux8
   - debian10
   - macos
-  - ubuntu2004
+  - macos_arm64
+  - ubuntu2204
+  - ubuntu2404
   - windows
   bazel:
+  - 8.x
   - 7.x
   - 6.x
 tasks:

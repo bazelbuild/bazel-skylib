@@ -55,8 +55,8 @@ def _subdirectory_test(name):
     )
 
 def _subdirectory_test_impl(env, targets):
-    f1 = targets.f1.files.to_list()[0]
-    f2 = targets.f2.files.to_list()[0]
+    f1 = targets.f1[DefaultInfo].files.to_list()[0]
+    f2 = targets.f2[DefaultInfo].files.to_list()[0]
 
     root = targets.root[DirectoryInfo]
     want_dir = root.entries["testdata"]
@@ -67,10 +67,10 @@ def _subdirectory_test_impl(env, targets):
     env.expect.that_str(targets.subdir[DirectoryInfo]).equals(want_subdir)
 
     env.expect.that_collection(
-        targets.testdata.files.to_list(),
+        targets.testdata[DefaultInfo].files.to_list(),
     ).contains_exactly([f1, f2])
     env.expect.that_collection(
-        targets.subdir.files.to_list(),
+        targets.subdir[DefaultInfo].files.to_list(),
     ).contains_exactly([f2])
 
 def _nonexistent_subdirectory_test(name):

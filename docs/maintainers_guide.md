@@ -77,100 +77,18 @@ Name 1, Name 2, Name 3 (alphabetically from `git log`)
 2.  Bump `version` in version.bzl, MODULE.bazel, *and* gazelle/MODULE.bazel to
     the new version.
     TODO(#386): add a test to make sure all the versions are in sync.
-3.  Ensure that the commits for steps 1 and 2 have been merged. All further
-    steps must be performed on a single, known-good git commit.
-4.  `bazel build //distribution`
-5.  Copy the `bazel-skylib-$VERSION.tar.gz` and
-    `bazel-skylib-gazelle-plugin-$VERSION.tar.gz` tarballs to the mirror (you'll
+3.  Ensure that the commits for steps 1 and 2 have been merged.
+4.  Create a new tag in the format `1.2.3` (no leading `v`) and push it to
+    GitHub.
+5.  Review a PR at [Bazel Central Registry](https://github.com/bazelbuild/bazel-central-registry)
+    created by the publish.yaml workflow.
+6.  Download the the `bazel-skylib-$VERSION.tar.gz` and
+    `bazel-skylib-gazelle-plugin-$VERSION.tar.gz` tarballs from the
+    automatically created GitHub release and upload them to the mirror (you'll
     need Bazel developer gcloud credentials; assuming you are a Bazel developer,
     you can obtain them via `gcloud init`):
 
 ```bash
-gsutil cp bazel-bin/distribution/bazel-skylib{,-gazelle-plugin}-$VERSION.tar.gz gs://bazel-mirror/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/
+gsutil cp bazel-skylib{,-gazelle-plugin}-$VERSION.tar.gz gs://bazel-mirror/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/
 gsutil setmeta -h "Cache-Control: public, max-age=31536000" gs://bazel-mirror/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib{,-gazelle-plugin}-$VERSION.tar.gz
 ```
-
-6.  Obtain checksums for release notes:
-
-```bash
-sha256sum bazel-bin/distribution/bazel-skylib-$VERSION.tar.gz
-sha256sum bazel-bin/distribution/bazel-skylib-gazelle-plugin-$VERSION.tar.gz
-````
-
-7.  Draft a new release with a new tag named $VERSION in github. Attach
-    `bazel-skylib-$VERSION.tar.gz` and
-    `bazel-skylib-gazelle-plugin-$VERSION.tar.gz` to the release. For the
-    release notes, use the CHANGELOG.md entry plus the following template:
-
---------------------------------------------------------------------------------
-
-**WORKSPACE setup**
-
-```
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-http_archive(
-    name = "bazel_skylib",
-    sha256 = "$SHA256SUM",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz",
-        "https://github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-$VERSION.tar.gz",
-    ],
-)
-
-load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
-
-bazel_skylib_workspace()
-```
-
-***Additional WORKSPACE setup for the Gazelle plugin***
-
-```starlark
-http_archive(
-    name = "bazel_skylib_gazelle_plugin",
-    sha256 = "$SHA256SUM_GAZELLE_PLUGIN",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-gazelle-plugin-$VERSION.tar.gz",
-        "https://github.com/bazelbuild/bazel-skylib/releases/download/$VERSION/bazel-skylib-gazelle-plugin-$VERSION.tar.gz",
-    ],
-)
-
-load("@bazel_skylib_gazelle_plugin//:workspace.bzl", "bazel_skylib_gazelle_plugin_workspace")
-
-bazel_skylib_gazelle_plugin_workspace()
-
-load("@bazel_skylib_gazelle_plugin//:setup.bzl", "bazel_skylib_gazelle_plugin_setup")
-
-bazel_skylib_gazelle_plugin_setup()
-```
-
-**Using the rules**
-
-See [the source](https://github.com/bazelbuild/bazel-skylib/tree/$VERSION).
-
---------------------------------------------------------------------------------
-
-8.  Review a PR at [Bazel Central Registry](https://github.com/bazelbuild/bazel-central-registry)
-    created by Publish-to-BCR plugin.
-
-    Use https://github.com/bazelbuild/bazel-central-registry/pull/403 as the
-    model.
-
-9.  Once the Bazel Central Registry PR is merged, insert in the release
-    description after the WORKSPACE setup section:
-
---------------------------------------------------------------------------------
-
-**MODULE.bazel setup**
-
-```starlark
-bazel_dep(name = "bazel_skylib", version = "$VERSION")
-```
-
-And for the Gazelle plugin:
-
-```starlark
-bazel_dep(name = "bazel_skylib_gazelle_plugin", version = "$VERSION", dev_dependency = True)
-```
-
---------------------------------------------------------------------------------
