@@ -83,8 +83,8 @@ int_setting = rule(
         "scope": attr.string(
             doc = "The scope indicates where a flag can propagate to",
             default = "universal",
+            values = ["universal", "project", "exec"],
         ),
-        values = ["universal", "project", "exec"],
     },
     doc = "An int-typed build setting that cannot be set on the command line",
 )
