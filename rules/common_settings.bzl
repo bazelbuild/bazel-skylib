@@ -43,7 +43,6 @@ Possible values:
 * `"universal"` - the flag will propagate everywhere in the build graph.
 * `"project"`- the flag will propagate within the project boundaries that are defined by project owners in their PROJECT.scl file.
 * `"exec"` - the flag will propagate to the exec configuration.
-...
 """,
     default = "universal",
     values = ["universal", "project", "exec"],
