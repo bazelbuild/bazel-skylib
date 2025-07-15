@@ -18,7 +18,7 @@ This rule copies a directory to another location using Bash (on Linux/macOS) or
 cmd.exe (on Windows).
 """
 
-load(":copy_common.bzl", "COPY_EXECUTION_REQUIREMENTS")
+load(":copy_common.bzl", "COPY_EXECUTION_REQUIREMENTS", "OsInfo")
 
 def _copy_cmd(ctx, src, dst):
     # Most Windows binaries built with MSVC use a certain argument quoting
@@ -108,7 +108,7 @@ def copy_directory_action(ctx, src, dst, is_windows = False):
 
 def _copy_directory_impl(ctx):
     dst = ctx.actions.declare_directory(ctx.attr.out)
-    copy_directory_action(ctx, ctx.file.src, dst, ctx.attr.is_windows)
+    copy_directory_action(ctx, ctx.file.src, dst, ctx.attr._exec_is_windows[OsInfo].is_windows)
 
     files = depset(direct = [dst])
     runfiles = ctx.runfiles(files = [dst])
@@ -120,10 +120,15 @@ _copy_directory = rule(
     provides = [DefaultInfo],
     attrs = {
         "src": attr.label(mandatory = True, allow_single_file = True),
-        "is_windows": attr.bool(mandatory = True),
         # Cannot declare out as an output here, because there's no API for declaring
         # TreeArtifact outputs.
         "out": attr.string(mandatory = True),
+        "_exec_is_windows": attr.label(
+            default = ":is_windows",
+            # The exec transition must match the exec group of the actions, which in
+            # this case is the default exec group.
+            cfg = "exec",
+        ),
     },
 )
 
@@ -147,10 +152,6 @@ def copy_directory(name, src, out, **kwargs):
     _copy_directory(
         name = name,
         src = src,
-        is_windows = select({
-            "@bazel_tools//src/conditions:host_windows": True,
-            "//conditions:default": False,
-        }),
         out = out,
         **kwargs
     )

@@ -43,3 +43,17 @@ COPY_EXECUTION_REQUIREMENTS = {
     "no-remote": "1",
     "no-cache": "1",
 }
+
+OsInfo = provider(
+    doc = "Information about the target platform's OS.",
+    fields = ["is_windows"],
+)
+
+is_windows = rule(
+    implementation = lambda ctx: OsInfo(
+        is_windows = ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo]),
+    ),
+    attrs = {
+        "_windows_constraint": attr.label(default = "@platforms//os:windows"),
+    },
+)
