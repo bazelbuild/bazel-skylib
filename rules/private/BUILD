@@ -1,5 +1,5 @@
 load("//:bzl_library.bzl", "bzl_library")
-load(":copy_file_private.bzl", "is_windows")
+load(":copy_common.bzl", "is_windows")
 
 package(default_applicable_licenses = ["//:license"])
 

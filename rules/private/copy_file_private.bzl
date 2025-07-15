@@ -19,7 +19,7 @@ cmd.exe (on Windows). '_copy_xfile' marks the resulting file executable,
 '_copy_file' does not.
 """
 
-load(":copy_common.bzl", "COPY_EXECUTION_REQUIREMENTS")
+load(":copy_common.bzl", "COPY_EXECUTION_REQUIREMENTS", "OsInfo")
 
 def copy_cmd(ctx, src, dst):
     # Most Windows binaries built with MSVC use a certain argument quoting
@@ -68,7 +68,7 @@ def _copy_file_impl(ctx):
             target_file = ctx.file.src,
             is_executable = ctx.attr.is_executable,
         )
-    elif ctx.attr._exec_is_windows[_OsInfo].is_windows:
+    elif ctx.attr._exec_is_windows[OsInfo].is_windows:
         copy_cmd(ctx, ctx.file.src, ctx.outputs.out)
     else:
         copy_bash(ctx, ctx.file.src, ctx.outputs.out)
@@ -107,20 +107,6 @@ _copy_xfile = rule(
     executable = True,
     provides = [DefaultInfo],
     attrs = _ATTRS,
-)
-
-_OsInfo = provider(
-    doc = "Information about the target platform's OS.",
-    fields = ["is_windows"],
-)
-
-is_windows = rule(
-    implementation = lambda ctx: _OsInfo(
-        is_windows = ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo]),
-    ),
-    attrs = {
-        "_windows_constraint": attr.label(default = "@platforms//os:windows"),
-    },
 )
 
 def copy_file(name, src, out, is_executable = False, allow_symlink = False, **kwargs):
