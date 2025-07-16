@@ -66,7 +66,8 @@ def _volcano_impl(ctx):
     height = ctx.attr.height[BuildSettingInfo].value,
     active = ctx.attr.active[BuildSettingInfo].value,
     namer = ctx.attr.namer[BuildSettingInfo].value,
-    nicknames = ctx.attr.nicknames[BuildSettingInfo].value
+    nicknames = ctx.attr.nicknames[BuildSettingInfo].value,
+    hazards = ctx.attr.hazards[BuildSettingInfo].value
   )
   print(description)
 
@@ -77,6 +78,7 @@ volcano = rule(
     "active" : attr.label(),
     "namer": attr.label(),
     "nicknames": attr.label(),
+    "hazards": attr.label(),
   }
 )
 EOF
@@ -89,6 +91,7 @@ load(
   "bool_flag",
   "string_flag",
   "string_list_flag",
+  "string_list_repeatable_flag",
 )
 load("//volcano:rules.bzl", "volcano")
 
@@ -113,6 +116,11 @@ string_list_flag(
   build_setting_default = ["loowit", "loowitiatkla", "lavelatla"]
 )
 
+string_list_repeatable_flag(
+  name = "hazards-flag",
+  build_setting_default = ["lava", "pyroclastic-flow", "ash"]
+)
+
 int_setting(
   name = "height-setting",
   build_setting_default = 9677
@@ -124,6 +132,7 @@ volcano(
   active = ":active-flag",
   namer = ":namer-flag",
   nicknames = ":nicknames-flag",
+  hazards = ":hazards-flag",
 )
 EOF
 
@@ -136,12 +145,15 @@ function test_can_set_flags() {
   bazel build volcano:mt-st-helens --//volcano:height-flag=8366 \
     --//volcano:active-flag=False --//volcano:namer-flag=puyallup-tribe \
     --//volcano:nicknames-flag=volcano-mc-volcanoface \
+    --//volcano:hazards-flag=lava \
+    --//volcano:hazards-flag=hydrogen-sulfide \
     >"$TEST_log" 2>&1 || fail "Expected test to pass"
 
   expect_log "active = False"
   expect_log "height = 8366"
   expect_log "namer = \"puyallup-tribe\""
   expect_log "nicknames = \[\"volcano-mc-volcanoface\"\]"
+  expect_log "hazards = \[\"lava\"\, \"hydrogen-sulfide\"]"
 }
 
 function test_cannot_set_settings() {

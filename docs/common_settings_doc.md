@@ -138,6 +138,24 @@ A string list-typed build setting that can be set on the command line
 | <a id="string_list_flag-scope"></a>scope |  The scope indicates where a flag can propagate to   | String | optional |  `"universal"`  |
 
 
+<a id="string_list_repeatable_flag"></a>
+
+## string_list_repeatable_flag
+
+<pre>
+string_list_repeatable_flag(<a href="#string_list_repeatable_flag-name">name</a>)
+</pre>
+
+A string list-typed build setting that can be accumulated on the command line
+
+**ATTRIBUTES**
+
+
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="string_list_repeatable_flag-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
+
+
 <a id="string_list_setting"></a>
 
 ## string_list_setting
