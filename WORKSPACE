@@ -44,6 +44,19 @@ rules_shell_dependencies()
 
 rules_shell_toolchains()
 
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "bazel_features",
+    sha256 = "07bd2b18764cdee1e0d6ff42c9c0a6111ffcbd0c17f0de38e7f44f1519d1c0cd",
+    strip_prefix = "bazel_features-1.32.0",
+    url = "https://github.com/bazel-contrib/bazel_features/releases/download/v1.32.0/bazel_features-v1.32.0.tar.gz",
+)
+
+load("@bazel_features//:deps.bzl", "bazel_features_deps")
+
+bazel_features_deps()
+
 maybe(
     http_archive,
     name = "io_bazel_stardoc",
