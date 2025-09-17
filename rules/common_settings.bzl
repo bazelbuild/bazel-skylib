@@ -139,7 +139,6 @@ repeatable_string_flag = rule(
         ),
     },
     doc = "A string-typed build setting that can be set on the command line. Multiple settings do not overwrite each other; they are concatenated into a list",
-
 )
 
 string_list_setting = rule(
