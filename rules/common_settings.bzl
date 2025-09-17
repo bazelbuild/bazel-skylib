@@ -123,6 +123,25 @@ string_list_flag = rule(
     doc = "A string list-typed build setting that can be set on the command line",
 )
 
+def _flag_impl(ctx):
+    return BuildSettingInfo(value = ctx.build_setting_value)
+
+repeatable_string_flag = rule(
+    implementation = _flag_impl,
+    build_setting = config.string_list(
+        flag = True,
+        repeatable = True,
+    ),
+    attrs = {
+        "scope": attr.string(
+            doc = "The scope indicates where a flag can propagate to",
+            default = "universal",
+        ),
+    },
+    doc = "A string-typed build setting that can be set on the command line. Multiple settings do not overwrite each other; they are concatenated into a list",
+
+)
+
 string_list_setting = rule(
     implementation = _impl,
     build_setting = config.string_list(),
