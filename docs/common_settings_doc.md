@@ -115,7 +115,7 @@ A build setting that accepts one or more string-typed settings on the command li
 
 
 <a id="string_flag"></a>
-`
+
 ## string_flag
 
 <pre>
