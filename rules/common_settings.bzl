@@ -99,7 +99,7 @@ bool_setting = rule(
     implementation = _impl,
     build_setting = config.bool(),
     attrs = {
-	"scope": _SCOPE_ATTR,
+        "scope": _SCOPE_ATTR,
     },
     doc = "A bool-typed build setting that cannot be set on the command line",
 )
@@ -117,13 +117,13 @@ def _repeatable_string_flag_impl(ctx):
     return BuildSettingInfo(value = ctx.build_setting_value)
 
 repeatable_string_flag = rule(
-    implementation = _flag_impl,
+    implementation = _repeatable_string_flag_impl,
     build_setting = config.string_list(
         flag = True,
         repeatable = True,
     ),
     attrs = {
-	"scope": _SCOPE_ATTR,
+        "scope": _SCOPE_ATTR,
     },
     doc = "A string-typed build setting that can be set on the command line. Multiple settings do not overwrite each other; they are concatenated into a list",
 )
