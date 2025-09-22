@@ -117,7 +117,7 @@ def _repeatable_string_flag_impl(ctx):
     return BuildSettingInfo(value = ctx.build_setting_value)
 
 repeatable_string_flag = rule(
-    implementation = _flag_impl,
+    implementation = _repeatable_string_flag_impl,
     build_setting = config.string_list(
         flag = True,
         repeatable = True,
