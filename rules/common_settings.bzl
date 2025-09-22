@@ -125,7 +125,7 @@ repeatable_string_flag = rule(
     attrs = {
         "scope": _SCOPE_ATTR,
     },
-    doc = "A string-typed build setting that can be set on the command line. Multiple settings do not overwrite each other; they are concatenated into a list",
+    doc = "A build setting that accepts one or more string-typed settings on the command line, with the values concatenated into a single string list; for example, `--//my/setting=foo` `--//my/setting=bar` will be parsed as `['foo', 'bar']`. Contrast with `string_list_flag`",
 )
 
 string_list_setting = rule(
@@ -134,7 +134,7 @@ string_list_setting = rule(
     attrs = {
         "scope": _SCOPE_ATTR,
     },
-    doc = "A string list-typed build setting that cannot be set on the command line",
+    doc = "A string list-typed build setting which expects its value on the command line to be given in comma-separated format; for example, `--//my/setting=foo,bar` will be parsed as `['foo', 'bar']`. Contrast with `repeatable_string_flag`",
 )
 
 def _no_at_str(label):
