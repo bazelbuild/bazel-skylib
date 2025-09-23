@@ -1,3 +1,10 @@
+# Release 1.8.2
+
+**What's Changed**
+* Migrate `copy_directory` away from deprecated host constraint by @fmeum (https://github.com/bazelbuild/bazel-skylib/pull/588)
+
+**Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.8.1...1.8.2
+
 # Release 1.8.1
 
 **What's Changed**
