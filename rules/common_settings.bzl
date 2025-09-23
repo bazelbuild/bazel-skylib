@@ -36,6 +36,11 @@ _MAKE_VARIABLE_ATTR = attr.string(
           "attribute.",
 )
 
+_SCOPE_ATTR = attr.string(
+    doc = "The scope indicates where a flag can propagate to",
+    default = "universal",
+)
+
 def _is_valid_make_variable_char(c):
     # Restrict make variable names for consistency with predefined ones. There are no enforced
     # restrictions on make variable names, but when they contain e.g. spaces or braces, they
@@ -66,10 +71,7 @@ int_flag = rule(
     build_setting = config.int(flag = True),
     attrs = {
         "make_variable": _MAKE_VARIABLE_ATTR,
-        "scope": attr.string(
-            doc = "The scope indicates where a flag can propagate to",
-            default = "universal",
-        ),
+        "scope": _SCOPE_ATTR,
     },
     doc = "An int-typed build setting that can be set on the command line",
 )
@@ -79,10 +81,7 @@ int_setting = rule(
     build_setting = config.int(),
     attrs = {
         "make_variable": _MAKE_VARIABLE_ATTR,
-        "scope": attr.string(
-            doc = "The scope indicates where a flag can propagate to",
-            default = "universal",
-        ),
+        "scope": _SCOPE_ATTR,
     },
     doc = "An int-typed build setting that cannot be set on the command line",
 )
@@ -91,10 +90,7 @@ bool_flag = rule(
     implementation = _impl,
     build_setting = config.bool(flag = True),
     attrs = {
-        "scope": attr.string(
-            doc = "The scope indicates where a flag can propagate to",
-            default = "universal",
-        ),
+        "scope": _SCOPE_ATTR,
     },
     doc = "A bool-typed build setting that can be set on the command line",
 )
@@ -103,10 +99,7 @@ bool_setting = rule(
     implementation = _impl,
     build_setting = config.bool(),
     attrs = {
-        "scope": attr.string(
-            doc = "The scope indicates where a flag can propagate to",
-            default = "universal",
-        ),
+        "scope": _SCOPE_ATTR,
     },
     doc = "A bool-typed build setting that cannot be set on the command line",
 )
@@ -115,24 +108,33 @@ string_list_flag = rule(
     implementation = _impl,
     build_setting = config.string_list(flag = True),
     attrs = {
-        "scope": attr.string(
-            doc = "The scope indicates where a flag can propagate to",
-            default = "universal",
-        ),
+        "scope": _SCOPE_ATTR,
     },
     doc = "A string list-typed build setting that can be set on the command line",
+)
+
+def _repeatable_string_flag_impl(ctx):
+    return BuildSettingInfo(value = ctx.build_setting_value)
+
+repeatable_string_flag = rule(
+    implementation = _repeatable_string_flag_impl,
+    build_setting = config.string_list(
+        flag = True,
+        repeatable = True,
+    ),
+    attrs = {
+        "scope": _SCOPE_ATTR,
+    },
+    doc = "A build setting that accepts one or more string-typed settings on the command line, with the values concatenated into a single string list; for example, `--//my/setting=foo` `--//my/setting=bar` will be parsed as `['foo', 'bar']`. Contrast with `string_list_flag`",
 )
 
 string_list_setting = rule(
     implementation = _impl,
     build_setting = config.string_list(),
     attrs = {
-        "scope": attr.string(
-            doc = "The scope indicates where a flag can propagate to",
-            default = "universal",
-        ),
+        "scope": _SCOPE_ATTR,
     },
-    doc = "A string list-typed build setting that cannot be set on the command line",
+    doc = "A string list-typed build setting which expects its value on the command line to be given in comma-separated format; for example, `--//my/setting=foo,bar` will be parsed as `['foo', 'bar']`. Contrast with `repeatable_string_flag`",
 )
 
 def _no_at_str(label):
@@ -160,10 +162,7 @@ string_flag = rule(
             doc = "The list of allowed values for this setting. An error is raised if any other value is given.",
         ),
         "make_variable": _MAKE_VARIABLE_ATTR,
-        "scope": attr.string(
-            doc = "The scope indicates where a flag can propagate to",
-            default = "universal",
-        ),
+        "scope": _SCOPE_ATTR,
     },
     doc = "A string-typed build setting that can be set on the command line",
 )
@@ -176,10 +175,7 @@ string_setting = rule(
             doc = "The list of allowed values for this setting. An error is raised if any other value is given.",
         ),
         "make_variable": _MAKE_VARIABLE_ATTR,
-        "scope": attr.string(
-            doc = "The scope indicates where a flag can propagate to",
-            default = "universal",
-        ),
+        "scope": _SCOPE_ATTR,
     },
     doc = "A string-typed build setting that cannot be set on the command line",
 )

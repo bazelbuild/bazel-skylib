@@ -94,6 +94,27 @@ An int-typed build setting that cannot be set on the command line
 | <a id="int_setting-scope"></a>scope |  The scope indicates where a flag can propagate to   | String | optional |  `"universal"`  |
 
 
+<a id="repeatable_string_flag"></a>
+
+## repeatable_string_flag
+
+<pre>
+load("@bazel_skylib//rules:common_settings.bzl", "repeatable_string_flag")
+
+repeatable_string_flag(<a href="#repeatable_string_flag-name">name</a>, <a href="#repeatable_string_flag-scope">scope</a>)
+</pre>
+
+A build setting that accepts one or more string-typed settings on the command line, with the values concatenated into a single string list; for example, `--//my/setting=foo` `--//my/setting=bar` will be parsed as `['foo', 'bar']`. Contrast with `string_list_flag`
+
+**ATTRIBUTES**
+
+
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="repeatable_string_flag-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
+| <a id="repeatable_string_flag-scope"></a>scope |  The scope indicates where a flag can propagate to   | String | optional |  `"universal"`  |
+
+
 <a id="string_flag"></a>
 
 ## string_flag
@@ -148,7 +169,7 @@ load("@bazel_skylib//rules:common_settings.bzl", "string_list_setting")
 string_list_setting(<a href="#string_list_setting-name">name</a>, <a href="#string_list_setting-scope">scope</a>)
 </pre>
 
-A string list-typed build setting that cannot be set on the command line
+A string list-typed build setting which expects its value on the command line to be given in comma-separated format; for example, `--//my/setting=foo,bar` will be parsed as `['foo', 'bar']`. Contrast with `repeatable_string_flag`
 
 **ATTRIBUTES**
 
