@@ -174,7 +174,7 @@ Vertexwahn, Vinh Tran
 Bugfix release: fixes build failure with --incompatible_disallow_empty_glob
 (#359)
 
-* Contributors**
+**Contributors**
 
 Alexandre Rostovtsev, Ivo List
 
