@@ -1,3 +1,15 @@
+# Release 1.8.2
+
+**New Features**
+* Introduce repeatable_string_flag (#593) 
+
+**Other Changes**
+* Migrate `copy_directory` away from deprecated host constraint (#588)
+
+**Contributors**
+* fmeum@
+* susinmotion@
+
 # Release 1.8.1
 
 **What's Changed**
@@ -162,7 +174,7 @@ Vertexwahn, Vinh Tran
 Bugfix release: fixes build failure with --incompatible_disallow_empty_glob
 (#359)
 
-**Contributors**
+* Contributors**
 
 Alexandre Rostovtsev, Ivo List
 
