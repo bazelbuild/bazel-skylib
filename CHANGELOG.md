@@ -1,7 +1,7 @@
 # Release 1.8.2
 
 **New Features**
-* Introduce repeatable_string_flag (#593) 
+* Introduce repeatable_string_flag (#593)
 
 **Other Changes**
 * Migrate `copy_directory` away from deprecated host constraint (#588)
