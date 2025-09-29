@@ -72,6 +72,9 @@ int_flag = rule(
     attrs = {
         "make_variable": _MAKE_VARIABLE_ATTR,
         "scope": _SCOPE_ATTR,
+        "on_leave_scope": attr.int(
+            doc = "the value of the flag once it leaves the specified scope.",
+        ),
     },
     doc = "An int-typed build setting that can be set on the command line",
 )
@@ -82,6 +85,9 @@ int_setting = rule(
     attrs = {
         "make_variable": _MAKE_VARIABLE_ATTR,
         "scope": _SCOPE_ATTR,
+        "on_leave_scope": attr.int(
+            doc = "the value of the flag once it leaves the specified scope.",
+        ),
     },
     doc = "An int-typed build setting that cannot be set on the command line",
 )
@@ -91,6 +97,9 @@ bool_flag = rule(
     build_setting = config.bool(flag = True),
     attrs = {
         "scope": _SCOPE_ATTR,
+        "on_leave_scope": attr.bool(
+            doc = "the value of the flag once it leaves the specified scope.",
+        ),
     },
     doc = "A bool-typed build setting that can be set on the command line",
 )
@@ -100,6 +109,9 @@ bool_setting = rule(
     build_setting = config.bool(),
     attrs = {
         "scope": _SCOPE_ATTR,
+        "on_leave_scope": attr.bool(
+            doc = "the value of the flag once it leaves the specified scope.",
+        ),
     },
     doc = "A bool-typed build setting that cannot be set on the command line",
 )
@@ -109,6 +121,9 @@ string_list_flag = rule(
     build_setting = config.string_list(flag = True),
     attrs = {
         "scope": _SCOPE_ATTR,
+        "on_leave_scope": attr.string_list(
+            doc = "the value of the flag once it leaves the specified scope.",
+        ),
     },
     doc = "A string list-typed build setting that can be set on the command line",
 )
@@ -124,6 +139,9 @@ repeatable_string_flag = rule(
     ),
     attrs = {
         "scope": _SCOPE_ATTR,
+        "on_leave_scope": attr.string_list(
+            doc = "the value of the flag once it leaves the specified scope.",
+        ),
     },
     doc = "A build setting that accepts one or more string-typed settings on the command line, with the values concatenated into a single string list; for example, `--//my/setting=foo` `--//my/setting=bar` will be parsed as `['foo', 'bar']`. Contrast with `string_list_flag`",
 )
@@ -133,6 +151,9 @@ string_list_setting = rule(
     build_setting = config.string_list(),
     attrs = {
         "scope": _SCOPE_ATTR,
+        "on_leave_scope": attr.string_list(
+            doc = "the value of the flag once it leaves the specified scope.",
+        ),
     },
     doc = "A string list-typed build setting which expects its value on the command line to be given in comma-separated format; for example, `--//my/setting=foo,bar` will be parsed as `['foo', 'bar']`. Contrast with `repeatable_string_flag`",
 )
@@ -163,6 +184,9 @@ string_flag = rule(
         ),
         "make_variable": _MAKE_VARIABLE_ATTR,
         "scope": _SCOPE_ATTR,
+        "on_leave_scope": attr.string(
+            doc = "the value of the flag once it leaves the specified scope.",
+        ),
     },
     doc = "A string-typed build setting that can be set on the command line",
 )
@@ -176,6 +200,9 @@ string_setting = rule(
         ),
         "make_variable": _MAKE_VARIABLE_ATTR,
         "scope": _SCOPE_ATTR,
+        "on_leave_scope": attr.string(
+            doc = "the value of the flag once it leaves the specified scope.",
+        ),
     },
     doc = "A string-typed build setting that cannot be set on the command line",
 )
