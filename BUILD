@@ -1,4 +1,5 @@
 load("@rules_license//rules:license.bzl", "license")
+load("//rules:common_settings.bzl", "bool_flag")
 load("//:bzl_library.bzl", "bzl_library")
 
 package(
@@ -94,4 +95,17 @@ filegroup(
         "//rules/private:distribution",
         "//toolchains/unittest:distribution",
     ] + glob(["*.bzl"]),
+)
+
+bool_flag(
+    name = "extract_docs",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "extract_docs_flag",
+    flag_values = {
+        ":extract_docs": "true",
+    },
 )
