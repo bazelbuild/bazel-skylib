@@ -14,11 +14,15 @@
 
 """Unit tests for structs.bzl."""
 
+load("@bazel_features//:features.bzl", "bazel_features")
 load("//lib:structs.bzl", "structs")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
-def _add_test(ctx):
-    """Unit tests for dicts.add."""
+def _placeholder():
+    pass
+
+def _to_dict_test(ctx):
+    """Unit tests for structs.to_dict."""
     env = unittest.begin(ctx)
 
     # Test zero- and one-argument behavior.
@@ -42,13 +46,55 @@ def _add_test(ctx):
         structs.to_dict(struct(a = 1, b = struct(bb = 1))),
     )
 
+    # Older Bazel denied creating `struct` with `to_json`/`to_proto`
+    if not bazel_features.rules.no_struct_field_denylist:
+        return unittest.end(env)
+
+    # Test `to_json`/`to_proto` values are propagated
+    asserts.equals(
+        env,
+        {"to_json": 1, "to_proto": 2},
+        structs.to_dict(struct(to_json = 1, to_proto = 2)),
+    )
+
+    # Test `to_json`/`to_proto` functions are propagated
+    asserts.equals(
+        env,
+        {"to_json": _placeholder, "to_proto": _placeholder},
+        structs.to_dict(struct(to_json = _placeholder, to_proto = _placeholder)),
+    )
+
     return unittest.end(env)
 
-add_test = unittest.make(_add_test)
+to_dict_test = unittest.make(_to_dict_test)
+
+def _merge_test(ctx):
+    """Unit tests for structs.merge."""
+    env = unittest.begin(ctx)
+
+    # Fixtures
+    a = struct(a = 1)
+    b = struct(b = 2)
+    c = struct(a = 3)
+
+    # Test one argument
+    asserts.equals(env, {"a": 1}, structs.to_dict(structs.merge(a)))
+
+    # Test two arguments
+    asserts.equals(env, {"a": 1}, structs.to_dict(structs.merge(a, a)))
+    asserts.equals(env, {"a": 1, "b": 2}, structs.to_dict(structs.merge(a, b)))
+
+    # Test overwrite
+    asserts.equals(env, {"a": 3}, structs.to_dict(structs.merge(a, c)))
+
+    return unittest.end(env)
+
+merge_test = unittest.make(_merge_test)
 
 def structs_test_suite():
     """Creates the test targets and test suite for structs.bzl tests."""
     unittest.suite(
         "structs_tests",
-        add_test,
+        to_dict_test,
+        merge_test,
     )
