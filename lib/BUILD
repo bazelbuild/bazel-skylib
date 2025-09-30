@@ -19,6 +19,14 @@ bzl_library(
 )
 
 bzl_library(
+    name = "compatibility",
+    srcs = ["compatibility.bzl"],
+    deps = [
+        ":selects",
+    ],
+)
+
+bzl_library(
     name = "dicts",
     srcs = ["dicts.bzl"],
 )
