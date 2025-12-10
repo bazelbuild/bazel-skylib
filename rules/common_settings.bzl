@@ -38,7 +38,7 @@ _MAKE_VARIABLE_ATTR = attr.string(
 
 _SCOPE_ATTR = attr.string(
     doc = "The scope indicates where a flag can propagate to",
-    default = "universal",
+    default = "target",
 )
 
 def _is_valid_make_variable_char(c):
