@@ -7,6 +7,7 @@ licenses(["notice"])
 
 is_windows(
     name = "is_windows",
+    applicable_licenses = [],  # no output artifacts
     visibility = ["//visibility:public"],
 )
 
