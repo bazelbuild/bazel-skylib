@@ -1,3 +1,15 @@
+# Release 1.9.0
+
+**What's Changed**
+* Optimize `copy_file` and set `allow_symlink` by default to `True` if `is_executable` is `False` (#565)
+* Give `rules/private:is_windows` an empty `applicable_license` (#600)
+* Bump `rules_go` dependency for compatibility with Bazel 9 (#601)
+
+**Contributors**
+fdinoff@, fmeum@, fweikert@, susinmotion@
+
+**Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.8.2...1.9.0
+
 # Release 1.8.2
 
 **New Features**
