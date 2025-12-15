@@ -6,7 +6,7 @@
 * Bump `rules_go` dependency for compatibility with Bazel 9 (#601)
 
 **Contributors**
-fdinoff@, fmeum@, fweikert@, susinmotion@
+@fdinoff, @fmeum, @fweikert, @susinmotion
 
 **Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.8.2...1.9.0
 
