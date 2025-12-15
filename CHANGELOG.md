@@ -5,7 +5,7 @@
 * Give `rules/private:is_windows` an empty `applicable_license` (#600)
 * Bump `rules_go` dependency for compatibility with Bazel 9 (#601)
 
-**Contributors**
+**Contributors**:
 @fdinoff, @fmeum, @fweikert, @susinmotion
 
 **Full Changelog**: https://github.com/bazelbuild/bazel-skylib/compare/1.8.2...1.9.0
