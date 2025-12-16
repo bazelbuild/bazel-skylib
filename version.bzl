@@ -14,4 +14,4 @@
 """The version of bazel-skylib."""
 
 # Keep in sync with MODULE.bazel and @bazel_skylib_gazelle_plugin//:MODULE.bazel
-version = "1.8.2"
+version = "1.9.0"
