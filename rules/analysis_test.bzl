@@ -27,6 +27,12 @@ analysis_test = rule(
     attrs = {"targets": attr.label_list(mandatory = True)},
     test = True,
     analysis_test = True,
+    exec_groups = {
+        # The default test exec groups limits test execution to an execution platform that matches
+        # the target platform's constraints. But the action Bazel uses to render the result of the
+        # test supports any platform, so we override this exec group to have no requirements.
+        "test": exec_group(),
+    },
     doc = """Test rule checking that other targets can be successfully analyzed.
 
     This rule essentially verifies that all targets under `targets` would
