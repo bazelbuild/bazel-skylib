@@ -16,10 +16,16 @@
 """
 
 def _expand_template_impl(ctx):
+    substitutions = {}
+    for key, value in ctx.attr.substitutions.items():
+        # TODO: Replace `expand_make_variables` once a suitable replacement exists.
+        # https://github.com/bazelbuild/bazel/issues/5859
+        substitutions[key] = ctx.expand_make_variables("substitutions", value, {})
+
     ctx.actions.expand_template(
         template = ctx.file.template,
         output = ctx.outputs.out,
-        substitutions = ctx.attr.substitutions,
+        substitutions = substitutions,
     )
 
 expand_template = rule(
