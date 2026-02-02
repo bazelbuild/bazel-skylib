@@ -230,17 +230,11 @@ def _config_setting_always_true(name, visibility):
     This is achieved by constructing a two-entry OR chain where each
     config_setting takes opposite values of a boolean flag.
     """
-    name_on = name + "_stamp_binary_on_check"
-    name_off = name + "_stamp_binary_off_check"
-    native.config_setting(
-        name = name_on,
-        values = {"stamp": "1"},
+    native.alias(
+        name = name,
+        visibility = visibility,
+        actual = "//lib:always_true",
     )
-    native.config_setting(
-        name = name_off,
-        values = {"stamp": "0"},
-    )
-    return _config_setting_or_group(name, [":" + name_on, ":" + name_off], visibility)
 
 selects = struct(
     with_or = _with_or,
