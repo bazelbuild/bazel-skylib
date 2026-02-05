@@ -53,6 +53,12 @@ function create_pkg() {
 workspace(name = 'bazel_skylib')
 EOF
 
+  cat > MODULE.bazel <<EOF
+module(name = "my_test_workspace")
+
+bazel_dep(name = "rules_cc", version = "0.2.14", dev_dependency = True)
+EOF
+
   mkdir -p rules
   cat > rules/BUILD <<EOF
 exports_files(["*.bzl"])
@@ -107,6 +113,7 @@ EOF
   cat > testdir/BUILD <<EOF
 load("//rules:analysis_test.bzl", "analysis_test")
 load("//fakerules:rules.bzl", "fake_rule", "fake_depending_rule")
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 fake_rule(name = "target_fails")
 

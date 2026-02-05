@@ -49,6 +49,7 @@ use_all_repos_test_ext = module_extension(
 def modules_test_suite():
     """Creates the tests for modules.bzl if Bzlmod is enabled."""
 
+    # buildifier: disable=canonical-repository
     is_bzlmod_enabled = str(Label("//tests:module_tests.bzl")).startswith("@@")
     if not is_bzlmod_enabled:
         return
