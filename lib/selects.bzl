@@ -14,8 +14,6 @@
 
 """Skylib module containing convenience interfaces for select()."""
 
-load("//rules:common_settings.bzl", "bool_setting")
-
 def _with_or(input_dict, no_match_error = ""):
     """Drop-in replacement for `select()` that supports ORed keys.
 
@@ -227,27 +225,12 @@ def _config_setting_and_group(name, settings, visibility):
         )
 
 def _config_setting_always_true(name, visibility):
-    """Returns a config_setting with the given name that's always true.
-
-    This is achieved by constructing a two-entry OR chain where each
-    config_setting takes opposite values of an arbitrary boolean flag.
-    """
-    bool_name = name + "_bool"
-    bool_setting(
-        name = bool_name,
-        build_setting_default = False,
+    """Creates a config_setting with the given name that's always true."""
+    native.alias(
+        name = name,
+        actual = Label(":always_true"),
+        visibility = visibility,
     )
-    name_on = name + "_on_check"
-    name_off = name + "_off_check"
-    native.config_setting(
-        name = name_on,
-        flag_values = {bool_name: "true"},
-    )
-    native.config_setting(
-        name = name_off,
-        flag_values = {bool_name: "false"},
-    )
-    return _config_setting_or_group(name, [":" + name_on, ":" + name_off], visibility)
 
 selects = struct(
     with_or = _with_or,
