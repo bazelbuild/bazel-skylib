@@ -45,7 +45,7 @@ explicitly add delimiters to the key strings, for example "{KEY}" or "@KEY@"."""
         ),
         "substitutions": attr.string_dict(
             mandatory = True,
-            doc = "A dictionary mapping strings to their substitutions.",
+            doc = "A dictionary mapping strings to their substitutions. Values of subject to \"Make\" variable expansion.",
         ),
         "out": attr.output(
             mandatory = True,
