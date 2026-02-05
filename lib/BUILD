@@ -1,5 +1,5 @@
 load("//:bzl_library.bzl", "bzl_library")
-load("///rules:common_settings.bzl", "bool_setting")
+load("//rules:common_settings.bzl", "bool_setting")
 load(":selects.bzl", "selects")
 
 package(
