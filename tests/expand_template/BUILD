@@ -62,3 +62,26 @@ cc_test(
         ":version",
     ],
 )
+
+expand_template(
+    name = "make_vars_expansion",
+    out = "make_vars.txt",
+    substitutions = {
+        "@bindir@": "$(BINDIR)",
+        "@gendir@": "$(GENDIR)",
+        "@target_cpu@": "$(TARGET_CPU)",
+    },
+    template = "make_vars.tpl.txt",
+)
+
+sh_test(
+    name = "make_vars_test",
+    srcs = ["make_vars_test.sh"],
+    data = [
+        ":make_vars_expansion",
+        "//tests:unittest.bash",
+    ],
+    deps = [
+        "@bazel_tools//tools/bash/runfiles",
+    ],
+)
