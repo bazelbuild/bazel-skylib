@@ -41,9 +41,12 @@ def _run_binary_impl(ctx):
         k: ctx.expand_location(v, tool_as_list)
         for k, v in ctx.attr.env.items()
     }
+    inputs = [
+        src[DefaultInfo].files for src in ctx.attr.srcs
+    ]
     ctx.actions.run(
         outputs = ctx.outputs.outs,
-        inputs = ctx.files.srcs,
+        inputs = depset(transitive = inputs),
         tools = [ctx.executable.tool],
         executable = ctx.executable.tool,
         arguments = args,
