@@ -42,7 +42,8 @@ def _run_binary_impl(ctx):
         for k, v in ctx.attr.env.items()
     }
     inputs = [
-        src[DefaultInfo].files for src in ctx.attr.srcs
+        src[DefaultInfo].files
+        for src in ctx.attr.srcs
     ]
     ctx.actions.run(
         outputs = ctx.outputs.outs,
