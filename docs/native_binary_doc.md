@@ -41,7 +41,7 @@ in genrule.tools for example. You can also augment the binary with runfiles.
 <pre>
 load("@bazel_skylib//rules:native_binary.bzl", "native_test")
 
-native_test(<a href="#native_test-name">name</a>, <a href="#native_test-src">src</a>, <a href="#native_test-data">data</a>, <a href="#native_test-out">out</a>, <a href="#native_test-env">env</a>)
+native_test(<a href="#native_test-name">name</a>, <a href="#native_test-src">src</a>, <a href="#native_test-data">data</a>, <a href="#native_test-out">out</a>, <a href="#native_test-env">env</a>, <a href="#native_test-env_inherit">env_inherit</a>)
 </pre>
 
 Wraps a pre-built binary or script with a test rule.
@@ -59,5 +59,6 @@ the binary with runfiles.
 | <a id="native_test-data"></a>data |  data dependencies. See https://bazel.build/reference/be/common-definitions#typical.data   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
 | <a id="native_test-out"></a>out |  An output name for the copy of the binary. Defaults to name.exe. (We add .exe to the name by default because it's required on Windows and tolerated on other platforms.)   | String | optional |  `""`  |
 | <a id="native_test-env"></a>env |  Environment variables to set when running the binary.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  `{}`  |
+| <a id="native_test-env_inherit"></a>env_inherit |  List of environment variable names to be inherited from the external environment when the test is executed by bazel test.   | List of strings | optional |  `[]`  |
 
 
