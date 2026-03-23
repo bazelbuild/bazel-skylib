@@ -1,4 +1,6 @@
 load("//:bzl_library.bzl", "bzl_library")
+load("//rules:common_settings.bzl", "bool_setting")
+load(":selects.bzl", "selects")
 
 package(
     default_applicable_licenses = ["//:license"],
@@ -115,4 +117,32 @@ filegroup(
 bzl_library(
     name = "old_sets",
     srcs = ["old_sets.bzl"],
+)
+
+# The following are used construct an "always true" config_setting, which is used in selects.bzl.
+
+bool_setting(
+    name = "bool",
+    build_setting_default = False,
+    visibility = ["//visibility:private"],
+)
+
+config_setting(
+    name = "bool_on",
+    flag_values = {":bool": "true"},
+    visibility = ["//visibility:private"],
+)
+
+config_setting(
+    name = "bool_off",
+    flag_values = {":bool": "false"},
+    visibility = ["//visibility:private"],
+)
+
+selects.config_setting_group(
+    name = "always_true",
+    match_any = [
+        ":bool_on",
+        ":bool_off",
+    ],
 )

@@ -29,14 +29,6 @@ matrix:
   ? "@bazel_skylib_gazelle_plugin//..."
 
 tasks:
-  run_presubmit_bazel_6:
-    name: "Bazel 6 (WORKSPACE)"
-    platform: ${{ platform }}
-    bazel: 6.x
-    build_flags: *reusable_build_flags
-    test_flags: *reusable_test_flags
-    build_targets: *workspace_targets
-
   run_presubmit_bazel_7_workspace:
     name: "Bazel 7 (WORKSPACE)"
     platform: ${{ platform }}
@@ -50,6 +42,7 @@ tasks:
       ? "--enable_workspace"
       ? "--noenable_bzlmod"
     build_targets: *workspace_targets
+    skip_in_bazel_downstream_pipeline: "Only Bazel 9 is relevant for the Downstream pipeline"
 
   run_presubmit_bazel_7_bzlmod:
     name: "Bazel 7 (Bzlmod)"
@@ -65,11 +58,22 @@ tasks:
     test_targets:
       <<: *bzlmod_targets
       ? "-//docs/..."
+    skip_in_bazel_downstream_pipeline: "Only Bazel 9 is relevant for the Downstream pipeline"
 
   run_presubmit_bazel_8:
     name: "Bazel 8 (Bzlmod)"
     platform: ${{ platform }}
     bazel: 8.x
+    build_flags: *reusable_build_flags
+    test_flags: *reusable_test_flags
+    build_targets: *bzlmod_targets
+    test_targets: *bzlmod_targets
+    skip_in_bazel_downstream_pipeline: "Only Bazel 9 is relevant for the Downstream pipeline"
+
+  run_presubmit_bazel_9:
+    name: "Bazel 9 (Bzlmod)"
+    platform: ${{ platform }}
+    bazel: 9.x
     build_flags: *reusable_build_flags
     test_flags: *reusable_test_flags
     build_targets: *bzlmod_targets

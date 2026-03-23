@@ -225,22 +225,12 @@ def _config_setting_and_group(name, settings, visibility):
         )
 
 def _config_setting_always_true(name, visibility):
-    """Returns a config_setting with the given name that's always true.
-
-    This is achieved by constructing a two-entry OR chain where each
-    config_setting takes opposite values of a boolean flag.
-    """
-    name_on = name + "_stamp_binary_on_check"
-    name_off = name + "_stamp_binary_off_check"
-    native.config_setting(
-        name = name_on,
-        values = {"stamp": "1"},
+    """Creates a config_setting with the given name that's always true."""
+    native.alias(
+        name = name,
+        actual = Label(":always_true"),
+        visibility = visibility,
     )
-    native.config_setting(
-        name = name_off,
-        values = {"stamp": "0"},
-    )
-    return _config_setting_or_group(name, [":" + name_on, ":" + name_off], visibility)
 
 selects = struct(
     with_or = _with_or,
