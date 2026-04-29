@@ -1,3 +1,13 @@
+# Release 1.9.1
+
+**What's Changed**
+* Revert allow_symlink = True by default for non-executables
+* Change from stamp to some other boolean flag 
+* Update Bazel versions in CI: drop Bazel 6, add Bazel 9 
+
+**Contributors**:
+@gzm0, @kotlaja, @susinmotion, @justinhorvitz
+
 # Release 1.9.0
 
 **What's Changed**
