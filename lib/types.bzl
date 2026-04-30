@@ -23,6 +23,14 @@ _an_int_type = type(1)
 _a_depset_type = type(depset())
 _a_struct_type = type(struct())
 
+# Unique types that do not have a load-phase type but can still be evaluated
+# within the analysis phase. While not perfect, these do centralize the ability
+# to express a type and provide a stable test against those types since these
+# type strings must be defined at load-time.
+_a_file_type = "File"
+_a_target_type = "Target"
+_a_label_type = "Label"
+
 def _a_function():
     pass
 
@@ -138,6 +146,39 @@ def _is_set(v):
     """
     return type(v) == _a_struct_type and hasattr(v, "_values") and _is_dict(v._values)
 
+def _is_file(v):
+    """Returns True if v is a "File" type.
+
+    Args:
+      v: The value whose type should be checked.
+
+    Returns:
+      True if v is a File.
+    """
+    return type(v) == _a_file_type
+
+def _is_target(v):
+    """Returns True if v is a "Target" type.
+
+    Args:
+      v: The value whose type should be checked.
+
+    Returns:
+      True if v is a Target.
+    """
+    return type(v) == _a_target_type
+
+def _is_label(v):
+    """Returns True if v is a "Label" type.
+
+    Args:
+      v: The value whose type should be checked.
+
+    Returns:
+      True if v is a Label.
+    """
+    return type(v) == _a_label_type
+
 types = struct(
     is_list = _is_list,
     is_string = _is_string,
@@ -149,4 +190,7 @@ types = struct(
     is_function = _is_function,
     is_depset = _is_depset,
     is_set = _is_set,
+    is_file = _is_file,
+    is_target = _is_target,
+    is_label = _is_label,
 )
