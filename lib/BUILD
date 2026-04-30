@@ -26,6 +26,11 @@ bzl_library(
 )
 
 bzl_library(
+    name = "expansion",
+    srcs = ["expansion.bzl"],
+)
+
+bzl_library(
     name = "modules",
     srcs = ["modules.bzl"],
 )
