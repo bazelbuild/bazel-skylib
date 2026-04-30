@@ -198,7 +198,10 @@ def _make(impl, attrs = {}, doc = "", toolchains = []):
         attrs = attrs,
         _skylark_testable = True,
         test = True,
-        toolchains = toolchains + [TOOLCHAIN_TYPE],
+        toolchains = toolchains,
+        exec_groups = {
+            "test": exec_group(toolchains = [TOOLCHAIN_TYPE]),
+        },
     )
 
 _ActionInfo = provider(
@@ -299,7 +302,9 @@ def _make_analysis_test(
         attrs = attrs,
         fragments = fragments,
         test = True,
-        toolchains = [TOOLCHAIN_TYPE],
+        exec_groups = {
+            "test": exec_group(toolchains = [TOOLCHAIN_TYPE]),
+        },
         analysis_test = True,
     )
 
@@ -429,7 +434,7 @@ def _end(env):
       A list of providers needed to automatically register the test result.
     """
 
-    tc = env.ctx.toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
+    tc = env.ctx.exec_groups["test"].toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
     testbin = env.ctx.actions.declare_file(env.ctx.label.name + tc.file_ext)
     if env.failures:
         failure_message_lines = "\n".join(env.failures).split("\n")
@@ -603,7 +608,7 @@ def _target_under_test(env):
     return result
 
 def _loading_test_impl(ctx):
-    tc = ctx.toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
+    tc = ctx.exec_groups["test"].toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
     content = tc.success_templ
     if ctx.attr.failure_message:
         content = tc.failure_templ % ctx.attr.failure_message
@@ -621,7 +626,9 @@ _loading_test = rule(
     attrs = {
         "failure_message": attr.string(),
     },
-    toolchains = [TOOLCHAIN_TYPE],
+    exec_groups = {
+        "test": exec_group(toolchains = [TOOLCHAIN_TYPE]),
+    },
     test = True,
 )
 
