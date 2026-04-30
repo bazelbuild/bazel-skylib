@@ -42,6 +42,7 @@ def _impl_rule(ctx):
         ),
         RunEnvironmentInfo(
             environment = ctx.attr.env,
+            inherited_environment = getattr(ctx.attr, "env_inherit", []),
         ),
     ]
 
@@ -73,6 +74,13 @@ _ATTRS = {
     ),
 }
 
+_TEST_ATTRS = _ATTRS | {
+    "env_inherit": attr.string_list(
+        doc = "List of environment variable names to be inherited from the " +
+              "external environment when the test is executed by bazel test.",
+    ),
+}
+
 native_binary = rule(
     implementation = _impl_rule,
     attrs = _ATTRS,
@@ -87,7 +95,7 @@ in genrule.tools for example. You can also augment the binary with runfiles.
 
 native_test = rule(
     implementation = _impl_rule,
-    attrs = _ATTRS,
+    attrs = _TEST_ATTRS,
     test = True,
     doc = """
 Wraps a pre-built binary or script with a test rule.
