@@ -59,3 +59,8 @@ Gazelle has the ability to remove old and unused targets. Test that.
 
 Existing canonical `bzl_library` rules should be merged in place even when
 other rules with non-literal `srcs` are present.
+
+## `canonical_name`
+
+Existing non-canonical `bzl_library` rules should be replaced by generated
+rules with canonical names.
