@@ -124,19 +124,16 @@ bzl_library(
 bool_setting(
     name = "bool",
     build_setting_default = False,
-    visibility = ["//visibility:private"],
 )
 
 config_setting(
     name = "bool_on",
     flag_values = {":bool": "true"},
-    visibility = ["//visibility:private"],
 )
 
 config_setting(
     name = "bool_off",
     flag_values = {":bool": "false"},
-    visibility = ["//visibility:private"],
 )
 
 selects.config_setting_group(
