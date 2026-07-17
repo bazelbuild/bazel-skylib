@@ -8,9 +8,9 @@ matrix:
   - ubuntu2404
   - windows
   bazel:
+  - 9.x
   - 8.x
   - 7.x
-  - 6.x
 tasks:
   verify_build_targets:
     name: "Verify build targets"
