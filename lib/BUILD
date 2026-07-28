@@ -119,7 +119,8 @@ bzl_library(
     srcs = ["old_sets.bzl"],
 )
 
-# The following are used construct an "always true" config_setting, which is used in selects.bzl.
+# The following are used to construct "always true" and "always false"
+# config_settings, which are used in selects.bzl.
 
 bool_setting(
     name = "bool",
@@ -139,6 +140,15 @@ config_setting(
 selects.config_setting_group(
     name = "always_true",
     match_any = [
+        ":bool_on",
+        ":bool_off",
+    ],
+)
+
+# The flag can't be both on and off at the same time.
+selects.config_setting_group(
+    name = "always_false",
+    match_all = [
         ":bool_on",
         ":bool_off",
     ],
