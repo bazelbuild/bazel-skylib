@@ -97,6 +97,14 @@ def _create_config_setting_groups():
         name = "1_or_nothing_else",
         match_any = [":condition1"],
     )
+    selects.config_setting_group(
+        name = "1_or_default",
+        match_any = [":condition1", "//conditions:default"],
+    )
+    selects.config_setting_group(
+        name = "1_and_default",
+        match_all = [":condition1", "//conditions:default"],
+    )
 
 ###################################################
 # Support code for config_setting_group tests
@@ -589,6 +597,78 @@ def _always_true_match_any_test():
     )
 
 ###################################################
+# or_config_setting_group_with_default_matches_test
+###################################################
+or_config_setting_group_with_default_matches_test = analysistest.make(
+    _expect_matches,
+    config_settings = _set_conditions([False, False, False]),
+)
+
+def _or_config_setting_group_with_default_matches_test():
+    """Tests that an ORing config_setting_group containing '//conditions:default' always matches."""
+    boolean_attr_rule(
+        name = "or_config_setting_group_with_default_matches_rule",
+        myboolean = select(
+            {
+                ":1_or_default": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    or_config_setting_group_with_default_matches_test(
+        name = "or_config_setting_group_with_default_matches_test",
+        target_under_test = ":or_config_setting_group_with_default_matches_rule",
+    )
+
+###################################################
+# and_config_setting_group_with_default_matches_test
+###################################################
+and_config_setting_group_with_default_matches_test = analysistest.make(
+    _expect_matches,
+    config_settings = _set_conditions([True, False, False]),
+)
+
+def _and_config_setting_group_with_default_matches_test():
+    """Tests that '//conditions:default' in an ANDing config_setting_group is ignored (match case)."""
+    boolean_attr_rule(
+        name = "and_config_setting_group_with_default_matches_rule",
+        myboolean = select(
+            {
+                ":1_and_default": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    and_config_setting_group_with_default_matches_test(
+        name = "and_config_setting_group_with_default_matches_test",
+        target_under_test = ":and_config_setting_group_with_default_matches_rule",
+    )
+
+###################################################
+# and_config_setting_group_with_default_fails_test
+###################################################
+and_config_setting_group_with_default_fails_test = analysistest.make(
+    _expect_doesnt_match,
+    config_settings = _set_conditions([False, True, True]),
+)
+
+def _and_config_setting_group_with_default_fails_test():
+    """Tests that '//conditions:default' in an ANDing config_setting_group is ignored (mismatch case)."""
+    boolean_attr_rule(
+        name = "and_config_setting_group_with_default_fails_rule",
+        myboolean = select(
+            {
+                ":1_and_default": True,
+                "//conditions:default": False,
+            },
+        ),
+    )
+    and_config_setting_group_with_default_fails_test(
+        name = "and_config_setting_group_with_default_fails_test",
+        target_under_test = ":and_config_setting_group_with_default_fails_rule",
+    )
+
+###################################################
 # empty_config_setting_group_not_allowed_test
 ###################################################
 
@@ -638,6 +718,10 @@ def selects_test_suite():
 
     _always_true_match_all_test()
     _always_true_match_any_test()
+
+    _or_config_setting_group_with_default_matches_test()
+    _and_config_setting_group_with_default_matches_test()
+    _and_config_setting_group_with_default_fails_test()
 
     # _empty_config_setting_group_not_allowed_test()
     # _and_and_or_not_allowed_together_test()
