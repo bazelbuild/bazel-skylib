@@ -9,10 +9,14 @@ Skylib module containing convenience interfaces for select().
 <pre>
 load("@bazel_skylib//lib:selects.bzl", "selects")
 
-selects.config_setting_group(<a href="#selects.config_setting_group-name">name</a>, <a href="#selects.config_setting_group-match_any">match_any</a>, <a href="#selects.config_setting_group-match_all">match_all</a>, <a href="#selects.config_setting_group-visibility">visibility</a>)
+selects.config_setting_group(<a href="#selects.config_setting_group-name">name</a>, <a href="#selects.config_setting_group-match_any">match_any</a>, <a href="#selects.config_setting_group-match_all">match_all</a>, <a href="#selects.config_setting_group-match_none">match_none</a>, <a href="#selects.config_setting_group-visibility">visibility</a>)
 </pre>
 
 Matches if all or any of its member `config_setting`s match.
+
+Members listed in `match_none` must additionally *not* match. `match_none`
+can be combined with `match_any` or `match_all` (both requirements then
+apply) or set on its own to negate conditions.
 
 Example:
 
@@ -26,11 +30,23 @@ Example:
       match_all = [":one", ":two", ":three"]
   )
 
+  config_setting_group(
+      name = "one_but_not_two",
+      match_all = [":one"],
+      match_none = [":two"],
+  )
+
+  config_setting_group(
+      name = "anything_but_three",
+      match_none = [":three"],
+  )
+
   cc_binary(
       name = "myapp",
       srcs = ["myapp.cc"],
       deps = select({
           ":one_two_three": [":special_deps"],
+          ":one_but_not_two": [":other_deps"],
           "//conditions:default": [":default_deps"]
       })
   ```
@@ -44,6 +60,7 @@ Example:
 | <a id="selects.config_setting_group-name"></a>name |  The group's name. This is how `select()`s reference it.   |  none |
 | <a id="selects.config_setting_group-match_any"></a>match_any |  A list of `config_settings`. This group matches if *any* member in the list matches. If this is set, `match_all` must not be set.   |  `[]` |
 | <a id="selects.config_setting_group-match_all"></a>match_all |  A list of `config_settings`. This group matches if *every* member in the list matches. If this is set, `match_any` must be not set.   |  `[]` |
+| <a id="selects.config_setting_group-match_none"></a>match_none |  A list of `config_settings`. This group matches only if *no* member in the list matches. This can be set by itself to negate conditions or combined with `match_any` or `match_all`, in which case both requirements must hold. `"//conditions:default"` must not appear in the list.   |  `[]` |
 | <a id="selects.config_setting_group-visibility"></a>visibility |  Visibility of the config_setting_group.   |  `None` |
 
 
