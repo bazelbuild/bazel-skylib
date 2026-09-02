@@ -20,7 +20,10 @@ def _expand_template_impl(ctx):
         template = ctx.file.template,
         output = ctx.outputs.out,
         substitutions = ctx.attr.substitutions,
+        is_executable = ctx.attr.is_executable,
     )
+    if ctx.attr.is_executable:
+        return [DefaultInfo(executable = ctx.outputs.out)]
 
 expand_template = rule(
     implementation = _expand_template_impl,
@@ -44,6 +47,10 @@ explicitly add delimiters to the key strings, for example "{KEY}" or "@KEY@"."""
         "out": attr.output(
             mandatory = True,
             doc = "The destination of the expanded file.",
+        ),
+        "is_executable": attr.bool(
+            default = False,
+            doc = "Whether the expanded file is executable",
         ),
     },
 )
