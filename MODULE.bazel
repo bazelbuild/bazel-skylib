@@ -21,6 +21,7 @@ bazel_dep(name = "rules_pkg", version = "1.0.1", dev_dependency = True)
 bazel_dep(name = "rules_testing", version = "0.6.0", dev_dependency = True)
 bazel_dep(name = "rules_cc", version = "0.0.17", dev_dependency = True)
 bazel_dep(name = "rules_shell", version = "0.3.0", dev_dependency = True)
+bazel_dep(name = "bazel_features", version = "1.32.0", dev_dependency = True)
 
 # Needed for bazelci and for building distribution tarballs.
 # If using an unreleased version of bazel_skylib via git_override, apply
