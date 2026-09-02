@@ -17,6 +17,9 @@ load("//lib:new_sets.bzl", "sets")
 load("//lib:types.bzl", "types")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
+# A placeholder target for unit tests that need a target.
+_target_test_hollow_target = "types_test_hollow_target"
+
 def _a_function():
     """A dummy function for testing."""
     pass
@@ -231,7 +234,92 @@ def _is_set_test(ctx):
 
 is_set_test = unittest.make(_is_set_test)
 
+def _make_test_file(ctx):
+    """Makes a file object in the analysis phase.
+
+    Declaring a file for the sake of analysis but we never actually need to
+    provide the file through an output group or DefaultInfo.
+    """
+    test_file = ctx.actions.declare_file(ctx.label.name + "_test_file")
+    ctx.actions.write(
+        output = test_file,
+        content = "test_file",
+    )
+
+    return test_file
+
+def _is_file_test(ctx):
+    """Unit test for types.is_file."""
+    env = unittest.begin(ctx)
+
+    # Ensuring a file does indeed match.
+    asserts.true(env, types.is_file(_make_test_file(ctx)))
+
+    asserts.false(env, types.is_file(99))
+    asserts.false(env, types.is_file(""))
+    asserts.false(env, types.is_file(set()))
+    asserts.false(env, types.is_file(list()))
+    asserts.false(env, types.is_file(struct()))
+
+    return unittest.end(env)
+
+is_file_test = unittest.make(_is_file_test)
+
+def _is_target_test(ctx):
+    """Unit test for types.is_target."""
+    env = unittest.begin(ctx)
+
+    # Ensuring a target does indeed match.
+    asserts.true(env, types.is_target(ctx.attr._test_target))
+
+    asserts.false(env, types.is_target(_make_test_file(ctx)))
+    asserts.false(env, types.is_target(99))
+    asserts.false(env, types.is_target(""))
+    asserts.false(env, types.is_target(set()))
+    asserts.false(env, types.is_target(list()))
+    asserts.false(env, types.is_target(struct()))
+
+    return unittest.end(env)
+
+is_target_test = unittest.make(
+    _is_target_test,
+    attrs = {
+        "_test_target": attr.label(
+            default = _target_test_hollow_target,
+        ),
+    },
+)
+
+def _is_label_test(ctx):
+    """Unit test for types.is_label."""
+    env = unittest.begin(ctx)
+
+    asserts.true(env, types.is_label(ctx.label))
+
+    # Ensuring a target does not match.
+    asserts.false(env, types.is_label(ctx.attr._test_target))
+    asserts.false(env, types.is_target(_make_test_file(ctx)))
+    asserts.false(env, types.is_target(99))
+    asserts.false(env, types.is_target(""))
+    asserts.false(env, types.is_target(set()))
+    asserts.false(env, types.is_target(list()))
+    asserts.false(env, types.is_target(struct()))
+
+    return unittest.end(env)
+
+is_label_test = unittest.make(
+    _is_label_test,
+    attrs = {
+        "_test_target": attr.label(
+            default = _target_test_hollow_target,
+        ),
+    },
+)
+
 def types_test_suite():
+    # Used for target type-testing.
+    native.filegroup(name = _target_test_hollow_target)
+
     """Creates the test targets and test suite for types.bzl tests."""
     unittest.suite(
         "types_tests",
@@ -245,4 +333,7 @@ def types_test_suite():
         is_function_test,
         is_depset_test,
         is_set_test,
+        is_file_test,
+        is_target_test,
+        is_label_test,
     )
