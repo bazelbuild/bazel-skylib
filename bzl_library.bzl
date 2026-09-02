@@ -23,7 +23,7 @@ load(
 
 StarlarkLibraryInfo = _StarlarkLibraryInfo
 
-def bzl_library(name, **kwargs):
+def bzl_library(name, srcs = [], deps = [], **kwargs):
     """Wrapper for bzl_library.
 
     Args:
@@ -38,9 +38,22 @@ def bzl_library(name, **kwargs):
     _ = kwargs.pop("target_compatible_with", None)
     _bzl_library(
         name = name,
+        srcs = srcs,
+        deps = deps,
         compatible_with = [],
         exec_compatible_with = [],
         features = [],
         target_compatible_with = [],
         **kwargs
     )
+    enable_doc_extract = select({
+        Label("//:extract_docs_flag"): hasattr(native, "starlark_doc_extract"),
+        "//conditions:default": False,
+    })
+    if enable_doc_extract:
+        for i, src in enumerate(srcs):
+            native.starlark_doc_extract(
+                name = "{}.doc_extract{}".format(name, i if i > 0 else ""),
+                src = src,
+                deps = deps,
+            )
