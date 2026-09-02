@@ -16,10 +16,16 @@
 """
 
 def _expand_template_impl(ctx):
+    substitutions = {}
+    for key, value in ctx.attr.substitutions.items():
+        # TODO: Replace `expand_make_variables` once a suitable replacement exists.
+        # https://github.com/bazelbuild/bazel/issues/5859
+        substitutions[key] = ctx.expand_make_variables("substitutions", value, {})
+
     ctx.actions.expand_template(
         template = ctx.file.template,
         output = ctx.outputs.out,
-        substitutions = ctx.attr.substitutions,
+        substitutions = substitutions,
     )
 
 expand_template = rule(
@@ -39,7 +45,7 @@ explicitly add delimiters to the key strings, for example "{KEY}" or "@KEY@"."""
         ),
         "substitutions": attr.string_dict(
             mandatory = True,
-            doc = "A dictionary mapping strings to their substitutions.",
+            doc = "A dictionary mapping strings to their substitutions. Values of subject to \"Make\" variable expansion.",
         ),
         "out": attr.output(
             mandatory = True,
