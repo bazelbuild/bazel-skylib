@@ -61,11 +61,11 @@ run_binary(
         # Testing $(location) expansion only on source files so the result is
         # predictable. The path of generated files depends on the target
         # platform.
-        "ENV_LOCATION": "a $(location BUILD)",
-        "ENV_LOCATIONS": "b\\ $(locations :dummy_srcs)",
+        "ENV_LOCATION": "a $(location BUILD)",  # buildifier: disable=make-location
+        "ENV_LOCATIONS": "b\\ $(locations :dummy_srcs)",  # buildifier: disable=make-location
         "ENV_PATH_BASH": "$PATH",
         "ENV_PATH_CMD": "%PATH%",
-        "OUT": "$(location run_script.out)",
+        "OUT": "$(execpath run_script.out)",
     },
     tool = ":script",
 )
@@ -157,9 +157,9 @@ run_binary(
         "$(execpaths :dummy_srcs)",
         "'$(execpath BUILD) $$(execpath BUILD)'",
         # Test the legacy 'location' expansions
-        "$(location BUILD)",
-        "$(locations :dummy_srcs)",
-        "'$(location BUILD) $$(location BUILD)'",
+        "$(location BUILD)",  # buildifier: disable=make-location
+        "$(locations :dummy_srcs)",  # buildifier: disable=make-location
+        "'$(location BUILD) $$(location BUILD)'",  # buildifier: disable=make-location
         "$PATH",
         "$$PATH",
         "${PATH}",
@@ -167,7 +167,7 @@ run_binary(
     ],
     # Not testing any complex envvars here, because we already did in
     # "run_script".
-    env = {"OUT": "$(location run_bin.out)"},
+    env = {"OUT": "$(execpath run_bin.out)"},
     tool = ":printargs",
 )
 

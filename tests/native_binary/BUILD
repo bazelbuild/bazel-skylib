@@ -72,11 +72,12 @@ copy_file(
     is_executable = True,
 )
 
+# Preserve legacy location expansion and quoting alongside escaped literals.
 _ARGS = [
     "'a b'",
     "c\\ d",
-    "$(location testdata.txt) $$(location testdata.txt) $(location testdata.txt)",
-    "'$(location testdata.txt) $$(location testdata.txt) $(location testdata.txt)'",
+    "$(location testdata.txt) $$(location testdata.txt) $(location testdata.txt)",  # buildifier: disable=make-location
+    "'$(location testdata.txt) $$(location testdata.txt) $(location testdata.txt)'",  # buildifier: disable=make-location
     "$$TEST_SRCDIR",
     "$${TEST_SRCDIR}",
 ]

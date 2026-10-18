@@ -46,5 +46,5 @@ genrule(
         "a-gen.txt",
         "aa-gen.txt",
     ],
-    cmd = "echo -n 'potato' > $(location a-gen.txt) && echo -n 'potato' > $(location aa-gen.txt)",
+    cmd = "echo -n 'potato' > $(execpath a-gen.txt) && echo -n 'potato' > $(execpath aa-gen.txt)",
 )

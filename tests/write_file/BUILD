@@ -72,8 +72,8 @@ genrule(
         "empty-bin-out.txt",
         "nonempty-bin-out.txt",
     ],
-    cmd = ("$(location :bin_empty) > $(location empty-bin-out.txt) && " +
-           "$(location :bin_nonempty) > $(location nonempty-bin-out.txt)"),
+    cmd = ("$(execpath :bin_empty) > $(execpath empty-bin-out.txt) && " +
+           "$(execpath :bin_nonempty) > $(execpath nonempty-bin-out.txt)"),
     output_to_bindir = 1,
     tools = [
         ":bin_empty",

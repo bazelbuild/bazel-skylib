@@ -77,10 +77,10 @@ genrule(
         "xgen-out.txt",
     ],
     cmd = " && ".join([
-        "$(location :bin_src_symlink) > $(location xsrc-out-symlink.txt)",
-        "$(location :bin_gen_symlink) > $(location xgen-out-symlink.txt)",
-        "$(location :bin_src) > $(location xsrc-out.txt)",
-        "$(location :bin_gen) > $(location xgen-out.txt)",
+        "$(execpath :bin_src_symlink) > $(execpath xsrc-out-symlink.txt)",
+        "$(execpath :bin_gen_symlink) > $(execpath xgen-out-symlink.txt)",
+        "$(execpath :bin_src) > $(execpath xsrc-out.txt)",
+        "$(execpath :bin_gen) > $(execpath xgen-out.txt)",
     ]),
     output_to_bindir = 1,
     tools = [
