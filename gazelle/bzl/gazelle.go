@@ -293,30 +293,28 @@ func generateEmpty(args language.GenerateArgs) []*rule.Rule {
 	if args.File == nil {
 		return ret
 	}
+
+	exists := make(map[string]bool)
+	for _, f := range args.RegularFiles {
+		exists[f] = true
+	}
+	for _, f := range args.GenFiles {
+		exists[f] = true
+	}
+
 	for _, r := range args.File.Rules {
 		if r.Kind() != "bzl_library" {
 			continue
 		}
-		name := r.AttrString("name")
-
-		exists := make(map[string]bool)
-		for _, f := range args.RegularFiles {
-			exists[f] = true
-		}
-		for _, f := range args.GenFiles {
-			exists[f] = true
-		}
-		for _, r := range args.File.Rules {
-			srcsExist := false
-			for _, f := range r.AttrStrings("srcs") {
-				if exists[f] {
-					srcsExist = true
-					break
-				}
+		srcsExist := false
+		for _, f := range r.AttrStrings("srcs") {
+			if exists[f] {
+				srcsExist = true
+				break
 			}
-			if !srcsExist {
-				ret = append(ret, rule.NewRule("bzl_library", name))
-			}
+		}
+		if !srcsExist {
+			ret = append(ret, rule.NewRule("bzl_library", r.Name()))
 		}
 	}
 	return ret
