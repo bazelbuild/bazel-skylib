@@ -7,7 +7,7 @@ bzl_library(
 )
 
 bzl_library(
-    name = "weirdly_named_target_that_will_be_renamed",
+    name = "weirdly_named_target_that_will_be_kept",
     srcs = ["foo.bzl"],
     visibility = ["//visibility:public"],
 )
