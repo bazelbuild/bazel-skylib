@@ -145,8 +145,7 @@ def _check_duplicates(settings):
     seen = {}
     for setting in settings:
         if setting in seen:
-            # TODO(https://github.com/bazelbuild/bazel-skylib/pull/643): format a Label in this error.
-            fail(setting + " appears more than once. Duplicates not allowed.")  # ty: ignore[unsupported-operator, non-static-type]
+            fail("%s appears more than once. Duplicates not allowed." % setting)
         seen[setting] = True
 
 def _remove_default_condition(settings):
