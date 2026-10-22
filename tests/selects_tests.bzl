@@ -91,7 +91,7 @@ def _create_config_setting_groups():
     )
     selects.config_setting_group(
         name = "1_or_2_or_3",
-        match_any = [":condition1", ":condition2", ":condition3"],
+        match_any = [Label(":condition1"), ":condition2", ":condition3"],
     )
     selects.config_setting_group(
         name = "1_or_nothing_else",
@@ -669,6 +669,35 @@ def _and_config_setting_group_with_default_fails_test():
     )
 
 ###################################################
+# duplicate_label_conditions_test
+###################################################
+
+def _duplicate_label_conditions_impl(ctx):
+    # Invalid groups fail before creating rules, so analysis tests can check the error.
+    condition = Label(":condition1")
+    selects.config_setting_group(
+        name = ctx.label.name,
+        match_any = [condition, condition],
+    )
+
+_duplicate_label_conditions = rule(
+    implementation = _duplicate_label_conditions_impl,
+)
+
+def _duplicate_label_conditions_test_impl(ctx):
+    env = analysistest.begin(ctx)
+    asserts.expect_failure(
+        env,
+        "%s appears more than once. Duplicates not allowed." % Label(":condition1"),
+    )
+    return analysistest.end(env)
+
+duplicate_label_conditions_test = analysistest.make(
+    _duplicate_label_conditions_test_impl,
+    expect_failure = True,
+)
+
+###################################################
 # empty_config_setting_group_not_allowed_test
 ###################################################
 
@@ -722,6 +751,15 @@ def selects_test_suite():
     _or_config_setting_group_with_default_matches_test()
     _and_config_setting_group_with_default_matches_test()
     _and_config_setting_group_with_default_fails_test()
+
+    _duplicate_label_conditions(
+        name = "duplicate_label_conditions",
+        tags = ["manual"],
+    )
+    duplicate_label_conditions_test(
+        name = "duplicate_label_conditions_test",
+        target_under_test = ":duplicate_label_conditions",
+    )
 
     # _empty_config_setting_group_not_allowed_test()
     # _and_and_or_not_allowed_together_test()
