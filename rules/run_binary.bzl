@@ -18,8 +18,6 @@ run_binary() build rule implementation.
 Runs a binary as a build action. This rule does not require Bash (unlike native.genrule()).
 """
 
-load("//lib:dicts.bzl", "dicts")
-
 def _run_binary_impl(ctx):
     tool_as_list = [ctx.attr.tool]
     args = [
@@ -48,8 +46,8 @@ def _run_binary_impl(ctx):
         executable = ctx.executable.tool,
         arguments = args,
         mnemonic = "RunBinary",
-        use_default_shell_env = False,
-        env = dicts.add(ctx.configuration.default_shell_env, envs),
+        use_default_shell_env = True,
+        env = envs,
     )
     return DefaultInfo(
         files = depset(ctx.outputs.outs),
