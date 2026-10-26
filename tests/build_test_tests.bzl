@@ -15,13 +15,12 @@
 """Unit tests for build_test.bzl."""
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//lib:unittest.bzl", "loadingtest")
 load("//rules:build_test.bzl", "build_test")
 
 # buildifier: disable=unnamed-macro
 def build_test_test_suite():
-    # Since the rules doesn't do anything really, it just makes some targets
-    # to get Bazel to build other targets via a `bazel test`, just make some
-    # targets to exercise the rule.
+    """Exercises build_test targets and forwarded tags."""
 
     # Make a source file
     native.genrule(
@@ -41,3 +40,27 @@ def build_test_test_suite():
         name = "build_test__test",
         targets = [":build_test__build_target"],
     )
+
+    env = loadingtest.make("build_test_tags")
+    for kind, tags, expected_test_tags, expected_deps_tags in [
+        ("list", ["build_test_input"], ["build_test_input"], ["build_test_input", "manual"]),
+        ("tuple", ("build_test_input",), ["build_test_input"], ["build_test_input", "manual"]),
+        ("depset", depset(["build_test_input"]), ["build_test_input"], ["build_test_input", "manual"]),
+        ("none", None, [], ["manual"]),
+        ("manual", ["manual"], ["manual"], ["manual"]),
+    ]:
+        name = "build_test_%s_tags_test" % kind
+        build_test(
+            name = name,
+            targets = [":build_test__build_target"],
+            tags = tags,
+        )
+        loadingtest.equals(
+            env,
+            kind,
+            (expected_test_tags, expected_deps_tags),
+            (
+                list(native.existing_rule(name)["tags"]),
+                sorted(native.existing_rule(name + "_0__deps")["tags"]),
+            ),
+        )
