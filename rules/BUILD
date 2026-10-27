@@ -63,6 +63,11 @@ bzl_library(
     srcs = ["common_settings.bzl"],
 )
 
+bzl_library(
+    name = "constraints",
+    srcs = ["constraints.bzl"],
+)
+
 filegroup(
     name = "test_deps",
     testonly = True,
