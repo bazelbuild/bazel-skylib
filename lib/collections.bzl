@@ -65,8 +65,25 @@ def _uniq(iterable):
     # TODO(bazel-team): Remove when testing frameworks no longer require python compatibility.
     return list(unique_elements.keys())
 
+def _flatten(iterable):
+    """Flattens an iterable to the sum of the elements with a starting value of [].
+
+    This behaves like collapsing the first dimension of the iterable.
+
+    Args:
+      iterable: An iterable to be collapsed to a list.
+
+    Returns:
+      A new list with the collapsed elements from `iterable`.
+    """
+    result = []
+    for element in iterable:
+      result += element
+    return result
+
 collections = struct(
     after_each = _after_each,
     before_each = _before_each,
     uniq = _uniq,
+    flatten = _flatten,
 )
