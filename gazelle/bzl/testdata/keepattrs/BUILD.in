@@ -1,0 +1,13 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
+package(default_visibility = ["//visibility:private"])
+
+# A rule without srcs must not make Gazelle treat the bzl_library as stale and
+# regenerate it, dropping its hand-written visibility.
+exports_files(["foo.bzl"])
+
+bzl_library(
+    name = "foo",
+    srcs = ["foo.bzl"],
+    visibility = ["//other:__pkg__"],
+)
