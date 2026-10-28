@@ -75,13 +75,20 @@ EOF
   mkdir -p lib
   touch lib/BUILD
   cat > lib/BUILD <<EOF
-exports_files(["*.bzl"])
+exports_files(["*.bzl", "*.scl"])
 EOF
   ln -sf "$(rlocation $TEST_WORKSPACE/lib/dicts.bzl)" lib/dicts.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/dicts.scl)" lib/dicts.scl
   ln -sf "$(rlocation $TEST_WORKSPACE/lib/new_sets.bzl)" lib/new_sets.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/new_sets.scl)" lib/new_sets.scl
   ln -sf "$(rlocation $TEST_WORKSPACE/lib/partial.bzl)" lib/partial.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/partial.scl)" lib/partial.scl
   ln -sf "$(rlocation $TEST_WORKSPACE/lib/sets.bzl)" lib/sets.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/sets.scl)" lib/sets.scl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/structs.bzl)" lib/structs.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/structs.scl)" lib/structs.scl
   ln -sf "$(rlocation $TEST_WORKSPACE/lib/types.bzl)" lib/types.bzl
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/types.scl)" lib/types.scl
   ln -sf "$(rlocation $TEST_WORKSPACE/lib/unittest.bzl)" lib/unittest.bzl
 
   mkdir -p toolchains/unittest

@@ -50,6 +50,9 @@ function import_diff_test() {
          "${repo}/rules/diff_test.bzl"
   ln -sf "$(rlocation $TEST_WORKSPACE/lib/shell.bzl)" \
          "${repo}/lib/shell.bzl"
+  ln -sf "$(rlocation $TEST_WORKSPACE/lib/shell.scl)" \
+         "${repo}/lib/shell.scl"
+  echo "exports_files(['shell.bzl', 'shell.scl'])" > "${repo}/lib/BUILD"
   echo "exports_files(['diff_test.bzl'])" > "${repo}/rules/BUILD"
 }
 
