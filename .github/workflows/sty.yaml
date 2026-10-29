@@ -1,0 +1,73 @@
+name: Starlark types
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sty:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: List implementations in each workspace
+        id: implementations
+        run: |
+          git -c core.quotePath=false ls-files -- '*.bzl' ':(exclude)gazelle/**' > "$RUNNER_TEMP/sty-root-files"
+          # Gazelle reads bzl/testdata as input to its parser tests.
+          git -c core.quotePath=false -C gazelle ls-files -- '*.bzl' ':(exclude)bzl/testdata/**' > "$RUNNER_TEMP/sty-gazelle-files"
+      - uses: tamird/sty@2ab74c830937d3ca85165ca0e9a02a42400ad9e5
+        with:
+          advisory-files-from: ${{ runner.temp }}/sty-root-files
+          audit-loads: true
+          bazel-version: '8.8.1'
+          files: |
+            distribution/distribution.bzl
+            lib.bzl
+            lib/modules.bzl
+            lib/old_sets.bzl
+            lib/paths.bzl
+            lib/sets.bzl
+            lib/shell.bzl
+            lib/subpackages.bzl
+            lib/types.bzl
+            lib/versions.bzl
+            rules/analysis_test.bzl
+            rules/build_test.bzl
+            rules/copy_directory.bzl
+            rules/copy_file.bzl
+            rules/diff_test.bzl
+            rules/expand_template.bzl
+            rules/native_binary.bzl
+            rules/private/copy_directory_private.bzl
+            rules/run_binary.bzl
+            rules/select_file.bzl
+            rules/write_file.bzl
+            skylark_library.bzl
+            tests/bzl_library/testdata
+            tests/copy_directory/empty_directory.bzl
+            tests/directory/external_directory_tests.bzl
+            tests/modules_test.bzl
+            version.bzl
+            workspace.bzl
+      - name: Check Gazelle workspace helpers
+        if: ${{ !cancelled() && steps.implementations.outcome == 'success' }}
+        uses: tamird/sty@2ab74c830937d3ca85165ca0e9a02a42400ad9e5
+        with:
+          advisory-files-from: ${{ runner.temp }}/sty-gazelle-files
+          working-directory: gazelle
+          artifact-name: sty-gazelle
+          audit-loads: true
+          bazel-version: '8.8.1'
+          files: |
+            workspace.bzl

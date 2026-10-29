@@ -22,6 +22,15 @@ bazel_dep(name = "rules_testing", version = "0.6.0", dev_dependency = True)
 bazel_dep(name = "rules_cc", version = "0.0.17", dev_dependency = True)
 bazel_dep(name = "rules_shell", version = "0.3.0", dev_dependency = True)
 
+# Type contracts for Bazel's repository helpers.
+bazel_dep(name = "bazel_tools_stubs", dev_dependency = True)
+archive_override(
+    module_name = "bazel_tools_stubs",
+    integrity = "sha256-FayMMyMk37REW96xvJXMY1fYcWXBban9QgFAZUB+Kr0=",
+    strip_prefix = "sty-2ab74c830937d3ca85165ca0e9a02a42400ad9e5/crates/starpls_bazel/data/bazel_tools",
+    urls = ["https://github.com/tamird/sty/archive/2ab74c830937d3ca85165ca0e9a02a42400ad9e5.tar.gz"],
+)
+
 # Needed for bazelci and for building distribution tarballs.
 # If using an unreleased version of bazel_skylib via git_override, apply
 # MODULE.bazel-remove-override.patch to remove the following lines:

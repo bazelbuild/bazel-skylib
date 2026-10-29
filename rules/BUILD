@@ -7,6 +7,10 @@ package(
 
 licenses(["notice"])
 
+exports_files([
+    "common_settings.bzli",
+])
+
 bzl_library(
     name = "analysis_test",
     srcs = ["analysis_test.bzl"],
@@ -55,7 +59,6 @@ bzl_library(
 bzl_library(
     name = "run_binary",
     srcs = ["run_binary.bzl"],
-    deps = ["//lib:dicts"],
 )
 
 bzl_library(
@@ -69,7 +72,10 @@ filegroup(
     srcs = [
         "BUILD",
         "//rules/private:test_deps",
-    ] + glob(["*.bzl"]),
+    ] + glob([
+        "*.bzl",
+        "*.bzli",
+    ]),
     visibility = ["//:__subpackages__"],  # Needs skylib's root BUILD file for default_applicable_licenses
 )
 
@@ -78,7 +84,10 @@ filegroup(
     name = "distribution",
     srcs = [
         "BUILD",
-    ] + glob(["*.bzl"]),
+    ] + glob([
+        "*.bzl",
+        "*.bzli",
+    ]),
     visibility = [
         "//:__pkg__",
     ],

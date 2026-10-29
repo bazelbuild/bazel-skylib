@@ -1,0 +1,19 @@
+format-version = 1
+
+[files]
+"bzl_library.bzl" = "bzl_library.bzli"
+"rules/private/bzl_library.bzl" = "rules/private/bzl_library.bzli"
+"rules/private/copy_common.bzl" = "rules/private/copy_common.bzli"
+"rules/private/copy_file_private.bzl" = "rules/private/copy_file_private.bzli"
+"rules/private/write_file_private.bzl" = "rules/private/write_file_private.bzli"
+"lib/collections.bzl" = "lib/collections.bzli"
+"lib/new_sets.bzl" = "lib/new_sets.bzli"
+"lib/selects.bzl" = "lib/selects.bzli"
+"lib/structs.bzl" = "lib/structs.bzli"
+"rules/directory/providers.bzl" = "rules/directory/providers.bzli"
+"rules/directory/private/paths.bzl" = "rules/directory/private/paths.bzli"
+"rules/directory/private/glob.bzl" = "rules/directory/private/glob.bzli"
+"rules/common_settings.bzl" = "rules/common_settings.bzli"
+"rules/directory/directory.bzl" = "rules/directory/directory.bzli"
+"rules/directory/glob.bzl" = "rules/directory/glob.bzli"
+"rules/directory/subdirectory.bzl" = "rules/directory/subdirectory.bzli"
