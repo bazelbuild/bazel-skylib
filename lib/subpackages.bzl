@@ -17,13 +17,16 @@
 _SUBPACKAGES_SUPPORTED = hasattr(native, "subpackages")
 
 def _supported():
+    # type: () -> bool
     return _SUBPACKAGES_SUPPORTED
 
 def _check_supported():
+    # type: () -> None
     if not _SUBPACKAGES_SUPPORTED:
         fail("native.subpackages not supported in this version of Bazel.")
 
 def _all(exclude = [], allow_empty = False, fully_qualified = True):
+    # type: (Sequence[str], bool, bool) -> list[str]
     """List all direct subpackages of the current package regardless of directory depth.
 
     The returned list contains all subpackages, but not subpackages of subpackages.
@@ -62,12 +65,14 @@ def _all(exclude = [], allow_empty = False, fully_qualified = True):
     return subs
 
 def _fully_qualified(relative_path):
+    # type: (str) -> str
     package_name = native.package_name()
     if package_name:
         return "//%s/%s" % (package_name, relative_path)
     return "//" + relative_path
 
 def _exists(relative_path):
+    # type: (str) -> bool
     """Checks to see if relative_path is a direct subpackage of the current package.
 
     Example:

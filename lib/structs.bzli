@@ -1,0 +1,3 @@
+"""Conversions from Starlark structs."""
+
+def _to_dict[T](s: struct[T]) -> dict[str, T]: ...

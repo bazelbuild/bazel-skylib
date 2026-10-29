@@ -56,6 +56,11 @@ def _source_root_test_impl(env, targets):
     subdir.transitive_files().contains_exactly([f2])
     env.expect.that_str(subdir.actual.path + "/f2").equals(f2.path)
 
+    env.expect.that_str(root.actual.get_path("testdata/f1").path).equals(f1.path)
+    env.expect.that_str(root.actual.get_path("testdata/subdir").path).equals(subdir.actual.path)
+    env.expect.that_str(root.actual.get_file("testdata/subdir/f2").path).equals(f2.path)
+    env.expect.that_str(root.actual.get_subdirectory("testdata/subdir").path).equals(subdir.actual.path)
+
 def _generated_root_test(name):
     subject_name = "_%s_subject" % name
     directory(
@@ -143,6 +148,27 @@ def _source_and_generated_root_test(name):
         srcs = ["f1", ":generated_file"],
     )
 
+def _get_file_impl(ctx):
+    file = ctx.attr.directory[DirectoryInfo].get_file(ctx.attr.path)
+    return [DefaultInfo(files = depset([file]))]
+
+_get_file = rule(
+    implementation = _get_file_impl,
+    attrs = {
+        "directory": attr.label(mandatory = True, providers = [DirectoryInfo]),
+        "path": attr.string(mandatory = True),
+    },
+)
+
+def _directory_as_file_test(name):
+    failure_test(
+        name = name,
+        impl = failure_matching(matching.contains("testdata/subdir to have type File, but got Directory")),
+        rule = _get_file,
+        directory = ":root",
+        path = "testdata/subdir",
+    )
+
 # buildifier: disable=function-docstring
 def directory_test_suite(name):
     test_suite(
@@ -154,5 +180,6 @@ def directory_test_suite(name):
             _directory_with_self_srcs_test,
             _outside_testdata_test,
             _source_and_generated_root_test,
+            _directory_as_file_test,
         ],
     )

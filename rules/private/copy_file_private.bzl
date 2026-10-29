@@ -22,6 +22,7 @@ cmd.exe (on Windows). '_copy_xfile' marks the resulting file executable,
 load(":copy_common.bzl", "OsInfo")
 
 def copy_cmd(ctx, src, dst):
+    # type: (ctx[object, object], File, File) -> None
     # Most Windows binaries built with MSVC use a certain argument quoting
     # scheme. Bazel uses that scheme too to quote arguments. However,
     # cmd.exe uses different semantics, so Bazel's quoting is wrong here.
@@ -49,6 +50,7 @@ def copy_cmd(ctx, src, dst):
     )
 
 def copy_bash(ctx, src, dst):
+    # type: (ctx[object, object], File, File) -> None
     ctx.actions.run_shell(
         inputs = [src],
         outputs = [dst],
@@ -60,6 +62,7 @@ def copy_bash(ctx, src, dst):
     )
 
 def _copy_file_impl(ctx):
+    # type: (...) -> list[DefaultInfo]
     if ctx.attr.allow_symlink:
         ctx.actions.symlink(
             output = ctx.outputs.out,

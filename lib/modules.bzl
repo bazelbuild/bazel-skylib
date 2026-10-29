@@ -15,6 +15,7 @@
 """Skylib module containing utilities for Bazel modules and module extensions."""
 
 def _as_extension(macro, doc = None):
+    # type: (Callable[[], object], str | None) -> ModuleExtension
     """Wraps a WORKSPACE dependency macro into a module extension.
 
     Example:
@@ -40,6 +41,9 @@ def _as_extension(macro, doc = None):
     """
 
     def _ext_impl(module_ctx):
+        # type: (module_ctx) -> extension_metadata | None
+        # TODO(https://github.com/bazelbuild/bazel/issues/32020): make this an
+        # annotation when supported Bazel versions expose context and metadata types.
         macro()
 
         # Setting `reproducible` is safe since `macro`, as a function without parameters, must be
@@ -55,7 +59,9 @@ def _as_extension(macro, doc = None):
         **kwargs
     )
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32020): use a source annotation once Bazel exposes these context and metadata types.
 def _use_all_repos(module_ctx, reproducible = False):
+    # type: (module_ctx, bool) -> extension_metadata | None
     """Return from a module extension that should have all its repositories imported via `use_repo`.
 
     Example:

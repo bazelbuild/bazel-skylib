@@ -1,0 +1,11 @@
+"""Contracts for selecting files and runfiles from a directory."""
+
+type _Attrs = struct[{
+    "directory": Target,
+    "srcs": list[str],
+    "data": list[str],
+    "exclude": list[str],
+    "allow_empty": bool,
+}, ...]
+
+def _directory_glob_impl(ctx: ctx[object, _Attrs]) -> DefaultInfo: ...
