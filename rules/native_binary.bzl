@@ -21,6 +21,7 @@ don't depend on Bash and work with --shell_executable="".
 """
 
 def _impl_rule(ctx):
+    # type: (...) -> list[DefaultInfo | RunEnvironmentInfo]
     out = ctx.actions.declare_file(ctx.attr.out if (ctx.attr.out != "") else ctx.attr.name + ".exe")
     ctx.actions.symlink(
         target_file = ctx.executable.src,

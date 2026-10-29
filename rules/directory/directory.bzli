@@ -1,0 +1,25 @@
+"""Contracts for constructing directory metadata from source files."""
+
+load("//rules/directory:providers.bzli", "DirectoryInfo")
+
+type _Actions = actions
+type _Metadata = struct[{
+    "directories": dict[str, _Metadata],
+    "files": list[File],
+    "relative": str,
+    "human_readable": str,
+}]
+
+class _DirectoryContext(Protocol):
+    @property
+    def actions(self) -> _Actions: ...
+
+    @property
+    def label(self) -> Label: ...
+
+    @property
+    def files(self) -> struct[{"srcs": list[File]}, ...]: ...
+
+def _directory_metadata(relative: str, human_readable: str) -> _Metadata: ...
+
+def _directory_impl(ctx: _DirectoryContext) -> list[DirectoryInfo | DefaultInfo]: ...

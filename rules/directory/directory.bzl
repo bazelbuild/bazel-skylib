@@ -18,12 +18,14 @@ load("//lib:paths.bzl", "paths")
 load(":providers.bzl", "DirectoryInfo", "create_directory_info")
 
 def _prefix_match(f, prefixes):
+    # type: (File, dict[str, File | None]) -> str
     for prefix in prefixes:
         if f.path.startswith(prefix):
             return prefix
     fail("Expected {path} to start with one of {prefixes}".format(path = f.path, prefixes = list(prefixes)))
 
 def _choose_path(prefixes):
+    # type: (dict[str, File | None]) -> str
     filtered = {prefix: example for prefix, example in prefixes.items() if example}
     if len(filtered) > 1:
         examples = list(filtered.values())
@@ -42,6 +44,16 @@ def _choose_path(prefixes):
     # If there's no entries, use the source path (it's always first in the dict)
     return list(filtered if filtered else prefixes)[0][:-1]
 
+def _directory_metadata(relative, human_readable):
+    directories = {}  # type: dict[str, _Metadata]
+    files = []  # type: list[File]
+    return struct(
+        directories = directories,
+        files = files,
+        relative = relative,
+        human_readable = human_readable,
+    )
+
 def _directory_impl(ctx):
     # Declare a generated file so that we can get the path to generated files.
     f = ctx.actions.declare_file("_directory_rule_" + ctx.label.name)
@@ -59,12 +71,7 @@ def _directory_impl(ctx):
         f.dirname + "/": None,
     }
 
-    root_metadata = struct(
-        directories = {},
-        files = [],
-        relative = "",
-        human_readable = str(ctx.label),
-    )
+    root_metadata = _directory_metadata("", str(ctx.label))
 
     topological = [root_metadata]
     for src in ctx.files.srcs:
@@ -74,11 +81,9 @@ def _directory_impl(ctx):
         current_path = root_metadata
         for dirname in relative[:-1]:
             if dirname not in current_path.directories:
-                dir_metadata = struct(
-                    directories = {},
-                    files = [],
-                    relative = paths.join(current_path.relative, dirname),
-                    human_readable = paths.join(current_path.human_readable, dirname),
+                dir_metadata = _directory_metadata(
+                    paths.join(current_path.relative, dirname),
+                    paths.join(current_path.human_readable, dirname),
                 )
                 current_path.directories[dirname] = dir_metadata
                 topological.append(dir_metadata)

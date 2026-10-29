@@ -1,0 +1,5 @@
+"""Arguments forwarded to the Starlark library rule."""
+
+load("//rules/private:bzl_library.bzl", _bzl_library_rule = "bzl_library")
+
+def bzl_library(name: str, **kwargs: Unpack[KeywordArgs[_bzl_library_rule, "name"]]) -> None: ...

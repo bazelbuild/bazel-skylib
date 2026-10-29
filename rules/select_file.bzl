@@ -19,6 +19,7 @@ Selects a single file from the outputs of a target by given relative path.
 """
 
 def _impl(ctx):
+    # type: (...) -> list[DefaultInfo]
     if ctx.attr.subpath and len(ctx.attr.subpath) == 0:
         fail("Subpath can not be empty.")
 

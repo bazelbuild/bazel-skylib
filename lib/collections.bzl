@@ -59,7 +59,7 @@ def _uniq(iterable):
     Returns:
       A new list with all unique elements from `iterable`.
     """
-    unique_elements = {element: None for element in iterable}
+    unique_elements = {element: None for element in iterable}  # type: dict[T, None]
 
     # list() used here for python3 compatibility.
     # TODO(bazel-team): Remove when testing frameworks no longer require python compatibility.

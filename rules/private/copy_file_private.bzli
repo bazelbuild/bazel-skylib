@@ -1,0 +1,13 @@
+"""Contracts for copying files."""
+
+type _Source = str | Label | select[str | Label, object]
+
+# The macro chooses the executable rule before Bazel resolves select().
+def copy_file(
+    name: str,
+    src: _Source,
+    out: str | Label,
+    is_executable: bool | select[Literal[True], object] = ...,
+    allow_symlink: bool | select[bool, object] = ...,
+    **kwargs: Unpack[CommonRuleAttrs],
+) -> None: ...

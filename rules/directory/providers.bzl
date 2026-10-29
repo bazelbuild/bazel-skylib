@@ -15,17 +15,17 @@
 """Skylib module containing providers for directories."""
 
 load("//rules/directory/private:glob.bzl", "glob")
-load("//rules/directory/private:paths.bzl", "DIRECTORY", "FILE", "get_path")
+load("//rules/directory/private:paths.bzl", "get_file", "get_path", "get_subdirectory")
 
 def _init_directory_info(**kwargs):
     self = struct(**kwargs)
-    kwargs.update(
-        get_path = lambda path: get_path(self, path, require_type = None),
-        get_file = lambda path: get_path(self, path, require_type = FILE),
-        get_subdirectory = lambda path: get_path(self, path, require_type = DIRECTORY),
+    return dict(
+        kwargs,
+        get_path = lambda path: get_path(self, path),
+        get_file = lambda path: get_file(self, path),
+        get_subdirectory = lambda path: get_subdirectory(self, path),
         glob = lambda include, exclude = [], allow_empty = False: glob(self, include, exclude, allow_empty),
     )
-    return kwargs
 
 # TODO: Once bazel 5 no longer needs to be supported, remove this function, and add
 # init = _init_directory_info to the provider below

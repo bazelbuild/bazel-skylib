@@ -17,6 +17,7 @@
 load(":providers.bzl", "DirectoryInfo")
 
 def _subdirectory_impl(ctx):
+    # type: (ctx[object, struct[{'parent': Target, 'path': str}, ...]]) -> list[DirectoryInfo | DefaultInfo]
     dir = ctx.attr.parent[DirectoryInfo].get_subdirectory(ctx.attr.path)
     return [
         dir,

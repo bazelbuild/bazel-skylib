@@ -1,0 +1,41 @@
+"""Contracts for writing text files and executable files."""
+
+type _WriteAttrs = struct[{
+    "content": list[str],
+    "newline": str,
+    "_windows_constraint": Target,
+}, ...]
+
+type _Actions = actions
+type _Runfiles = runfiles
+
+class _WriteContext(Protocol):
+    @property
+    def attr(self) -> _WriteAttrs: ...
+
+    @property
+    def actions(self) -> _Actions: ...
+
+    @property
+    def outputs(self) -> struct[{"out": File}, ...]: ...
+
+    @property
+    def target_platform_has_constraint(self) -> Callable[[ConstraintValueInfo], bool]: ...
+
+    def runfiles(self, *, files: Sequence[File]) -> _Runfiles: ...
+
+def _common_impl(ctx: _WriteContext, is_executable: bool) -> list[DefaultInfo]: ...
+def _impl(ctx: _WriteContext) -> list[DefaultInfo]: ...
+def _ximpl(ctx: _WriteContext) -> list[DefaultInfo]: ...
+
+type _Content = Collection[str] | depset[str] | select[Collection[str] | depset[str] | None, object] | None
+type _Newline = Literal["auto", "unix", "windows", ""] | select[Literal["auto", "unix", "windows"], object] | None
+
+def write_file(
+    name: str,
+    out: str | Label,
+    content: _Content = ...,
+    is_executable: bool = ...,
+    newline: _Newline = ...,
+    **kwargs: Unpack[CommonRuleAttrs],
+) -> None: ...

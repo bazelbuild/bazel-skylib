@@ -17,6 +17,7 @@
 load("//lib:new_sets.bzl", "sets")
 
 def _empty_test_impl(ctx):
+    # type: (...) -> list[DefaultInfo]
     is_windows = ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo])
     extension = ".bat" if is_windows else ".sh"
     content = "exit 0" if is_windows else "#!/usr/bin/env bash\nexit 0"
@@ -42,15 +43,8 @@ _empty_test = rule(
     test = True,
 )
 
-_GENRULE_ATTRS = [
-    "compatible_with",
-    "exec_compatible_with",
-    "restricted_to",
-    "tags",
-    "target_compatible_with",
-]
-
-def build_test(name, targets, **kwargs):
+def build_test(name, targets, *, tags = [], **kwargs):
+    # type: (str, Collection[str | Label], list[str], **Unpack[KeywordArgs[_empty_test, "name", "data", "tags"]]) -> None
     """Test rule checking that other targets build.
 
     This works not by an instance of this test failing, but instead by
@@ -72,6 +66,7 @@ def build_test(name, targets, **kwargs):
     Args:
       name: The name of the test rule.
       targets: A list of targets to ensure build.
+      tags: Tags to apply to the test and its generated build targets.
       **kwargs: The [common attributes for tests](https://bazel.build/reference/be/common-definitions#common-attributes-tests).
     """
     if len(targets) == 0:
@@ -89,13 +84,11 @@ def build_test(name, targets, **kwargs):
     # too much for a remote execution set up.
     batch_size = max(1, len(targets) // 100)
 
-    # Pull a few args over from the test to the genrule.
-    genrule_args = {k: kwargs.get(k) for k in _GENRULE_ATTRS if k in kwargs}
-
     # Only the test target should be used to determine whether or not the deps
     # are built. Tagging the genrule targets as manual accomplishes this by
     # preventing them from being picked up by recursive build patterns (`//...`).
-    genrule_tags = genrule_args.pop("tags", [])
+    # TODO(https://github.com/bazelbuild/bazel-skylib/pull/644): accept the other native tags forms.
+    genrule_tags = tags
     if "manual" not in genrule_tags:
         genrule_tags = genrule_tags + ["manual"]
 
@@ -115,12 +108,16 @@ def build_test(name, targets, **kwargs):
             cmd = "touch $@",
             cmd_bat = "type nul > $@",
             tags = genrule_tags,
-            **genrule_args
+            compatible_with = kwargs.get("compatible_with"),
+            exec_compatible_with = kwargs.get("exec_compatible_with"),
+            restricted_to = kwargs.get("restricted_to"),
+            target_compatible_with = kwargs.get("target_compatible_with"),
         )
 
     _empty_test(
         name = name,
         data = test_data,
+        tags = tags,
         size = kwargs.pop("size", "small"),  # Default to small for test size
         **kwargs
     )

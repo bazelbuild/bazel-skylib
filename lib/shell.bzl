@@ -15,6 +15,7 @@
 """Skylib module containing shell utility functions."""
 
 def _array_literal(iterable):
+    # type: (Collection[object]) -> str
     """Creates a string from a sequence that can be used as a shell array.
 
     For example, `shell.array_literal(["a", "b", "c"])` would return the string
@@ -35,6 +36,7 @@ def _array_literal(iterable):
     return "(" + " ".join([_quote(str(i)) for i in iterable]) + ")"
 
 def _quote(s):
+    # type: (str) -> str
     """Quotes the given string for use in a shell command.
 
     This function quotes the given string (in case it contains spaces or other

@@ -25,7 +25,7 @@ def transitive_entries(directory):
     Returns:
         List[Either[DirectoryInfo, File]] The entries contained within.
     """
-    entries = [directory]
+    entries = [directory]  # type: list[File | _DirectoryContent]
     stack = [directory]
     for _ in range(99999999):
         if not stack:
@@ -65,7 +65,7 @@ def directory_glob_chunk(directory, chunk):
     else:
         middle = ""
         left, right = chunk.split("*")
-    entries = []
+    entries = []  # type: list[File | _DirectoryContent]
     for name, entry in directory.entries.items():
         if name.startswith(left) and name.endswith(right) and len(left) + len(right) <= len(name) and middle in name[len(left):len(name) - len(right)]:
             entries.append(entry)
@@ -85,7 +85,7 @@ def directory_single_glob(directory, glob):
     # Treat a glob as a nondeterministic finite state automata. We can be in
     # multiple places at the one time.
     candidate_dirs = [directory]
-    candidate_files = []
+    candidate_files = {}  # type: dict[File, None]
     for chunk in glob.split("/"):
         next_candidate_dirs = {}
         candidate_files = {}
@@ -111,7 +111,7 @@ def glob(directory, include, exclude = [], allow_empty = False):
     Returns:
         depset[File] A set of files that match.
     """
-    include_files = []
+    include_files = []  # type: list[File]
     for g in include:
         matches = directory_single_glob(directory, g)
         if not matches and not allow_empty:
@@ -124,7 +124,7 @@ def glob(directory, include, exclude = [], allow_empty = False):
     if not exclude:
         return depset(include_files)
 
-    include_files = {k: None for k in include_files}
+    remaining_files = {k: None for k in include_files}  # type: dict[File, None]
     for g in exclude:
         matches = directory_single_glob(directory, g)
         if not matches and not allow_empty:
@@ -133,5 +133,5 @@ def glob(directory, include, exclude = [], allow_empty = False):
                 dir = directory.human_readable,
             ))
         for f in matches:
-            include_files.pop(f, None)
-    return depset(include_files.keys())
+            remaining_files.pop(f, None)
+    return depset(remaining_files.keys())

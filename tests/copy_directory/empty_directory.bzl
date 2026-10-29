@@ -15,6 +15,7 @@
 """Creates an empty directory."""
 
 def _empty_directory_impl(ctx):
+    # type: (...) -> list[DefaultInfo]
     out = ctx.actions.declare_directory(ctx.attr.name)
     ctx.actions.run_shell(
         outputs = [out],
