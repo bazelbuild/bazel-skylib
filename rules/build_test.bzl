@@ -16,7 +16,7 @@
 
 load("//lib:new_sets.bzl", "sets")
 
-def _empty_test_impl(ctx):
+def _skylib_build_test_impl(ctx):
     is_windows = ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo])
     extension = ".bat" if is_windows else ".sh"
     content = "exit 0" if is_windows else "#!/usr/bin/env bash\nexit 0"
@@ -33,8 +33,8 @@ def _empty_test_impl(ctx):
         runfiles = ctx.runfiles(files = ctx.files.data),
     )]
 
-_empty_test = rule(
-    implementation = _empty_test_impl,
+skylib_build_test = rule(
+    implementation = _skylib_build_test_impl,
     attrs = {
         "data": attr.label_list(allow_files = True),
         "_windows_constraint": attr.label(default = "@platforms//os:windows"),
@@ -118,7 +118,7 @@ def build_test(name, targets, **kwargs):
             **genrule_args
         )
 
-    _empty_test(
+    skylib_build_test(
         name = name,
         data = test_data,
         size = kwargs.pop("size", "small"),  # Default to small for test size

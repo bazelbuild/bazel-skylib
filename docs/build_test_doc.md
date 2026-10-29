@@ -2,6 +2,27 @@
 
 A test verifying other targets build as part of a `bazel test`
 
+<a id="skylib_build_test"></a>
+
+## skylib_build_test
+
+<pre>
+load("@bazel_skylib//rules:build_test.bzl", "skylib_build_test")
+
+skylib_build_test(<a href="#skylib_build_test-name">name</a>, <a href="#skylib_build_test-data">data</a>)
+</pre>
+
+
+
+**ATTRIBUTES**
+
+
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="skylib_build_test-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
+| <a id="skylib_build_test-data"></a>data |  -   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
+
+
 <a id="build_test"></a>
 
 ## build_test
