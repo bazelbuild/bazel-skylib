@@ -1,0 +1,24 @@
+# Copyright 2024 The Bazel Authors. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Path lookup over directory entries."""
+
+load("//rules/directory:providers.bzli", "DirectoryInfo", _DirectoryContent = "DirectoryContent")
+
+def _get_direct_child(directory: _DirectoryContent, name: str) -> File | DirectoryInfo: ...
+def _get_direct_subdirectory(directory: _DirectoryContent, name: str) -> DirectoryInfo: ...
+def _get_parent(directory: _DirectoryContent, path: str) -> tuple[_DirectoryContent, str]: ...
+def get_path(directory: _DirectoryContent, path: str, require_type: str | None = ...) -> File | DirectoryInfo: ...
+def get_file(directory: _DirectoryContent, path: str) -> File: ...
+def get_subdirectory(directory: _DirectoryContent, path: str) -> DirectoryInfo: ...

@@ -21,12 +21,14 @@ command (fc.exe) on Windows (no Bash is required).
 load("//lib:shell.bzl", "shell")
 
 def _runfiles_path(f):
+    # type: (File) -> str
     if f.root.path:
         return f.path[len(f.root.path) + 1:]  # generated file
     else:
         return f.path  # source file
 
 def _diff_test_impl(ctx):
+    # type: (...) -> DefaultInfo
     if ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo]):
         test_bin = ctx.actions.declare_file(ctx.label.name + "-test.bat")
         ctx.actions.write(

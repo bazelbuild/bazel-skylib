@@ -5,6 +5,16 @@ package(default_applicable_licenses = ["//:license"])
 
 licenses(["notice"])
 
+exports_files(
+    [
+        "bzl_library.bzli",
+        "copy_common.bzli",
+        "copy_file_private.bzli",
+        "write_file_private.bzli",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 is_windows(
     name = "is_windows",
     applicable_licenses = [],  # no output artifacts
@@ -61,7 +71,10 @@ filegroup(
     testonly = True,
     srcs = [
         "BUILD",
-    ] + glob(["*.bzl"]),
+    ] + glob([
+        "*.bzl",
+        "*.bzli",
+    ]),
     visibility = [
         "//rules:__pkg__",
     ],

@@ -15,11 +15,13 @@
 """Skylib module containing functions for checking Bazel versions."""
 
 def _get_bazel_version():
+    # type: () -> str
     """Returns the current Bazel version"""
 
     return native.bazel_version
 
 def _extract_version_number(bazel_version):
+    # type: (str) -> str
     """Extracts the semantic version number from a version string
 
     Args:
@@ -40,6 +42,7 @@ def _extract_version_number(bazel_version):
 # "0.10.0rc1 abc123d" => (0, 10, 0)
 # "0.3.0" => (0, 3, 0)
 def _parse_bazel_version(bazel_version):
+    # type: (str) -> tuple[int, ...]
     """Parses a version string into a 3-tuple of ints
 
     int tuples can be compared directly using binary operators (<, >).
@@ -60,6 +63,7 @@ def _parse_bazel_version(bazel_version):
     return tuple([int(n) for n in version.split(".")])
 
 def _is_at_most(threshold, version):
+    # type: (str, str) -> bool
     """Check that a version is lower or equals to a threshold.
 
     Args:
@@ -72,6 +76,7 @@ def _is_at_most(threshold, version):
     return _parse_bazel_version(version) <= _parse_bazel_version(threshold)
 
 def _is_at_least(threshold, version):
+    # type: (str, str) -> bool
     """Check that a version is higher or equals to a threshold.
 
     Args:
@@ -85,6 +90,7 @@ def _is_at_least(threshold, version):
     return _parse_bazel_version(version) >= _parse_bazel_version(threshold)
 
 def _check_bazel_version(minimum_bazel_version, maximum_bazel_version = None, bazel_version = None):
+    # type: (str, str | None, str | None) -> None
     """Check that the version of Bazel is valid within the specified range.
 
     Args:

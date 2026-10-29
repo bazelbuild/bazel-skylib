@@ -9,6 +9,13 @@ package(
 
 licenses(["notice"])
 
+exports_files([
+    "collections.bzli",
+    "new_sets.bzli",
+    "selects.bzli",
+    "structs.bzli",
+])
+
 # export bzl files for the documentation
 exports_files(
     glob(["*.bzl"]),
@@ -56,9 +63,6 @@ bzl_library(
 bzl_library(
     name = "new_sets",
     srcs = ["new_sets.bzl"],
-    deps = [
-        ":dicts",
-    ],
 )
 
 bzl_library(

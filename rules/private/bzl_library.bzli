@@ -1,0 +1,5 @@
+"""Return contract for the Starlark library rule."""
+
+load("//rules/private:bzl_library.bzl", _StarlarkLibraryInfo = "StarlarkLibraryInfo")
+
+def _bzl_library_impl(ctx) -> list[DefaultInfo | _StarlarkLibraryInfo]: ...

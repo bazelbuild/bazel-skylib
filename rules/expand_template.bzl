@@ -16,6 +16,7 @@
 """
 
 def _expand_template_impl(ctx):
+    # type: (...) -> None
     ctx.actions.expand_template(
         template = ctx.file.template,
         output = ctx.outputs.out,
