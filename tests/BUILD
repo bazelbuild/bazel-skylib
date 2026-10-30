@@ -4,6 +4,7 @@ load(":build_test_tests.bzl", "build_test_test_suite")
 load(":collections_tests.bzl", "collections_test_suite")
 load(":common_settings_tests.bzl", "common_settings_test_suite")
 load(":dicts_tests.bzl", "dicts_test_suite")
+load(":expansion_tests.bzl", "expansion_test_suite")
 load(":modules_test.bzl", "modules_test_suite")
 load(":new_sets_tests.bzl", "new_sets_test_suite")
 load(":partial_tests.bzl", "partial_test_suite")
@@ -35,6 +36,8 @@ collections_test_suite()
 common_settings_test_suite()
 
 dicts_test_suite()
+
+expansion_test_suite()
 
 modules_test_suite()
 
