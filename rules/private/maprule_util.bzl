@@ -15,29 +15,29 @@
 """Utilities for maprule."""
 
 def resolve_locations(ctx, strategy, d):
-    """Resolve $(location) references in the values of a dictionary.
+    """Expand the location and locations variables in dictionary values.
 
     Args:
       ctx: the 'ctx' argument of the rule implementation function
       strategy: a struct with an 'as_path(string) -> string' function
-      d: {string: string} dictionary; values may contain $(location) references
+      d: {string: string} dictionary; values may contain references
         for labels declared in the rule's 'srcs' and 'tools' attributes
 
     Returns:
-      {string: string} dict, same as 'd' except "$(location)" references are
-      resolved.
+      {string: string} dict, same as 'd' but with label references replaced by paths.
     """
+    location_prefix = "$(location"  # buildifier: disable=make-location
     location_expressions = []
     parts = {}
     was_anything_to_resolve = False
     for k, v in d.items():
         # Look for "$(location ...)" or "$(locations ...)", resolve if found.
         # _validate_attributes already ensured that there's at most one $(location/s ...) in "v".
-        if "$(location" in v:
-            tokens = v.split("$(location")
+        if location_prefix in v:
+            tokens = v.split(location_prefix)
             was_anything_to_resolve = True
             closing_paren = tokens[1].find(")")
-            location_expressions.append("$(location" + tokens[1][:closing_paren + 1])
+            location_expressions.append(location_prefix + tokens[1][:closing_paren + 1])
             parts[k] = (tokens[0], tokens[1][closing_paren + 1:])
         else:
             location_expressions.append("")
