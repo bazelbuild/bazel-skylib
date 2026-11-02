@@ -95,9 +95,10 @@ def build_test(name, targets, **kwargs):
     # Only the test target should be used to determine whether or not the deps
     # are built. Tagging the genrule targets as manual accomplishes this by
     # preventing them from being picked up by recursive build patterns (`//...`).
-    genrule_tags = genrule_args.pop("tags", [])
+    tags = genrule_args.pop("tags", [])
+    genrule_tags = tags.to_list() if type(tags) == "depset" else list(tags or [])
     if "manual" not in genrule_tags:
-        genrule_tags = genrule_tags + ["manual"]
+        genrule_tags.append("manual")
 
     # Pass an output from the genrules as data to a shell test to bundle
     # it all up in a test.
