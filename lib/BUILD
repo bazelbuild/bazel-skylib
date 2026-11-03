@@ -9,10 +9,6 @@ package(
 
 licenses(["notice"])
 
-exports_files([
-    "selects.bzli",
-])
-
 # export bzl files for the documentation
 exports_files(
     glob(["*.bzl"]),

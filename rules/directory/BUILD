@@ -4,11 +4,6 @@ package(default_applicable_licenses = ["//:license"])
 
 licenses(["notice"])
 
-exports_files(
-    ["providers.bzli"],
-    visibility = ["//visibility:public"],
-)
-
 # export bzl files for the documentation
 exports_files(
     glob(["*.bzl"]),

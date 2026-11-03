@@ -21,7 +21,6 @@ exports_files([
     "LICENSE",
     "MODULE.bazel",
     "WORKSPACE",
-    "stubs.toml",
 ])
 
 filegroup(
@@ -88,7 +87,6 @@ filegroup(
         "CONTRIBUTORS",
         "LICENSE",
         "WORKSPACE.bzlmod",
-        "stubs.toml",
         "//lib:distribution",
         "//rules:distribution",
         "//rules/directory:distribution",

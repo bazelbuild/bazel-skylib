@@ -5,13 +5,6 @@ package(default_applicable_licenses = ["//:license"])
 
 licenses(["notice"])
 
-exports_files(
-    [
-        "write_file_private.bzli",
-    ],
-    visibility = ["//visibility:public"],
-)
-
 is_windows(
     name = "is_windows",
     applicable_licenses = [],  # no output artifacts
@@ -68,10 +61,7 @@ filegroup(
     testonly = True,
     srcs = [
         "BUILD",
-    ] + glob([
-        "*.bzl",
-        "*.bzli",
-    ]),
+    ] + glob(["*.bzl"]),
     visibility = [
         "//rules:__pkg__",
     ],
