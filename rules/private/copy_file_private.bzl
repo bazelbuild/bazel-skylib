@@ -32,7 +32,10 @@ def copy_cmd(ctx, src, dst):
         output = bat,
         # Do not use lib/shell.bzl's shell.quote() method, because that uses
         # Bash quoting syntax, which is different from cmd.exe's syntax.
-        content = "@copy /Y \"%s\" \"%s\" >NUL" % (
+        content = """\
+            @ECHO OFF 
+            @copy /Y \"%s\" \"%s\" >NUL
+            """ % (
             src.path.replace("/", "\\"),
             dst.path.replace("/", "\\"),
         ),

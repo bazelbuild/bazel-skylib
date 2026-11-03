@@ -34,12 +34,13 @@ def _copy_cmd(ctx, src, dst):
     # https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy
     # NB: robocopy return non-zero exit codes on success so we must exit 0 after calling it
     cmd_tmpl = """\
-if not exist \"{src}\\\" (
-  echo Error: \"{src}\" is not a directory
-  @exit 1
-)
-@robocopy \"{src}\" \"{dst}\" /E /MIR >NUL & @exit 0
-"""
+        @ECHO OFF
+        if not exist \"{src}\\\" (
+            echo Error: \"{src}\" is not a directory
+            @exit 1
+        )
+        @robocopy \"{src}\" \"{dst}\" /E /MIR >NUL & @exit 0
+        """
     mnemonic = "CopyDirectory"
     progress_message = "Copying directory %{input}"
 
