@@ -90,11 +90,10 @@ def directory_single_glob(directory, glob):
     # multiple places at the one time.
     candidate_dirs = [directory]
 
-    # Each iteration resets the map; the glob may also match no files.
-    candidate_files = {}  # type: dict[File, None]
+    candidate_files = {}
     for chunk in glob.split("/"):
         next_candidate_dirs = {}
-        candidate_files = {}
+        candidate_files.clear()
         for candidate in candidate_dirs:
             for e in directory_glob_chunk(candidate, chunk):
                 if type(e) == "File":
@@ -136,7 +135,7 @@ def glob(
     if not exclude:
         return depset(include_files)
 
-    remaining_files = {k: None for k in include_files}
+    include_files = {k: None for k in include_files}
     for g in exclude:
         matches = directory_single_glob(directory, g)
         if not matches and not allow_empty:
@@ -145,5 +144,5 @@ def glob(
                 dir = directory.human_readable,
             ))
         for f in matches:
-            remaining_files.pop(f, None)
-    return depset(remaining_files.keys())
+            include_files.pop(f, None)
+    return depset(include_files.keys())

@@ -243,10 +243,9 @@ def _relativize(path, start):
     """
     segments = _normalize(path).split("/")
 
-    # Both split() and the empty fallback below hold path components.
-    start_segments = _normalize(start).split("/")  # type: list[str]
+    start_segments = _normalize(start).split("/")
     if start_segments == ["."]:
-        start_segments = []
+        start_segments.clear()
     start_length = len(start_segments)
 
     if (path.startswith("/") != start.startswith("/") or
