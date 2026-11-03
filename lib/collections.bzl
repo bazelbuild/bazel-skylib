@@ -66,8 +66,7 @@ def _uniq(iterable):
       A new list with all unique elements from `iterable`.
     """
 
-    # Without a value annotation, sty infers None | Unknown for the sentinel.
-    unique_elements = {element: None for element in iterable}  # type: dict[T, None]
+    unique_elements = {element: None for element in iterable}
 
     # list() used here for python3 compatibility.
     # TODO(bazel-team): Remove when testing frameworks no longer require python compatibility.

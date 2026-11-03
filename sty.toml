@@ -1,10 +1,54 @@
 [analysis]
 strict-generic-narrowing = true
+# Skylib uses None as a dict-set sentinel. Preserve its type unless a write
+# widens it.
+widen-singleton-collection-elements = false
 require-valid-suppressions = true
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32343): Use the native
+# contract when Bazel can describe the keywords maybe() forwards to its rule.
 [[stub-packages]]
 manifest = "@bazel_tools_stubs//:stubs.toml"
-allow-unversioned = true
 
 [rules]
 strict = "error"
+
+# These helpers and test suites still have untyped declarations. Check their
+# arguments and return values wherever a caller or a dependency supplies types.
+[[overrides]]
+include = [
+    "docs/private/stardoc_with_diff_test.bzl",
+    "gazelle/setup.bzl",
+    "lib/dicts.bzl",
+    "lib/partial.bzl",
+    "lib/unittest.bzl",
+    "rules/private/maprule_util.bzl",
+    "tests/*_tests.bzl",
+    "tests/bzl_library/bzl_library_test.bzl",
+    "tests/directory/*_test.bzl",
+    "tests/directory/utils.bzl",
+]
+[overrides.rules]
+missing-parameter-annotation = "warn"
+missing-return-annotation = "warn"
+non-static-type = "warn"
+
+# Bazel returns rule-specific attribute values from native.existing_rules().
+[[overrides]]
+include = ["docs/private/stardoc_with_diff_test.bzl"]
+[overrides.rules]
+unresolved-attribute = "warn"
+not-subscriptable = "warn"
+invalid-argument-type = "warn"
+
+# Each test case pairs its build setting with its own default value.
+[[overrides]]
+include = ["tests/common_settings_tests.bzl"]
+[overrides.rules]
+invalid-argument-type = "warn"
+
+# The glob tests construct partial directory providers with strings for files.
+[[overrides]]
+include = ["tests/directory/glob_test.bzl"]
+[overrides.rules]
+missing-argument = "warn"

@@ -136,8 +136,7 @@ def glob(
     if not exclude:
         return depset(include_files)
 
-    # Without a value annotation, sty infers None | Unknown for the sentinel.
-    remaining_files = {k: None for k in include_files}  # type: dict[File, None]
+    remaining_files = {k: None for k in include_files}
     for g in exclude:
         matches = directory_single_glob(directory, g)
         if not matches and not allow_empty:
