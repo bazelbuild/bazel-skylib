@@ -46,12 +46,24 @@ pkg_tar(
     strip_prefix = strip_prefix.from_root(),
 )
 
+remove_internal_only(
+    name = "distro_gazelle_module",
+    src = "@bazel_skylib_gazelle_plugin//:MODULE.bazel",
+    out = "gazelle/MODULE.bazel",
+)
+
 # @bazel_skylib_gazelle_plugin//:WORKSPACE refers to bazel-skylib in the parent
-# directory. For distribution, use the minimal WORSKPACE.bzlmod instead.
+# directory. For distribution, use the minimal WORKSPACE.bzlmod instead.
 pkg_files(
-    name = "bazel-skylib-gazelle-plugin-distro_workspace",
-    srcs = ["@bazel_skylib_gazelle_plugin//:WORKSPACE.bzlmod"],
-    renames = {"@bazel_skylib_gazelle_plugin//:WORKSPACE.bzlmod": "WORKSPACE"},
+    name = "bazel-skylib-gazelle-plugin-workspace-files",
+    srcs = [
+        "gazelle/MODULE.bazel",
+        "@bazel_skylib_gazelle_plugin//:WORKSPACE.bzlmod",
+    ],
+    renames = {
+        "gazelle/MODULE.bazel": "MODULE.bazel",
+        "@bazel_skylib_gazelle_plugin//:WORKSPACE.bzlmod": "WORKSPACE",
+    },
 )
 
 pkg_files(
@@ -66,8 +78,8 @@ pkg_files(
 pkg_tar(
     name = "bazel-skylib-gazelle-plugin",
     srcs = [
-        "bazel-skylib-gazelle-plugin-distro_workspace",
         "bazel-skylib-gazelle-plugin-without-external-prefix",
+        "bazel-skylib-gazelle-plugin-workspace-files",
         "//:LICENSE",
     ],
     out = "bazel-skylib-gazelle-plugin-%s.tar.gz" % version,
