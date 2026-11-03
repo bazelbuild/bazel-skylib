@@ -1,8 +1,6 @@
 format-version = 1
 
 [files]
-"bzl_library.bzl" = "bzl_library.bzli"
-"rules/private/copy_common.bzl" = "rules/private/copy_common.bzli"
 "rules/private/copy_file_private.bzl" = "rules/private/copy_file_private.bzli"
 "rules/private/write_file_private.bzl" = "rules/private/write_file_private.bzli"
 "lib/collections.bzl" = "lib/collections.bzli"
@@ -13,6 +11,3 @@ format-version = 1
 "rules/directory/private/paths.bzl" = "rules/directory/private/paths.bzli"
 "rules/directory/private/glob.bzl" = "rules/directory/private/glob.bzli"
 "rules/common_settings.bzl" = "rules/common_settings.bzli"
-"rules/directory/directory.bzl" = "rules/directory/directory.bzli"
-"rules/directory/glob.bzl" = "rules/directory/glob.bzli"
-"rules/directory/subdirectory.bzl" = "rules/directory/subdirectory.bzli"

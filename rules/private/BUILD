@@ -7,7 +7,6 @@ licenses(["notice"])
 
 exports_files(
     [
-        "copy_common.bzli",
         "copy_file_private.bzli",
         "write_file_private.bzli",
     ],

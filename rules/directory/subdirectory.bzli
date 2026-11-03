@@ -1,3 +1,0 @@
-"""Contracts for selecting a directory's descendant metadata."""
-
-load("//rules/directory:providers.bzli", "DirectoryInfo")

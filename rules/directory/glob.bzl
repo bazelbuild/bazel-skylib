@@ -16,6 +16,9 @@
 load(":providers.bzl", "DirectoryInfo")
 
 def _directory_glob_impl(ctx):
+    # type: (...) -> DefaultInfo
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the callback directly
+    # when every supported Bazel release accepts return syntax.
     directory = ctx.attr.directory[DirectoryInfo]
     srcs = directory.glob(
         ctx.attr.srcs,

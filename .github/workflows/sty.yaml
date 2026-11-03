@@ -29,6 +29,7 @@ jobs:
           audit-loads: true
           bazel-version: '8.8.1'
           files: |
+            bzl_library.bzl
             distribution/distribution.bzl
             lib.bzl
             lib/modules.bzl
@@ -44,9 +45,13 @@ jobs:
             rules/copy_directory.bzl
             rules/copy_file.bzl
             rules/diff_test.bzl
+            rules/directory/directory.bzl
+            rules/directory/glob.bzl
+            rules/directory/subdirectory.bzl
             rules/expand_template.bzl
             rules/native_binary.bzl
             rules/private/bzl_library.bzl
+            rules/private/copy_common.bzl
             rules/private/copy_directory_private.bzl
             rules/run_binary.bzl
             rules/select_file.bzl

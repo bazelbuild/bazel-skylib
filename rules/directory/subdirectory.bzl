@@ -18,6 +18,8 @@ load(":providers.bzl", "DirectoryInfo")
 
 def _subdirectory_impl(ctx):
     # type: (ctx[object, struct[{'parent': Target, 'path': str}, ...]]) -> list[DirectoryInfo | DefaultInfo]
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the callback directly
+    # when supported Bazel releases accept the syntax and retain its typed attributes.
     dir = ctx.attr.parent[DirectoryInfo].get_subdirectory(ctx.attr.path)
     return [
         dir,

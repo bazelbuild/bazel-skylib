@@ -24,6 +24,9 @@ load(
 StarlarkLibraryInfo = _StarlarkLibraryInfo
 
 def bzl_library(name, **kwargs):
+    # type: (str, **Unpack[KeywordArgs[_bzl_library, "name"]]) -> None
+    # TODO(https://github.com/bazelbuild/bazel/issues/32343): Express the native rule's
+    # forwarded keywords in a native function annotation once Bazel supports them.
     """Wrapper for bzl_library.
 
     Args:

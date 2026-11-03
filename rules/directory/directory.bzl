@@ -19,6 +19,8 @@ load(":providers.bzl", "DirectoryInfo", "create_directory_info")
 
 def _prefix_match(f, prefixes):
     # type: (File, dict[str, File | None]) -> str
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native annotations for
+    # the path helpers and callback when every supported Bazel release accepts them.
     for prefix in prefixes:
         if f.path.startswith(prefix):
             return prefix
@@ -44,7 +46,12 @@ def _choose_path(prefixes):
     # If there's no entries, use the source path (it's always first in the dict)
     return list(filtered if filtered else prefixes)[0][:-1]
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32044): Declare recursive directory
+# metadata with a native type alias once Bazel supports recursive aliases.
+# type _Metadata = struct[{"directories": dict[str, _Metadata], "files": list[File], "relative": str, "human_readable": str}]
+
 def _directory_metadata(relative, human_readable):
+    # type: (str, str) -> _Metadata
     directories = {}  # type: dict[str, _Metadata]
     files = []  # type: list[File]
     return struct(
@@ -55,6 +62,7 @@ def _directory_metadata(relative, human_readable):
     )
 
 def _directory_impl(ctx):
+    # type: (...) -> list[DirectoryInfo | DefaultInfo]
     # Declare a generated file so that we can get the path to generated files.
     f = ctx.actions.declare_file("_directory_rule_" + ctx.label.name)
     ctx.actions.write(f, "")

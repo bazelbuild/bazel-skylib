@@ -1,3 +1,0 @@
-"""Operating system information for copy rules."""
-
-def OsInfo(*, is_windows: bool) -> record[{"is_windows": bool}]: ...

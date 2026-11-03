@@ -21,7 +21,6 @@ exports_files([
     "LICENSE",
     "MODULE.bazel",
     "WORKSPACE",
-    "bzl_library.bzli",
     "stubs.toml",
 ])
 
