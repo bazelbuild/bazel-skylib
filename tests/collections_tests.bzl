@@ -103,6 +103,23 @@ def _uniq_test(ctx):
 
 uniq_test = unittest.make(_uniq_test)
 
+def _flatten_test(ctx):
+    env = unittest.begin(ctx)
+    asserts.equals(env, [0, 1, 2, 3], collections.flatten([[0, 1], [2, 3]]))
+    asserts.equals(env, [], collections.flatten([]), [])
+    asserts.equals(env, [0, 1], collections.flatten([[], [0, 1]]))
+    asserts.equals(env,
+        '[] + select({"//conditions:default": [0, 1]}) + select({"//conditions:default": [2, 3]})',
+        str(collections.flatten([select({
+            "//conditions:default": [0, 1],
+        }), select({
+            "//conditions:default": [2, 3],
+        })])))
+
+    return unittest.end(env)
+
+flatten_test = unittest.make(_flatten_test)
+
 def collections_test_suite():
     """Creates the test targets and test suite for collections.bzl tests."""
     unittest.suite(
@@ -110,4 +127,5 @@ def collections_test_suite():
         after_each_test,
         before_each_test,
         uniq_test,
+        flatten_test,
     )
