@@ -647,7 +647,7 @@ def _loading_make(name):
     )
     return struct(name = name)
 
-def _loading_assert_equals(env, test_case, expected, actual):
+def _loading_assert_equals(env, test_case, expected, actual, timeout = "short"):
     """Creates a test case for asserting state at LOADING phase.
 
     Args:
@@ -655,6 +655,7 @@ def _loading_assert_equals(env, test_case, expected, actual):
       test_case: Name of the test case
       expected:  Expected value to test
       actual:    Actual value received.
+      timeout:   Test timeout passed into the generated rule.
 
     Returns:
       None, creates test case
@@ -668,6 +669,7 @@ def _loading_assert_equals(env, test_case, expected, actual):
         name = "%s_%s" % (env.name, test_case),
         failure_message = msg,
         tags = [env.name + "_test_case"],
+        timeout = timeout,
     )
 
 asserts = struct(
