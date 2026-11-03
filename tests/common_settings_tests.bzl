@@ -156,23 +156,34 @@ def _test_make_variable_name_failures():
         expected_failure = "Error setting //tests:my_failing_string_flag: invalid make variable name 'MY STRING'. Make variable names may only contain uppercase letters, digits, and underscores.",
     )
 
+# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use a native signature
+# when Skylib drops Bazel 7 support.
+def _simple_setting_test(name, value):
+    # type: (str, object) -> str
+    test_name = name + "_test"
+    _template_variable_info_contents_test(
+        name = test_name,
+        target_under_test = ":" + name,
+        expected_value = repr(value),
+    )
+    return test_name
+
 def _test_simple_settings():
     tests = []
     for setting, name, value in [
         (bool_flag, "my_bool_flag", True),
         (bool_setting, "my_bool_setting", False),
+    ]:
+        setting(name = name, build_setting_default = value)
+        tests.append(_simple_setting_test(name, value))
+
+    for setting, name, value in [
         (string_list_flag, "my_string_list_flag", ["one", "two"]),
         (string_list_setting, "my_string_list_setting", []),
         (repeatable_string_flag, "my_repeatable_string_flag", ["one", "two"]),
     ]:
         setting(name = name, build_setting_default = value)
-        test_name = name + "_test"
-        _template_variable_info_contents_test(
-            name = test_name,
-            target_under_test = ":" + name,
-            expected_value = repr(value),
-        )
-        tests.append(test_name)
+        tests.append(_simple_setting_test(name, value))
     return tests
 
 def common_settings_test_suite(name = "common_settings_test_suite"):

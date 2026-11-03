@@ -15,7 +15,7 @@
 """Unit tests for the directory_glob rule."""
 
 load("@bazel_skylib//rules/directory:glob.bzl", "directory_glob")
-load("@bazel_skylib//rules/directory:providers.bzl", "DirectoryInfo")
+load("@bazel_skylib//rules/directory:providers.bzl", "DirectoryInfo", "create_directory_info")
 
 # buildifier: disable=bzl-visibility
 load("@bazel_skylib//rules/directory/private:glob.bzl", "directory_glob_chunk", "transitive_entries")
@@ -33,12 +33,6 @@ def _expect_glob(env, directory, include, allow_empty = False):
     return env.expect.that_collection(
         directory.glob(include, allow_empty = allow_empty),
         expr = "directory_glob({}, {}, allow_empty={})".format(directory.human_readable, include, allow_empty),
-    )
-
-def _with_children(children):
-    return DirectoryInfo(
-        entries = {k: k for k in children},
-        human_readable = repr(children),
     )
 
 def _glob_test(name):
@@ -97,38 +91,23 @@ def _glob_test_impl(env, targets):
     _expect_glob_chunk(env, testdata, "*").contains_exactly(
         [f1, subdir],
     )
-    _expect_glob_chunk(
-        env,
-        _with_children(["a", "d", "abc", "abbc", "ab.bc", ".abbc", "abbc."]),
-        "ab*bc",
-    ).contains_exactly([
-        "abbc",
-        "ab.bc",
-    ])
-    _expect_glob_chunk(
-        env,
-        _with_children(["abbc", "abbbc", "ab.b.bc"]),
-        "ab*b*bc",
-    ).contains_exactly([
-        "abbbc",
-        "ab.b.bc",
-    ])
-    _expect_glob_chunk(
-        env,
-        _with_children(["a", "ab", "ba"]),
-        "a*",
-    ).contains_exactly([
-        "a",
-        "ab",
-    ])
-    _expect_glob_chunk(
-        env,
-        _with_children(["a", "ab", "a.b.", "ba."]),
-        "a*b*",
-    ).contains_exactly([
-        "ab",
-        "a.b.",
-    ])
+
+    for names, chunk, expected in [
+        (["a", "d", "abc", "abbc", "ab.bc", ".abbc", "abbc."], "ab*bc", ["abbc", "ab.bc"]),
+        (["abbc", "abbbc", "ab.b.bc"], "ab*b*bc", ["abbbc", "ab.b.bc"]),
+        (["a", "ab", "ba"], "a*", ["a", "ab"]),
+        (["a", "ab", "a.b.", "ba."], "a*b*", ["ab", "a.b."]),
+    ]:
+        directory = create_directory_info(
+            entries = {
+                name: create_directory_info(entries = {}, transitive_files = depset(), path = name, human_readable = name)
+                for name in names
+            },
+            transitive_files = depset(),
+            path = "",
+            human_readable = repr(names),
+        )
+        _expect_glob_chunk(env, directory, chunk).contains_exactly([directory.entries[name] for name in expected])
 
     _expect_glob(env, root, ["testdata/f1"]).contains_exactly([f1])
     _expect_glob(env, root, ["testdata/subdir/f2"]).contains_exactly([f2])

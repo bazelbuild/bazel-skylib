@@ -91,7 +91,12 @@ def update_docs(
     data = []
     for r in native.existing_rules().values():
         if r["kind"] == "stardoc_markdown_renderer":
-            doc_gen = r["out"]
+            # Bazel reflects the renderer's attr.output as a label string;
+            # existing_rules() exposes it to sty as object.
+            # TODO(https://github.com/bazelbuild/bazel/pull/30373): Use a native
+            # annotation when all supported Bazel versions parse it.
+            # type: str
+            doc_gen = r["out"]  # ty: ignore[invalid-assignment]
             if doc_gen.startswith(":"):
                 doc_gen = doc_gen[1:]
             doc_dest = doc_gen.replace("-docgen.md", ".md")

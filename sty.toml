@@ -32,23 +32,3 @@ include = [
 missing-parameter-annotation = "warn"
 missing-return-annotation = "warn"
 non-static-type = "warn"
-
-# Bazel returns rule-specific attribute values from native.existing_rules().
-[[overrides]]
-include = ["docs/private/stardoc_with_diff_test.bzl"]
-[overrides.rules]
-unresolved-attribute = "warn"
-not-subscriptable = "warn"
-invalid-argument-type = "warn"
-
-# Each test case pairs its build setting with its own default value.
-[[overrides]]
-include = ["tests/common_settings_tests.bzl"]
-[overrides.rules]
-invalid-argument-type = "warn"
-
-# The glob tests construct partial directory providers with strings for files.
-[[overrides]]
-include = ["tests/directory/glob_test.bzl"]
-[overrides.rules]
-missing-argument = "warn"
