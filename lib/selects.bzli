@@ -1,5 +1,8 @@
 """Contracts for configurable attribute helpers."""
 
+# TODO(https://github.com/bazelbuild/starlark/pull/362): Move these contracts into
+# selects.bzl when every supported Bazel release accepts generic function syntax and
+# source annotations can describe _ConditionEntries.items() and typed selector results.
 type _Condition = str | Label
 type _Conditions = Sequence[_Condition]
 type _Visibility = Collection[_Condition] | depset[_Condition] | None

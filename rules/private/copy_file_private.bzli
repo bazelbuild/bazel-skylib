@@ -3,6 +3,9 @@
 type _Source = str | Label | select[str | Label, object]
 
 # The macro chooses the executable rule before Bazel resolves select().
+# TODO(https://github.com/bazelbuild/bazel/issues/32343): Replace this common-attribute
+# approximation when source can express keywords conditional on is_executable. The
+# executable rule also accepts args and output_licenses, which this signature rejects.
 def copy_file(
     name: str,
     src: _Source,

@@ -25,6 +25,9 @@ def transitive_entries(directory):
     Returns:
         List[Either[DirectoryInfo, File]] The entries contained within.
     """
+    # TODO(https://github.com/bazelbuild/bazel/issues/27370): Move the companion
+    # signatures into this source when provider-owned types can be referenced without
+    # a runtime load cycle: providers.bzl loads this implementation.
     entries = [directory]  # type: list[File | _DirectoryContent]
     stack = [directory]
     for _ in range(99999999):

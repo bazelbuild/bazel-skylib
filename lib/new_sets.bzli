@@ -1,5 +1,8 @@
 """Contracts for hash-set helpers."""
 
+# TODO(https://github.com/bazelbuild/starlark/pull/362): Move these contracts into
+# new_sets.bzl when every supported Bazel release accepts generic function syntax and
+# source annotations can express bounds, defaults, and the _SetView intersection.
 type _Set[T: Hashable] = struct[{"_values": dict[T, None]}, ...]
 
 # Union reads each input without changing its element type.

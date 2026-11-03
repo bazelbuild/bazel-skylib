@@ -1,5 +1,8 @@
 """Collection helpers preserve item and separator types."""
 
+# TODO(https://github.com/bazelbuild/starlark/pull/362): Move these contracts into
+# collections.bzl when every supported Bazel release accepts generic function syntax
+# and source annotations can express _uniq's hashability bound.
 def _after_each[S, T](separator: S, iterable: Collection[T]) -> list[S | T]: ...
 
 def _before_each[S, T](separator: S, iterable: Collection[T]) -> list[S | T]: ...

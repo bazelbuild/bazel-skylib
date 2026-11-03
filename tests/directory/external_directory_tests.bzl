@@ -25,6 +25,8 @@ directory(
 
 def _external_directory_tests_impl(repo_ctx):
     # type: (...) -> None
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the test repository callback natively when
+    # every supported Bazel release accepts return annotations.
     for f in repo_ctx.attr.files:
         repo_ctx.symlink(repo_ctx.path(f), f.package + "/" + f.name)
 

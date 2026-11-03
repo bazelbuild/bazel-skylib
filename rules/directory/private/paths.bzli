@@ -14,6 +14,9 @@
 
 """Path lookup over directory entries."""
 
+# TODO(https://github.com/bazelbuild/bazel/issues/27370): Move these contracts into
+# paths.bzl when source can refer to provider-owned types without a runtime load
+# cycle: providers.bzl loads this implementation.
 load("//rules/directory:providers.bzli", "DirectoryInfo", _DirectoryContent = "DirectoryContent")
 
 def _get_direct_child(directory: _DirectoryContent, name: str) -> File | DirectoryInfo: ...

@@ -14,6 +14,9 @@
 
 """Directory helper contracts and their complete provider results."""
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32207): Move the provider record
+# and shared directory view into providers.bzl when native provider fields can
+# preserve their callable types and source can declare the structural view.
 class DirectoryContent(Protocol):
     @property
     def entries(self) -> dict[str, File | DirectoryInfo]: ...

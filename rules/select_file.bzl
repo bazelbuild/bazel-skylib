@@ -20,6 +20,8 @@ Selects a single file from the outputs of a target by given relative path.
 
 def _impl(ctx):
     # type: (...) -> list[DefaultInfo]
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the file-selection callback natively when
+    # every supported Bazel release accepts return annotations.
     if ctx.attr.subpath and len(ctx.attr.subpath) == 0:
         fail("Subpath can not be empty.")
 

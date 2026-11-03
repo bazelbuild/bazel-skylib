@@ -16,6 +16,8 @@
 
 def _as_extension(macro, doc = None):
     # type: (Callable[[], object], str | None) -> ModuleExtension
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Use a native signature when supported Bazel releases
+    # accept annotations and preserve the module-extension return type.
     """Wraps a WORKSPACE dependency macro into a module extension.
 
     Example:

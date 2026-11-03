@@ -22,6 +22,8 @@ load("//lib:shell.bzl", "shell")
 
 def _runfiles_path(f):
     # type: (File) -> str
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the path helper and test callback natively
+    # when every supported Bazel release accepts function annotations.
     if f.root.path:
         return f.path[len(f.root.path) + 1:]  # generated file
     else:

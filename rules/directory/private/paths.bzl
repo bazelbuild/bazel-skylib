@@ -28,6 +28,8 @@ DIRECTORY = "directory"
 
 def _check_path_relative(path):
     # type: (str) -> None
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the path validation helpers natively when
+    # every supported Bazel release accepts function annotations.
     if paths.is_absolute(path):
         fail("Path must be relative. Got {path}".format(path = path))
 

@@ -20,6 +20,8 @@ load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
 def bazel_skylib_gazelle_plugin_workspace():
     # type: () -> None
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Use a native workspace helper signature when every
+    # supported Bazel release accepts function annotations.
     """Loads dependencies required to use skylib's gazelle plugin"""
     bazel_skylib_workspace()
 

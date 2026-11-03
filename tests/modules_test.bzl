@@ -19,6 +19,8 @@ load("//rules:build_test.bzl", "build_test")
 
 def _repo_rule_impl(repository_ctx):
     # type: (...) -> None
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the test repository callback natively when
+    # every supported Bazel release accepts return annotations.
     repository_ctx.file("WORKSPACE")
     repository_ctx.file("BUILD", """exports_files(["hello"])""")
     repository_ctx.file("hello", "Hello, Bzlmod!")

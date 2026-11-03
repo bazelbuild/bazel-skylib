@@ -21,6 +21,8 @@ with backslash separators or drive letters.
 
 def _basename(p):
     # type: (str) -> str
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate these path helpers natively when every
+    # supported Bazel release accepts function annotations.
     """Returns the basename (i.e., the file portion) of a path.
 
     Note that if `p` ends with a slash, this function returns an empty string.

@@ -1,5 +1,8 @@
 """Values and implementations for the common build settings."""
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32207): Move these contracts into
+# common_settings.bzl when native provider fields and source callbacks can share
+# the build-setting value type.
 def BuildSettingInfo[T = object](*, value: T) -> record[{"value": T}]: ...
 
 type _VariableAttrs = struct[{"make_variable": str}, ...]

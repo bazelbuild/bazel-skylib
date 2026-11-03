@@ -16,6 +16,8 @@
 
 def remove_internal_only(name, src, out, **kwargs):
     # type: (str, str | Label, str | Label, **Unpack[KeywordArgs[native.genrule, "name", "srcs", "outs", "cmd"]]) -> None
+    # TODO(https://github.com/bazelbuild/bazel/issues/32343): Express the forwarded
+    # genrule keywords in a native function annotation once Bazel supports them.
     """Removes '### INTERNAL ONLY' line and all lines below from a file.
 
     Args:

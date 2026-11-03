@@ -20,6 +20,8 @@ Runs a binary as a build action. This rule does not require Bash (unlike native.
 
 def _run_binary_impl(ctx):
     # type: (...) -> DefaultInfo
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the binary callback natively when every
+    # supported Bazel release accepts return annotations.
     tool_as_list = [ctx.attr.tool]
     args = [
         # Expand $(execpath ...) / $(execpaths ...) / $(location ...) / $(locations ...) in args.

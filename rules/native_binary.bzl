@@ -22,6 +22,8 @@ don't depend on Bash and work with --shell_executable="".
 
 def _impl_rule(ctx):
     # type: (...) -> list[DefaultInfo | RunEnvironmentInfo]
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the binary callback natively when supported
+    # Bazel releases accept the syntax and expose both provider types.
     out = ctx.actions.declare_file(ctx.attr.out if (ctx.attr.out != "") else ctx.attr.name + ".exe")
     ctx.actions.symlink(
         target_file = ctx.executable.src,

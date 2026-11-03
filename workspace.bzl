@@ -20,6 +20,8 @@ load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
 def bazel_skylib_workspace():
     # type: () -> None
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the workspace helper natively when every
+    # supported Bazel release accepts function annotations.
     """Registers toolchains and declares repository dependencies of the bazel_skylib repository."""
     maybe(
         http_archive,

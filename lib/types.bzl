@@ -25,12 +25,17 @@ _a_struct_type = type(struct())
 
 def _a_function():
     # type: () -> None
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate this function sentinel natively when every
+    # supported Bazel release accepts function annotations.
     pass
 
 _a_function_type = type(_a_function)
 
 def _is_list(v):
     # type: (object) -> TypeIs[Top[list[Unknown]]]
+    # TODO(https://github.com/tamird/sty/blob/d400a008/docs/type-interfaces.md#materialized-types):
+    # Use native predicate annotations once Bazel can preserve argument narrowing
+    # and known container element types.
     """Returns True if v is an instance of a list.
 
     Args:
