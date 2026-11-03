@@ -83,11 +83,11 @@ eof
   echo bar > "$ws/$subdir/b.txt"
 
   (cd "$ws" && \
-   bazel test ${flags} "//${subdir%/}:same" --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel --windows_enable_symlinks test ${flags} "//${subdir%/}:same" --test_output=errors 1>"$TEST_log" 2>&1 \
      || fail "expected success")
 
   (cd "$ws" && \
-   bazel test ${flags} "//${subdir%/}:different" --test_output=errors 1>"$TEST_log" 2>&1 \
+   bazel --windows_enable_symlinks test ${flags} "//${subdir%/}:different" --test_output=errors 1>"$TEST_log" 2>&1 \
      && fail "expected failure" || true)
   expect_log "FAIL: files \"${subdir}a.txt\" and \"${subdir}b.txt\" differ"
 }
@@ -234,6 +234,10 @@ function test_directory_named_external_without_legacy_external_runfiles() {
 
 function test_directory_named_external_with_manifest() {
   assert_simple_diff_test "--noenable_runfiles" "${FUNCNAME[0]}" "path/to/directory/external/in/name/"
+}
+
+function test_windows_symlinks() {
+  assert_simple_diff_test "--enable_runfiles" "${FUNCNAME[0]}" ""
 }
 
 function test_from_ext_repo_with_legacy_external_runfiles() {
