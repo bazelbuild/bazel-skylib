@@ -18,17 +18,14 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        id: checkout
         with:
           persist-credentials: false
-      - name: List implementations in each workspace
-        id: implementations
-        run: |
-          git -c core.quotePath=false ls-files -- '*.bzl' ':(exclude)gazelle/**' > "$RUNNER_TEMP/sty-root-files"
-          # Gazelle reads bzl/testdata as input to its parser tests.
-          git -c core.quotePath=false -C gazelle ls-files -- '*.bzl' ':(exclude)bzl/testdata/**' > "$RUNNER_TEMP/sty-gazelle-files"
-      - uses: tamird/sty@2ab74c830937d3ca85165ca0e9a02a42400ad9e5
+      - uses: tamird/sty@d400a00807b3c7f7b2ac82bf1e1e6a16db0290e3
         with:
-          advisory-files-from: ${{ runner.temp }}/sty-root-files
+          advisory-pathspecs: |
+            *.bzl
+            :(exclude)gazelle/**
           audit-loads: true
           bazel-version: '8.8.1'
           files: |
@@ -49,6 +46,7 @@ jobs:
             rules/diff_test.bzl
             rules/expand_template.bzl
             rules/native_binary.bzl
+            rules/private/bzl_library.bzl
             rules/private/copy_directory_private.bzl
             rules/run_binary.bzl
             rules/select_file.bzl
@@ -61,10 +59,13 @@ jobs:
             version.bzl
             workspace.bzl
       - name: Check Gazelle workspace helpers
-        if: ${{ !cancelled() && steps.implementations.outcome == 'success' }}
-        uses: tamird/sty@2ab74c830937d3ca85165ca0e9a02a42400ad9e5
+        if: ${{ !cancelled() && steps.checkout.outcome == 'success' }}
+        uses: tamird/sty@d400a00807b3c7f7b2ac82bf1e1e6a16db0290e3
         with:
-          advisory-files-from: ${{ runner.temp }}/sty-gazelle-files
+          # Gazelle reads bzl/testdata as input to its parser tests.
+          advisory-pathspecs: |
+            *.bzl
+            :(exclude)bzl/testdata/**
           working-directory: gazelle
           artifact-name: sty-gazelle
           audit-loads: true

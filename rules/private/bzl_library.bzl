@@ -24,6 +24,9 @@ StarlarkLibraryInfo = provider(
 )
 
 def _bzl_library_impl(ctx):
+    # type: (...) -> list[DefaultInfo | StarlarkLibraryInfo]
+    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Use a native return
+    # annotation when Bazel 8.8 is the minimum supported version.
     deps_files = [x[DefaultInfo].files for x in ctx.attr.deps]
     all_files = depset(ctx.files.srcs, order = "postorder", transitive = deps_files)
     if not ctx.files.srcs and not deps_files:
