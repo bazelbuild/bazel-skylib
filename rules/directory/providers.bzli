@@ -16,12 +16,15 @@
 
 # TODO(https://github.com/bazelbuild/bazel/issues/32207): Move these fields onto
 # the provider when source can refer to DirectoryInfo from its own field types
-# and declare glob's keyword parameters.
+# and declare the named parameters of its lookup and glob methods.
 class DirectoryContent(Protocol):
     @property
     def entries(self) -> dict[str, File | DirectoryInfo]: ...
     @property
     def human_readable(self) -> str: ...
+
+class _Lookup[T](Protocol):
+    def __call__(self, path: str) -> T: ...
 
 class _Glob(Protocol):
     def __call__(self, include: Sequence[str], exclude: Sequence[str] = ..., allow_empty: bool = ...) -> depset[File]: ...
@@ -31,9 +34,9 @@ type _Fields = dict[{
     "transitive_files": depset[File],
     "path": str,
     "human_readable": str,
-    "get_path": Callable[[str], File | DirectoryInfo],
-    "get_file": Callable[[str], File],
-    "get_subdirectory": Callable[[str], DirectoryInfo],
+    "get_path": _Lookup[File | DirectoryInfo],
+    "get_file": _Lookup[File],
+    "get_subdirectory": _Lookup[DirectoryInfo],
     "glob": _Glob,
 }]
 
@@ -42,8 +45,8 @@ def DirectoryInfo(**kwargs: Unpack[_Fields]) -> record[{
     "transitive_files": depset[File],
     "path": str,
     "human_readable": str,
-    "get_path": Callable[[str], File | DirectoryInfo],
-    "get_file": Callable[[str], File],
-    "get_subdirectory": Callable[[str], DirectoryInfo],
+    "get_path": _Lookup[File | DirectoryInfo],
+    "get_file": _Lookup[File],
+    "get_subdirectory": _Lookup[DirectoryInfo],
     "glob": _Glob,
 }]: ...

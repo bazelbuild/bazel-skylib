@@ -58,7 +58,7 @@ def _source_root_test_impl(env, targets):
 
     env.expect.that_str(root.actual.get_path("testdata/f1").path).equals(f1.path)
     env.expect.that_str(root.actual.get_path("testdata/subdir").path).equals(subdir.actual.path)
-    env.expect.that_str(root.actual.get_file("testdata/subdir/f2").path).equals(f2.path)
+    env.expect.that_str(root.actual.get_file(path = "testdata/subdir/f2").path).equals(f2.path)
     env.expect.that_str(root.actual.get_subdirectory("testdata/subdir").path).equals(subdir.actual.path)
 
 def _generated_root_test(name):

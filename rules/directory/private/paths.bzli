@@ -14,6 +14,7 @@
 
 """Path lookup over directory entries."""
 
-# TODO(https://github.com/bazelbuild/bazel/issues/27370): Import these types in
-# source when Bazel supports type-only loads. A value load would create a cycle.
+# TODO(https://github.com/bazelbuild/bazel/issues/32377): Move this load into
+# paths.bzl when Bazel supports type-only loads. providers.bzl already loads
+# paths.bzl for DirectoryInfo's methods.
 load("//rules/directory:providers.bzli", "DirectoryInfo", _DirectoryContent = "DirectoryContent")

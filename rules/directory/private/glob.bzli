@@ -14,6 +14,7 @@
 
 """Glob matching over directory entries."""
 
-# TODO(https://github.com/bazelbuild/bazel/issues/27370): Import this type in
-# source when Bazel supports type-only loads. A value load would create a cycle.
+# TODO(https://github.com/bazelbuild/bazel/issues/32377): Move this load into
+# glob.bzl when Bazel supports type-only loads. providers.bzl already loads
+# glob.bzl for DirectoryInfo's methods.
 load("//rules/directory:providers.bzli", _DirectoryContent = "DirectoryContent")

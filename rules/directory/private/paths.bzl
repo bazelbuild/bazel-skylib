@@ -74,7 +74,9 @@ def _get_parent(directory, path):
     return directory, chunks[-1]
 
 def get_path(directory, path, require_type = None):
-    # type: (_DirectoryContent, str, str | None) -> File | DirectoryInfo
+    # type: (_DirectoryContent, str, Literal["file", "directory"] | None) -> File | DirectoryInfo
+    # TODO(https://github.com/bazelbuild/bazel/issues/32104): Annotate require_type
+    # natively when Bazel supports finite sets of string values.
     """Gets a subdirectory or file contained within a directory.
 
     Example: `get_path(directory, "a/b")` returns the entry corresponding to
@@ -86,7 +88,7 @@ def get_path(directory, path, require_type = None):
         require_type: Require a FILE or DIRECTORY entry when provided.
 
     Returns:
-        (File|DirectoryInfo) The directory contained within.
+        (File|DirectoryInfo) The entry at the requested path.
     """
     if require_type == FILE:
         return get_file(directory, path)
