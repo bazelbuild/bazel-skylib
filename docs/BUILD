@@ -35,6 +35,12 @@ stardoc_with_diff_test(
 )
 
 stardoc_with_diff_test(
+    name = "constraints",
+    bzl_library_target = "//rules:constraints",
+    out_label = "//docs:constraints_doc.md",
+)
+
+stardoc_with_diff_test(
     name = "copy_directory",
     bzl_library_target = "//rules:copy_directory",
     out_label = "//docs:copy_directory_doc.md",
