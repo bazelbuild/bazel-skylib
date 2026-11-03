@@ -203,6 +203,7 @@ var kinds = map[string]rule.KindInfo{
 	"bzl_library": {
 		NonEmptyAttrs:  map[string]bool{"srcs": true, "deps": true},
 		MergeableAttrs: map[string]bool{"srcs": true},
+		ResolveAttrs:   map[string]bool{"deps": true},
 	},
 }
 
