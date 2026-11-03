@@ -285,38 +285,47 @@ func isBzlSourceFile(f string) bool {
 // generateEmpty generates the list of rules that don't need to exist in the
 // BUILD file any more.
 // For each bzl_library rule in args.File that only has srcs that aren't in
-// args.RegularFiles or args.GenFiles, add a bzl_library with no srcs or deps.
-// That will let Gazelle delete bzl_library rules after the corresponding .bzl
-// files are deleted.
+// args.RegularFiles or args.GenFiles, or doesn't have the canonical target name
+// for its source, add a bzl_library with no srcs or deps. That will let Gazelle
+// delete bzl_library rules after the corresponding .bzl files are deleted or
+// renamed.
 func generateEmpty(args language.GenerateArgs) []*rule.Rule {
 	var ret []*rule.Rule
 	if args.File == nil {
 		return ret
 	}
+
+	exists := make(map[string]bool)
+	for _, f := range args.RegularFiles {
+		exists[f] = true
+	}
+	for _, f := range args.GenFiles {
+		exists[f] = true
+	}
+
 	for _, r := range args.File.Rules {
 		if r.Kind() != "bzl_library" {
 			continue
 		}
-		name := r.AttrString("name")
 
-		exists := make(map[string]bool)
-		for _, f := range args.RegularFiles {
-			exists[f] = true
+		srcs := r.AttrStrings("srcs")
+		if len(srcs) == 0 {
+			continue
 		}
-		for _, f := range args.GenFiles {
-			exists[f] = true
-		}
-		for _, r := range args.File.Rules {
-			srcsExist := false
-			for _, f := range r.AttrStrings("srcs") {
-				if exists[f] {
-					srcsExist = true
-					break
+
+		srcsExist := false
+		canonicalName := ""
+		for _, f := range srcs {
+			if exists[f] {
+				srcsExist = true
+				if isBzlSourceFile(f) && canonicalName == "" {
+					canonicalName = strings.TrimSuffix(f, fileType)
 				}
 			}
-			if !srcsExist {
-				ret = append(ret, rule.NewRule("bzl_library", name))
-			}
+		}
+
+		if !srcsExist || (canonicalName != "" && r.Name() != canonicalName) {
+			ret = append(ret, rule.NewRule("bzl_library", r.AttrString("name")))
 		}
 	}
 	return ret

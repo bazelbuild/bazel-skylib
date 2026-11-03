@@ -1,2 +1,2 @@
-/bazel-*
+bazel-*
 MODULE.bazel.lock
