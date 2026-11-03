@@ -15,12 +15,15 @@
 """Skylib module containing convenience interfaces for select()."""
 
 # TODO(https://github.com/bazelbuild/starlark/pull/362): Use native annotations when
-# Bazel supports generic functions and typed select expressions.
+# Bazel supports generic functions. with_or also needs a bound on condition
+# keys and a way to describe the resulting configurable value.
+# type _Condition = str | Label
+# type _Key = _Condition | tuple[_Condition, ...]
 # type _Conditions = Sequence[_Condition]
 # type _Visibility = Collection[_Condition] | depset[_Condition] | None
 
 def _with_or(input_dict, no_match_error = ""):
-    # type: [V](_ConditionEntries[V], str) -> select[V, object]
+    # type: [K: _Key, V](dict[K, V], str) -> select[V]
     """Drop-in replacement for `select()` that supports ORed keys.
 
     Example:
@@ -58,7 +61,7 @@ def _with_or(input_dict, no_match_error = ""):
     return select(_with_or_dict(input_dict), no_match_error = no_match_error)
 
 def _with_or_dict(input_dict):
-    # type: [V](_ConditionEntries[V]) -> dict[_Condition, V]
+    # type: [K: _Key, V](dict[K, V]) -> dict[_Condition, V]
     """Variation of `with_or` that returns the dict of the `select()`.
 
     Unlike `select()`, the contents of the dict can be inspected by Starlark
@@ -70,7 +73,7 @@ def _with_or_dict(input_dict):
     Returns:
       A dictionary usable by a native `select()`.
     """
-    output_dict = {}
+    output_dict = {}  # type: dict[_Condition, V]
     for (key, value) in input_dict.items():
         if type(key) == type(()):
             for config_setting in key:

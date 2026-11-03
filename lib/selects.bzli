@@ -1,9 +1,0 @@
-"""Contracts for configurable attribute helpers."""
-
-type _Condition = str | Label
-
-# TODO(https://github.com/bazelbuild/bazel/issues/27370): Move this structural
-# contract into source when Bazel can describe the condition/value pairs returned
-# by items().
-class _ConditionEntries[V](Protocol):
-    def items(self) -> Collection[tuple[_Condition | tuple[_Condition, ...], V]]: ...
