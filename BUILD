@@ -32,10 +32,7 @@ filegroup(
         "//lib:test_deps",
         "//rules:test_deps",
         "//toolchains/unittest:test_deps",
-    ] + glob([
-        "*.bzl",
-        "*.bzli",
-    ]),
+    ] + glob(["*.bzl"]),
 )
 
 bzl_library(
@@ -98,8 +95,5 @@ filegroup(
         "//rules/directory/private:distribution",
         "//rules/private:distribution",
         "//toolchains/unittest:distribution",
-    ] + glob([
-        "*.bzl",
-        "*.bzli",
-    ]),
+    ] + glob(["*.bzl"]),
 )
