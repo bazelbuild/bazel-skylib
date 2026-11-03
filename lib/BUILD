@@ -11,18 +11,27 @@ licenses(["notice"])
 
 # export bzl files for the documentation
 exports_files(
-    glob(["*.bzl"]),
+    glob([
+        "*.bzl",
+        "*.scl",
+    ]),
     visibility = ["//:__subpackages__"],
 )
 
 bzl_library(
     name = "collections",
-    srcs = ["collections.bzl"],
+    srcs = [
+        "collections.bzl",
+        "collections.scl",
+    ],
 )
 
 bzl_library(
     name = "dicts",
-    srcs = ["dicts.bzl"],
+    srcs = [
+        "dicts.bzl",
+        "dicts.scl",
+    ],
 )
 
 bzl_library(
@@ -32,12 +41,18 @@ bzl_library(
 
 bzl_library(
     name = "partial",
-    srcs = ["partial.bzl"],
+    srcs = [
+        "partial.bzl",
+        "partial.scl",
+    ],
 )
 
 bzl_library(
     name = "paths",
-    srcs = ["paths.bzl"],
+    srcs = [
+        "paths.bzl",
+        "paths.scl",
+    ],
 )
 
 bzl_library(
@@ -47,7 +62,10 @@ bzl_library(
 
 bzl_library(
     name = "sets",
-    srcs = ["sets.bzl"],
+    srcs = [
+        "sets.bzl",
+        "sets.scl",
+    ],
     deps = [
         ":new_sets",
     ],
@@ -55,7 +73,10 @@ bzl_library(
 
 bzl_library(
     name = "new_sets",
-    srcs = ["new_sets.bzl"],
+    srcs = [
+        "new_sets.bzl",
+        "new_sets.scl",
+    ],
     deps = [
         ":dicts",
     ],
@@ -63,12 +84,18 @@ bzl_library(
 
 bzl_library(
     name = "shell",
-    srcs = ["shell.bzl"],
+    srcs = [
+        "shell.bzl",
+        "shell.scl",
+    ],
 )
 
 bzl_library(
     name = "structs",
-    srcs = ["structs.bzl"],
+    srcs = [
+        "structs.bzl",
+        "structs.scl",
+    ],
 )
 
 bzl_library(
@@ -78,7 +105,13 @@ bzl_library(
 
 bzl_library(
     name = "types",
-    srcs = ["types.bzl"],
+    srcs = [
+        "types.bzl",
+        "types.scl",
+    ],
+    deps = [
+        ":structs",
+    ],
 )
 
 bzl_library(
@@ -100,7 +133,10 @@ bzl_library(
 filegroup(
     name = "test_deps",
     testonly = True,
-    srcs = ["BUILD"] + glob(["*.bzl"]),
+    srcs = ["BUILD"] + glob([
+        "*.bzl",
+        "*.scl",
+    ]),
     visibility = ["//:__subpackages__"],  # Needs skylib's root BUILD file for default_applicable_licenses
 )
 
