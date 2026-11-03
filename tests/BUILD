@@ -104,6 +104,19 @@ sh_test(
     tags = ["local"],
 )
 
+sh_test(
+    name = "compatibility_test",
+    srcs = ["compatibility_test.sh"],
+    data = [
+        ":unittest.bash",
+        "//lib:compatibility",
+    ],
+    tags = ["local"],
+    deps = [
+        "@bazel_tools//tools/bash/runfiles",
+    ],
+)
+
 shell_args_test_gen(
     name = "shell_spawn_e2e_test_src",
 )
