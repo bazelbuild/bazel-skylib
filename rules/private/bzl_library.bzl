@@ -58,6 +58,7 @@ bzl_library = rule(
 Starlark files listed in `srcs`.""",
         ),
     },
+    provides = [StarlarkLibraryInfo],
     doc = """Creates a logical collection of Starlark .bzl and .scl files.
 
 Example:
