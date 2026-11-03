@@ -34,6 +34,7 @@ def _check_path_relative(path):
         fail("Path must be relative. Got {path}".format(path = path))
 
 def _get_direct_child(directory, name):
+    # type: (_DirectoryContent, str) -> File | DirectoryInfo
     """Gets the direct child of a directory.
 
     Args:
@@ -53,6 +54,7 @@ def _get_direct_child(directory, name):
     return entry
 
 def _get_direct_subdirectory(directory, name):
+    # type: (_DirectoryContent, str) -> DirectoryInfo
     entry = _get_direct_child(directory, name)
     if type(entry) == "File":
         fail(_WRONG_TYPE.format(
@@ -64,6 +66,7 @@ def _get_direct_subdirectory(directory, name):
     return entry
 
 def _get_parent(directory, path):
+    # type: (_DirectoryContent, str) -> tuple[_DirectoryContent, str]
     _check_path_relative(path)
     chunks = path.split("/")
     for dirname in chunks[:-1]:
@@ -71,6 +74,7 @@ def _get_parent(directory, path):
     return directory, chunks[-1]
 
 def get_path(directory, path, require_type = None):
+    # type: (_DirectoryContent, str, str | None) -> File | DirectoryInfo
     """Gets a subdirectory or file contained within a directory.
 
     Example: `get_path(directory, "a/b")` returns the entry corresponding to
@@ -92,6 +96,7 @@ def get_path(directory, path, require_type = None):
     return _get_direct_child(directory, name)
 
 def get_file(directory, path):
+    # type: (_DirectoryContent, str) -> File
     """Gets a file contained within a directory.
 
     Args:
@@ -113,6 +118,7 @@ def get_file(directory, path):
     return entry
 
 def get_subdirectory(directory, path):
+    # type: (_DirectoryContent, str) -> DirectoryInfo
     """Gets a subdirectory contained within a directory.
 
     Args:

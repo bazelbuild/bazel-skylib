@@ -50,7 +50,13 @@ def _is_valid_make_variable_char(c):
     # aren't expanded by e.g. cc_binary.
     return c == "_" or c.isdigit() or (c.isalpha() and c.isupper())
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32207): Annotate the callbacks
+# natively when Bazel can describe their build-setting and provider value types.
+# type _VariableAttrs = struct[{"make_variable": str}, ...]
+# type _StringAttrs = struct[{"make_variable": str, "values": list[str]}, ...]
+
 def _get_template_variable_info(ctx):
+    # type: (_SettingContext[object, _VariableAttrs]) -> list[TemplateVariableInfo]
     make_variable = ctx.attr.make_variable
     if not make_variable:
         return []
@@ -65,11 +71,13 @@ def _get_template_variable_info(ctx):
     ]
 
 def _impl(ctx):
+    # type: [T](_SettingContext[T, _VariableAttrs]) -> list[BuildSettingInfo[T] | TemplateVariableInfo]
     return [
         BuildSettingInfo(value = ctx.build_setting_value),
     ] + _get_template_variable_info(ctx)
 
 def _simple_impl(ctx):
+    # type: [T](_SettingContext[T, object]) -> BuildSettingInfo[T]
     return BuildSettingInfo(value = ctx.build_setting_value)
 
 int_flag = rule(
@@ -153,6 +161,7 @@ def _no_at_str(label):
     return s
 
 def _string_impl(ctx):
+    # type: (_SettingContext[str, _StringAttrs]) -> list[BuildSettingInfo[str] | TemplateVariableInfo]
     allowed_values = ctx.attr.values
     value = ctx.build_setting_value
     if len(allowed_values) == 0 or value in ctx.attr.values:

@@ -48,15 +48,18 @@ def _choose_path(prefixes):
 
 # TODO(https://github.com/bazelbuild/bazel/issues/32044): Declare recursive directory
 # metadata with a native type alias once Bazel supports recursive aliases.
-# type _Metadata = struct[{"directories": dict[str, _Metadata], "files": list[File], "relative": str, "human_readable": str}]
+# type _Metadata = struct[{
+#     "directories": dict[str, _Metadata],
+#     "files": list[File],
+#     "relative": str,
+#     "human_readable": str,
+# }]
 
 def _directory_metadata(relative, human_readable):
     # type: (str, str) -> _Metadata
-    directories = {}  # type: dict[str, _Metadata]
-    files = []  # type: list[File]
     return struct(
-        directories = directories,
-        files = files,
+        directories = {},
+        files = [],
         relative = relative,
         human_readable = human_readable,
     )

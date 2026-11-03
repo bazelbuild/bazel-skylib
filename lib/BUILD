@@ -10,10 +10,7 @@ package(
 licenses(["notice"])
 
 exports_files([
-    "collections.bzli",
-    "new_sets.bzli",
     "selects.bzli",
-    "structs.bzli",
 ])
 
 # export bzl files for the documentation

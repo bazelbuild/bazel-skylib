@@ -1,5 +1,0 @@
-"""Conversions from Starlark structs."""
-
-# TODO(https://github.com/bazelbuild/starlark/pull/362): Move this contract into
-# structs.bzl when every supported Bazel release accepts generic function syntax.
-def _to_dict[T](s: struct[T]) -> dict[str, T]: ...

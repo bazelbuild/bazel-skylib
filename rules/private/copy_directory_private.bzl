@@ -91,8 +91,13 @@ rm -rf \"$2\" && cp -fR \"$1/\" \"$2\"
         execution_requirements = COPY_EXECUTION_REQUIREMENTS,
     )
 
-def copy_directory_action(ctx, src, dst, is_windows = False):
-    # type: (ctx[object, object], File, File, bool) -> None
+def copy_directory_action(
+        ctx,  # type: ctx[object, object]
+        src,  # type: File
+        dst,  # type: File
+        # type: bool
+        is_windows = False):
+    # type: (...) -> None
     """Helper function that creates an action to copy a directory from src to dst.
 
     This helper is used by copy_directory. It is exposed as a public API so it can be used within
@@ -138,8 +143,13 @@ _copy_directory = rule(
     },
 )
 
-def copy_directory(name, src, out, **kwargs):
-    # type: (str, str | Label | select[str | Label, object], str | select[str, object], **Unpack[CommonRuleAttrs]) -> None
+def copy_directory(
+        name,  # type: str
+        src,  # type: str | Label | select[str | Label, object]
+        out,  # type: str | select[str, object]
+        # type: Unpack[CommonRuleAttrs]
+        **kwargs):
+    # type: (...) -> None
     # TODO(https://github.com/bazelbuild/bazel/issues/32343): Express the forwarded rule
     # attributes in a native function annotation once Bazel supports them.
     """Copies a directory to another location.

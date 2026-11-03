@@ -14,7 +14,11 @@
 
 """Skylib module containing functions that operate on structs."""
 
+# TODO(https://github.com/bazelbuild/starlark/pull/362): Annotate the struct value
+# type natively when every supported Bazel release accepts generic functions.
+
 def _to_dict(s):
+    # type: [T](struct[T]) -> dict[str, T]
     """Converts a `struct` to a `dict`.
 
     Args:

@@ -1,5 +1,7 @@
 """Contracts for writing text files and executable files."""
 
+# TODO(https://github.com/bazelbuild/bazel/issues/27370): Express the context
+# protocol in source when Bazel supports structural method signatures.
 type _WriteAttrs = struct[{
     "content": list[str],
     "newline": str,
@@ -7,11 +9,9 @@ type _WriteAttrs = struct[{
 }, ...]
 
 type _Actions = actions
+
 type _Runfiles = runfiles
 
-# TODO(https://github.com/bazelbuild/bazel/issues/27370): Move the callback signatures
-# into write_file_private.bzl when source annotations can express the context's output
-# file and callable members.
 class _WriteContext(Protocol):
     @property
     def attr(self) -> _WriteAttrs: ...
@@ -26,24 +26,3 @@ class _WriteContext(Protocol):
     def target_platform_has_constraint(self) -> Callable[[ConstraintValueInfo], bool]: ...
 
     def runfiles(self, *, files: Sequence[File]) -> _Runfiles: ...
-
-def _common_impl(ctx: _WriteContext, is_executable: bool) -> list[DefaultInfo]: ...
-def _impl(ctx: _WriteContext) -> list[DefaultInfo]: ...
-def _ximpl(ctx: _WriteContext) -> list[DefaultInfo]: ...
-
-# TODO(https://github.com/bazelbuild/bazel/issues/32021): Express the content depset
-# element type in a native annotation when Bazel supports typed depsets.
-type _Content = Collection[str] | depset[str] | select[Collection[str] | depset[str] | None, object] | None
-type _Newline = Literal["auto", "unix", "windows", ""] | select[Literal["auto", "unix", "windows"], object] | None
-
-# TODO(https://github.com/bazelbuild/bazel/issues/32343): Replace this common-attribute
-# approximation when source can express keywords conditional on is_executable. The
-# executable rule also accepts args and output_licenses, which this signature rejects.
-def write_file(
-    name: str,
-    out: str | Label,
-    content: _Content = ...,
-    is_executable: bool = ...,
-    newline: _Newline = ...,
-    **kwargs: Unpack[CommonRuleAttrs],
-) -> None: ...

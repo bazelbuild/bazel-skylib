@@ -45,8 +45,14 @@ _empty_test = rule(
     test = True,
 )
 
-def build_test(name, targets, *, tags = [], **kwargs):
-    # type: (str, Collection[str | Label], list[str], **Unpack[KeywordArgs[_empty_test, "name", "data", "tags"]]) -> None
+def build_test(
+        name,  # type: str
+        targets,  # type: Collection[str | Label]
+        *,
+        tags = [],  # type: list[str]
+        # type: Unpack[KeywordArgs[_empty_test, "name", "data", "tags"]]
+        **kwargs):
+    # type: (...) -> None
     # TODO(https://github.com/bazelbuild/bazel/issues/32343): Express the forwarded
     # test-rule keywords in a native function annotation once Bazel supports them.
     """Test rule checking that other targets build.

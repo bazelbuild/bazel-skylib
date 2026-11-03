@@ -17,7 +17,21 @@
 load("//rules/directory/private:glob.bzl", "glob")
 load("//rules/directory/private:paths.bzl", "get_file", "get_path", "get_subdirectory")
 
+# TODO(https://github.com/bazelbuild/bazel/issues/31770): Annotate initializer
+# keywords natively when Bazel supports named, typed dictionary keys.
+# type _Input = dict[{
+#     "entries": dict[str, File | DirectoryInfo],
+#     "transitive_files": depset[File],
+#     "path": str,
+#     "human_readable": str,
+#     "get_path": NotRequired[object],
+#     "get_file": NotRequired[object],
+#     "get_subdirectory": NotRequired[object],
+#     "glob": NotRequired[object],
+# }]
+
 def _init_directory_info(**kwargs):
+    # type: (**Unpack[_Input]) -> _Fields
     self = struct(**kwargs)
     return dict(
         kwargs,
@@ -31,6 +45,7 @@ def _init_directory_info(**kwargs):
 # init = _init_directory_info to the provider below
 # buildifier: disable=function-docstring
 def create_directory_info(**kwargs):
+    # type: (**Unpack[_Input]) -> DirectoryInfo
     return DirectoryInfo(**_init_directory_info(**kwargs))
 
 DirectoryInfo = provider(

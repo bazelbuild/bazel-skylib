@@ -23,7 +23,16 @@
   `types.is_set()` method in types.bzl.
 """
 
+# TODO(https://github.com/bazelbuild/starlark/pull/362): Use native annotations when
+# Bazel supports bounded type parameters on aliases and functions.
+# type _Set[T: Hashable] = struct[{"_values": dict[T, None]}, ...]
+# _union reads each input without changing its element type.
+# type _SetView[T: Hashable] = struct[{
+#     "_values": Intersection[Top[dict[Unknown, None]], Collection[T]],
+# }, ...]
+
 def _make(elements = None):
+    # type: [T: Hashable = Hashable](Collection[T] | None) -> _Set[T]
     """Creates a new set.
 
     All elements must be hashable.
@@ -40,6 +49,7 @@ def _make(elements = None):
     return struct(_values = {e: None for e in elements or ()})
 
 def _copy(s):
+    # type: [T: Hashable](_Set[T]) -> _Set[T]
     """Creates a new set from another set.
 
     Args:
@@ -51,6 +61,7 @@ def _copy(s):
     return struct(_values = dict(s._values))
 
 def _to_list(s):
+    # type: [T: Hashable](_Set[T]) -> list[T]
     """Creates a list from the values in the set.
 
     Args:
@@ -62,6 +73,7 @@ def _to_list(s):
     return s._values.keys()
 
 def _insert(s, e):
+    # type: [T: Hashable](_Set[T], T) -> _Set[T]
     """Inserts an element into the set.
 
     Element must be hashable.  This mutates the original set.
@@ -77,6 +89,7 @@ def _insert(s, e):
     return s
 
 def _remove(s, e):
+    # type: [T: Hashable](_Set[T], T) -> _Set[T]
     """Removes an element from the set.
 
     Element must be hashable.  This mutates the original set.
@@ -92,6 +105,7 @@ def _remove(s, e):
     return s
 
 def _contains(a, e):
+    # type: [T: Hashable](_Set[T], Hashable) -> bool
     """Checks for the existence of an element in a set.
 
     Args:
@@ -104,6 +118,7 @@ def _contains(a, e):
     return e in a._values
 
 def _get_shorter_and_longer(a, b):
+    # type: [A: Hashable, B: Hashable](_Set[A], _Set[B]) -> tuple[_Set[A], _Set[B]] | tuple[_Set[B], _Set[A]]
     """Returns two sets in the order of shortest and longest.
 
     Args:
@@ -118,6 +133,7 @@ def _get_shorter_and_longer(a, b):
     return b, a
 
 def _is_equal(a, b):
+    # type: [A: Hashable, B: Hashable](_Set[A], _Set[B]) -> bool
     """Returns whether two sets are equal.
 
     Args:
@@ -130,6 +146,7 @@ def _is_equal(a, b):
     return a._values == b._values
 
 def _is_subset(a, b):
+    # type: [A: Hashable, B: Hashable](_Set[A], _Set[B]) -> bool
     """Returns whether `a` is a subset of `b`.
 
     Args:
@@ -145,6 +162,7 @@ def _is_subset(a, b):
     return True
 
 def _disjoint(a, b):
+    # type: [A: Hashable, B: Hashable](_Set[A], _Set[B]) -> bool
     """Returns whether two sets are disjoint.
 
     Two sets are disjoint if they have no elements in common.
@@ -163,6 +181,7 @@ def _disjoint(a, b):
     return True
 
 def _intersection(a, b):
+    # type: [A: Hashable, B: Hashable](_Set[A], _Set[B]) -> _Set[A | B]
     """Returns the intersection of two sets.
 
     Args:
@@ -176,6 +195,7 @@ def _intersection(a, b):
     return struct(_values = {e: None for e in shorter._values.keys() if e in longer._values})
 
 def _union(*args):
+    # type: [T: Hashable = Hashable](*_SetView[T]) -> _Set[T]
     """Returns the union of several sets.
 
     Args:
@@ -184,12 +204,16 @@ def _union(*args):
     Returns:
       The set union of all sets in `*args`.
     """
+
+    # The empty initializer has no key type, and update() does not infer one
+    # from the input sets.
     values = {}  # type: dict[T, None]
     for s in args:
         values.update(s._values)
     return struct(_values = values)
 
 def _difference(a, b):
+    # type: [A: Hashable, B: Hashable](_Set[A], _Set[B]) -> _Set[A]
     """Returns the elements in `a` that are not in `b`.
 
     Args:
@@ -202,6 +226,7 @@ def _difference(a, b):
     return struct(_values = {e: None for e in a._values.keys() if e not in b._values})
 
 def _length(s):
+    # type: [T: Hashable](_Set[T]) -> int
     """Returns the number of elements in a set.
 
     Args:
@@ -213,6 +238,7 @@ def _length(s):
     return len(s._values)
 
 def _repr(s):
+    # type: [T: Hashable](_Set[T]) -> str
     """Returns a string value representing the set.
 
     Args:

@@ -112,7 +112,19 @@ _copy_xfile = rule(
     attrs = _ATTRS,
 )
 
-def copy_file(name, src, out, is_executable = False, allow_symlink = False, **kwargs):
+# TODO(https://github.com/bazelbuild/bazel/issues/32343): Describe the forwarded
+# attributes natively when Bazel can express keywords conditional on is_executable.
+# Only the executable rule also accepts args and output_licenses.
+
+def copy_file(
+        name,  # type: str
+        src,  # type: str | Label | select[str | Label, object]
+        out,  # type: str | Label
+        is_executable = False,  # type: bool | select[Literal[True], object]
+        allow_symlink = False,  # type: bool | select[bool, object]
+        # type: Unpack[CommonRuleAttrs]
+        **kwargs):
+    # type: (...) -> None
     """Copies a file to another location.
 
     `native.genrule()` is sometimes used to copy files (often wishing to rename them). The 'copy_file' rule does this with a simpler interface than genrule.

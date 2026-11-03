@@ -242,6 +242,8 @@ def _relativize(path, start):
       The portion of `path` that is relative to `start`.
     """
     segments = _normalize(path).split("/")
+
+    # Both split() and the empty fallback below hold path components.
     start_segments = _normalize(start).split("/")  # type: list[str]
     if start_segments == ["."]:
         start_segments = []

@@ -17,6 +17,7 @@
 _NO_GLOB_MATCHES = "{glob} failed to match any files in {dir}"
 
 def transitive_entries(directory):
+    # type: (_DirectoryContent) -> list[File | _DirectoryContent]
     """Returns the files and directories contained within a directory transitively.
 
     Args:
@@ -26,10 +27,7 @@ def transitive_entries(directory):
         List[Either[DirectoryInfo, File]] The entries contained within.
     """
 
-    # TODO(https://github.com/bazelbuild/bazel/issues/27370): Move the companion
-    # signatures into this source when provider-owned types can be referenced without
-    # a runtime load cycle: providers.bzl loads this implementation.
-    entries = [directory]  # type: list[File | _DirectoryContent]
+    entries = [directory]
     stack = [directory]
     for _ in range(99999999):
         if not stack:
@@ -43,6 +41,7 @@ def transitive_entries(directory):
     fail("Should never get to here")
 
 def directory_glob_chunk(directory, chunk):
+    # type: (_DirectoryContent, str) -> Sequence[File | _DirectoryContent]
     """Given a directory and a chunk of a glob, returns possible candidates.
 
     Args:
@@ -69,13 +68,14 @@ def directory_glob_chunk(directory, chunk):
     else:
         middle = ""
         left, right = chunk.split("*")
-    entries = []  # type: list[File | _DirectoryContent]
+    entries = []
     for name, entry in directory.entries.items():
         if name.startswith(left) and name.endswith(right) and len(left) + len(right) <= len(name) and middle in name[len(left):len(name) - len(right)]:
             entries.append(entry)
     return entries
 
 def directory_single_glob(directory, glob):
+    # type: (_DirectoryContent, str) -> list[File]
     """Calculates all files that are matched by a glob on a directory.
 
     Args:
@@ -89,6 +89,8 @@ def directory_single_glob(directory, glob):
     # Treat a glob as a nondeterministic finite state automata. We can be in
     # multiple places at the one time.
     candidate_dirs = [directory]
+
+    # Each iteration resets the map; the glob may also match no files.
     candidate_files = {}  # type: dict[File, None]
     for chunk in glob.split("/"):
         next_candidate_dirs = {}
@@ -103,7 +105,13 @@ def directory_single_glob(directory, glob):
 
     return list(candidate_files)
 
-def glob(directory, include, exclude = [], allow_empty = False):
+def glob(
+        directory,  # type: _DirectoryContent
+        include,  # type: Sequence[str]
+        exclude = [],  # type: Sequence[str]
+        # type: bool
+        allow_empty = False):
+    # type: (...) -> depset[File]
     """native.glob, but for DirectoryInfo.
 
     Args:
@@ -115,7 +123,7 @@ def glob(directory, include, exclude = [], allow_empty = False):
     Returns:
         depset[File] A set of files that match.
     """
-    include_files = []  # type: list[File]
+    include_files = []
     for g in include:
         matches = directory_single_glob(directory, g)
         if not matches and not allow_empty:
@@ -128,6 +136,7 @@ def glob(directory, include, exclude = [], allow_empty = False):
     if not exclude:
         return depset(include_files)
 
+    # Without a value annotation, sty infers None | Unknown for the sentinel.
     remaining_files = {k: None for k in include_files}  # type: dict[File, None]
     for g in exclude:
         matches = directory_single_glob(directory, g)

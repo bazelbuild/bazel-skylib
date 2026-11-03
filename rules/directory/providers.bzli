@@ -14,9 +14,9 @@
 
 """Directory helper contracts and their complete provider results."""
 
-# TODO(https://github.com/bazelbuild/bazel/issues/32207): Move the provider record
-# and shared directory view into providers.bzl when native provider fields can
-# preserve their callable types and source can declare the structural view.
+# TODO(https://github.com/bazelbuild/bazel/issues/32207): Move these fields onto
+# the provider when source can refer to DirectoryInfo from its own field types
+# and declare glob's keyword parameters.
 class DirectoryContent(Protocol):
     @property
     def entries(self) -> dict[str, File | DirectoryInfo]: ...
@@ -25,19 +25,6 @@ class DirectoryContent(Protocol):
 
 class _Glob(Protocol):
     def __call__(self, include: Sequence[str], exclude: Sequence[str] = ..., allow_empty: bool = ...) -> depset[File]: ...
-
-# TODO(https://github.com/bazelbuild/bazel/issues/31770): annotate the provider initializer
-# in Starlark once Bazel accepts dictionaries with named, typed keys.
-type _Input = dict[{
-    "entries": dict[str, File | DirectoryInfo],
-    "transitive_files": depset[File],
-    "path": str,
-    "human_readable": str,
-    "get_path": NotRequired[object],
-    "get_file": NotRequired[object],
-    "get_subdirectory": NotRequired[object],
-    "glob": NotRequired[object],
-}]
 
 type _Fields = dict[{
     "entries": dict[str, File | DirectoryInfo],
@@ -49,9 +36,6 @@ type _Fields = dict[{
     "get_subdirectory": Callable[[str], DirectoryInfo],
     "glob": _Glob,
 }]
-
-def _init_directory_info(**kwargs: Unpack[_Input]) -> _Fields: ...
-def create_directory_info(**kwargs: Unpack[_Input]) -> DirectoryInfo: ...
 
 def DirectoryInfo(**kwargs: Unpack[_Fields]) -> record[{
     "entries": dict[str, File | DirectoryInfo],
