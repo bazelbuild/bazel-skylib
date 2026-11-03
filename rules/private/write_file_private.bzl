@@ -20,8 +20,8 @@ These rules write a UTF-8 encoded text file, using Bazel's FileWriteAction.
 
 # TODO(https://github.com/bazelbuild/bazel/issues/32021): Express the content depset
 # element type in a native annotation when Bazel supports typed depsets.
-# type _Content = Collection[str] | depset[str] | select[Collection[str] | depset[str] | None, object] | None
-# type _Newline = Literal["auto", "unix", "windows", ""] | select[Literal["auto", "unix", "windows"], object] | None
+# type _Content = Collection[str] | depset[str] | select[Collection[str] | depset[str] | None] | None
+# type _Newline = Literal["auto", "unix", "windows", ""] | select[Literal["auto", "unix", "windows"]] | None
 
 def _common_impl(ctx, is_executable):
     # type: (_WriteContext, bool) -> list[DefaultInfo]
@@ -79,14 +79,15 @@ _write_xfile = rule(
 
 # TODO(https://github.com/bazelbuild/bazel/issues/32343): Describe the forwarded
 # attributes natively when Bazel can express keywords conditional on is_executable.
-# Only the executable rule also accepts args and output_licenses.
+# The executable rule also accepts args and output_licenses. sty checks their
+# types but cannot restrict them to calls with is_executable = True.
 def write_file(
         name,  # type: str
         out,  # type: str | Label
         content = [],  # type: _Content
         is_executable = False,  # type: bool
         newline = "auto",  # type: _Newline
-        # type: Unpack[CommonRuleAttrs]
+        # type: Unpack[CommonExecutableRuleAttrs]
         **kwargs):
     # type: (...) -> None
     """Creates a UTF-8 encoded text file.
@@ -118,5 +119,7 @@ def write_file(
             content = content,
             out = out,
             newline = newline or "auto",
-            **kwargs
+            # The plain rule rejects args and output_licenses. kwargs must also
+            # cover callers that choose the executable rule.
+            **kwargs  # ty: ignore[unknown-argument]
         )

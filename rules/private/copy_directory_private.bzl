@@ -21,7 +21,7 @@ cmd.exe (on Windows).
 load(":copy_common.bzl", "COPY_EXECUTION_REQUIREMENTS", "OsInfo")
 
 def _copy_cmd(ctx, src, dst):
-    # type: (ctx[object, object], File, File) -> None
+    # type: (ctx, File, File) -> None
     # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate these copy helpers natively when supported
     # Bazel releases accept annotations and preserve their context types.
     # Most Windows binaries built with MSVC use a certain argument quoting
@@ -68,7 +68,7 @@ if not exist \"{src}\\\" (
     )
 
 def _copy_bash(ctx, src, dst):
-    # type: (ctx[object, object], File, File) -> None
+    # type: (ctx, File, File) -> None
     cmd = """\
 if [ ! -d \"$1\" ]; then
     echo \"Error: $1 is not a directory\"
@@ -92,7 +92,7 @@ rm -rf \"$2\" && cp -fR \"$1/\" \"$2\"
     )
 
 def copy_directory_action(
-        ctx,  # type: ctx[object, object]
+        ctx,  # type: ctx
         src,  # type: File
         dst,  # type: File
         # type: bool
@@ -145,8 +145,8 @@ _copy_directory = rule(
 
 def copy_directory(
         name,  # type: str
-        src,  # type: str | Label | select[str | Label, object]
-        out,  # type: str | select[str, object]
+        src,  # type: str | Label | select[str | Label]
+        out,  # type: str | select[str]
         # type: Unpack[CommonRuleAttrs]
         **kwargs):
     # type: (...) -> None

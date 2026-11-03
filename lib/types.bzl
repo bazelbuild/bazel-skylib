@@ -33,9 +33,9 @@ _a_function_type = type(_a_function)
 
 def _is_list(v):
     # type: (object) -> TypeIs[Top[list[Unknown]]]
-    # TODO(https://github.com/tamird/sty/blob/d400a008/docs/type-interfaces.md#materialized-types):
-    # Use native predicate annotations once Bazel can preserve argument narrowing
-    # and known container element types.
+    # TODO(https://github.com/bazelbuild/bazel/issues/32379): Annotate these
+    # predicates natively when they can narrow the caller's argument without
+    # discarding known container element types.
     """Returns True if v is an instance of a list.
 
     Args:
@@ -130,7 +130,8 @@ def _is_function(v):
     """
     return type(v) == _a_function_type
 
-# TODO(https://github.com/bazelbuild/bazel/issues/32021): use a source annotation once depset element types are supported.
+# TODO(https://github.com/bazelbuild/bazel/issues/32021): A native narrowing
+# predicate for depsets also needs to name the element type.
 def _is_depset(v):
     # type: (object) -> TypeIs[depset[object]]
     """Returns True if v is an instance of a `depset`.

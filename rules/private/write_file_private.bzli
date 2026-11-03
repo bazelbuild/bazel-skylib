@@ -1,6 +1,6 @@
 """Contracts for writing text files and executable files."""
 
-# TODO(https://github.com/bazelbuild/bazel/issues/27370): Express the context
+# TODO(https://github.com/bazelbuild/bazel/issues/32370): Express the context
 # protocol in source when Bazel supports structural method signatures.
 type _WriteAttrs = struct[{
     "content": list[str],

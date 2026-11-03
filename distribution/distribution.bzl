@@ -18,7 +18,7 @@ def remove_internal_only(
         name,  # type: str
         src,  # type: str | Label
         out,  # type: str | Label
-        # type: Unpack[KeywordArgs[native.genrule, "name", "srcs", "outs", "cmd"]]
+        # type: Unpack[KeywordArgs[native.genrule]]
         **kwargs):
     # type: (...) -> None
     # TODO(https://github.com/bazelbuild/bazel/issues/32343): Express the forwarded

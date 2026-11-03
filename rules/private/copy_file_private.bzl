@@ -22,7 +22,7 @@ cmd.exe (on Windows). '_copy_xfile' marks the resulting file executable,
 load(":copy_common.bzl", "OsInfo")
 
 def copy_cmd(ctx, src, dst):
-    # type: (ctx[object, object], File, File) -> None
+    # type: (ctx, File, File) -> None
     # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the copy helpers
     # and callback natively when every supported Bazel release accepts the syntax.
     # Most Windows binaries built with MSVC use a certain argument quoting
@@ -52,7 +52,7 @@ def copy_cmd(ctx, src, dst):
     )
 
 def copy_bash(ctx, src, dst):
-    # type: (ctx[object, object], File, File) -> None
+    # type: (ctx, File, File) -> None
     ctx.actions.run_shell(
         inputs = [src],
         outputs = [dst],
@@ -114,15 +114,16 @@ _copy_xfile = rule(
 
 # TODO(https://github.com/bazelbuild/bazel/issues/32343): Describe the forwarded
 # attributes natively when Bazel can express keywords conditional on is_executable.
-# Only the executable rule also accepts args and output_licenses.
+# The executable rule also accepts args and output_licenses. sty checks their
+# types but cannot restrict them to calls with is_executable = True.
 
 def copy_file(
         name,  # type: str
-        src,  # type: str | Label | select[str | Label, object]
+        src,  # type: str | Label | select[str | Label]
         out,  # type: str | Label
-        is_executable = False,  # type: bool | select[Literal[True], object]
-        allow_symlink = False,  # type: bool | select[bool, object]
-        # type: Unpack[CommonRuleAttrs]
+        is_executable = False,  # type: bool
+        allow_symlink = False,  # type: bool | select[bool]
+        # type: Unpack[CommonExecutableRuleAttrs]
         **kwargs):
     # type: (...) -> None
     """Copies a file to another location.
@@ -159,5 +160,7 @@ def copy_file(
         out = out,
         is_executable = is_executable,
         allow_symlink = allow_symlink,
-        **kwargs
+        # The plain rule rejects args and output_licenses. kwargs must also
+        # cover callers that choose the executable rule.
+        **kwargs  # ty: ignore[unknown-argument]
     )

@@ -50,7 +50,7 @@ def build_test(
         targets,  # type: Collection[str | Label]
         *,
         tags = [],  # type: list[str]
-        # type: Unpack[KeywordArgs[_empty_test, "name", "data", "tags"]]
+        # type: Unpack[KeywordArgs[_empty_test, "data"]]
         **kwargs):
     # type: (...) -> None
     # TODO(https://github.com/bazelbuild/bazel/issues/32343): Express the forwarded
