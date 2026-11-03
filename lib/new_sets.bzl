@@ -23,13 +23,16 @@
   `types.is_set()` method in types.bzl.
 """
 
-# TODO(https://github.com/bazelbuild/starlark/pull/362): Use native annotations when
-# Bazel supports bounded type parameters on aliases and functions.
+# TODO(https://github.com/bazelbuild/bazel/issues/32381): Use native annotations
+# when Bazel can express hashability bounds on generic aliases and functions.
+# sets.make() and sets.union() also need a default element type for empty calls.
 # type _Set[T: Hashable] = struct[{"_values": dict[T, None]}, ...]
-# _union reads each input without changing its element type.
-# type _SetView[T: Hashable] = struct[{
-#     "_values": Intersection[Top[dict[Unknown, None]], Collection[T]],
-# }, ...]
+# update() copies the backing dictionary directly. Read its keys as a collection
+# so a union can combine, for example, an existing set of strings and one of ints.
+# type _SetView[T: Hashable] = Intersection[
+#     Top[_Set[Unknown]],
+#     struct[{"_values": Collection[T]}, ...],
+# ]
 
 def _make(elements = None):
     # type: [T: Hashable = Hashable](Collection[T] | None) -> _Set[T]
@@ -205,8 +208,8 @@ def _union(*args):
       The set union of all sets in `*args`.
     """
 
-    # The empty initializer has no key type, and update() does not infer one
-    # from the input sets.
+    # update() sees the backing dictionary without its key type; the collection
+    # in _SetView supplies T.
     values = {}  # type: dict[T, None]
     for s in args:
         values.update(s._values)
