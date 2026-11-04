@@ -26,10 +26,9 @@ _WRONG_TYPE = "Expected {dir}/{name} to have type {want}, but got {got}"
 FILE = "file"
 DIRECTORY = "directory"
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _check_path_relative(path):
     # type: (str) -> None
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the path validation helpers natively when
-    # every supported Bazel release accepts function annotations.
     if paths.is_absolute(path):
         fail("Path must be relative. Got {path}".format(path = path))
 
@@ -73,10 +72,10 @@ def _get_parent(directory, path):
         directory = _get_direct_subdirectory(directory, dirname)
     return directory, chunks[-1]
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32104): Annotate require_type
+# natively when Bazel supports finite sets of string values.
 def get_path(directory, path, require_type = None):
     # type: (_DirectoryContent, str, Literal["file", "directory"] | None) -> File | DirectoryInfo
-    # TODO(https://github.com/bazelbuild/bazel/issues/32104): Annotate require_type
-    # natively when Bazel supports finite sets of string values.
     """Gets a subdirectory or file contained within a directory.
 
     Example: `get_path(directory, "a/b")` returns the entry corresponding to

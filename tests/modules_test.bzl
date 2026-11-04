@@ -17,10 +17,9 @@
 load("//lib:modules.bzl", "modules")
 load("//rules:build_test.bzl", "build_test")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _repo_rule_impl(repository_ctx):
     # type: (...) -> None
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the test repository callback natively when
-    # every supported Bazel release accepts return annotations.
     repository_ctx.file("WORKSPACE")
     repository_ctx.file("BUILD", """exports_files(["hello"])""")
     repository_ctx.file("hello", "Hello, Bzlmod!")
@@ -39,7 +38,8 @@ as_extension_test_ext = modules.as_extension(
     doc = "Only used for testing modules.as_extension().",
 )
 
-# TODO(https://github.com/bazelbuild/bazel/issues/32020): use a source annotation once Bazel exposes these context and metadata types.
+# TODO(https://github.com/bazelbuild/bazel/issues/32020): Use native annotations
+# when Bazel exposes the module context and extension metadata types.
 def _use_all_repos_ext_impl(module_ctx):
     # type: (...) -> extension_metadata | None
     _repo_rule(name = "baz")

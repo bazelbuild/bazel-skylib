@@ -17,8 +17,7 @@
 load("//lib:subpackages.bzl", "subpackages")
 load("//lib:unittest.bzl", "loadingtest")
 
-# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
-# when Skylib requires Bazel 8.8 or newer.
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _all_test(env):
     # type: (struct[{"name": str}]) -> None
     """Unit tests for subpackages.all."""

@@ -18,10 +18,9 @@ run_binary() build rule implementation.
 Runs a binary as a build action. This rule does not require Bash (unlike native.genrule()).
 """
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _run_binary_impl(ctx):
     # type: (...) -> DefaultInfo
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the binary callback natively when every
-    # supported Bazel release accepts return annotations.
     tool_as_list = [ctx.attr.tool]
     args = [
         # Expand $(execpath ...) / $(execpaths ...) / $(location ...) / $(locations ...) in args.

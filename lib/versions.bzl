@@ -14,10 +14,9 @@
 
 """Skylib module containing functions for checking Bazel versions."""
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _get_bazel_version():
     # type: () -> str
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate these version helpers natively when every
-    # supported Bazel release accepts function annotations.
     """Returns the current Bazel version"""
 
     return native.bazel_version

@@ -17,8 +17,7 @@
 load("//lib:partial.bzl", "partial")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
-# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
-# when Skylib requires Bazel 8.8 or newer.
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _make_noargs_nokwargs():
     # type: () -> int
     """Test utility for no args no kwargs case"""

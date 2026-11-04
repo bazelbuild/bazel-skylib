@@ -14,8 +14,7 @@
 
 """Utilities for maprule."""
 
-# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native annotations
-# when all supported Bazel releases accept them.
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def resolve_locations(ctx, strategy, d):
     # type: (ctx, struct[{"as_path": Callable[[str], str]}, ...], dict[str, str]) -> dict[str, str]
     """Expand the location and locations variables in dictionary values.

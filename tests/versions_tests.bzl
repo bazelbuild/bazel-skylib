@@ -17,8 +17,7 @@
 load("//lib:unittest.bzl", "asserts", "unittest")
 load("//lib:versions.bzl", "versions")
 
-# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
-# when Skylib requires Bazel 8.8 or newer.
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _parse_test(ctx):
     # type: (ctx) -> list[DefaultInfo]
     """Unit tests for versions.parse"""

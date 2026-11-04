@@ -20,10 +20,9 @@ cmd.exe (on Windows).
 
 load(":copy_common.bzl", "COPY_EXECUTION_REQUIREMENTS", "OsInfo")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _copy_cmd(ctx, src, dst):
     # type: (ctx, File, File) -> None
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate these copy helpers natively when supported
-    # Bazel releases accept annotations and preserve their context types.
     # Most Windows binaries built with MSVC use a certain argument quoting
     # scheme. Bazel uses that scheme too to quote arguments. However,
     # cmd.exe uses different semantics, so Bazel's quoting is wrong here.
@@ -143,6 +142,8 @@ _copy_directory = rule(
     },
 )
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32343): Express the forwarded rule
+# attributes in a native function annotation once Bazel supports them.
 def copy_directory(
         name,  # type: str
         src,  # type: str | Label | select[str | Label]
@@ -150,8 +151,6 @@ def copy_directory(
         # type: Unpack[CommonRuleAttrs]
         **kwargs):
     # type: (...) -> None
-    # TODO(https://github.com/bazelbuild/bazel/issues/32343): Express the forwarded rule
-    # attributes in a native function annotation once Bazel supports them.
     """Copies a directory to another location.
 
     This rule uses a Bash command on Linux/macOS/non-Windows, and a cmd.exe command on Windows (no Bash is required).

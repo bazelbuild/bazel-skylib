@@ -41,10 +41,9 @@ _SCOPE_ATTR = attr.string(
     default = "target",
 )
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _is_valid_make_variable_char(c):
     # type: (str) -> bool
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate these validation helpers natively when
-    # every supported Bazel release accepts function annotations.
     # Restrict make variable names for consistency with predefined ones. There are no enforced
     # restrictions on make variable names, but when they contain e.g. spaces or braces, they
     # aren't expanded by e.g. cc_binary.

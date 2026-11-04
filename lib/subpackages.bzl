@@ -16,10 +16,9 @@
 """
 _SUBPACKAGES_SUPPORTED = hasattr(native, "subpackages")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _supported():
     # type: () -> bool
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate these subpackage helpers natively when every
-    # supported Bazel release accepts function annotations.
     return _SUBPACKAGES_SUPPORTED
 
 def _check_supported():

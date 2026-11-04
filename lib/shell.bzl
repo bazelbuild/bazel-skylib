@@ -14,10 +14,9 @@
 
 """Skylib module containing shell utility functions."""
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _array_literal(iterable):
     # type: (Collection[object]) -> str
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate these shell helpers natively when every
-    # supported Bazel release accepts function annotations.
     """Creates a string from a sequence that can be used as a shell array.
 
     For example, `shell.array_literal(["a", "b", "c"])` would return the string

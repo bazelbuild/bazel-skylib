@@ -28,8 +28,7 @@ load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
 
-# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native annotations
-# for these macros when all supported Bazel releases accept them.
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def stardoc_with_diff_test(
         name,  # type: str
         bzl_library_target,  # type: str

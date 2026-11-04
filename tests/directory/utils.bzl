@@ -18,8 +18,7 @@ load("@rules_testing//lib:analysis_test.bzl", "analysis_test")
 load("@rules_testing//lib:truth.bzl", "matching")
 load("@rules_testing//lib:util.bzl", "util")
 
-# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native annotations
-# when Skylib requires Bazel 8.8 or newer.
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def failure_containing(message):
     # type: (str) -> Callable[[TestEnv, Target], None]
     matcher = matching.contains(message)

@@ -21,10 +21,9 @@ cmd.exe (on Windows). '_copy_xfile' marks the resulting file executable,
 
 load(":copy_common.bzl", "OsInfo")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def copy_cmd(ctx, src, dst):
     # type: (ctx, File, File) -> None
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the copy helpers
-    # and callback natively when every supported Bazel release accepts the syntax.
     # Most Windows binaries built with MSVC use a certain argument quoting
     # scheme. Bazel uses that scheme too to quote arguments. However,
     # cmd.exe uses different semantics, so Bazel's quoting is wrong here.

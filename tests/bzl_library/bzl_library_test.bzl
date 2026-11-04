@@ -18,8 +18,7 @@ load("//:bzl_library.bzl", "StarlarkLibraryInfo")
 load("//lib:sets.bzl", "sets")
 load("//lib:unittest.bzl", "analysistest", "asserts")
 
-# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
-# when Skylib requires Bazel 8.8 or newer.
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _assert_same_files(env, expected_file_targets, actual_files):
     # type: (
     #     struct[{"ctx": ctx, "failures": list[str]}], list[Target], list[File] | depset[File]

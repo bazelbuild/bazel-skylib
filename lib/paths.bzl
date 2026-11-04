@@ -19,10 +19,9 @@ path separators (forward slash, "/"); they do not handle Windows-style paths
 with backslash separators or drive letters.
 """
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _basename(p):
     # type: (str) -> str
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate these path helpers natively when every
-    # supported Bazel release accepts function annotations.
     """Returns the basename (i.e., the file portion) of a path.
 
     Note that if `p` ends with a slash, this function returns an empty string.

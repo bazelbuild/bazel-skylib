@@ -24,8 +24,7 @@ load("@bazel_skylib//rules/directory/private:glob.bzl", "directory_glob_chunk", 
 load("@rules_testing//lib:analysis_test.bzl", "analysis_test", "test_suite")
 load(":utils.bzl", "directory_entry", "failure_containing", "failure_test")
 
-# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
-# when Skylib requires Bazel 8.8 or newer.
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _expect_glob_chunk(env, directory, chunk):
     # type: (TestEnv, DirectoryInfo, str) -> CollectionSubject
     return env.expect.that_collection(

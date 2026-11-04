@@ -17,10 +17,9 @@
 load("//lib:paths.bzl", "paths")
 load(":providers.bzl", "DirectoryInfo", "create_directory_info")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _prefix_match(f, prefixes):
     # type: (File, dict[str, File | None]) -> str
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native annotations for
-    # the path helpers and callback when every supported Bazel release accepts them.
     for prefix in prefixes:
         if f.path.startswith(prefix):
             return prefix

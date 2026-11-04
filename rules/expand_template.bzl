@@ -15,10 +15,9 @@
 """A rule that performs template expansion.
 """
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _expand_template_impl(ctx):
     # type: (...) -> None
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the template callback natively when every
-    # supported Bazel release accepts return annotations.
     ctx.actions.expand_template(
         template = ctx.file.template,
         output = ctx.outputs.out,

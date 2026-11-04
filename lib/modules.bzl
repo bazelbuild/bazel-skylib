@@ -14,10 +14,9 @@
 
 """Skylib module containing utilities for Bazel modules and module extensions."""
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _as_extension(macro, doc = None):
     # type: (Callable[[], object], str | None) -> ModuleExtension
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Use a native signature when supported Bazel releases
-    # accept annotations and preserve the module-extension return type.
     """Wraps a WORKSPACE dependency macro into a module extension.
 
     Example:
@@ -42,10 +41,10 @@ def _as_extension(macro, doc = None):
       version of Bazel and thus doesn't result in a lockfile entry.
     """
 
+    # TODO(https://github.com/bazelbuild/bazel/issues/32020): Use native annotations
+    # when Bazel exposes the module context and extension metadata types.
     def _ext_impl(module_ctx):
         # type: (module_ctx) -> extension_metadata | None
-        # TODO(https://github.com/bazelbuild/bazel/issues/32020): make this an
-        # annotation when supported Bazel versions expose context and metadata types.
         macro()
 
         # Setting `reproducible` is safe since `macro`, as a function without parameters, must be
@@ -61,7 +60,8 @@ def _as_extension(macro, doc = None):
         **kwargs
     )
 
-# TODO(https://github.com/bazelbuild/bazel/issues/32020): use a source annotation once Bazel exposes these context and metadata types.
+# TODO(https://github.com/bazelbuild/bazel/issues/32020): Use native annotations
+# when Bazel exposes the module context and extension metadata types.
 def _use_all_repos(module_ctx, reproducible = False):
     # type: (module_ctx, bool) -> extension_metadata | None
     """Return from a module extension that should have all its repositories imported via `use_repo`.

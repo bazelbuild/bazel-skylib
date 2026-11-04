@@ -16,10 +16,9 @@
 
 load("//lib:new_sets.bzl", "sets")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _empty_test_impl(ctx):
     # type: (...) -> list[DefaultInfo]
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the test callback natively when every
-    # supported Bazel release accepts return annotations.
     is_windows = ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo])
     extension = ".bat" if is_windows else ".sh"
     content = "exit 0" if is_windows else "#!/usr/bin/env bash\nexit 0"
@@ -45,6 +44,8 @@ _empty_test = rule(
     test = True,
 )
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32343): Express the forwarded
+# test-rule keywords in a native function annotation once Bazel supports them.
 def build_test(
         name,  # type: str
         targets,  # type: Collection[str | Label]
@@ -53,8 +54,6 @@ def build_test(
         # type: Unpack[KeywordArgs[_empty_test, "data"]]
         **kwargs):
     # type: (...) -> None
-    # TODO(https://github.com/bazelbuild/bazel/issues/32343): Express the forwarded
-    # test-rule keywords in a native function annotation once Bazel supports them.
     """Test rule checking that other targets build.
 
     This works not by an instance of this test failing, but instead by

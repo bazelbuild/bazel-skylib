@@ -161,10 +161,10 @@ def _make(func, *args, **kwargs):
     """
     return struct(function = func, args = args, kwargs = kwargs)
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32379): Use a native
+# return annotation once predicates can narrow the caller's argument.
 def _is_instance(v):
     # type: (object) -> TypeIs[_PartialFields[object, Top[dict[Unknown, Unknown]]]]
-    # TODO(https://github.com/bazelbuild/bazel/issues/32379): Use a native
-    # return annotation once predicates can narrow the caller's argument.
     """Returns True if v is a partial created using `make`.
 
     Args:

@@ -17,8 +17,7 @@
 load("//lib:unittest.bzl", "analysistest", "asserts")
 load("//rules:common_settings.bzl", "BuildSettingInfo", "bool_flag", "bool_setting", "int_flag", "int_setting", "repeatable_string_flag", "string_flag", "string_list_flag", "string_list_setting", "string_setting")
 
-# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
-# when Skylib requires Bazel 8.8 or newer.
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _template_variable_info_contents_test_impl(ctx):
     # type: (...) -> list[AnalysisTestResultInfo]
     env = analysistest.begin(ctx)

@@ -17,8 +17,7 @@ load("//lib:new_sets.bzl", "sets")
 load("//lib:types.bzl", "types")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
-# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
-# when Skylib requires Bazel 8.8 or newer.
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _a_function():
     # type: () -> None
     """A dummy function for testing."""

@@ -23,19 +23,18 @@ _an_int_type = type(1)
 _a_depset_type = type(depset())
 _a_struct_type = type(struct())
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _a_function():
     # type: () -> None
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate this function sentinel natively when every
-    # supported Bazel release accepts function annotations.
     pass
 
 _a_function_type = type(_a_function)
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32379): Annotate these
+# predicates natively when they can narrow the caller's argument without
+# discarding known container element types.
 def _is_list(v):
     # type: (object) -> TypeIs[Top[list[Unknown]]]
-    # TODO(https://github.com/bazelbuild/bazel/issues/32379): Annotate these
-    # predicates natively when they can narrow the caller's argument without
-    # discarding known container element types.
     """Returns True if v is an instance of a list.
 
     Args:

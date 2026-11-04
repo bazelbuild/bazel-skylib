@@ -18,10 +18,9 @@ load("@bazel_skylib//lib:unittest.bzl", "register_unittest_toolchains")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def bazel_skylib_workspace():
     # type: () -> None
-    # TODO(https://github.com/bazelbuild/bazel/pull/30373): Annotate the workspace helper natively when every
-    # supported Bazel release accepts function annotations.
     """Registers toolchains and declares repository dependencies of the bazel_skylib repository."""
     maybe(
         http_archive,
