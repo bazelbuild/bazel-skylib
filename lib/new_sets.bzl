@@ -27,12 +27,6 @@
 # when Bazel can express hashability bounds on generic aliases and functions.
 # sets.make() and sets.union() also need a default element type for empty calls.
 # type _Set[T: Hashable] = struct[{"_values": dict[T, None]}, ...]
-# update() copies the backing dictionary directly. Read its keys as a collection
-# so a union can combine, for example, an existing set of strings and one of ints.
-# type _SetView[T: Hashable] = Intersection[
-#     Top[_Set[Unknown]],
-#     struct[{"_values": Collection[T]}, ...],
-# ]
 
 def _make(elements = None):
     # type: [T: Hashable = Hashable](Collection[T] | None) -> _Set[T]
@@ -197,8 +191,12 @@ def _intersection(a, b):
     shorter, longer = _get_shorter_and_longer(a, b)
     return struct(_values = {e: None for e in shorter._values.keys() if e in longer._values})
 
+# Each input can have a narrower key type than the result: a set of str and a
+# set of int contribute their keys to a new set of str | int.
+# type _UnionInput[T: Hashable] = Top[_Set[Intersection[T, Unknown]]]
+
 def _union(*args):
-    # type: [T: Hashable = Hashable](*_SetView[T]) -> _Set[T]
+    # type: [T: Hashable = Hashable](*_UnionInput[T]) -> _Set[T]
     """Returns the union of several sets.
 
     Args:
@@ -208,9 +206,7 @@ def _union(*args):
       The set union of all sets in `*args`.
     """
 
-    # update() sees the backing dictionary without its key type; the collection
-    # in _SetView supplies T.
-    values = {}  # type: dict[T, None]
+    values = {}
     for s in args:
         values.update(s._values)
     return struct(_values = values)
