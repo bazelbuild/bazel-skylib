@@ -25,6 +25,8 @@ load(":utils.bzl", "directory_entry", "failure_containing", "failure_test")
 # when Skylib requires Bazel 8.8 or newer.
 def _source_root_test(name):
     # type: (str) -> None
+    # Each key in targets becomes a callback field: a label becomes a Target,
+    # and a list of labels becomes a list of Targets.
     # ty: ignore[non-static-type]
     analysis_test(
         name = name,
@@ -189,6 +191,8 @@ def _directory_as_file_test(name):
 # buildifier: disable=function-docstring
 def directory_test_suite(name):
     # type: (str) -> None
+    # The keys and values in test_kwargs must fit every callback in tests.
+    # A dict[str, object] parameter would accept misspelled callback arguments.
     # ty: ignore[non-static-type]
     test_suite(
         name = name,

@@ -22,10 +22,7 @@ load("@rules_testing//lib:util.bzl", "util")
 # when Skylib requires Bazel 8.8 or newer.
 def failure_containing(message):
     # type: (str) -> Callable[[TestEnv, Target], None]
-    # rules_testing builds a matcher with a string description and a predicate
-    # that tests whether the failure message contains this substring.
-    # type: Matcher
-    matcher = matching.contains(message)  # ty: ignore[non-static-type, unsound-assignment]
+    matcher = matching.contains(message)
 
     def test(env, target):
         # type: (TestEnv, Target) -> None
@@ -55,7 +52,7 @@ def failure_test(*, name, impl, rule, **kwargs):
     # type: (str, Callable[[TestEnv, Target], None], rule, **object) -> None
     subject_name = "_%s_subject" % name
 
-    # rules_testing 0.6.0 leaves its registration helpers untyped.
+    # The rule passed to helper_target determines which keywords it accepts.
     # ty: ignore[non-static-type]
     util.helper_target(
         rule,

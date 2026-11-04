@@ -16,9 +16,9 @@
 
 # TODO(https://github.com/bazelbuild/bazel/issues/32370): Use source annotations
 # when Bazel can describe the methods these tests call on a test environment.
+load("@rules_testing//lib/private:matching.bzl", "Matcher")
 load("//rules/directory:providers.bzl", "DirectoryInfo")
 
-type Matcher = struct[{"desc": str, "match": Callable[[str], bool]}, ...]
 type _Ordered = struct[{"in_order": Callable[[], None]}, ...]
 type CollectionSubject = struct[{
     "contains_exactly": Callable[[Collection[object]], _Ordered],
@@ -29,7 +29,7 @@ type _EntriesSubject = struct[{
 }, ...]
 type _TargetSubject = struct[{
     "actual": Target,
-    "failures": Callable[[], struct[{"contains_exactly_predicates": Callable[[list[Matcher]], _Ordered]}, ...]],
+    "failures": Callable[[], struct[{"contains_exactly_predicates": Callable[[list[Matcher[str]]], _Ordered]}, ...]],
     "runfiles": Callable[[], struct[{"actual": runfiles}, ...]],
 }, ...]
 
