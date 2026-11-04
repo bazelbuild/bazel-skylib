@@ -24,7 +24,17 @@ _a_dict_type = type({})
 _a_tuple_type = type(())
 _a_struct_type = type(struct())
 
+# TODO(https://github.com/bazelbuild/starlark/pull/362): Use native annotations
+# when supported Bazel releases can describe a generic callable and its result.
+# type _PartialFields[F, Kw] = struct[{
+#     "function": F,
+#     "args": tuple[object, ...],
+#     "kwargs": Kw,
+# }, ...]
+# type Partial[R] = _PartialFields[Top[Callable[..., R]], dict[str, object]]
+
 def _call(partial, *args, **kwargs):
+    # type: [R](Partial[R], *object, **object) -> R
     """Calls a partial created using `make`.
 
     Args:
@@ -40,9 +50,13 @@ def _call(partial, *args, **kwargs):
     function_args = partial.args + args
     function_kwargs = dict(partial.kwargs)
     function_kwargs.update(kwargs)
-    return partial.function(*function_args, **function_kwargs)
+
+    # Only the combined arguments must match the function's parameters. A
+    # partial can bind any subset at make() and override keywords at call().
+    return partial.function(*function_args, **function_kwargs)  # ty: ignore[call-top-callable]
 
 def _make(func, *args, **kwargs):
+    # type: [R](Top[Callable[..., R]], *object, **object) -> Partial[R]
     """Creates a partial that can be called using `call`.
 
     A partial can have args assigned to it at the make site, and can have args
@@ -148,6 +162,9 @@ def _make(func, *args, **kwargs):
     return struct(function = func, args = args, kwargs = kwargs)
 
 def _is_instance(v):
+    # type: (object) -> TypeIs[_PartialFields[object, Top[dict[Unknown, Unknown]]]]
+    # TODO(https://github.com/bazelbuild/bazel/issues/32379): Use a native
+    # return annotation once predicates can narrow the caller's argument.
     """Returns True if v is a partial created using `make`.
 
     Args:
