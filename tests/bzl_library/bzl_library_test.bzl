@@ -18,7 +18,12 @@ load("//:bzl_library.bzl", "StarlarkLibraryInfo")
 load("//lib:sets.bzl", "sets")
 load("//lib:unittest.bzl", "analysistest", "asserts")
 
+# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
+# when Skylib requires Bazel 8.8 or newer.
 def _assert_same_files(env, expected_file_targets, actual_files):
+    # type: (
+    #     struct[{"ctx": ctx, "failures": list[str]}], list[Target], list[File] | depset[File]
+    # ) -> None
     """Assertion that a list of expected file targets and an actual list or depset of files contain the same files"""
     expected_files = []
     for target in expected_file_targets:
@@ -29,7 +34,14 @@ def _assert_same_files(env, expected_file_targets, actual_files):
         actual_files = actual_files.to_list()
     asserts.set_equals(env = env, expected = sets.make(expected_files), actual = sets.make(actual_files))
 
-def _bzl_library_test_impl(ctx):
+def _bzl_library_test_impl(
+        # type: ctx[object, struct[{
+        #     "expected_srcs": list[Target],
+        #     "expected_transitive_srcs": list[Target],
+        #     "target_under_test": Target | list[Target],
+        # }, ...]]
+        ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     env = analysistest.begin(ctx)
     target_under_test = analysistest.target_under_test(env)
     _assert_same_files(env, ctx.attr.expected_srcs, target_under_test[StarlarkLibraryInfo].srcs)

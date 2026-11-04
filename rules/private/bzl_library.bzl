@@ -14,12 +14,14 @@
 
 """Skylib module containing a library rule for aggregating rules files."""
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32207): Declare field types
+# directly on the provider when Bazel supports them.
 StarlarkLibraryInfo = provider(
     "Information on contained Starlark rules.",
     fields = {
-        "srcs": "Top level rules files.",
+        "srcs": "Top level rules files.",  # type: list[File]
         "transitive_srcs": "Transitive closure of rules files required for " +
-                           "interpretation of the srcs",
+                           "interpretation of the srcs",  # type: depset[File]
     },
 )
 
