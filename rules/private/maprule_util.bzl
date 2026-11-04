@@ -14,7 +14,10 @@
 
 """Utilities for maprule."""
 
+# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native annotations
+# when all supported Bazel releases accept them.
 def resolve_locations(ctx, strategy, d):
+    # type: (ctx, struct[{"as_path": Callable[[str], str]}, ...], dict[str, str]) -> dict[str, str]
     """Expand the location and locations variables in dictionary values.
 
     Args:
@@ -68,6 +71,7 @@ def resolve_locations(ctx, strategy, d):
     return resolved
 
 def fail_if_errors(errors):
+    # type: (Sequence[str]) -> None
     """Reports errors and fails the rule.
 
     Args:
@@ -78,22 +82,26 @@ def fail_if_errors(errors):
         fail("\n".join(errors[:10]))
 
 def _as_windows_path(s):
+    # type: (str) -> str
     """Returns the input path as a Windows path (replaces all of "/" with "\")."""
     return s.replace("/", "\\")
 
 def _unchanged_path(s):
+    # type: (str) -> str
     """Returns the input string (path) unchanged."""
     return s
 
 def _create_cmd_action(
-        ctx,
-        outputs,
-        command,
-        inputs = None,
-        env = None,
-        progress_message = None,
-        mnemonic = None,
+        ctx,  # type: ctx
+        outputs,  # type: Sequence[File]
+        command,  # type: str
+        inputs = None,  # type: Sequence[File] | depset[File] | None
+        env = None,  # type: Mapping[str, str] | None
+        progress_message = None,  # type: str | None
+        mnemonic = None,  # type: str | None
+        # type: Sequence[object] | None
         manifests_from_tools = None):
+    # type: (...) -> None
     """Create one action using cmd.exe."""
     ctx.actions.run(
         inputs = inputs or [],
@@ -107,14 +115,16 @@ def _create_cmd_action(
     )
 
 def _create_bash_action(
-        ctx,
-        outputs,
-        command,
-        inputs = None,
-        env = None,
-        progress_message = None,
-        mnemonic = None,
+        ctx,  # type: ctx
+        outputs,  # type: Sequence[File]
+        command,  # type: str
+        inputs = None,  # type: Sequence[File] | depset[File] | None
+        env = None,  # type: Mapping[str, str] | None
+        progress_message = None,  # type: str | None
+        mnemonic = None,  # type: str | None
+        # type: Sequence[object] | None
         manifests_from_tools = None):
+    # type: (...) -> None
     """Create one action using Bash."""
     ctx.actions.run_shell(
         inputs = inputs or [],
