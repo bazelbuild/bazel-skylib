@@ -17,31 +17,40 @@
 load("//lib:partial.bzl", "partial")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
+# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
+# when Skylib requires Bazel 8.8 or newer.
 def _make_noargs_nokwargs():
+    # type: () -> int
     """Test utility for no args no kwargs case"""
     return 1
 
 def _make_args_nokwargs(arg1, arg2, arg3):
+    # type: (int, int, int) -> int
     """Test utility for args no kwargs case"""
     return arg1 + arg2 + arg3
 
 def _make_args_kwargs(arg1, arg2, arg3, **kwargs):
+    # type: (int, int, int, **int) -> int
     """Test utility for args and kwargs case"""
     return arg1 + arg2 + arg3 + kwargs["x"] + kwargs["y"]
 
 def _call_noargs_nokwargs(call_arg1):
+    # type: (int) -> int
     """Test utility no args no kwargs case where values passed from call site"""
     return call_arg1
 
 def _call_args_nokwargs(func_arg1, call_arg1):
+    # type: (int, int) -> int
     """Test utility for args no kwargs case where values passed from call site"""
     return func_arg1 + call_arg1
 
 def _call_args_kwargs(func_arg1, call_arg1, func_mult, call_mult):
+    # type: (int, int, int, int) -> int
     """Test utility for args and kwargs case where values passed from call site"""
     return (func_arg1 + call_arg1) * func_mult * call_mult
 
 def _make_call_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for partial.make and partial.call."""
     env = unittest.begin(ctx)
 
@@ -77,6 +86,7 @@ def _make_call_test(ctx):
 make_call_test = unittest.make(_make_call_test)
 
 def _is_instance_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit test for partial.is_instance."""
     env = unittest.begin(ctx)
 
@@ -94,6 +104,7 @@ def _is_instance_test(ctx):
 is_instance_test = unittest.make(_is_instance_test)
 
 def partial_test_suite():
+    # type: () -> None
     """Creates the test targets and test suite for partial.bzl tests."""
     unittest.suite(
         "partial_tests",

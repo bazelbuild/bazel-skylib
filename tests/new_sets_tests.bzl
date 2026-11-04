@@ -17,7 +17,10 @@
 load("//lib:new_sets.bzl", "sets")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
+# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
+# when Skylib requires Bazel 8.8 or newer.
 def _is_equal_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for sets.is_equal."""
 
     # Note that if this test fails, the results for the other `sets` tests will
@@ -41,6 +44,7 @@ def _is_equal_test(ctx):
 is_equal_test = unittest.make(_is_equal_test)
 
 def _is_subset_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for sets.is_subset."""
     env = unittest.begin(ctx)
 
@@ -59,6 +63,7 @@ def _is_subset_test(ctx):
 is_subset_test = unittest.make(_is_subset_test)
 
 def _disjoint_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for sets.disjoint."""
     env = unittest.begin(ctx)
 
@@ -77,6 +82,7 @@ def _disjoint_test(ctx):
 disjoint_test = unittest.make(_disjoint_test)
 
 def _intersection_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for sets.intersection."""
     env = unittest.begin(ctx)
 
@@ -95,6 +101,7 @@ def _intersection_test(ctx):
 intersection_test = unittest.make(_intersection_test)
 
 def _union_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for sets.union."""
     env = unittest.begin(ctx)
 
@@ -119,6 +126,7 @@ def _union_test(ctx):
 union_test = unittest.make(_union_test)
 
 def _difference_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for sets.difference."""
     env = unittest.begin(ctx)
 
@@ -137,6 +145,7 @@ def _difference_test(ctx):
 difference_test = unittest.make(_difference_test)
 
 def _to_list_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for sets.to_list."""
     env = unittest.begin(ctx)
 
@@ -149,6 +158,7 @@ def _to_list_test(ctx):
 to_list_test = unittest.make(_to_list_test)
 
 def _make_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for sets.make."""
     env = unittest.begin(ctx)
 
@@ -160,6 +170,7 @@ def _make_test(ctx):
 make_test = unittest.make(_make_test)
 
 def _copy_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for sets.copy."""
     env = unittest.begin(ctx)
 
@@ -177,6 +188,7 @@ def _copy_test(ctx):
 copy_test = unittest.make(_copy_test)
 
 def _insert_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for sets.insert."""
     env = unittest.begin(ctx)
 
@@ -197,6 +209,7 @@ def _insert_test(ctx):
 insert_test = unittest.make(_insert_test)
 
 def _contains_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for sets.contains."""
     env = unittest.begin(ctx)
 
@@ -210,6 +223,7 @@ def _contains_test(ctx):
 contains_test = unittest.make(_contains_test)
 
 def _length_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit test for sets.length."""
     env = unittest.begin(ctx)
 
@@ -222,6 +236,7 @@ def _length_test(ctx):
 length_test = unittest.make(_length_test)
 
 def _remove_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit test for sets.remove."""
     env = unittest.begin(ctx)
 
@@ -237,6 +252,7 @@ def _remove_test(ctx):
 remove_test = unittest.make(_remove_test)
 
 def _repr_str_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit test for sets.repr and sets.str."""
     env = unittest.begin(ctx)
 
@@ -253,6 +269,7 @@ def _repr_str_test(ctx):
 repr_str_test = unittest.make(_repr_str_test)
 
 def new_sets_test_suite():
+    # type: () -> None
     """Creates the test targets and test suite for new_sets.bzl tests."""
     unittest.suite(
         "new_sets_tests",

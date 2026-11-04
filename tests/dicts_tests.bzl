@@ -17,7 +17,10 @@
 load("//lib:dicts.bzl", "dicts")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
+# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
+# when Skylib requires Bazel 8.8 or newer.
 def _add_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for dicts.add."""
     env = unittest.begin(ctx)
 
@@ -84,6 +87,7 @@ def _add_test(ctx):
 add_test = unittest.make(_add_test)
 
 def _omit_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for dicts.omit."""
     env = unittest.begin(ctx)
 
@@ -117,6 +121,7 @@ def _omit_test(ctx):
 omit_test = unittest.make(_omit_test)
 
 def _pick_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for dicts.pick."""
     env = unittest.begin(ctx)
 
@@ -150,6 +155,7 @@ def _pick_test(ctx):
 pick_test = unittest.make(_pick_test)
 
 def dicts_test_suite():
+    # type: () -> None
     """Creates the test targets and test suite for dicts.bzl tests."""
     unittest.suite(
         "dicts_tests",

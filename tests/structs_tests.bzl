@@ -17,7 +17,10 @@
 load("//lib:structs.bzl", "structs")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
+# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
+# when Skylib requires Bazel 8.8 or newer.
 def _add_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for dicts.add."""
     env = unittest.begin(ctx)
 
@@ -47,6 +50,7 @@ def _add_test(ctx):
 add_test = unittest.make(_add_test)
 
 def structs_test_suite():
+    # type: () -> None
     """Creates the test targets and test suite for structs.bzl tests."""
     unittest.suite(
         "structs_tests",

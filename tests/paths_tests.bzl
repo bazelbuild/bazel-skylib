@@ -17,7 +17,10 @@
 load("//lib:paths.bzl", "paths")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
+# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
+# when Skylib requires Bazel 8.8 or newer.
 def _basename_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for paths.basename."""
     env = unittest.begin(ctx)
 
@@ -42,6 +45,7 @@ def _basename_test(ctx):
 basename_test = unittest.make(_basename_test)
 
 def _dirname_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for paths.dirname."""
     env = unittest.begin(ctx)
 
@@ -67,6 +71,7 @@ def _dirname_test(ctx):
 dirname_test = unittest.make(_dirname_test)
 
 def _is_absolute_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for paths.is_absolute."""
     env = unittest.begin(ctx)
 
@@ -95,6 +100,7 @@ def _is_absolute_test(ctx):
 is_absolute_test = unittest.make(_is_absolute_test)
 
 def _join_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for paths.join."""
     env = unittest.begin(ctx)
 
@@ -139,6 +145,7 @@ def _join_test(ctx):
 join_test = unittest.make(_join_test)
 
 def _normalize_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for paths.normalize."""
     env = unittest.begin(ctx)
 
@@ -181,6 +188,7 @@ def _normalize_test(ctx):
 normalize_test = unittest.make(_normalize_test)
 
 def _is_normalized_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for paths.is_normalized."""
     env = unittest.begin(ctx)
 
@@ -230,6 +238,7 @@ def _is_normalized_test(ctx):
 is_normalized_test = unittest.make(_is_normalized_test)
 
 def _relativize_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for paths.relativize."""
     env = unittest.begin(ctx)
 
@@ -256,6 +265,7 @@ def _relativize_test(ctx):
 relativize_test = unittest.make(_relativize_test)
 
 def _replace_extension_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for paths.replace_extension."""
     env = unittest.begin(ctx)
 
@@ -287,6 +297,7 @@ def _replace_extension_test(ctx):
 replace_extension_test = unittest.make(_replace_extension_test)
 
 def _split_extension_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for paths.split_extension."""
     env = unittest.begin(ctx)
 
@@ -326,6 +337,7 @@ def _split_extension_test(ctx):
 split_extension_test = unittest.make(_split_extension_test)
 
 def _starts_with_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for paths.starts_with."""
     env = unittest.begin(ctx)
 
@@ -351,6 +363,7 @@ def _starts_with_test(ctx):
 starts_with_test = unittest.make(_starts_with_test)
 
 def paths_test_suite():
+    # type: () -> None
     """Creates the test targets and test suite for paths.bzl tests."""
     unittest.suite(
         "paths_tests",

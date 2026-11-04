@@ -17,7 +17,10 @@
 load("//lib:subpackages.bzl", "subpackages")
 load("//lib:unittest.bzl", "loadingtest")
 
+# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
+# when Skylib requires Bazel 8.8 or newer.
 def _all_test(env):
+    # type: (struct[{"name": str}]) -> None
     """Unit tests for subpackages.all."""
 
     all_pkgs = [
@@ -79,11 +82,13 @@ def _all_test(env):
     )
 
 def _exists_test(env):
+    # type: (struct[{"name": str}]) -> None
     """Unit tests for subpackages.exists."""
     loadingtest.equals(env, "exists_yes", True, subpackages.exists("copy_file"))
     loadingtest.equals(env, "exists_no", False, subpackages.exists("never_existed"))
 
 def subpackages_test_suite():
+    # type: () -> None
     """Creates the test targets and test suite for subpackages.bzl tests."""
 
     if subpackages.supported():

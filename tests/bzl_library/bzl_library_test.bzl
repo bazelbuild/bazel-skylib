@@ -34,13 +34,7 @@ def _assert_same_files(env, expected_file_targets, actual_files):
         actual_files = actual_files.to_list()
     asserts.set_equals(env = env, expected = sets.make(expected_files), actual = sets.make(actual_files))
 
-def _bzl_library_test_impl(
-        # type: ctx[object, struct[{
-        #     "expected_srcs": list[Target],
-        #     "expected_transitive_srcs": list[Target],
-        #     "target_under_test": Target | list[Target],
-        # }, ...]]
-        ctx):
+def _bzl_library_test_impl(ctx):
     # type: (...) -> list[AnalysisTestResultInfo]
     env = analysistest.begin(ctx)
     target_under_test = analysistest.target_under_test(env)

@@ -17,7 +17,10 @@
 load("//lib:unittest.bzl", "analysistest", "asserts")
 load("//rules:common_settings.bzl", "BuildSettingInfo", "bool_flag", "bool_setting", "int_flag", "int_setting", "repeatable_string_flag", "string_flag", "string_list_flag", "string_list_setting", "string_setting")
 
+# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
+# when Skylib requires Bazel 8.8 or newer.
 def _template_variable_info_contents_test_impl(ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     env = analysistest.begin(ctx)
 
     target_under_test = analysistest.target_under_test(env)
@@ -42,6 +45,7 @@ _template_variable_info_contents_test = analysistest.make(
 )
 
 def _test_template_variable_info_contents():
+    # type: () -> None
     int_flag(
         name = "my_int_flag",
         build_setting_default = 42,
@@ -115,6 +119,7 @@ def _test_template_variable_info_contents():
     )
 
 def _failure_test_impl(ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     env = analysistest.begin(ctx)
 
     asserts.expect_failure(env, ctx.attr.expected_failure)
@@ -130,6 +135,7 @@ _failure_test = analysistest.make(
 )
 
 def _test_make_variable_name_failures():
+    # type: () -> None
     int_flag(
         name = "my_failing_int_flag",
         build_setting_default = 42,
@@ -156,8 +162,6 @@ def _test_make_variable_name_failures():
         expected_failure = "Error setting //tests:my_failing_string_flag: invalid make variable name 'MY STRING'. Make variable names may only contain uppercase letters, digits, and underscores.",
     )
 
-# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use a native signature
-# when Skylib drops Bazel 7 support.
 def _simple_setting_test(name, value):
     # type: (str, object) -> str
     test_name = name + "_test"
@@ -169,6 +173,7 @@ def _simple_setting_test(name, value):
     return test_name
 
 def _test_simple_settings():
+    # type: () -> list[str]
     tests = []
     for setting, name, value in [
         (bool_flag, "my_bool_flag", True),
@@ -177,9 +182,10 @@ def _test_simple_settings():
         setting(name = name, build_setting_default = value)
         tests.append(_simple_setting_test(name, value))
 
+    empty_strings = []  # type: list[str]
     for setting, name, value in [
         (string_list_flag, "my_string_list_flag", ["one", "two"]),
-        (string_list_setting, "my_string_list_setting", []),
+        (string_list_setting, "my_string_list_setting", empty_strings),
         (repeatable_string_flag, "my_repeatable_string_flag", ["one", "two"]),
     ]:
         setting(name = name, build_setting_default = value)
@@ -187,6 +193,7 @@ def _test_simple_settings():
     return tests
 
 def common_settings_test_suite(name = "common_settings_test_suite"):
+    # type: (str) -> None
     _test_template_variable_info_contents()
     _test_make_variable_name_failures()
 
