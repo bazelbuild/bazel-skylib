@@ -30,7 +30,6 @@ def bazel_skylib_gazelle_plugin_setup(go_version = "1.20.5", register_go_toolcha
     go_rules_dependencies()
 
     if register_go_toolchains:
-        # rules_go leaves version untyped, so sty cannot check the string argument.
-        go_register_toolchains(version = go_version)  # ty: ignore[non-static-type]
+        go_register_toolchains(version = go_version)
 
     gazelle_dependencies()
