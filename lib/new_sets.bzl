@@ -26,10 +26,10 @@
 # TODO(https://github.com/bazelbuild/bazel/issues/32381): Use native annotations
 # when Bazel can express hashability bounds on generic aliases and functions.
 # sets.make() and sets.union() also need a default element type for empty calls.
-# type _Set[T: Hashable] = struct[{"_values": dict[T, None]}, ...]
+# type Set[T: Hashable] = struct[{"_values": dict[T, None]}, ...]
 
 def _make(elements = None):
-    # type: [T: Hashable = Hashable](Collection[T] | None) -> _Set[T]
+    # type: [T: Hashable = Hashable](Collection[T] | None) -> Set[T]
     """Creates a new set.
 
     All elements must be hashable.
@@ -46,7 +46,7 @@ def _make(elements = None):
     return struct(_values = {e: None for e in elements or ()})
 
 def _copy(s):
-    # type: [T: Hashable](_Set[T]) -> _Set[T]
+    # type: [T: Hashable](Set[T]) -> Set[T]
     """Creates a new set from another set.
 
     Args:
@@ -58,7 +58,7 @@ def _copy(s):
     return struct(_values = dict(s._values))
 
 def _to_list(s):
-    # type: [T: Hashable](_Set[T]) -> list[T]
+    # type: [T: Hashable](Set[T]) -> list[T]
     """Creates a list from the values in the set.
 
     Args:
@@ -70,7 +70,7 @@ def _to_list(s):
     return s._values.keys()
 
 def _insert(s, e):
-    # type: [T: Hashable](_Set[T], T) -> _Set[T]
+    # type: [T: Hashable](Set[T], T) -> Set[T]
     """Inserts an element into the set.
 
     Element must be hashable.  This mutates the original set.
@@ -86,7 +86,7 @@ def _insert(s, e):
     return s
 
 def _remove(s, e):
-    # type: [T: Hashable](_Set[T], T) -> _Set[T]
+    # type: [T: Hashable](Set[T], T) -> Set[T]
     """Removes an element from the set.
 
     Element must be hashable.  This mutates the original set.
@@ -102,7 +102,7 @@ def _remove(s, e):
     return s
 
 def _contains(a, e):
-    # type: [T: Hashable](_Set[T], Hashable) -> bool
+    # type: [T: Hashable](Set[T], Hashable) -> bool
     """Checks for the existence of an element in a set.
 
     Args:
@@ -115,7 +115,7 @@ def _contains(a, e):
     return e in a._values
 
 def _get_shorter_and_longer(a, b):
-    # type: [A: Hashable, B: Hashable](_Set[A], _Set[B]) -> tuple[_Set[A], _Set[B]] | tuple[_Set[B], _Set[A]]
+    # type: [A: Hashable, B: Hashable](Set[A], Set[B]) -> tuple[Set[A], Set[B]] | tuple[Set[B], Set[A]]
     """Returns two sets in the order of shortest and longest.
 
     Args:
@@ -130,7 +130,7 @@ def _get_shorter_and_longer(a, b):
     return b, a
 
 def _is_equal(a, b):
-    # type: [A: Hashable, B: Hashable](_Set[A], _Set[B]) -> bool
+    # type: [A: Hashable, B: Hashable](Set[A], Set[B]) -> bool
     """Returns whether two sets are equal.
 
     Args:
@@ -143,7 +143,7 @@ def _is_equal(a, b):
     return a._values == b._values
 
 def _is_subset(a, b):
-    # type: [A: Hashable, B: Hashable](_Set[A], _Set[B]) -> bool
+    # type: [A: Hashable, B: Hashable](Set[A], Set[B]) -> bool
     """Returns whether `a` is a subset of `b`.
 
     Args:
@@ -159,7 +159,7 @@ def _is_subset(a, b):
     return True
 
 def _disjoint(a, b):
-    # type: [A: Hashable, B: Hashable](_Set[A], _Set[B]) -> bool
+    # type: [A: Hashable, B: Hashable](Set[A], Set[B]) -> bool
     """Returns whether two sets are disjoint.
 
     Two sets are disjoint if they have no elements in common.
@@ -178,7 +178,7 @@ def _disjoint(a, b):
     return True
 
 def _intersection(a, b):
-    # type: [A: Hashable, B: Hashable](_Set[A], _Set[B]) -> _Set[A | B]
+    # type: [A: Hashable, B: Hashable](Set[A], Set[B]) -> Set[A | B]
     """Returns the intersection of two sets.
 
     Args:
@@ -193,10 +193,10 @@ def _intersection(a, b):
 
 # Each input can have a narrower key type than the result: a set of str and a
 # set of int contribute their keys to a new set of str | int.
-# type _UnionInput[T: Hashable] = Top[_Set[Intersection[T, Unknown]]]
+# type _UnionInput[T: Hashable] = Top[Set[Intersection[T, Unknown]]]
 
 def _union(*args):
-    # type: [T: Hashable = Hashable](*_UnionInput[T]) -> _Set[T]
+    # type: [T: Hashable = Hashable](*_UnionInput[T]) -> Set[T]
     """Returns the union of several sets.
 
     Args:
@@ -212,7 +212,7 @@ def _union(*args):
     return struct(_values = values)
 
 def _difference(a, b):
-    # type: [A: Hashable, B: Hashable](_Set[A], _Set[B]) -> _Set[A]
+    # type: [A: Hashable, B: Hashable](Set[A], Set[B]) -> Set[A]
     """Returns the elements in `a` that are not in `b`.
 
     Args:
@@ -225,7 +225,7 @@ def _difference(a, b):
     return struct(_values = {e: None for e in a._values.keys() if e not in b._values})
 
 def _length(s):
-    # type: [T: Hashable](_Set[T]) -> int
+    # type: [T: Hashable](Set[T]) -> int
     """Returns the number of elements in a set.
 
     Args:
@@ -237,7 +237,7 @@ def _length(s):
     return len(s._values)
 
 def _repr(s):
-    # type: [T: Hashable](_Set[T]) -> str
+    # type: [T: Hashable](Set[T]) -> str
     """Returns a string value representing the set.
 
     Args:
