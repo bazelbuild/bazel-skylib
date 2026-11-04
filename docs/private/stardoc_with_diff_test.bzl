@@ -28,10 +28,14 @@ load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
 
+# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native annotations
+# for these macros when all supported Bazel releases accept them.
 def stardoc_with_diff_test(
-        name,
-        bzl_library_target,
+        name,  # type: str
+        bzl_library_target,  # type: str
+        # type: str
         out_label):
+    # type: (...) -> None
     """Creates a stardoc target coupled with a `diff_test` for a given `bzl_library`.
 
     This is helpful for minimizing boilerplate in repos with lots of stardoc targets.
@@ -63,8 +67,10 @@ def stardoc_with_diff_test(
     )
 
 def update_docs(
-        name = "update",
+        name = "update",  # type: str
+        # type: str
         docs_folder = "docs"):
+    # type: (...) -> None
     """Creates a `sh_binary` target which copies over generated doc files to the local source tree.
 
     This is to be used in tandem with `stardoc_with_diff_test()` to produce a convenient workflow
@@ -91,12 +97,7 @@ def update_docs(
     data = []
     for r in native.existing_rules().values():
         if r["kind"] == "stardoc_markdown_renderer":
-            # Bazel reflects the renderer's attr.output as a label string;
-            # existing_rules() exposes it to sty as object.
-            # TODO(https://github.com/bazelbuild/bazel/pull/30373): Use a native
-            # annotation when all supported Bazel versions parse it.
-            # type: str
-            doc_gen = r["out"]  # ty: ignore[invalid-assignment]
+            doc_gen = r["out"]
             if doc_gen.startswith(":"):
                 doc_gen = doc_gen[1:]
             doc_dest = doc_gen.replace("-docgen.md", ".md")
