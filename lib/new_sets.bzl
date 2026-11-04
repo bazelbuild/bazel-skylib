@@ -25,17 +25,18 @@
 
 # TODO(https://github.com/bazelbuild/bazel/issues/32381): Use native annotations
 # when Bazel can express hashability bounds on generic aliases and functions.
-# sets.make() and sets.union() also need a default element type for empty calls.
-# type Set[T: Hashable] = struct[{"_values": dict[T, None]}, ...]
+# type Set[T: Hashable] = struct[{"_values": dict[T, None]}]
 
-def _make(elements = None):
-    # type: [T: Hashable = Hashable](Collection[T] | None) -> Set[T]
+# An empty set has no elements from which to infer T. Give it an expected
+# element type at construction to allow later insertions.
+def _make(elements = ()):
+    # type: [T: Hashable = Never](Collection[T] | None) -> Set[T]
     """Creates a new set.
 
     All elements must be hashable.
 
     Args:
-      elements: Optional sequence to construct the set out of.
+      elements: Elements to insert. Passing None creates an empty set.
 
     Returns:
       A set containing the passed in values.
@@ -196,7 +197,7 @@ def _intersection(a, b):
 # type _UnionInput[T: Hashable] = Top[Set[Intersection[T, Unknown]]]
 
 def _union(*args):
-    # type: [T: Hashable = Hashable](*_UnionInput[T]) -> Set[T]
+    # type: [T: Hashable = Never](*_UnionInput[T]) -> Set[T]
     """Returns the union of several sets.
 
     Args:

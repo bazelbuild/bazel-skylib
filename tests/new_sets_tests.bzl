@@ -115,7 +115,15 @@ def _union_test(ctx):
 
     strings = sets.make(["one"])
     ints = sets.make([1])
-    asserts.new_set_equals(env, sets.make(["one", 1]), sets.union(strings, ints))
+    mixed = sets.union(strings, ints)
+    values = sets.to_list(mixed)  # type: list[int | str]
+    asserts.new_set_equals(env, sets.make([1, "one"]), sets.make(values))
+
+    # Both sets contain just 1, even though mixed can also hold strings.
+    sets.remove(mixed, "one")
+    asserts.true(env, sets.is_equal(mixed, ints))
+    asserts.true(env, sets.is_subset(mixed, ints))
+    asserts.false(env, sets.disjoint(mixed, ints))
 
     # If passing a list, verify that duplicate elements are ignored.
     asserts.new_set_equals(env, sets.make([1, 2]), sets.union(sets.make([1, 1]), sets.make([1, 2])))
@@ -162,6 +170,7 @@ def _make_test(ctx):
     env = unittest.begin(ctx)
 
     asserts.equals(env, {}, sets.make()._values)
+    asserts.equals(env, {}, sets.make(None)._values)
     asserts.equals(env, {x: None for x in [1, 2, 3]}, sets.make([1, 1, 2, 2, 3, 3])._values)
 
     return unittest.end(env)
