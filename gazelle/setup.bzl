@@ -17,7 +17,10 @@
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 
+# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native annotations
+# when all supported Bazel releases accept them.
 def bazel_skylib_gazelle_plugin_setup(go_version = "1.20.5", register_go_toolchains = True):
+    # type: (str, bool) -> None
     """Set up the dependencies needed by the Gazelle plugin.
 
     Args:
@@ -27,6 +30,7 @@ def bazel_skylib_gazelle_plugin_setup(go_version = "1.20.5", register_go_toolcha
     go_rules_dependencies()
 
     if register_go_toolchains:
-        go_register_toolchains(version = go_version)
+        # rules_go leaves version untyped, so sty cannot check the string argument.
+        go_register_toolchains(version = go_version)  # ty: ignore[non-static-type]
 
     gazelle_dependencies()
