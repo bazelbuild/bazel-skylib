@@ -139,6 +139,11 @@ def _pick_test(ctx):
     # Test key not in dict.
     asserts.equals(env, {}, dicts.pick({"a": 1}, ["b"]))
 
+    # Preserve the requested key, even when it equals a dictionary key of a different type.
+    picked = dicts.pick({1: "one"}, [1.0, 2.0])
+    asserts.equals(env, ["float"], [type(key) for key in picked])
+    asserts.equals(env, ["one"], picked.values())
+
     # Since dictionaries are passed around by reference, make sure that the
     # result of dicts.pick is always a *copy* by modifying it afterwards and
     # ensuring that the original argument doesn't also reflect the change. We do
