@@ -2,7 +2,7 @@
 
 # TODO(https://github.com/bazelbuild/bazel/issues/32207): Declare the provider value
 # type on its fields when native Bazel annotations support generic providers.
-def BuildSettingInfo[T = object](*, value: T) -> record[{"value": T}]: ...
+def BuildSettingInfo[T](*, value: T) -> record[{"value": T}]: ...
 
 # TODO(https://github.com/bazelbuild/bazel/issues/32370): Express this context
 # in source when Bazel can type ctx.attr and ctx.build_setting_value independently.
