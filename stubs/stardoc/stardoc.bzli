@@ -1,0 +1,65 @@
+# Copyright 2018 The Bazel Authors. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""The public documentation macro in Stardoc 0.8.0."""
+
+# TODO: Drop this package when the selected Stardoc release ships types for stardoc().
+type _Label = str | Label
+type _List[T] = Collection[T] | depset[T]
+type _Selectable[T] = T | select[T]
+type _Labels = _List[_Label]
+
+# Stardoc forwards these keywords to the extractor, renderer, or copy_file.
+# All three accept them; only the extractor, for example, accepts data.
+# Stardoc iterates tags before forwarding them.
+type _Attrs = dict[{
+    "applicable_licenses": NotRequired[_Labels | None],
+    "aspect_hints": NotRequired[_Selectable[_Labels] | None],
+    "compatible_with": NotRequired[_Labels | None],
+    "deprecation": NotRequired[str | None],
+    "exec_compatible_with": NotRequired[_Labels | None],
+    "exec_properties": NotRequired[_Selectable[dict[str, str]] | None],
+    "features": NotRequired[_Selectable[_List[str]] | None],
+    "package_metadata": NotRequired[_Labels | None],
+    "restricted_to": NotRequired[_Labels | None],
+    "tags": NotRequired[Collection[str]],
+    "target_compatible_with": NotRequired[_Selectable[_Labels] | None],
+    "testonly": NotRequired[bool | Literal[0, 1] | None],
+    "transitive_configs": NotRequired[_Labels | None],
+    "visibility": NotRequired[_Labels | None],
+}]
+
+def stardoc(
+    *,
+    name: str,
+    input: _Selectable[_Label],
+    out: _Label,
+    deps: _Selectable[_Labels] | None = ...,
+    format: Literal["markdown", "proto"] = ...,
+    symbol_names: _Selectable[_List[str]] | None = ...,
+    renderer: _Selectable[_Label] = ...,
+    aspect_template: _Selectable[_Label] = ...,
+    func_template: _Selectable[_Label] = ...,
+    macro_template: _Selectable[_Label] = ...,
+    header_template: _Selectable[_Label] = ...,
+    table_of_contents_template: _Selectable[_Label] | None = ...,
+    provider_template: _Selectable[_Label] = ...,
+    rule_template: _Selectable[_Label] = ...,
+    repository_rule_template: _Selectable[_Label] = ...,
+    module_extension_template: _Selectable[_Label] = ...,
+    footer_template: _Selectable[_Label] | None = ...,
+    render_main_repo_name: _Selectable[bool | Literal[0, 1]] | None = ...,
+    stamp: _Selectable[int] | None = ...,
+    **kwargs: Unpack[_Attrs],
+) -> None: ...

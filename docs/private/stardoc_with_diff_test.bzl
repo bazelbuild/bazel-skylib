@@ -47,8 +47,6 @@ def stardoc_with_diff_test(
     """
     out_file = out_label.replace("//", "").replace(":", "/")
 
-    # Stardoc's macro leaves its parameters untyped.
-    # ty: ignore[non-static-type]
     stardoc(
         name = name,
         out = out_file.replace(".md", "-docgen.md"),
