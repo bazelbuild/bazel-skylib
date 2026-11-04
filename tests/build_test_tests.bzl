@@ -33,8 +33,6 @@ def build_test_test_suite():
         cmd = "echo 'int dummy() { return 0; }' > $@",
     )
 
-    # cc_library forwards the arguments to an untyped macro in rules_cc.
-    # ty: ignore[non-static-type]
     cc_library(
         name = "build_test__build_target",
         srcs = [":build_test__make_src"],

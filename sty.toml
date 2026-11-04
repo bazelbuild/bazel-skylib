@@ -10,5 +10,8 @@ require-valid-suppressions = true
 [[stub-packages]]
 manifest = "@bazel_tools_stubs//:stubs.toml"
 
+[[stub-packages]]
+manifest = "stubs/rules_cc/stubs.toml"
+
 [rules]
 strict = "error"
