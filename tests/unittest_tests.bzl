@@ -134,9 +134,8 @@ def _failure_testing_test(ctx):
 
     return analysistest.end(env)
 
-def _failure_testing_fake_rule(ctx):
+def _failure_testing_fake_rule(_ctx):
     # type: (...) -> Never
-    _ignore = [ctx]  # @unused
     fail("This rule should never work")
 
 failure_testing_fake_rule = rule(
@@ -160,9 +159,8 @@ def _fail_unexpected_passing_test(ctx):
 
     return analysistest.end(env)
 
-def _fail_unexpected_passing_fake_rule(ctx):
+def _fail_unexpected_passing_fake_rule(_ctx):
     # type: (...) -> list[Never]
-    _ignore = [ctx]  # @unused
     return []
 
 fail_unexpected_passing_fake_rule = rule(
@@ -246,9 +244,8 @@ _AddedByAspectInfo = provider(
     },
 )
 
-def _example_aspect_impl(target, ctx):
+def _example_aspect_impl(_target, _ctx):
     # type: (...) -> list[_AddedByAspectInfo]
-    _ignore = [target, ctx]  # @unused
     return [
         _AddedByAspectInfo(value = "attached by aspect"),
     ]
