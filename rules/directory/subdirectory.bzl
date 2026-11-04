@@ -18,7 +18,7 @@ load(":providers.bzl", "DirectoryInfo")
 
 # TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _subdirectory_impl(ctx):
-    # type: (ctx[object, struct[{'parent': Target, 'path': str}, ...]]) -> list[DirectoryInfo | DefaultInfo]
+    # type: (...) -> list[DirectoryInfo | DefaultInfo]
     dir = ctx.attr.parent[DirectoryInfo].get_subdirectory(ctx.attr.path)
     return [
         dir,

@@ -52,7 +52,6 @@ def _is_valid_make_variable_char(c):
 # TODO(https://github.com/bazelbuild/bazel/issues/32207): Annotate the callbacks
 # natively when Bazel can describe their build-setting and provider value types.
 # type _VariableAttrs = struct[{"make_variable": str}, ...]
-# type _StringAttrs = struct[{"make_variable": str, "values": list[str]}, ...]
 
 def _get_template_variable_info(ctx):
     # type: (_SettingContext[object, _VariableAttrs]) -> list[TemplateVariableInfo]
@@ -160,7 +159,7 @@ def _no_at_str(label):
     return s
 
 def _string_impl(ctx):
-    # type: (_SettingContext[str, _StringAttrs]) -> list[BuildSettingInfo[str] | TemplateVariableInfo]
+    # type: (...) -> list[BuildSettingInfo[str] | TemplateVariableInfo]
     allowed_values = ctx.attr.values
     value = ctx.build_setting_value
     if len(allowed_values) == 0 or value in ctx.attr.values:
