@@ -12,23 +12,3 @@ manifest = "@bazel_tools_stubs//:stubs.toml"
 
 [rules]
 strict = "error"
-
-# These helpers and test suites still have untyped declarations. Check their
-# arguments and return values wherever a caller or a dependency supplies types.
-[[overrides]]
-include = [
-    "docs/private/stardoc_with_diff_test.bzl",
-    "gazelle/setup.bzl",
-    "lib/dicts.bzl",
-    "lib/partial.bzl",
-    "lib/unittest.bzl",
-    "rules/private/maprule_util.bzl",
-    "tests/*_tests.bzl",
-    "tests/bzl_library/bzl_library_test.bzl",
-    "tests/directory/*_test.bzl",
-    "tests/directory/utils.bzl",
-]
-[overrides.rules]
-missing-parameter-annotation = "warn"
-missing-return-annotation = "warn"
-non-static-type = "warn"
