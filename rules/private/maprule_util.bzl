@@ -90,6 +90,8 @@ def _unchanged_path(s):
     """Returns the input string (path) unchanged."""
     return s
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32021): Annotate the inputs
+# of both action helpers natively when Bazel can express depset[File].
 def _create_cmd_action(
         ctx,  # type: ctx
         outputs,  # type: Sequence[File]

@@ -16,7 +16,6 @@
 
 # TODO(https://github.com/bazelbuild/starlark/pull/362): Annotate after_each
 # and before_each natively when every supported Bazel accepts generic functions.
-
 def _after_each(separator, iterable):
     # type: [S, T](S, Collection[T]) -> list[S | T]
     """Inserts `separator` after each item in `iterable`.

@@ -104,6 +104,8 @@ def directory_single_glob(directory, glob):
 
     return list(candidate_files)
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32021): Use a native return
+# annotation when Bazel can express depset[File].
 def glob(
         directory,  # type: _DirectoryContent
         include,  # type: Sequence[str]

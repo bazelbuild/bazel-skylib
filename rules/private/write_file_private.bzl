@@ -21,6 +21,8 @@ These rules write a UTF-8 encoded text file, using Bazel's FileWriteAction.
 # TODO(https://github.com/bazelbuild/bazel/issues/32021): Express the content depset
 # element type in a native annotation when Bazel supports typed depsets.
 # type _Content = Collection[str] | depset[str] | select[Collection[str] | depset[str] | None] | None
+# TODO(https://github.com/bazelbuild/bazel/issues/32104): Annotate newline
+# natively when Bazel can restrict strings to its supported line endings.
 # type _Newline = Literal["auto", "unix", "windows", ""] | select[Literal["auto", "unix", "windows"]] | None
 
 def _common_impl(ctx, is_executable):
