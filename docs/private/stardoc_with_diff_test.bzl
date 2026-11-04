@@ -95,15 +95,16 @@ def update_docs(
         docs_folder: the name of the folder containing the doc files in the local source tree
     """
     content = ["#!/usr/bin/env bash", "cd ${BUILD_WORKSPACE_DIRECTORY}"]
-    data = []  # type: list[str]
+    data = []
     for r in native.existing_rules().values():
         if r["kind"] == "stardoc_markdown_renderer":
-            # A standalone .bzl has no package from which to resolve this rule.
-            # The calling BUILD file supplies the renderer's output type.
-            doc_gen = r["out"].removeprefix(":")  # ty: ignore[non-static-type]
-            doc_dest = doc_gen.replace("-docgen.md", ".md")  # ty: ignore[non-static-type]
-            data.append(doc_gen)  # ty: ignore[non-static-type]
-            content.append("cp -fv bazel-bin/{0}/{1} {2}".format(docs_folder, doc_gen, doc_dest))  # ty: ignore[non-static-type]
+            # The calling package supplies the renderer's output label. Bazel
+            # reflects it as a string; a standalone .bzl has no package.
+            # type: str
+            doc_gen = r["out"].removeprefix(":")  # ty: ignore[non-static-type, unsound-assignment]
+            doc_dest = doc_gen.replace("-docgen.md", ".md")
+            data.append(doc_gen)
+            content.append("cp -fv bazel-bin/{0}/{1} {2}".format(docs_folder, doc_gen, doc_dest))
 
     update_script = name + ".sh"
     write_file(
