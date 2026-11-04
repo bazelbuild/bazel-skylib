@@ -19,23 +19,29 @@ load("@bazel_skylib//rules/directory:providers.bzl", "DirectoryInfo", "create_di
 
 # buildifier: disable=bzl-visibility
 load("@bazel_skylib//rules/directory/private:glob.bzl", "directory_glob_chunk", "transitive_entries")
-load("@rules_testing//lib:analysis_test.bzl", "analysis_test", "test_suite")
-load("@rules_testing//lib:truth.bzl", "matching")
-load(":utils.bzl", "failure_matching", "failure_test")
 
+# rules_testing 0.6.0 leaves both test registration signatures untyped.
+load("@rules_testing//lib:analysis_test.bzl", "analysis_test", "test_suite")
+load(":utils.bzl", "directory_entry", "failure_containing", "failure_test")
+
+# TODO(https://github.com/bazelbuild/bazel/pull/30373): Use native signatures
+# when Skylib requires Bazel 8.8 or newer.
 def _expect_glob_chunk(env, directory, chunk):
+    # type: (TestEnv, DirectoryInfo, str) -> CollectionSubject
     return env.expect.that_collection(
         directory_glob_chunk(directory, chunk),
         expr = "directory_glob_chunk({}, {})".format(directory.human_readable, repr(chunk)),
     )
 
 def _expect_glob(env, directory, include, allow_empty = False):
+    # type: (TestEnv, DirectoryInfo, Sequence[str], bool) -> CollectionSubject
     return env.expect.that_collection(
         directory.glob(include, allow_empty = allow_empty),
         expr = "directory_glob({}, {}, allow_empty={})".format(directory.human_readable, include, allow_empty),
     )
 
 def _glob_test(name):
+    # type: (str) -> None
     simple_name = "_simple_%s" % name
     exclude_name = "_exclude_%s" % name
     directory_glob(
@@ -57,6 +63,7 @@ def _glob_test(name):
         exclude = ["testdata/f1"],
     )
 
+    # ty: ignore[non-static-type]
     analysis_test(
         name = name,
         impl = _glob_test_impl,
@@ -69,12 +76,22 @@ def _glob_test(name):
         },
     )
 
-def _glob_test_impl(env, targets):
+def _glob_test_impl(
+        env,  # type: TestEnv
+        # type: struct[{
+        #     "root": Target,
+        #     "f1": Target,
+        #     "f2": Target,
+        #     "simple_glob": Target,
+        #     "glob_with_exclude": Target,
+        # }, ...]
+        targets):
+    # type: (...) -> None
     f1 = targets.f1[DefaultInfo].files.to_list()[0]
     f2 = targets.f2[DefaultInfo].files.to_list()[0]
     root = targets.root[DirectoryInfo]
-    testdata = root.entries["testdata"]
-    subdir = testdata.entries["subdir"]
+    testdata = directory_entry(root, "testdata")
+    subdir = directory_entry(testdata, "subdir")
 
     env.expect.that_collection(transitive_entries(root)).contains_exactly([
         root,
@@ -140,9 +157,10 @@ def _glob_test_impl(env, targets):
     ).contains_exactly([f2])
 
 def _glob_with_no_match_test(name):
+    # type: (str) -> None
     failure_test(
         name = name,
-        impl = failure_matching(matching.contains('"nonexistent" failed to match any files in')),
+        impl = failure_containing('"nonexistent" failed to match any files in'),
         rule = directory_glob,
         srcs = [
             "testdata/f1",
@@ -154,6 +172,8 @@ def _glob_with_no_match_test(name):
 
 # buildifier: disable=function-docstring
 def glob_test_suite(name):
+    # type: (str) -> None
+    # ty: ignore[non-static-type]
     test_suite(
         name = name,
         tests = [
