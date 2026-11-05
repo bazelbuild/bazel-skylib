@@ -95,10 +95,12 @@ def update_docs(
     data = []
     for r in native.existing_rules().values():
         if r["kind"] == "stardoc_markdown_renderer":
-            # The calling package supplies the renderer's output label. Bazel
-            # reflects it as a string; a standalone .bzl has no package.
+            # docs/BUILD uses Stardoc's renderer, whose attr.output Bazel
+            # reflects as a label string. Another package can define a rule
+            # with the same kind name and a different "out" attribute.
             # type: str
-            doc_gen = r["out"].removeprefix(":")  # ty: ignore[non-static-type, unsound-assignment]
+            out = r["out"]  # ty: ignore[non-static-type, unsound-assignment]
+            doc_gen = out.removeprefix(":")
             doc_dest = doc_gen.replace("-docgen.md", ".md")
             data.append(doc_gen)
             content.append("cp -fv bazel-bin/{0}/{1} {2}".format(docs_folder, doc_gen, doc_dest))

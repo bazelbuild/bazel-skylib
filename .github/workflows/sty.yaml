@@ -20,12 +20,16 @@ jobs:
       fail-fast: false
       matrix:
         workspace: [".", gazelle]
+        include:
+          - workspace: "."
+            additional-files: docs/BUILD
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
-      # https://github.com/tamird/sty/blob/c2386e79f774f2300af855bf129e492b51758de9/docs/github-actions.md
-      - uses: tamird/sty@c2386e79f774f2300af855bf129e492b51758de9
+      # https://github.com/tamird/sty/blob/c62bbea118506a03072ce53a1b3fc8e76db09492/docs/github-actions.md
+      - uses: tamird/sty@c62bbea118506a03072ce53a1b3fc8e76db09492
         with:
           working-directory: ${{ matrix.workspace }}
           bazel-version: '8.8.1'
+          additional-files: ${{ matrix.additional-files }}
