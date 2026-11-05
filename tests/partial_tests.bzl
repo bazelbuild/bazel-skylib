@@ -17,31 +17,39 @@
 load("//lib:partial.bzl", "partial")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _make_noargs_nokwargs():
+    # type: () -> int
     """Test utility for no args no kwargs case"""
     return 1
 
 def _make_args_nokwargs(arg1, arg2, arg3):
+    # type: (int, int, int) -> int
     """Test utility for args no kwargs case"""
     return arg1 + arg2 + arg3
 
 def _make_args_kwargs(arg1, arg2, arg3, **kwargs):
+    # type: (int, int, int, **int) -> int
     """Test utility for args and kwargs case"""
     return arg1 + arg2 + arg3 + kwargs["x"] + kwargs["y"]
 
 def _call_noargs_nokwargs(call_arg1):
+    # type: (int) -> int
     """Test utility no args no kwargs case where values passed from call site"""
     return call_arg1
 
 def _call_args_nokwargs(func_arg1, call_arg1):
+    # type: (int, int) -> int
     """Test utility for args no kwargs case where values passed from call site"""
     return func_arg1 + call_arg1
 
 def _call_args_kwargs(func_arg1, call_arg1, func_mult, call_mult):
+    # type: (int, int, int, int) -> int
     """Test utility for args and kwargs case where values passed from call site"""
     return (func_arg1 + call_arg1) * func_mult * call_mult
 
 def _make_call_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for partial.make and partial.call."""
     env = unittest.begin(ctx)
 
@@ -55,6 +63,9 @@ def _make_call_test(ctx):
 
     foo = partial.make(_make_args_kwargs)
     asserts.equals(env, 15, partial.call(foo, 1, 2, 3, x = 4, y = 5))
+
+    search = partial.make("bazel".find, "z", 1)
+    asserts.equals(env, 2, partial.call(search))
 
     # Test cases where there are args (and/or kwargs) at the make site and the
     # call site.
@@ -77,6 +88,7 @@ def _make_call_test(ctx):
 make_call_test = unittest.make(_make_call_test)
 
 def _is_instance_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit test for partial.is_instance."""
     env = unittest.begin(ctx)
 
@@ -84,6 +96,7 @@ def _is_instance_test(ctx):
     asserts.true(env, partial.is_instance(partial.make(make_call_test)))
     asserts.true(env, partial.is_instance(partial.make(make_call_test, timeout = "short")))
     asserts.true(env, partial.is_instance(partial.make(make_call_test, timeout = "short", tags = ["foo"])))
+    asserts.true(env, partial.is_instance(struct(function = make_call_test, args = (), kwargs = {}, extra = True)))
     asserts.false(env, partial.is_instance(None))
     asserts.false(env, partial.is_instance({}))
     asserts.false(env, partial.is_instance(struct(foo = 1)))
@@ -94,6 +107,7 @@ def _is_instance_test(ctx):
 is_instance_test = unittest.make(_is_instance_test)
 
 def partial_test_suite():
+    # type: () -> None
     """Creates the test targets and test suite for partial.bzl tests."""
     unittest.suite(
         "partial_tests",

@@ -1,0 +1,44 @@
+# Copyright 2024 The Bazel Authors. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Assertion types used by the directory analysis tests."""
+
+# TODO(https://github.com/bazelbuild/bazel/issues/32370): Use source annotations
+# when Bazel can describe the methods these tests call on a test environment.
+load("@rules_testing//lib/private:matching.bzl", "Matcher")
+load("//rules/directory:providers.bzl", "DirectoryInfo")
+
+type _Ordered = struct[{"in_order": Callable[[], None]}, ...]
+type CollectionSubject = struct[{
+    "contains_exactly": Callable[[Collection[object]], _Ordered],
+}, ...]
+type _StrSubject = struct[{"equals": Callable[[str], None]}, ...]
+type _EntriesSubject = struct[{
+    "contains_exactly": Callable[[dict[str, File | DirectoryInfo]], None],
+}, ...]
+type _TargetSubject = struct[{
+    "actual": Target,
+    "failures": Callable[[], struct[{"contains_exactly_predicates": Callable[[list[Matcher[str]]], _Ordered]}, ...]],
+    "runfiles": Callable[[], struct[{"actual": runfiles}, ...]],
+}, ...]
+
+class _ThatCollection(Protocol):
+    def __call__(self, collection: Collection[object] | depset[object], expr: str = ...) -> CollectionSubject: ...
+
+type TestEnv = struct[{"expect": struct[{
+    "that_collection": _ThatCollection,
+    "that_str": Callable[[str], _StrSubject],
+    "that_target": Callable[[Target], _TargetSubject],
+    "that_dict": Callable[[dict[str, File | DirectoryInfo]], _EntriesSubject],
+}, ...]}, ...]

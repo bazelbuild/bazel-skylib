@@ -17,7 +17,9 @@
 load("//lib:collections.bzl", "collections")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _after_each_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for collections.after_each."""
     env = unittest.begin(ctx)
 
@@ -42,6 +44,7 @@ def _after_each_test(ctx):
 after_each_test = unittest.make(_after_each_test)
 
 def _before_each_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for collections.before_each."""
     env = unittest.begin(ctx)
 
@@ -66,6 +69,7 @@ def _before_each_test(ctx):
 before_each_test = unittest.make(_before_each_test)
 
 def _uniq_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     env = unittest.begin(ctx)
     asserts.equals(env, collections.uniq([0, 1, 2, 3]), [0, 1, 2, 3])
     asserts.equals(env, collections.uniq([]), [])
@@ -104,6 +108,7 @@ def _uniq_test(ctx):
 uniq_test = unittest.make(_uniq_test)
 
 def collections_test_suite():
+    # type: () -> None
     """Creates the test targets and test suite for collections.bzl tests."""
     unittest.suite(
         "collections_tests",

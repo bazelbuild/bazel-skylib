@@ -19,7 +19,9 @@ path separators (forward slash, "/"); they do not handle Windows-style paths
 with backslash separators or drive letters.
 """
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _basename(p):
+    # type: (str) -> str
     """Returns the basename (i.e., the file portion) of a path.
 
     Note that if `p` ends with a slash, this function returns an empty string.
@@ -36,6 +38,7 @@ def _basename(p):
     return p.rpartition("/")[-1]
 
 def _dirname(p):
+    # type: (str) -> str
     """Returns the dirname of a path.
 
     The dirname is the portion of `p` up to but not including the file portion
@@ -57,6 +60,7 @@ def _dirname(p):
         return prefix.rstrip("/")
 
 def _is_absolute(path):
+    # type: (str) -> bool
     """Returns `True` if `path` is an absolute path.
 
     Args:
@@ -68,6 +72,7 @@ def _is_absolute(path):
     return path.startswith("/") or (len(path) > 2 and path[1] == ":")
 
 def _join(path, *others):
+    # type: (str, *str) -> str
     """Joins one or more path components intelligently.
 
     This function mimics the behavior of Python's `os.path.join` function on POSIX
@@ -98,6 +103,7 @@ def _join(path, *others):
     return result
 
 def _normalize(path):
+    # type: (str) -> str
     """Normalizes a path, eliminating double slashes and other redundant segments.
 
     This function mimics the behavior of Python's `os.path.normpath` function on
@@ -159,6 +165,7 @@ _DOT = 2
 _DOTDOT = 3
 
 def _is_normalized(str, look_for_same_level_references = True):
+    # type: (str, bool) -> bool
     """Returns true if the passed path doesn't contain uplevel references "..".
 
     Also checks for single-dot references "." if look_for_same_level_references
@@ -215,6 +222,7 @@ def _is_normalized(str, look_for_same_level_references = True):
     return True
 
 def _relativize(path, start):
+    # type: (str, str) -> str
     """Returns the portion of `path` that is relative to `start`.
 
     Because we do not have access to the underlying file system, this
@@ -233,9 +241,10 @@ def _relativize(path, start):
       The portion of `path` that is relative to `start`.
     """
     segments = _normalize(path).split("/")
+
     start_segments = _normalize(start).split("/")
     if start_segments == ["."]:
-        start_segments = []
+        start_segments.clear()
     start_length = len(start_segments)
 
     if (path.startswith("/") != start.startswith("/") or
@@ -251,6 +260,7 @@ def _relativize(path, start):
     return "/".join(result_segments)
 
 def _replace_extension(p, new_extension):
+    # type: (str, str) -> str
     """Replaces the extension of the file at the end of a path.
 
     If the path has no extension, the new extension is added to it.
@@ -266,6 +276,7 @@ def _replace_extension(p, new_extension):
     return _split_extension(p)[0] + new_extension
 
 def _split_extension(p):
+    # type: (str) -> tuple[str, str]
     """Splits the path `p` into a tuple containing the root and extension.
 
     Leading periods on the basename are ignored, so
@@ -292,6 +303,7 @@ def _split_extension(p):
     return (p[:-dot_distance_from_end], p[-dot_distance_from_end:])
 
 def _starts_with(path_a, path_b):
+    # type: (str, str) -> bool
     """Returns True if and only if path_b is an ancestor of path_a.
 
     Does not handle OS dependent case-insensitivity."""

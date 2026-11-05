@@ -17,7 +17,9 @@
 load("//lib:shell.bzl", "shell")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _shell_array_literal_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for shell.array_literal."""
     env = unittest.begin(ctx)
 
@@ -32,6 +34,7 @@ def _shell_array_literal_test(ctx):
 shell_array_literal_test = unittest.make(_shell_array_literal_test)
 
 def _shell_quote_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for shell.quote."""
     env = unittest.begin(ctx)
 
@@ -53,6 +56,7 @@ def _shell_quote_test(ctx):
 shell_quote_test = unittest.make(_shell_quote_test)
 
 def _shell_args_test_gen_impl(ctx):
+    # type: (...) -> list[DefaultInfo]
     """Test argument escaping: this rule writes a script for a sh_test."""
     args = [
         "foo",
@@ -96,6 +100,7 @@ shell_args_test_gen = rule(
 )
 
 def shell_test_suite():
+    # type: () -> None
     """Creates the test targets and test suite for shell.bzl tests."""
     unittest.suite(
         "shell_tests",

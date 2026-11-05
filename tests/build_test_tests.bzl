@@ -18,7 +18,9 @@ load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("//rules:build_test.bzl", "build_test")
 
 # buildifier: disable=unnamed-macro
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def build_test_test_suite():
+    # type: () -> None
     # Since the rules doesn't do anything really, it just makes some targets
     # to get Bazel to build other targets via a `bazel test`, just make some
     # targets to exercise the rule.
@@ -30,7 +32,6 @@ def build_test_test_suite():
         cmd = "echo 'int dummy() { return 0; }' > $@",
     )
 
-    # Use it in a non-test target
     cc_library(
         name = "build_test__build_target",
         srcs = [":build_test__make_src"],

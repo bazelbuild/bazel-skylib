@@ -23,22 +23,22 @@ Instead, it contains the following entries:
 """
 _WRONG_TYPE = "Expected {dir}/{name} to have type {want}, but got {got}"
 
-# These correspond to an "enum".
 FILE = "file"
 DIRECTORY = "directory"
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _check_path_relative(path):
+    # type: (str) -> None
     if paths.is_absolute(path):
         fail("Path must be relative. Got {path}".format(path = path))
 
-def _get_direct_child(directory, name, require_type = None):
+def _get_direct_child(directory, name):
+    # type: (_DirectoryContent, str) -> File | DirectoryInfo
     """Gets the direct child of a directory.
 
     Args:
         directory: (DirectoryInfo) The directory to look within.
         name: (string) The name of the directory/file to look for.
-        require_type: (Optional[DIRECTORY|FILE]) If provided, must return
-          either a the corresponding type.
 
     Returns:
         (File|DirectoryInfo) The content contained within.
@@ -50,15 +50,66 @@ def _get_direct_child(directory, name, require_type = None):
             name = repr(name),
             children = "\n".join(directory.entries.keys()),
         ))
-    if require_type == DIRECTORY and type(entry) == "File":
+    return entry
+
+def _get_direct_subdirectory(directory, name):
+    # type: (_DirectoryContent, str) -> DirectoryInfo
+    entry = _get_direct_child(directory, name)
+    if type(entry) == "File":
         fail(_WRONG_TYPE.format(
             dir = directory.human_readable,
             name = name,
             want = "Directory",
             got = "File",
         ))
+    return entry
 
-    if require_type == FILE and type(entry) != "File":
+def _get_parent(directory, path):
+    # type: (_DirectoryContent, str) -> tuple[_DirectoryContent, str]
+    _check_path_relative(path)
+    chunks = path.split("/")
+    for dirname in chunks[:-1]:
+        directory = _get_direct_subdirectory(directory, dirname)
+    return directory, chunks[-1]
+
+# TODO(https://github.com/bazelbuild/bazel/issues/32104): Annotate require_type
+# natively when Bazel supports finite sets of string values.
+def get_path(directory, path, require_type = None):
+    # type: (_DirectoryContent, str, Literal["file", "directory"] | None) -> File | DirectoryInfo
+    """Gets a subdirectory or file contained within a directory.
+
+    Example: `get_path(directory, "a/b")` returns the entry corresponding to
+    `directory.path + "/a/b"`.
+
+    Args:
+        directory: (DirectoryInfo) The directory to look within.
+        path: (string) The path of the directory to look for within it.
+        require_type: Require a FILE or DIRECTORY entry when provided.
+
+    Returns:
+        (File|DirectoryInfo) The entry at the requested path.
+    """
+    if require_type == FILE:
+        return get_file(directory, path)
+    if require_type == DIRECTORY:
+        return get_subdirectory(directory, path)
+    directory, name = _get_parent(directory, path)
+    return _get_direct_child(directory, name)
+
+def get_file(directory, path):
+    # type: (_DirectoryContent, str) -> File
+    """Gets a file contained within a directory.
+
+    Args:
+        directory: (DirectoryInfo) The directory to look within.
+        path: (string) The path of the file to look for within it.
+
+    Returns:
+        (File) The file contained within.
+    """
+    directory, name = _get_parent(directory, path)
+    entry = _get_direct_child(directory, name)
+    if type(entry) != "File":
         fail(_WRONG_TYPE.format(
             dir = directory.human_readable,
             name = name,
@@ -67,28 +118,16 @@ def _get_direct_child(directory, name, require_type = None):
         ))
     return entry
 
-def get_path(directory, path, require_type = None):
-    """Gets a subdirectory or file contained within a directory.
-
-    Example: `get_path(directory, "a/b", require_type=FILE)`
-      -> the file  corresponding to `directory.path + "/a/b"`
+def get_subdirectory(directory, path):
+    # type: (_DirectoryContent, str) -> DirectoryInfo
+    """Gets a subdirectory contained within a directory.
 
     Args:
         directory: (DirectoryInfo) The directory to look within.
-        path: (string) The path of the directory to look for within it.
-        require_type: (Optional[DIRECTORY|FILE]) If provided, must return
-          either a the corresponding type.
+        path: (string) The path of the subdirectory to look for within it.
 
     Returns:
-        (File|DirectoryInfo) The directory contained within.
+        (DirectoryInfo) The subdirectory contained within.
     """
-    _check_path_relative(path)
-
-    chunks = path.split("/")
-    for dirname in chunks[:-1]:
-        directory = _get_direct_child(directory, dirname, require_type = DIRECTORY)
-    return _get_direct_child(
-        directory,
-        chunks[-1],
-        require_type = require_type,
-    )
+    directory, name = _get_parent(directory, path)
+    return _get_direct_subdirectory(directory, name)

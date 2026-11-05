@@ -21,7 +21,9 @@ load("//lib:unittest.bzl", "analysistest", "asserts", "loadingtest", "unittest")
 ####### basic_failing_test ########
 ###################################
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _basic_failing_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for a basic library verification test that fails."""
     env = unittest.begin(ctx)
 
@@ -36,6 +38,7 @@ basic_failing_test = unittest.make(_basic_failing_test)
 ###################################
 
 def _failure_message_test(ctx):
+    # type: (...) -> list[DefaultInfo]
     """Failing unit test with arbitrary content in the message."""
     env = unittest.begin(ctx)
 
@@ -56,6 +59,7 @@ failure_message_test = unittest.make(
 ####### basic_passing_test ########
 ###################################
 def _basic_passing_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for a basic library verification test."""
     env = unittest.begin(ctx)
 
@@ -69,6 +73,7 @@ basic_passing_test = unittest.make(_basic_passing_test)
 ####### basic_passing_short_timeout_test ########
 #################################################
 def _basic_passing_short_timeout_test(ctx):
+    # type: (...) -> list[DefaultInfo]
     """Unit tests for a basic library verification test."""
     env = unittest.begin(ctx)
 
@@ -82,6 +87,7 @@ basic_passing_short_timeout_test = unittest.make(_basic_passing_short_timeout_te
 ####### change_setting_test #######
 ###################################
 def _change_setting_test(ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     """Test to verify that an analysis test may change configuration."""
     env = analysistest.begin(ctx)
 
@@ -90,12 +96,17 @@ def _change_setting_test(ctx):
 
     return analysistest.end(env)
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32207): Declare field types
+# directly on the provider when Bazel supports them.
 _ChangeSettingInfo = provider(
     doc = "min_os_version for change_setting_test",
-    fields = ["min_os_version"],
+    fields = {
+        "min_os_version": "Minimum OS version in the target configuration.",  # type: str | None
+    },
 )
 
 def _change_setting_fake_rule(ctx):
+    # type: (...) -> list[_ChangeSettingInfo]
     return [_ChangeSettingInfo(min_os_version = ctx.fragments.cpp.minimum_os_version())]
 
 change_setting_fake_rule = rule(
@@ -114,6 +125,7 @@ change_setting_test = analysistest.make(
 ####### failure_testing_test #######
 ####################################
 def _failure_testing_test(ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     """Test to verify that an analysis test may verify a rule fails with fail()."""
     env = analysistest.begin(ctx)
 
@@ -121,8 +133,8 @@ def _failure_testing_test(ctx):
 
     return analysistest.end(env)
 
-def _failure_testing_fake_rule(ctx):
-    _ignore = [ctx]  # @unused
+def _failure_testing_fake_rule(_ctx):
+    # type: (...) -> Never
     fail("This rule should never work")
 
 failure_testing_fake_rule = rule(
@@ -138,6 +150,7 @@ failure_testing_test = analysistest.make(
 ####### fail_unexpected_passing_test #######
 ############################################
 def _fail_unexpected_passing_test(ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     """Test that fails by expecting an error that never occurs."""
     env = analysistest.begin(ctx)
 
@@ -145,8 +158,8 @@ def _fail_unexpected_passing_test(ctx):
 
     return analysistest.end(env)
 
-def _fail_unexpected_passing_fake_rule(ctx):
-    _ignore = [ctx]  # @unused
+def _fail_unexpected_passing_fake_rule(_ctx):
+    # type: (...) -> list[Never]
     return []
 
 fail_unexpected_passing_fake_rule = rule(
@@ -162,6 +175,7 @@ fail_unexpected_passing_test = analysistest.make(
 ####### change_setting_with_failure_test #######
 ################################################
 def _change_setting_with_failure_test(ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     """Test verifying failure while changing configuration."""
     env = analysistest.begin(ctx)
 
@@ -170,6 +184,7 @@ def _change_setting_with_failure_test(ctx):
     return analysistest.end(env)
 
 def _change_setting_with_failure_fake_rule(ctx):
+    # type: (...) -> list[Never]
     if ctx.fragments.cpp.minimum_os_version() == "error_error":
         fail("unexpected minimum_os_version!!!")
     return []
@@ -191,6 +206,7 @@ change_setting_with_failure_test = analysistest.make(
 ####### inspect_actions_test #######
 ####################################
 def _inspect_actions_test(ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     """Test verifying actions registered by a target."""
     env = analysistest.begin(ctx)
 
@@ -201,6 +217,7 @@ def _inspect_actions_test(ctx):
     return analysistest.end(env)
 
 def _inspect_actions_fake_rule(ctx):
+    # type: (...) -> list[DefaultInfo]
     out_file = ctx.actions.declare_file("out.txt")
     ctx.actions.run_shell(
         command = "echo 'hello' > %s" % out_file.basename,
@@ -222,12 +239,12 @@ inspect_actions_test = analysistest.make(
 _AddedByAspectInfo = provider(
     doc = "Example provider added by example aspect",
     fields = {
-        "value": "(str)",
+        "value": "Value attached by the test aspect.",  # type: str
     },
 )
 
-def _example_aspect_impl(target, ctx):
-    _ignore = [target, ctx]  # @unused
+def _example_aspect_impl(_target, _ctx):
+    # type: (...) -> list[_AddedByAspectInfo]
     return [
         _AddedByAspectInfo(value = "attached by aspect"),
     ]
@@ -237,14 +254,16 @@ example_aspect = aspect(
 )
 
 def _inspect_aspect_test(ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     """Test verifying aspect run on a target."""
     env = analysistest.begin(ctx)
 
-    tut = env.ctx.attr.target_under_test
+    tut = analysistest.target_under_test(env)
     asserts.equals(env, "attached by aspect", tut[_AddedByAspectInfo].value)
     return analysistest.end(env)
 
 def _inspect_aspect_fake_rule(ctx):
+    # type: (...) -> list[DefaultInfo]
     out_file = ctx.actions.declare_file("out.txt")
     ctx.actions.run_shell(
         command = "echo 'hello' > %s" % out_file.basename,
@@ -266,10 +285,13 @@ inspect_aspect_test = analysistest.make(
 ########################################
 _OutputDirInfo = provider(
     doc = "bin_path for inspect_output_dirs_test",
-    fields = ["bin_path"],
+    fields = {
+        "bin_path": "Output directory observed by the target.",  # type: str
+    },
 )
 
 def _inspect_output_dirs_test(ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     """Test verifying output directories used by a test."""
     env = analysistest.begin(ctx)
 
@@ -289,6 +311,7 @@ def _inspect_output_dirs_test(ctx):
     return analysistest.end(env)
 
 def _inspect_output_dirs_fake_rule(ctx):
+    # type: (...) -> list[_OutputDirInfo]
     return [
         _OutputDirInfo(
             bin_path = ctx.bin_dir.path,
@@ -309,6 +332,7 @@ inspect_output_dirs_test = analysistest.make(
 )
 
 def _loading_phase_test(env):
+    # type: (struct[{"name": str}]) -> None
     loadingtest.equals(env, "self_glob", ["unittest_tests.bzl"], native.glob(["unittest_tests.bzl"]))
 
     # now use our own calls to assert we created a test case rule and test_suite for it.
@@ -319,6 +343,7 @@ def _loading_phase_test(env):
 
 # buildifier: disable=unnamed-macro
 def unittest_passing_tests_suite():
+    # type: () -> None
     """Creates the test targets and test suite for passing unittest.bzl tests.
 
     Not all tests are included. Some unittest.bzl tests verify a test fails

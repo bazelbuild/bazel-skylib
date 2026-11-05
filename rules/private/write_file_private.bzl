@@ -18,7 +18,15 @@ These rules write a UTF-8 encoded text file, using Bazel's FileWriteAction.
 '_write_xfile' marks the resulting file executable, '_write_file' does not.
 """
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32021): Express the content depset
+# element type in a native annotation when Bazel supports typed depsets.
+# type _Content = Collection[str] | depset[str] | select[Collection[str] | depset[str] | None] | None
+# TODO(https://github.com/bazelbuild/bazel/issues/32104): Annotate newline
+# natively when Bazel can restrict strings to its supported line endings.
+# type _Newline = Literal["auto", "unix", "windows", ""] | select[Literal["auto", "unix", "windows"]] | None
+
 def _common_impl(ctx, is_executable):
+    # type: (_WriteContext, bool) -> list[DefaultInfo]
     is_windows = ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo])
     if ctx.attr.newline == "auto":
         newline = "\r\n" if is_windows else "\n"
@@ -44,9 +52,11 @@ def _common_impl(ctx, is_executable):
         return [DefaultInfo(files = files, data_runfiles = runfiles)]
 
 def _impl(ctx):
+    # type: (...) -> list[DefaultInfo]
     return _common_impl(ctx, False)
 
 def _ximpl(ctx):
+    # type: (...) -> list[DefaultInfo]
     return _common_impl(ctx, True)
 
 _ATTRS = {
@@ -69,13 +79,19 @@ _write_xfile = rule(
     attrs = _ATTRS,
 )
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32343): Describe the forwarded
+# attributes natively when Bazel can express keywords conditional on is_executable.
+# The executable rule also accepts args and output_licenses. sty checks their
+# types but cannot restrict them to calls with is_executable = True.
 def write_file(
-        name,
-        out,
-        content = [],
-        is_executable = False,
-        newline = "auto",
+        name,  # type: str
+        out,  # type: str | Label
+        content = [],  # type: _Content
+        is_executable = False,  # type: bool
+        newline = "auto",  # type: _Newline
+        # type: Unpack[CommonExecutableRuleAttrs]
         **kwargs):
+    # type: (...) -> None
     """Creates a UTF-8 encoded text file.
 
     Args:
@@ -105,5 +121,7 @@ def write_file(
             content = content,
             out = out,
             newline = newline or "auto",
-            **kwargs
+            # The plain rule rejects args and output_licenses. kwargs must also
+            # cover callers that choose the executable rule.
+            **kwargs  # ty: ignore[unknown-argument]
         )

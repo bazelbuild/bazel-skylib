@@ -21,7 +21,9 @@ cmd.exe (on Windows). '_copy_xfile' marks the resulting file executable,
 
 load(":copy_common.bzl", "OsInfo")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def copy_cmd(ctx, src, dst):
+    # type: (ctx, File, File) -> None
     # Most Windows binaries built with MSVC use a certain argument quoting
     # scheme. Bazel uses that scheme too to quote arguments. However,
     # cmd.exe uses different semantics, so Bazel's quoting is wrong here.
@@ -49,6 +51,7 @@ def copy_cmd(ctx, src, dst):
     )
 
 def copy_bash(ctx, src, dst):
+    # type: (ctx, File, File) -> None
     ctx.actions.run_shell(
         inputs = [src],
         outputs = [dst],
@@ -60,6 +63,7 @@ def copy_bash(ctx, src, dst):
     )
 
 def _copy_file_impl(ctx):
+    # type: (...) -> list[DefaultInfo]
     if ctx.attr.allow_symlink:
         ctx.actions.symlink(
             output = ctx.outputs.out,
@@ -107,7 +111,20 @@ _copy_xfile = rule(
     attrs = _ATTRS,
 )
 
-def copy_file(name, src, out, is_executable = False, allow_symlink = False, **kwargs):
+# TODO(https://github.com/bazelbuild/bazel/issues/32343): Describe the forwarded
+# attributes natively when Bazel can express keywords conditional on is_executable.
+# The executable rule also accepts args and output_licenses. sty checks their
+# types but cannot restrict them to calls with is_executable = True.
+
+def copy_file(
+        name,  # type: str
+        src,  # type: str | Label | select[str | Label]
+        out,  # type: str | Label
+        is_executable = False,  # type: bool
+        allow_symlink = False,  # type: bool | select[bool]
+        # type: Unpack[CommonExecutableRuleAttrs]
+        **kwargs):
+    # type: (...) -> None
     """Copies a file to another location.
 
     `native.genrule()` is sometimes used to copy files (often wishing to rename them). The 'copy_file' rule does this with a simpler interface than genrule.
@@ -142,5 +159,7 @@ def copy_file(name, src, out, is_executable = False, allow_symlink = False, **kw
         out = out,
         is_executable = is_executable,
         allow_symlink = allow_symlink,
-        **kwargs
+        # The plain rule rejects args and output_licenses. kwargs must also
+        # cover callers that choose the executable rule.
+        **kwargs  # ty: ignore[unknown-argument]
     )

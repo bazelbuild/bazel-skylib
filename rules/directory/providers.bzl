@@ -15,22 +15,37 @@
 """Skylib module containing providers for directories."""
 
 load("//rules/directory/private:glob.bzl", "glob")
-load("//rules/directory/private:paths.bzl", "DIRECTORY", "FILE", "get_path")
+load("//rules/directory/private:paths.bzl", "get_file", "get_path", "get_subdirectory")
+
+# TODO(https://github.com/bazelbuild/bazel/issues/31770): Annotate initializer
+# keywords natively when Bazel supports named, typed dictionary keys.
+# type _Input = dict[{
+#     "entries": dict[str, File | DirectoryInfo],
+#     "transitive_files": depset[File],
+#     "path": str,
+#     "human_readable": str,
+#     "get_path": NotRequired[object],
+#     "get_file": NotRequired[object],
+#     "get_subdirectory": NotRequired[object],
+#     "glob": NotRequired[object],
+# }]
 
 def _init_directory_info(**kwargs):
+    # type: (**Unpack[_Input]) -> _Fields
     self = struct(**kwargs)
-    kwargs.update(
-        get_path = lambda path: get_path(self, path, require_type = None),
-        get_file = lambda path: get_path(self, path, require_type = FILE),
-        get_subdirectory = lambda path: get_path(self, path, require_type = DIRECTORY),
+    return dict(
+        kwargs,
+        get_path = lambda path: get_path(self, path),
+        get_file = lambda path: get_file(self, path),
+        get_subdirectory = lambda path: get_subdirectory(self, path),
         glob = lambda include, exclude = [], allow_empty = False: glob(self, include, exclude, allow_empty),
     )
-    return kwargs
 
 # TODO: Once bazel 5 no longer needs to be supported, remove this function, and add
 # init = _init_directory_info to the provider below
 # buildifier: disable=function-docstring
 def create_directory_info(**kwargs):
+    # type: (**Unpack[_Input]) -> DirectoryInfo
     return DirectoryInfo(**_init_directory_info(**kwargs))
 
 DirectoryInfo = provider(

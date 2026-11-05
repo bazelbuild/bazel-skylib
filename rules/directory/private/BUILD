@@ -30,7 +30,10 @@ filegroup(
     name = "distribution",
     srcs = [
         "BUILD",
-    ] + glob(["*.bzl"]),
+    ] + glob([
+        "*.bzl",
+        "*.bzli",
+    ]),
     visibility = [
         "//:__pkg__",
     ],

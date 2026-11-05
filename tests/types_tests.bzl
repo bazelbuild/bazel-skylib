@@ -17,11 +17,14 @@ load("//lib:new_sets.bzl", "sets")
 load("//lib:types.bzl", "types")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _a_function():
+    # type: () -> None
     """A dummy function for testing."""
     pass
 
 def _is_string_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for types.is_string."""
 
     env = unittest.begin(ctx)
@@ -43,6 +46,7 @@ def _is_string_test(ctx):
 is_string_test = unittest.make(_is_string_test)
 
 def _is_bool_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for types.is_bool."""
 
     env = unittest.begin(ctx)
@@ -64,6 +68,7 @@ def _is_bool_test(ctx):
 is_bool_test = unittest.make(_is_bool_test)
 
 def _is_list_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for types.is_list."""
 
     env = unittest.begin(ctx)
@@ -85,6 +90,7 @@ def _is_list_test(ctx):
 is_list_test = unittest.make(_is_list_test)
 
 def _is_none_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for types.is_none."""
 
     env = unittest.begin(ctx)
@@ -106,6 +112,7 @@ def _is_none_test(ctx):
 is_none_test = unittest.make(_is_none_test)
 
 def _is_int_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for types.is_int."""
 
     env = unittest.begin(ctx)
@@ -128,6 +135,7 @@ def _is_int_test(ctx):
 is_int_test = unittest.make(_is_int_test)
 
 def _is_tuple_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for types.is_tuple."""
 
     env = unittest.begin(ctx)
@@ -150,6 +158,7 @@ def _is_tuple_test(ctx):
 is_tuple_test = unittest.make(_is_tuple_test)
 
 def _is_dict_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for types.is_dict."""
 
     env = unittest.begin(ctx)
@@ -172,6 +181,7 @@ def _is_dict_test(ctx):
 is_dict_test = unittest.make(_is_dict_test)
 
 def _is_function_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for types.is_function."""
 
     env = unittest.begin(ctx)
@@ -193,6 +203,7 @@ def _is_function_test(ctx):
 is_function_test = unittest.make(_is_function_test)
 
 def _is_depset_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for types.is_depset."""
 
     env = unittest.begin(ctx)
@@ -217,6 +228,7 @@ def _is_depset_test(ctx):
 is_depset_test = unittest.make(_is_depset_test)
 
 def _is_set_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit test for types.is_set."""
     env = unittest.begin(ctx)
 
@@ -232,6 +244,7 @@ def _is_set_test(ctx):
 is_set_test = unittest.make(_is_set_test)
 
 def types_test_suite():
+    # type: () -> None
     """Creates the test targets and test suite for types.bzl tests."""
     unittest.suite(
         "types_tests",

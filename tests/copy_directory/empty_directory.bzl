@@ -14,7 +14,9 @@
 
 """Creates an empty directory."""
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _empty_directory_impl(ctx):
+    # type: (...) -> list[DefaultInfo]
     out = ctx.actions.declare_directory(ctx.attr.name)
     ctx.actions.run_shell(
         outputs = [out],

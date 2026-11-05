@@ -15,48 +15,51 @@
 """Helper functions for testing directory rules."""
 
 load("@rules_testing//lib:analysis_test.bzl", "analysis_test")
-load("@rules_testing//lib:truth.bzl", "subjects")
+load("@rules_testing//lib:truth.bzl", "matching")
 load("@rules_testing//lib:util.bzl", "util")
 
-_depset_as_list_subject = lambda value, *, meta: subjects.collection(
-    value.to_list(),
-    meta = meta,
-)
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
+def failure_containing(message):
+    # type: (str) -> Callable[[TestEnv, Target], None]
+    matcher = matching.contains(message)
 
-directory_info_subject = lambda value, *, meta: subjects.struct(
-    value,
-    meta = meta,
-    attrs = dict(
-        entries = subjects.dict,
-        transitive_files = _depset_as_list_subject,
-        path = subjects.str,
-        human_readable = subjects.str,
-    ),
-)
-
-def failure_matching(matcher):
     def test(env, target):
+        # type: (TestEnv, Target) -> None
         env.expect.that_target(target).failures().contains_exactly_predicates([
             matcher,
         ])
 
     return test
 
-def directory_subject(env, directory_info):
-    return env.expect.that_value(
-        value = directory_info,
-        expr = "DirectoryInfo(%r)" % directory_info.path,
-        factory = directory_info_subject,
-    )
+def directory_entry(parent, name):
+    # type: (DirectoryInfo, str) -> DirectoryInfo
+    """Read an expected directory independently of get_subdirectory.
+
+    Args:
+      parent: Directory whose immediate entries contain the child.
+      name: The child's basename.
+
+    Returns:
+      The named child's DirectoryInfo.
+    """
+    entry = parent.entries[name]
+    if type(entry) == "File":
+        fail("%s: expected %r to be a directory, got file %s" % (parent.path, name, entry.path))
+    return entry
 
 def failure_test(*, name, impl, rule, **kwargs):
+    # type: (str, Callable[[TestEnv, Target], None], rule, **object) -> None
     subject_name = "_%s_subject" % name
+
+    # The rule passed to helper_target determines which keywords it accepts.
+    # ty: ignore[non-static-type]
     util.helper_target(
         rule,
         name = subject_name,
         **kwargs
     )
 
+    # ty: ignore[non-static-type]
     analysis_test(
         name = name,
         expect_failure = True,

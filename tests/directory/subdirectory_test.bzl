@@ -16,9 +16,10 @@
 
 load("@bazel_skylib//rules/directory:providers.bzl", "DirectoryInfo")
 load("@bazel_skylib//rules/directory:subdirectory.bzl", "subdirectory")
+
+# rules_testing 0.6.0 leaves both test registration signatures untyped.
 load("@rules_testing//lib:analysis_test.bzl", "analysis_test", "test_suite")
-load("@rules_testing//lib:truth.bzl", "matching")
-load(":utils.bzl", "failure_matching", "failure_test")
+load(":utils.bzl", "directory_entry", "failure_containing", "failure_test")
 
 _NONEXISTENT_SUBDIRECTORY_ERR = """directory:root/testdata does not contain an entry named "nonexistent".
 Instead, it contains the following entries:
@@ -26,7 +27,9 @@ f1
 subdir
 """
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _subdirectory_test(name):
+    # type: (str) -> None
     testdata_name = "_%s_dir" % name
     subdir_name = "_%s_subdir" % name
 
@@ -42,6 +45,7 @@ def _subdirectory_test(name):
         path = "testdata/subdir",
     )
 
+    # ty: ignore[non-static-type]
     analysis_test(
         name = name,
         impl = _subdirectory_test_impl,
@@ -54,17 +58,28 @@ def _subdirectory_test(name):
         },
     )
 
-def _subdirectory_test_impl(env, targets):
+def _subdirectory_test_impl(
+        env,  # type: TestEnv
+        # type: struct[{
+        #     "root": Target,
+        #     "f1": Target,
+        #     "f2": Target,
+        #     "testdata": Target,
+        #     "subdir": Target,
+        # }, ...]
+        targets):
+    # type: (...) -> None
     f1 = targets.f1[DefaultInfo].files.to_list()[0]
     f2 = targets.f2[DefaultInfo].files.to_list()[0]
 
     root = targets.root[DirectoryInfo]
-    want_dir = root.entries["testdata"]
-    want_subdir = want_dir.entries["subdir"]
+    want_dir = directory_entry(root, "testdata")
+    want_subdir = directory_entry(want_dir, "subdir")
 
-    # Use that_str because it supports equality checks. They're not strings.
-    env.expect.that_str(targets.testdata[DirectoryInfo]).equals(want_dir)
-    env.expect.that_str(targets.subdir[DirectoryInfo]).equals(want_subdir)
+    env.expect.that_collection([
+        targets.testdata[DirectoryInfo],
+        targets.subdir[DirectoryInfo],
+    ]).contains_exactly([want_dir, want_subdir]).in_order()
 
     env.expect.that_collection(
         targets.testdata[DefaultInfo].files.to_list(),
@@ -74,27 +89,30 @@ def _subdirectory_test_impl(env, targets):
     ).contains_exactly([f2])
 
 def _nonexistent_subdirectory_test(name):
+    # type: (str) -> None
     failure_test(
         name = name,
-        impl = failure_matching(matching.contains(_NONEXISTENT_SUBDIRECTORY_ERR)),
+        impl = failure_containing(_NONEXISTENT_SUBDIRECTORY_ERR),
         rule = subdirectory,
         parent = ":root",
         path = "testdata/nonexistent",
     )
 
 def _subdirectory_of_file_test(name):
+    # type: (str) -> None
     failure_test(
         name = name,
-        impl = failure_matching(matching.contains("testdata/f1 to have type Directory, but got File")),
+        impl = failure_containing("testdata/f1 to have type Directory, but got File"),
         rule = subdirectory,
         parent = ":root",
         path = "testdata/f1/foo",
     )
 
 def _subdirectory_as_file_test(name):
+    # type: (str) -> None
     failure_test(
         name = name,
-        impl = failure_matching(matching.contains("testdata/f1 to have type Directory, but got File")),
+        impl = failure_containing("testdata/f1 to have type Directory, but got File"),
         rule = subdirectory,
         parent = ":root",
         path = "testdata/f1",
@@ -102,6 +120,8 @@ def _subdirectory_as_file_test(name):
 
 # buildifier: disable=function-docstring
 def subdirectory_test_suite(name):
+    # type: (str) -> None
+    # ty: ignore[non-static-type]
     test_suite(
         name = name,
         tests = [

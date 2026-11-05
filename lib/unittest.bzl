@@ -32,9 +32,23 @@ load(":new_sets.bzl", new_sets = "sets")
 load(":partial.bzl", "partial")
 load(":types.bzl", "types")
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32381): Use native generic
+# declarations once supported Bazel releases can express the context bound.
+# type _TestEnv[C: ctx] = struct[{"ctx": C, "failures": list[str]}]
+# The analysis test transition supplies a list for a split target and a
+# single Target otherwise.
+# type _AnalysisCtx = ctx[object, struct[{"target_under_test": Target | list[Target]}, ...]]
+
+# type _Attrs = Top[dict[str, Intersection[Attribute[object], Unknown]]]
+# The factory only hands the callback to Bazel. Its context may have any
+# attribute schema; a callback accepting an unrelated type cannot be registered.
+# type _TestImpl = Callable[[ctx[Never, Never]], object]
+# type _Toolchain = str | Label | toolchain_type
+
 # The following function should only be called from WORKSPACE files and workspace macros.
 # buildifier: disable=unnamed-macro
 def register_unittest_toolchains():
+    # type: () -> None
     """Registers the toolchains for unittest users."""
     native.register_toolchains(
         "@bazel_skylib//toolchains/unittest:cmd_toolchain",
@@ -45,17 +59,20 @@ TOOLCHAIN_TYPE = "@bazel_skylib//toolchains/unittest:toolchain_type"
 
 _UnittestToolchainInfo = provider(
     doc = "Execution platform information for rules in the bazel_skylib repository.",
-    fields = [
-        "file_ext",
-        "success_templ",
-        "failure_templ",
-        "join_on",
-        "escape_chars_with",
-        "escape_other_chars_with",
-    ],
+    # TODO(https://github.com/bazelbuild/bazel/issues/32207): Declare provider
+    # field types directly when supported Bazel versions accept them.
+    fields = {
+        "file_ext": "File extension for the test script.",  # type: str
+        "success_templ": "Script emitted when a test succeeds.",  # type: str
+        "failure_templ": "Script template containing a placeholder for failures.",  # type: str
+        "join_on": "Separator for the lines of a failure message.",  # type: str
+        "escape_chars_with": "Prefixes for characters requiring special escaping.",  # type: dict[str, str]
+        "escape_other_chars_with": "Prefix for all other characters.",  # type: str
+    },
 )
 
 def _unittest_toolchain_impl(ctx):
+    # type: (...) -> list[ToolchainInfo]
     return [
         platform_common.ToolchainInfo(
             unittest_toolchain_info = _UnittestToolchainInfo(
@@ -129,6 +146,7 @@ unittest_toolchain = rule(
 )
 
 def _impl_function_name(impl):
+    # type: (object) -> str
     """Derives the name of the given rule implementation function.
 
     This can be used for better test feedback.
@@ -149,6 +167,9 @@ def _impl_function_name(impl):
     return impl_name.rpartition(">")[0]
 
 def _make(impl, attrs = {}, doc = "", toolchains = []):
+    # type: [T: _Toolchain](
+    #     _TestImpl, _Attrs, str, list[T] | tuple[T, ...]
+    # ) -> rule
     """Creates a unit test rule from its implementation function.
 
     Each unit test is defined in an implementation function that must then be
@@ -189,13 +210,12 @@ def _make(impl, attrs = {}, doc = "", toolchains = []):
       A rule definition that should be stored in a global whose name ends in
       `_test`.
     """
-    attrs = dict(attrs)
-    attrs["_impl_name"] = attr.string(default = _impl_function_name(impl))
 
+    # The caller's attributes determine which context this implementation accepts.
     return rule(
-        impl,
+        implementation = impl,  # ty: ignore[invalid-argument-type]
+        attrs = dict(attrs, _impl_name = attr.string(default = _impl_function_name(impl))),
         doc = doc,
-        attrs = attrs,
         _skylark_testable = True,
         test = True,
         toolchains = toolchains,
@@ -206,10 +226,14 @@ def _make(impl, attrs = {}, doc = "", toolchains = []):
 
 _ActionInfo = provider(
     doc = "Information relating to the target under test.",
-    fields = ["actions", "bin_path"],
+    fields = {
+        "actions": "Actions registered by the target under test.",  # type: list[Action]
+        "bin_path": "The target's output bin directory.",  # type: str
+    },
 )
 
 def _action_retrieving_aspect_impl(target, ctx):
+    # type: (...) -> list[_ActionInfo]
     return [
         _ActionInfo(
             actions = target.actions,
@@ -231,6 +255,10 @@ def _make_analysis_test(
         config_settings = {},
         extra_target_under_test_aspects = [],
         doc = ""):
+    # type: (
+    #     _TestImpl, bool, _Attrs, list[str] | tuple[str, ...],
+    #     Top[dict[str, Unknown]], list[Aspect], str
+    # ) -> rule
     """Creates an analysis test rule from its implementation function.
 
     An analysis test verifies the behavior of a "real" rule target by examining
@@ -276,30 +304,20 @@ def _make_analysis_test(
       A rule definition that should be stored in a global whose name ends in
       `_test`.
     """
-    attrs = dict(attrs)
-    attrs["_impl_name"] = attr.string(default = _impl_function_name(impl))
 
-    changed_settings = dict(config_settings)
-    if expect_failure:
-        changed_settings["//command_line_option:allow_analysis_failures"] = "True"
-
-    target_attr_kwargs = {}
-    if changed_settings:
-        test_transition = analysis_test_transition(
-            settings = changed_settings,
-        )
-        target_attr_kwargs["cfg"] = test_transition
-
-    attrs["target_under_test"] = attr.label(
-        aspects = [_action_retrieving_aspect] + extra_target_under_test_aspects,
-        mandatory = True,
-        **target_attr_kwargs
-    )
-
+    # The caller's attributes determine which context this implementation accepts.
     return rule(
-        impl,
+        implementation = impl,  # ty: ignore[invalid-argument-type]
+        attrs = dict(
+            attrs,
+            _impl_name = attr.string(default = _impl_function_name(impl)),
+            target_under_test = attr.label(
+                aspects = [_action_retrieving_aspect] + extra_target_under_test_aspects,
+                cfg = _analysis_test_transition(expect_failure, config_settings),
+                mandatory = True,
+            ),
+        ),
         doc = doc,
-        attrs = attrs,
         fragments = fragments,
         test = True,
         exec_groups = {
@@ -308,7 +326,17 @@ def _make_analysis_test(
         analysis_test = True,
     )
 
+def _analysis_test_transition(expect_failure, config_settings):
+    # type: (bool, Top[dict[str, Unknown]]) -> transition | None
+    changed_settings = dict(config_settings)  # type: dict[str, object]
+    if expect_failure:
+        changed_settings["//command_line_option:allow_analysis_failures"] = "True"
+    if changed_settings:
+        return analysis_test_transition(settings = changed_settings)
+    return None
+
 def _suite(name, *test_rules):
+    # type: (str, *rule | _Partial[object]) -> None
     """Defines a `test_suite` target that contains multiple tests.
 
     After defining your test rules in a `.bzl` file, you need to create targets
@@ -367,6 +395,7 @@ def _suite(name, *test_rules):
     )
 
 def _begin(ctx):
+    # type: [C: ctx](C) -> _TestEnv[C]
     """Begins a unit test.
 
     This should be the first function called in a unit test implementation
@@ -386,6 +415,7 @@ def _begin(ctx):
     return struct(ctx = ctx, failures = [])
 
 def _begin_analysis_test(ctx):
+    # type: [C: ctx](C) -> _TestEnv[C]
     """Begins an analysis test.
 
     This should be the first function called in an analysis test implementation
@@ -405,6 +435,7 @@ def _begin_analysis_test(ctx):
     return struct(ctx = ctx, failures = [])
 
 def _end_analysis_test(env):
+    # type: (_TestEnv[ctx]) -> list[AnalysisTestResultInfo]
     """Ends an analysis test and logs the results.
 
     This must be called and returned at the end of an analysis test implementation function so
@@ -421,7 +452,13 @@ def _end_analysis_test(env):
         message = "\n".join(env.failures),
     )]
 
+def _test_toolchain(ctx):
+    # type: (ctx) -> _UnittestToolchainInfo
+    # unittest_toolchain supplies this provider under an open ToolchainInfo field.
+    return ctx.exec_groups["test"].toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info  # ty: ignore[non-static-type, unsound-return-statement]
+
 def _end(env):
+    # type: (_TestEnv[ctx]) -> list[DefaultInfo]
     """Ends a unit test and logs the results.
 
     This must be called and returned at the end of a unit test implementation function so
@@ -434,7 +471,7 @@ def _end(env):
       A list of providers needed to automatically register the test result.
     """
 
-    tc = env.ctx.exec_groups["test"].toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
+    tc = _test_toolchain(env.ctx)
     testbin = env.ctx.actions.declare_file(env.ctx.label.name + tc.file_ext)
     if env.failures:
         failure_message_lines = "\n".join(env.failures).split("\n")
@@ -457,13 +494,16 @@ def _end(env):
     return [DefaultInfo(executable = testbin)]
 
 def _fail(env, msg):
+    # type: (_TestEnv[ctx], str) -> None
     """Unconditionally causes the current test to fail.
 
     Args:
       env: The test environment returned by `unittest.begin`.
       msg: The message to log describing the failure.
     """
-    full_msg = "In test %s: %s" % (env.ctx.attr._impl_name, msg)
+
+    # Both test factories add the private function-name attribute to the context.
+    full_msg = "In test %s: %s" % (env.ctx.attr._impl_name, msg)  # ty: ignore[possibly-missing-attribute]
 
     # There isn't a better way to output the message in Starlark, so use print.
     # buildifier: disable=print
@@ -474,6 +514,7 @@ def _assert_true(
         env,
         condition,
         msg = "Expected condition to be true, but was false."):
+    # type: (_TestEnv[ctx], object, str) -> None
     """Asserts that the given `condition` is true.
 
     Args:
@@ -489,6 +530,7 @@ def _assert_false(
         env,
         condition,
         msg = "Expected condition to be false, but was true."):
+    # type: (_TestEnv[ctx], object, str) -> None
     """Asserts that the given `condition` is false.
 
     Args:
@@ -501,6 +543,7 @@ def _assert_false(
         _fail(env, msg)
 
 def _assert_equals(env, expected, actual, msg = None):
+    # type: (_TestEnv[ctx], object, object, str | None) -> None
     """Asserts that the given `expected` and `actual` values are equal.
 
     Args:
@@ -519,6 +562,7 @@ def _assert_equals(env, expected, actual, msg = None):
         _fail(env, full_msg)
 
 def _assert_set_equals(env, expected, actual, msg = None):
+    # type: [A: Hashable, B: Hashable](_TestEnv[ctx], _Set[A], _Set[B], str | None) -> None
     """Asserts that the given `expected` and `actual` sets are equal.
 
     Args:
@@ -545,6 +589,7 @@ def _assert_set_equals(env, expected, actual, msg = None):
 _assert_new_set_equals = _assert_set_equals
 
 def _expect_failure(env, expected_failure_msg = ""):
+    # type: (_TestEnv[_AnalysisCtx], str) -> None
     """Asserts that the target under test has failed with a given error message.
 
     This requires that the analysis test is created with `analysistest.make()` and
@@ -567,6 +612,7 @@ def _expect_failure(env, expected_failure_msg = ""):
         _fail(env, "Expected failure of target_under_test, but found success")
 
 def _target_actions(env):
+    # type: (_TestEnv[_AnalysisCtx]) -> list[Action]
     """Returns a list of actions registered by the target under test.
 
     Args:
@@ -580,6 +626,7 @@ def _target_actions(env):
     return _target_under_test(env)[_ActionInfo].actions
 
 def _target_bin_dir_path(env):
+    # type: (_TestEnv[_AnalysisCtx]) -> str
     """Returns ctx.bin_dir.path for the target under test.
 
     Args:
@@ -591,6 +638,7 @@ def _target_bin_dir_path(env):
     return _target_under_test(env)[_ActionInfo].bin_path
 
 def _target_under_test(env):
+    # type: (_TestEnv[_AnalysisCtx]) -> Target
     """Returns the target under test.
 
     Args:
@@ -599,7 +647,7 @@ def _target_under_test(env):
     Returns:
       The target under test.
     """
-    result = getattr(env.ctx.attr, "target_under_test")
+    result = env.ctx.attr.target_under_test
     if types.is_list(result):
         if result:
             return result[0]
@@ -608,7 +656,8 @@ def _target_under_test(env):
     return result
 
 def _loading_test_impl(ctx):
-    tc = ctx.exec_groups["test"].toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info
+    # type: (...) -> list[DefaultInfo]
+    tc = _test_toolchain(ctx)
     content = tc.success_templ
     if ctx.attr.failure_message:
         content = tc.failure_templ % ctx.attr.failure_message
@@ -633,6 +682,7 @@ _loading_test = rule(
 )
 
 def _loading_make(name):
+    # type: (str) -> struct[{"name": str}]
     """Creates a loading phase test environment and test_suite.
 
     Args:
@@ -648,6 +698,7 @@ def _loading_make(name):
     return struct(name = name)
 
 def _loading_assert_equals(env, test_case, expected, actual):
+    # type: (struct[{"name": str}, ...], str, object, object) -> None
     """Creates a test case for asserting state at LOADING phase.
 
     Args:
