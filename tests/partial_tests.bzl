@@ -64,6 +64,9 @@ def _make_call_test(ctx):
     foo = partial.make(_make_args_kwargs)
     asserts.equals(env, 15, partial.call(foo, 1, 2, 3, x = 4, y = 5))
 
+    search = partial.make("bazel".find, "z", 1)
+    asserts.equals(env, 2, partial.call(search))
+
     # Test cases where there are args (and/or kwargs) at the make site and the
     # call site.
     foo = partial.make(_call_noargs_nokwargs, 100)
@@ -93,6 +96,7 @@ def _is_instance_test(ctx):
     asserts.true(env, partial.is_instance(partial.make(make_call_test)))
     asserts.true(env, partial.is_instance(partial.make(make_call_test, timeout = "short")))
     asserts.true(env, partial.is_instance(partial.make(make_call_test, timeout = "short", tags = ["foo"])))
+    asserts.true(env, partial.is_instance(struct(function = make_call_test, args = (), kwargs = {}, extra = True)))
     asserts.false(env, partial.is_instance(None))
     asserts.false(env, partial.is_instance({}))
     asserts.false(env, partial.is_instance(struct(foo = 1)))
