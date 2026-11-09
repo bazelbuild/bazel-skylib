@@ -1,4 +1,5 @@
 load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+load("//rules:build_test.bzl", "build_test")
 load("//rules:copy_file.bzl", "copy_file")
 load("//rules:native_binary.bzl", "native_binary", "native_test")
 
@@ -11,6 +12,20 @@ package(
 cc_binary(
     name = "assertarg",
     srcs = ["assertarg.cc"],
+)
+
+cc_binary(
+    name = "write_marker",
+    srcs = ["write_marker.cc"],
+)
+
+# Shell quoting would change the marker tool's literal output argument.
+build_test(
+    name = "declared_build_test!",
+    args = ["'a b'"],
+    marker_tool = ":write_marker",
+    targets = [":assertdata"],
+    test_runner = ":assertarg",
 )
 
 cc_binary(
