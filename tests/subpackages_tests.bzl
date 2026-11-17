@@ -28,6 +28,7 @@ def _all_test(env):
         "diff_test",
         "directory",
         "expand_template",
+        "reapply_platform_flags",
         "select_file",
         "write_file",
     ]
@@ -47,6 +48,7 @@ def _all_test(env):
         "copy_file",
         "directory",
         "expand_template",
+        "reapply_platform_flags",
         "select_file",
         "write_file",
     ]

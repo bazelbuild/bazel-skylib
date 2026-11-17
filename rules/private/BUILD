@@ -1,4 +1,5 @@
 load("//:bzl_library.bzl", "bzl_library")
+load("//rules:common_settings.bzl", "string_list_setting")
 load(":copy_common.bzl", "is_windows")
 
 package(default_applicable_licenses = ["//:license"])
@@ -10,6 +11,14 @@ is_windows(
     applicable_licenses = [],  # no output artifacts
     visibility = ["//visibility:public"],
 )
+
+# The target platforms that //rules:reapply_platform_flags.bzl changes back to.
+string_list_setting(
+    name = "reapply_platform_flags_original_platforms",
+    build_setting_default = [],
+)
+
+platform(name = "reapply_platform_flags_platform_without_flags")
 
 bzl_library(
     name = "bzl_library",

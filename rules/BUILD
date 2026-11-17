@@ -53,6 +53,11 @@ bzl_library(
 )
 
 bzl_library(
+    name = "reapply_platform_flags",
+    srcs = ["reapply_platform_flags.bzl"],
+)
+
+bzl_library(
     name = "run_binary",
     srcs = ["run_binary.bzl"],
     deps = ["//lib:dicts"],

@@ -119,6 +119,12 @@ stardoc_with_diff_test(
 )
 
 stardoc_with_diff_test(
+    name = "reapply_platform_flags",
+    bzl_library_target = "//rules:reapply_platform_flags",
+    out_label = "//docs:reapply_platform_flags_doc.md",
+)
+
+stardoc_with_diff_test(
     name = "run_binary",
     bzl_library_target = "//rules:run_binary",
     out_label = "//docs:run_binary_doc.md",
