@@ -27,8 +27,8 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
-      # https://github.com/tamird/sty/blob/c62bbea118506a03072ce53a1b3fc8e76db09492/docs/github-actions.md
-      - uses: tamird/sty@c62bbea118506a03072ce53a1b3fc8e76db09492
+      # https://github.com/tamird/sty/blob/ed623d51f9aa44b5f3c9d0b165aa3369e6037d56/docs/github-actions.md
+      - uses: tamird/sty@ed623d51f9aa44b5f3c9d0b165aa3369e6037d56
         with:
           working-directory: ${{ matrix.workspace }}
           bazel-version: '8.8.1'
