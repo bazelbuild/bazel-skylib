@@ -28,7 +28,7 @@ jobs:
         with:
           persist-credentials: false
       # https://github.com/tamird/sty/blob/ed623d51f9aa44b5f3c9d0b165aa3369e6037d56/docs/github-actions.md
-      - uses: tamird/sty@cd09583e01456e102fb9dad01eba6656e9e18e7e
+      - uses: tamird/sty@1ec32e3ef847d9086034792ed587ac659c6548f6
         with:
           working-directory: ${{ matrix.workspace }}
           bazel-version: '8.8.1'
