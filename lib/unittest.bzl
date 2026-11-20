@@ -457,6 +457,7 @@ def _test_toolchain(ctx):
     toolchain = ctx.exec_groups["test"].toolchains[TOOLCHAIN_TYPE]
     if toolchain == None:
         fail("Missing required unittest toolchain: " + TOOLCHAIN_TYPE)
+
     # unittest_toolchain supplies this provider under an open ToolchainInfo field.
     return toolchain.unittest_toolchain_info  # ty: ignore[non-static-type, unsound-return]
 
