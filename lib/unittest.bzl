@@ -455,7 +455,7 @@ def _end_analysis_test(env):
 def _test_toolchain(ctx):
     # type: (ctx) -> _UnittestToolchainInfo
     # unittest_toolchain supplies this provider under an open ToolchainInfo field.
-    return ctx.exec_groups["test"].toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info  # ty: ignore[non-static-type, unsound-return-statement]
+    return ctx.exec_groups["test"].toolchains[TOOLCHAIN_TYPE].unittest_toolchain_info  # ty: ignore[non-static-type, unsound-return]
 
 def _end(env):
     # type: (_TestEnv[ctx]) -> list[DefaultInfo]

@@ -55,7 +55,7 @@ def _call(partial, *args, **kwargs):
 
     # Only the combined arguments must match the function's parameters. A
     # partial can bind any subset at make() and override keywords at call().
-    return partial.function(*function_args, **function_kwargs)  # ty: ignore[call-top-callable]
+    return partial.function(*function_args, **function_kwargs)  # ty: ignore[call-to-function-with-unknown-signature]
 
 def _make(func, *args, **kwargs):
     # type: [F: Top[Callable[..., object]], A = Never, V = Never](F, *A, **V) -> struct[{
