@@ -1,0 +1,9 @@
+format-version = 1
+
+[source]
+repository = "@io_bazel_rules_go"
+module = "rules_go"
+versions = ["0.59.0"]
+
+[files]
+"go/private/sdk.bzl" = "sdk.bzli"

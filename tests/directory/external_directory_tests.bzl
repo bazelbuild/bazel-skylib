@@ -23,7 +23,9 @@ directory(
 )
 """
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _external_directory_tests_impl(repo_ctx):
+    # type: (...) -> None
     for f in repo_ctx.attr.files:
         repo_ctx.symlink(repo_ctx.path(f), f.package + "/" + f.name)
 
@@ -48,6 +50,7 @@ external_directory_tests = repository_rule(
 )
 
 def _external_directory_tests_ext_impl(_module_ctx):
+    # type: (...) -> None
     external_directory_tests(name = "external_directory_tests")
 
 # use_repo_rule would be preferred, but it isn't supported in bazel 6.

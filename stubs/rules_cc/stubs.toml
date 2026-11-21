@@ -1,0 +1,9 @@
+format-version = 1
+
+[source]
+repository = "@rules_cc"
+module = "rules_cc"
+versions = ["0.1.5"]
+
+[files]
+"cc/cc_library.bzl" = "cc_library.bzli"

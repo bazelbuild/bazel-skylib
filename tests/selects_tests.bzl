@@ -20,7 +20,9 @@ load("//lib:unittest.bzl", "analysistest", "asserts", "unittest")
 ###################################################
 # with_or_test
 ###################################################
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _with_or_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for with_or."""
     env = unittest.begin(ctx)
 
@@ -67,6 +69,7 @@ with_or_test = unittest.make(_with_or_test)
 # TODO: redefine these config_settings with Starlark build flags when
 # they're available non-experimentally.
 def _create_config_settings():
+    # type: () -> None
     native.config_setting(
         name = "condition1",
         values = {"stamp": "1"},
@@ -81,6 +84,7 @@ def _create_config_settings():
     )
 
 def _create_config_setting_groups():
+    # type: () -> None
     selects.config_setting_group(
         name = "1_and_2_and_3",
         match_all = [":condition1", ":condition2", ":condition3"],
@@ -91,7 +95,7 @@ def _create_config_setting_groups():
     )
     selects.config_setting_group(
         name = "1_or_2_or_3",
-        match_any = [":condition1", ":condition2", ":condition3"],
+        match_any = [Label(":condition1"), ":condition2", ":condition3"],
     )
     selects.config_setting_group(
         name = "1_or_nothing_else",
@@ -111,6 +115,7 @@ def _create_config_setting_groups():
 ###################################################
 
 def _set_conditions(condition_list):
+    # type: (list[bool]) -> dict[str, str | list[str]]
     """Returns an argument for config_settings that sets specific options.
 
     Args:
@@ -137,12 +142,17 @@ def _set_conditions(condition_list):
         ans["//command_line_option:features"] = ["notmyfeature"]
     return ans
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32207): Declare field types
+# directly on the provider when Bazel supports them.
 _BooleanInfo = provider(
     doc = "value for boolean tests",
-    fields = ["value"],
+    fields = {
+        "value": "Value of the selected boolean attribute.",  # type: bool
+    },
 )
 
 def _boolean_attr_impl(ctx):
+    # type: (...) -> list[_BooleanInfo]
     return [_BooleanInfo(value = ctx.attr.myboolean)]
 
 boolean_attr_rule = rule(
@@ -151,6 +161,7 @@ boolean_attr_rule = rule(
 )
 
 def _expect_matches(ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     """Generic test implementation expecting myboolean == True."""
     env = analysistest.begin(ctx)
     attrval = analysistest.target_under_test(env)[_BooleanInfo].value
@@ -158,6 +169,7 @@ def _expect_matches(ctx):
     return analysistest.end(env)
 
 def _expect_doesnt_match(ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     """Generic test implementation expecting myboolean == False."""
     env = analysistest.begin(ctx)
     attrval = analysistest.target_under_test(env)[_BooleanInfo].value
@@ -173,6 +185,7 @@ and_config_setting_group_matches_test = analysistest.make(
 )
 
 def _and_config_setting_group_matches_test():
+    # type: () -> None
     """Test verifying match on an ANDing config_setting_group."""
     boolean_attr_rule(
         name = "and_config_setting_group_matches_rule",
@@ -197,6 +210,7 @@ and_config_setting_group_first_match_fails_test = analysistest.make(
 )
 
 def _and_config_setting_group_first_match_fails_test():
+    # type: () -> None
     """Test verifying first condition mismatch on an ANDing config_setting_group."""
     boolean_attr_rule(
         name = "and_config_setting_group_first_match_fails_rule",
@@ -221,6 +235,7 @@ and_config_setting_group_middle_match_fails_test = analysistest.make(
 )
 
 def _and_config_setting_group_middle_match_fails_test():
+    # type: () -> None
     """Test verifying middle condition mismatch on an ANDing config_setting_group."""
     boolean_attr_rule(
         name = "and_config_setting_group_middle_match_fails_rule",
@@ -245,6 +260,7 @@ and_config_setting_group_last_match_fails_test = analysistest.make(
 )
 
 def _and_config_setting_group_last_match_fails_test():
+    # type: () -> None
     """Test verifying last condition mismatch on an ANDing config_setting_group."""
     boolean_attr_rule(
         name = "and_config_setting_group_last_match_fails_rule",
@@ -269,6 +285,7 @@ and_config_setting_group_multiple_matches_fail_test = analysistest.make(
 )
 
 def _and_config_setting_group_multiple_matches_fail_test():
+    # type: () -> None
     """Test verifying multiple conditions mismatch on an ANDing config_setting_group."""
     boolean_attr_rule(
         name = "and_config_setting_group_multiple_matches_fail_rule",
@@ -293,6 +310,7 @@ and_config_setting_group_all_matches_fail_test = analysistest.make(
 )
 
 def _and_config_setting_group_all_matches_fail_test():
+    # type: () -> None
     """Test verifying all conditions mismatch on an ANDing config_setting_group."""
     boolean_attr_rule(
         name = "and_config_setting_group_all_matches_fail_rule",
@@ -317,6 +335,7 @@ and_config_setting_group_single_setting_matches_test = analysistest.make(
 )
 
 def _and_config_setting_group_single_setting_matches_test():
+    # type: () -> None
     """Test verifying match on single-entry ANDing config_setting_group."""
     boolean_attr_rule(
         name = "and_config_setting_group_single_setting_matches_rule",
@@ -341,6 +360,7 @@ and_config_setting_group_single_setting_fails_test = analysistest.make(
 )
 
 def _and_config_setting_group_single_setting_fails_test():
+    # type: () -> None
     """Test verifying no match on single-entry ANDing config_setting_group."""
     boolean_attr_rule(
         name = "and_config_setting_group_single_setting_fails_rule",
@@ -365,6 +385,7 @@ or_config_setting_group_no_matches_test = analysistest.make(
 )
 
 def _or_config_setting_group_no_matches_test():
+    # type: () -> None
     """Test verifying no matches on an ORing config_setting_group."""
     boolean_attr_rule(
         name = "or_config_setting_group_no_matches_rule",
@@ -389,6 +410,7 @@ or_config_setting_group_first_cond_matches_test = analysistest.make(
 )
 
 def _or_config_setting_group_first_cond_matches_test():
+    # type: () -> None
     """Test verifying first condition matching on an ORing config_setting_group."""
     boolean_attr_rule(
         name = "or_config_setting_group_first_cond_matches_rule",
@@ -413,6 +435,7 @@ or_config_setting_group_middle_cond_matches_test = analysistest.make(
 )
 
 def _or_config_setting_group_middle_cond_matches_test():
+    # type: () -> None
     """Test verifying middle condition matching on an ORing config_setting_group."""
     boolean_attr_rule(
         name = "or_config_setting_group_middle_cond_matches_rule",
@@ -437,6 +460,7 @@ or_config_setting_group_last_cond_matches_test = analysistest.make(
 )
 
 def _or_config_setting_group_last_cond_matches_test():
+    # type: () -> None
     """Test verifying last condition matching on an ORing config_setting_group."""
     boolean_attr_rule(
         name = "or_config_setting_group_last_cond_matches_rule",
@@ -461,6 +485,7 @@ or_config_setting_group_multiple_conds_match_test = analysistest.make(
 )
 
 def _or_config_setting_group_multiple_conds_match_test():
+    # type: () -> None
     """Test verifying multiple conditions matching on an ORing config_setting_group."""
     boolean_attr_rule(
         name = "or_config_setting_group_multiple_conds_match_rule",
@@ -485,6 +510,7 @@ or_config_setting_group_all_conds_match_test = analysistest.make(
 )
 
 def _or_config_setting_group_all_conds_match_test():
+    # type: () -> None
     """Test verifying all conditions matching on an ORing config_setting_group."""
     boolean_attr_rule(
         name = "or_config_setting_group_all_conds_match_rule",
@@ -509,6 +535,7 @@ or_config_setting_group_single_setting_matches_test = analysistest.make(
 )
 
 def _or_config_setting_group_single_setting_matches_test():
+    # type: () -> None
     """Test verifying match on single-entry ORing config_setting_group."""
     boolean_attr_rule(
         name = "or_config_setting_group_single_setting_matches_rule",
@@ -533,6 +560,7 @@ or_config_setting_group_single_setting_fails_test = analysistest.make(
 )
 
 def _or_config_setting_group_single_setting_fails_test():
+    # type: () -> None
     """Test verifying no match on single-entry ORing config_setting_group."""
     boolean_attr_rule(
         name = "or_config_setting_group_single_setting_fails_rule",
@@ -554,6 +582,7 @@ def _or_config_setting_group_single_setting_fails_test():
 always_true_match_all_test = analysistest.make(_expect_matches)
 
 def _always_true_match_all_test():
+    # type: () -> None
     """Tests that "match_all=['//conditions:default']" always matches."""
     selects.config_setting_group(
         name = "all_always_match",
@@ -578,6 +607,7 @@ def _always_true_match_all_test():
 always_true_match_any_test = analysistest.make(_expect_matches)
 
 def _always_true_match_any_test():
+    # type: () -> None
     """Tests that "match_any=['//conditions:default']" always matches."""
     selects.config_setting_group(
         name = "any_always_match",
@@ -605,6 +635,7 @@ or_config_setting_group_with_default_matches_test = analysistest.make(
 )
 
 def _or_config_setting_group_with_default_matches_test():
+    # type: () -> None
     """Tests that an ORing config_setting_group containing '//conditions:default' always matches."""
     boolean_attr_rule(
         name = "or_config_setting_group_with_default_matches_rule",
@@ -629,6 +660,7 @@ and_config_setting_group_with_default_matches_test = analysistest.make(
 )
 
 def _and_config_setting_group_with_default_matches_test():
+    # type: () -> None
     """Tests that '//conditions:default' in an ANDing config_setting_group is ignored (match case)."""
     boolean_attr_rule(
         name = "and_config_setting_group_with_default_matches_rule",
@@ -653,6 +685,7 @@ and_config_setting_group_with_default_fails_test = analysistest.make(
 )
 
 def _and_config_setting_group_with_default_fails_test():
+    # type: () -> None
     """Tests that '//conditions:default' in an ANDing config_setting_group is ignored (mismatch case)."""
     boolean_attr_rule(
         name = "and_config_setting_group_with_default_fails_rule",
@@ -667,6 +700,37 @@ def _and_config_setting_group_with_default_fails_test():
         name = "and_config_setting_group_with_default_fails_test",
         target_under_test = ":and_config_setting_group_with_default_fails_rule",
     )
+
+###################################################
+# duplicate_label_conditions_test
+###################################################
+
+def _duplicate_label_conditions_impl(ctx):
+    # type: (...) -> None
+    # Invalid groups fail before creating rules, so analysis tests can check the error.
+    condition = Label(":condition1")
+    selects.config_setting_group(
+        name = ctx.label.name,
+        match_any = [condition, condition],
+    )
+
+_duplicate_label_conditions = rule(
+    implementation = _duplicate_label_conditions_impl,
+)
+
+def _duplicate_label_conditions_test_impl(ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
+    env = analysistest.begin(ctx)
+    asserts.expect_failure(
+        env,
+        "%s appears more than once. Duplicates not allowed." % Label(":condition1"),
+    )
+    return analysistest.end(env)
+
+duplicate_label_conditions_test = analysistest.make(
+    _duplicate_label_conditions_test_impl,
+    expect_failure = True,
+)
 
 ###################################################
 # empty_config_setting_group_not_allowed_test
@@ -689,6 +753,7 @@ def _and_config_setting_group_with_default_fails_test():
 
 # buildifier: disable=unnamed-macro
 def selects_test_suite():
+    # type: () -> None
     """Creates the test targets and test suite for selects.bzl tests."""
     unittest.suite(
         "selects_tests",
@@ -722,6 +787,15 @@ def selects_test_suite():
     _or_config_setting_group_with_default_matches_test()
     _and_config_setting_group_with_default_matches_test()
     _and_config_setting_group_with_default_fails_test()
+
+    _duplicate_label_conditions(
+        name = "duplicate_label_conditions",
+        tags = ["manual"],
+    )
+    duplicate_label_conditions_test(
+        name = "duplicate_label_conditions_test",
+        target_under_test = ":duplicate_label_conditions",
+    )
 
     # _empty_config_setting_group_not_allowed_test()
     # _and_and_or_not_allowed_together_test()

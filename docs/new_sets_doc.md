@@ -259,7 +259,7 @@ All elements must be hashable.
 
 | Name  | Description | Default Value |
 | :------------- | :------------- | :------------- |
-| <a id="sets.make-elements"></a>elements |  Optional sequence to construct the set out of.   |  `None` |
+| <a id="sets.make-elements"></a>elements |  Elements to insert. Passing None creates an empty set.   |  `()` |
 
 **RETURNS**
 

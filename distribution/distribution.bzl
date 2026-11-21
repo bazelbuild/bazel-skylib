@@ -14,14 +14,22 @@
 
 """Helper utilities for generating distribution tarballs."""
 
-def remove_internal_only(name, src, out, **kwargs):
+# TODO(https://github.com/bazelbuild/bazel/issues/32343): Express the forwarded
+# genrule keywords in a native function annotation once Bazel supports them.
+def remove_internal_only(
+        name,  # type: str
+        src,  # type: str | Label
+        out,  # type: str | Label
+        # type: Unpack[KeywordArgs[native.genrule]]
+        **kwargs):
+    # type: (...) -> None
     """Removes '### INTERNAL ONLY' line and all lines below from a file.
 
     Args:
         name: Name of the rule.
         src: File to process.
         out: Path of the output file.
-        **kwargs: further keyword arguments.
+        **kwargs: further keyword arguments passed to native.genrule.
     """
     native.genrule(
         name = name,

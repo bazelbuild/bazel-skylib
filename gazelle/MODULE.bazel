@@ -20,3 +20,14 @@ go_deps.module(
     version = "v0.0.0-20220531122519-a43aed7014c8",
 )
 use_repo(go_deps, "com_github_bazelbuild_buildtools")
+
+### INTERNAL ONLY
+
+# Type contracts for Bazel's repository helpers.
+bazel_dep(name = "bazel_tools_stubs", dev_dependency = True)
+archive_override(
+    module_name = "bazel_tools_stubs",
+    integrity = "sha256-dL7m8o17203cR0gsGStzBqjm52bXY9Wq7m8qF+qxFM8=",
+    strip_prefix = "sty-d272530567a2a2422bdaa3a43bf8265756ce6f49/crates/starpls_bazel/data/bazel_tools",
+    urls = ["https://github.com/tamird/sty/archive/d272530567a2a2422bdaa3a43bf8265756ce6f49.tar.gz"],
+)

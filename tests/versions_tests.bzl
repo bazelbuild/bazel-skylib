@@ -17,7 +17,9 @@
 load("//lib:unittest.bzl", "asserts", "unittest")
 load("//lib:versions.bzl", "versions")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _parse_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for versions.parse"""
     env = unittest.begin(ctx)
 
@@ -32,6 +34,7 @@ def _parse_test(ctx):
     return unittest.end(env)
 
 def _version_comparison_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for versions.is_at_least and is_at_most"""
     env = unittest.begin(ctx)
 
@@ -50,6 +53,7 @@ def _version_comparison_test(ctx):
     return unittest.end(env)
 
 def _check_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for versions.check"""
     env = unittest.begin(ctx)
 
@@ -65,6 +69,7 @@ version_comparison_test = unittest.make(_version_comparison_test)
 check_test = unittest.make(_check_test)
 
 def versions_test_suite():
+    # type: () -> None
     """Creates the test targets and test suite for versions.bzl tests."""
     unittest.suite(
         "versions_tests",

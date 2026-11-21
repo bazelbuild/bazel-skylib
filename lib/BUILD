@@ -56,9 +56,6 @@ bzl_library(
 bzl_library(
     name = "new_sets",
     srcs = ["new_sets.bzl"],
-    deps = [
-        ":dicts",
-    ],
 )
 
 bzl_library(

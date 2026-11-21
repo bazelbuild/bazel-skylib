@@ -17,7 +17,9 @@
 load("//lib:dicts.bzl", "dicts")
 load("//lib:unittest.bzl", "asserts", "unittest")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _add_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for dicts.add."""
     env = unittest.begin(ctx)
 
@@ -84,6 +86,7 @@ def _add_test(ctx):
 add_test = unittest.make(_add_test)
 
 def _omit_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for dicts.omit."""
     env = unittest.begin(ctx)
 
@@ -117,6 +120,7 @@ def _omit_test(ctx):
 omit_test = unittest.make(_omit_test)
 
 def _pick_test(ctx):
+    # type: (ctx) -> list[DefaultInfo]
     """Unit tests for dicts.pick."""
     env = unittest.begin(ctx)
 
@@ -135,6 +139,11 @@ def _pick_test(ctx):
     # Test key not in dict.
     asserts.equals(env, {}, dicts.pick({"a": 1}, ["b"]))
 
+    # Preserve the requested key, even when it equals a dictionary key of a different type.
+    picked = dicts.pick({1: "one"}, [1.0, 2.0])
+    asserts.equals(env, ["float"], [type(key) for key in picked])
+    asserts.equals(env, ["one"], picked.values())
+
     # Since dictionaries are passed around by reference, make sure that the
     # result of dicts.pick is always a *copy* by modifying it afterwards and
     # ensuring that the original argument doesn't also reflect the change. We do
@@ -150,6 +159,7 @@ def _pick_test(ctx):
 pick_test = unittest.make(_pick_test)
 
 def dicts_test_suite():
+    # type: () -> None
     """Creates the test targets and test suite for dicts.bzl tests."""
     unittest.suite(
         "dicts_tests",

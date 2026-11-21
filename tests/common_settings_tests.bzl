@@ -15,12 +15,15 @@
 """Analysis tests for common_settings.bzl."""
 
 load("//lib:unittest.bzl", "analysistest", "asserts")
-load("//rules:common_settings.bzl", "int_flag", "int_setting", "string_flag", "string_setting")
+load("//rules:common_settings.bzl", "BuildSettingInfo", "bool_flag", "bool_setting", "int_flag", "int_setting", "repeatable_string_flag", "string_flag", "string_list_flag", "string_list_setting", "string_setting")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _template_variable_info_contents_test_impl(ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     env = analysistest.begin(ctx)
 
     target_under_test = analysistest.target_under_test(env)
+    asserts.equals(env, ctx.attr.expected_value, repr(target_under_test[BuildSettingInfo].value))
     if ctx.attr.expected:
         asserts.equals(
             env,
@@ -36,10 +39,12 @@ _template_variable_info_contents_test = analysistest.make(
     _template_variable_info_contents_test_impl,
     attrs = {
         "expected": attr.string_dict(),
+        "expected_value": attr.string(mandatory = True),
     },
 )
 
 def _test_template_variable_info_contents():
+    # type: () -> None
     int_flag(
         name = "my_int_flag",
         build_setting_default = 42,
@@ -49,6 +54,7 @@ def _test_template_variable_info_contents():
     _template_variable_info_contents_test(
         name = "my_int_flag_test",
         target_under_test = ":my_int_flag",
+        expected_value = "42",
         expected = {
             "MY_INT_1": "42",
         },
@@ -63,6 +69,7 @@ def _test_template_variable_info_contents():
     _template_variable_info_contents_test(
         name = "my_int_setting_test",
         target_under_test = ":my_int_setting",
+        expected_value = "21",
         expected = {
             "MY_INT_2": "21",
         },
@@ -77,6 +84,7 @@ def _test_template_variable_info_contents():
     _template_variable_info_contents_test(
         name = "my_string_flag_test",
         target_under_test = ":my_string_flag",
+        expected_value = "\"foo\"",
         expected = {
             "MY_STRING_1": "foo",
         },
@@ -91,6 +99,7 @@ def _test_template_variable_info_contents():
     _template_variable_info_contents_test(
         name = "my_string_setting_test",
         target_under_test = ":my_string_setting",
+        expected_value = "\"bar\"",
         expected = {
             "MY_STRING_2": "bar",
         },
@@ -104,10 +113,12 @@ def _test_template_variable_info_contents():
     _template_variable_info_contents_test(
         name = "my_string_flag_without_make_variable_test",
         target_under_test = ":my_string_flag_without_make_variable",
+        expected_value = "\"foo\"",
         expected = {},
     )
 
 def _failure_test_impl(ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     env = analysistest.begin(ctx)
 
     asserts.expect_failure(env, ctx.attr.expected_failure)
@@ -123,6 +134,7 @@ _failure_test = analysistest.make(
 )
 
 def _test_make_variable_name_failures():
+    # type: () -> None
     int_flag(
         name = "my_failing_int_flag",
         build_setting_default = 42,
@@ -149,7 +161,38 @@ def _test_make_variable_name_failures():
         expected_failure = "Error setting //tests:my_failing_string_flag: invalid make variable name 'MY STRING'. Make variable names may only contain uppercase letters, digits, and underscores.",
     )
 
+def _simple_setting_test(name, value):
+    # type: (str, object) -> str
+    test_name = name + "_test"
+    _template_variable_info_contents_test(
+        name = test_name,
+        target_under_test = ":" + name,
+        expected_value = repr(value),
+    )
+    return test_name
+
+def _test_simple_settings():
+    # type: () -> list[str]
+    tests = []
+    for setting, name, value in [
+        (bool_flag, "my_bool_flag", True),
+        (bool_setting, "my_bool_setting", False),
+    ]:
+        setting(name = name, build_setting_default = value)
+        tests.append(_simple_setting_test(name, value))
+
+    empty_strings = []  # type: list[str]
+    for setting, name, value in [
+        (string_list_flag, "my_string_list_flag", ["one", "two"]),
+        (string_list_setting, "my_string_list_setting", empty_strings),
+        (repeatable_string_flag, "my_repeatable_string_flag", ["one", "two"]),
+    ]:
+        setting(name = name, build_setting_default = value)
+        tests.append(_simple_setting_test(name, value))
+    return tests
+
 def common_settings_test_suite(name = "common_settings_test_suite"):
+    # type: (str) -> None
     _test_template_variable_info_contents()
     _test_make_variable_name_failures()
 
@@ -163,5 +206,5 @@ def common_settings_test_suite(name = "common_settings_test_suite"):
             "my_string_flag_without_make_variable_test",
             "my_failing_int_flag_test",
             "my_failing_string_flag_test",
-        ],
+        ] + _test_simple_settings(),
     )

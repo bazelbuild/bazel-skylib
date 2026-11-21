@@ -11,7 +11,10 @@ license(
 
 licenses(["notice"])
 
-exports_files(["WORKSPACE.bzlmod"])
+exports_files([
+    "MODULE.bazel",
+    "WORKSPACE.bzlmod",
+])
 
 bzl_library(
     name = "setup",
@@ -39,7 +42,6 @@ filegroup(
     name = "distribution",
     srcs = [
         "BUILD",
-        "MODULE.bazel",
         "WORKSPACE.bzlmod",
         "setup.bzl",
         "workspace.bzl",

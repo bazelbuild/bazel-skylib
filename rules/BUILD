@@ -55,7 +55,6 @@ bzl_library(
 bzl_library(
     name = "run_binary",
     srcs = ["run_binary.bzl"],
-    deps = ["//lib:dicts"],
 )
 
 bzl_library(
@@ -78,7 +77,10 @@ filegroup(
     name = "distribution",
     srcs = [
         "BUILD",
-    ] + glob(["*.bzl"]),
+    ] + glob([
+        "*.bzl",
+        "*.bzli",
+    ]),
     visibility = [
         "//:__pkg__",
     ],

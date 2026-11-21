@@ -14,7 +14,10 @@
 
 """Skylib module containing functions that operate on collections."""
 
+# TODO(https://github.com/bazelbuild/starlark/pull/362): Annotate after_each
+# and before_each natively when every supported Bazel accepts generic functions.
 def _after_each(separator, iterable):
+    # type: [S, T](S, Collection[T]) -> list[S | T]
     """Inserts `separator` after each item in `iterable`.
 
     Args:
@@ -32,6 +35,7 @@ def _after_each(separator, iterable):
     return result
 
 def _before_each(separator, iterable):
+    # type: [S, T](S, Collection[T]) -> list[S | T]
     """Inserts `separator` before each item in `iterable`.
 
     Args:
@@ -48,7 +52,10 @@ def _before_each(separator, iterable):
 
     return result
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32381): Annotate uniq natively
+# when Bazel can require its input elements to be hashable.
 def _uniq(iterable):
+    # type: [T: Hashable](Collection[T]) -> list[T]
     """Returns a list of unique elements in `iterable`.
 
     Requires all the elements to be hashable.
@@ -59,6 +66,7 @@ def _uniq(iterable):
     Returns:
       A new list with all unique elements from `iterable`.
     """
+
     unique_elements = {element: None for element in iterable}
 
     # list() used here for python3 compatibility.

@@ -1,0 +1,9 @@
+format-version = 1
+
+[source]
+repository = "@rules_testing"
+module = "rules_testing"
+versions = ["0.6.0"]
+
+[files]
+"lib/private/matching.bzl" = "matching.bzli"

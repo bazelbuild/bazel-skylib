@@ -1,0 +1,5 @@
+[[stub-packages]]
+manifest = "@bazel_tools_stubs//:stubs.toml"
+
+[[stub-packages]]
+manifest = "stubs/rules_go/stubs.toml"

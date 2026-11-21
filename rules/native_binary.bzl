@@ -20,7 +20,9 @@ do, but they run the wrapped binary directly, instead of through Bash, so they
 don't depend on Bash and work with --shell_executable="".
 """
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _impl_rule(ctx):
+    # type: (...) -> list[DefaultInfo | RunEnvironmentInfo]
     out = ctx.actions.declare_file(ctx.attr.out if (ctx.attr.out != "") else ctx.attr.name + ".exe")
     ctx.actions.symlink(
         target_file = ctx.executable.src,

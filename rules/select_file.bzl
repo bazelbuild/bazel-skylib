@@ -18,7 +18,9 @@ select_file() build rule implementation.
 Selects a single file from the outputs of a target by given relative path.
 """
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _impl(ctx):
+    # type: (...) -> list[DefaultInfo]
     if ctx.attr.subpath and len(ctx.attr.subpath) == 0:
         fail("Subpath can not be empty.")
 

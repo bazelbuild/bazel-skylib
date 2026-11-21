@@ -14,16 +14,20 @@
 
 """Skylib module containing a library rule for aggregating rules files."""
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32207): Declare field types
+# directly on the provider when Bazel supports them.
 StarlarkLibraryInfo = provider(
     "Information on contained Starlark rules.",
     fields = {
-        "srcs": "Top level rules files.",
+        "srcs": "Top level rules files.",  # type: list[File]
         "transitive_srcs": "Transitive closure of rules files required for " +
-                           "interpretation of the srcs",
+                           "interpretation of the srcs",  # type: depset[File]
     },
 )
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _bzl_library_impl(ctx):
+    # type: (...) -> list[DefaultInfo | StarlarkLibraryInfo]
     deps_files = [x[DefaultInfo].files for x in ctx.attr.deps]
     all_files = depset(ctx.files.srcs, order = "postorder", transitive = deps_files)
     if not ctx.files.srcs and not deps_files:

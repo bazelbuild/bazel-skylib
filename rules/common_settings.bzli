@@ -1,0 +1,15 @@
+"""Values and implementations for the common build settings."""
+
+# TODO(https://github.com/bazelbuild/bazel/issues/32207): Declare the provider value
+# type on its fields when native Bazel annotations support generic providers.
+def BuildSettingInfo[T](*, value: T) -> record[{"value": T}]: ...
+
+# TODO(https://github.com/bazelbuild/bazel/issues/32370): Express this context
+# in source when Bazel can type ctx.attr and ctx.build_setting_value independently.
+class _SettingContext[T, A](Protocol):
+    @property
+    def attr(self) -> A: ...
+    @property
+    def label(self) -> Label: ...
+    @property
+    def build_setting_value(self) -> T: ...

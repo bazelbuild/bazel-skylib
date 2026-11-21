@@ -14,7 +14,17 @@
 
 """Skylib module containing functions that operate on dictionaries."""
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32381): Use native annotations
+# once Bazel can express bounded dictionary keys and read-only access to
+# dictionaries with different key and value types.
+# add() can copy a dict[str, int] and a dict[str, Label] into the same result.
+# Neither input accepts the other dictionary's values.
+# type _AddInput[K: Hashable, V] = Top[dict[Intersection[K, Unknown], Intersection[V, Unknown]]]
+
+# The return type covers both add({1: 2}) and add({1: 2}, extra = 3).
+# Only the second call introduces a string key.
 def _add(*dictionaries, **kwargs):
+    # type: [K: Hashable = Never, V = Never](*_AddInput[K, V], **V) -> dict[K | str, V]
     """Returns a new `dict` that has all the entries of the given dictionaries.
 
     If the same key is present in more than one of the input dictionaries, the
@@ -39,6 +49,7 @@ def _add(*dictionaries, **kwargs):
     return result
 
 def _omit(dictionary, keys):
+    # type: [K: Hashable, V](dict[K, V], Collection[Hashable]) -> dict[K, V]
     """Returns a new `dict` that has all the entries of `dictionary` with keys not in `keys`.
 
     Args:
@@ -52,6 +63,7 @@ def _omit(dictionary, keys):
     return {k: dictionary[k] for k in dictionary if k not in keys_set}
 
 def _pick(dictionary, keys):
+    # type: [K: Hashable, V, L: Hashable](dict[K, V], Collection[L]) -> dict[L, V]
     """Returns a new `dict` that has all the entries of `dictionary` with keys in `keys`.
 
     Args:

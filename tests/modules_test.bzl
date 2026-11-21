@@ -17,7 +17,9 @@
 load("//lib:modules.bzl", "modules")
 load("//rules:build_test.bzl", "build_test")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _repo_rule_impl(repository_ctx):
+    # type: (...) -> None
     repository_ctx.file("WORKSPACE")
     repository_ctx.file("BUILD", """exports_files(["hello"])""")
     repository_ctx.file("hello", "Hello, Bzlmod!")
@@ -25,6 +27,7 @@ def _repo_rule_impl(repository_ctx):
 _repo_rule = repository_rule(_repo_rule_impl)
 
 def _workspace_macro(register_toolchains = False):
+    # type: (bool) -> None
     _repo_rule(name = "foo")
     _repo_rule(name = "bar")
     if register_toolchains:
@@ -35,7 +38,10 @@ as_extension_test_ext = modules.as_extension(
     doc = "Only used for testing modules.as_extension().",
 )
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32020): Use native annotations
+# when Bazel exposes the module context and extension metadata types.
 def _use_all_repos_ext_impl(module_ctx):
+    # type: (...) -> extension_metadata | None
     _repo_rule(name = "baz")
     _repo_rule(name = "qux")
     return modules.use_all_repos(module_ctx)
@@ -47,6 +53,7 @@ use_all_repos_test_ext = module_extension(
 
 # buildifier: disable=unnamed-macro
 def modules_test_suite():
+    # type: () -> None
     """Creates the tests for modules.bzl if Bzlmod is enabled."""
 
     # buildifier: disable=canonical-repository

@@ -15,7 +15,9 @@
 
 load(":providers.bzl", "DirectoryInfo")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _directory_glob_impl(ctx):
+    # type: (...) -> DefaultInfo
     directory = ctx.attr.directory[DirectoryInfo]
     srcs = directory.glob(
         ctx.attr.srcs,

@@ -1,0 +1,23 @@
+[analysis]
+strict-generic-narrowing = true
+# Skylib uses None as a dict-set sentinel. Preserve its type unless a write
+# widens it.
+widen-singleton-collection-elements = false
+require-valid-suppressions = true
+
+# TODO(https://github.com/bazelbuild/bazel/issues/32343): Use the native
+# contract when Bazel can describe the keywords maybe() forwards to its rule.
+[[stub-packages]]
+manifest = "@bazel_tools_stubs//:stubs.toml"
+
+[[stub-packages]]
+manifest = "stubs/rules_cc/stubs.toml"
+
+[[stub-packages]]
+manifest = "stubs/rules_testing/stubs.toml"
+
+[[stub-packages]]
+manifest = "stubs/stardoc/stubs.toml"
+
+[rules]
+strict = "error"

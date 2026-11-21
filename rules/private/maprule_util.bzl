@@ -14,30 +14,32 @@
 
 """Utilities for maprule."""
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def resolve_locations(ctx, strategy, d):
-    """Resolve $(location) references in the values of a dictionary.
+    # type: (ctx, struct[{"as_path": Callable[[str], str]}, ...], dict[str, str]) -> dict[str, str]
+    """Expand the location and locations variables in dictionary values.
 
     Args:
       ctx: the 'ctx' argument of the rule implementation function
       strategy: a struct with an 'as_path(string) -> string' function
-      d: {string: string} dictionary; values may contain $(location) references
+      d: {string: string} dictionary; values may contain references
         for labels declared in the rule's 'srcs' and 'tools' attributes
 
     Returns:
-      {string: string} dict, same as 'd' except "$(location)" references are
-      resolved.
+      {string: string} dict, same as 'd' but with label references replaced by paths.
     """
+    location_prefix = "$(location"  # buildifier: disable=make-location
     location_expressions = []
     parts = {}
     was_anything_to_resolve = False
     for k, v in d.items():
         # Look for "$(location ...)" or "$(locations ...)", resolve if found.
         # _validate_attributes already ensured that there's at most one $(location/s ...) in "v".
-        if "$(location" in v:
-            tokens = v.split("$(location")
+        if location_prefix in v:
+            tokens = v.split(location_prefix)
             was_anything_to_resolve = True
             closing_paren = tokens[1].find(")")
-            location_expressions.append("$(location" + tokens[1][:closing_paren + 1])
+            location_expressions.append(location_prefix + tokens[1][:closing_paren + 1])
             parts[k] = (tokens[0], tokens[1][closing_paren + 1:])
         else:
             location_expressions.append("")
@@ -68,6 +70,7 @@ def resolve_locations(ctx, strategy, d):
     return resolved
 
 def fail_if_errors(errors):
+    # type: (Sequence[str]) -> None
     """Reports errors and fails the rule.
 
     Args:
@@ -78,22 +81,28 @@ def fail_if_errors(errors):
         fail("\n".join(errors[:10]))
 
 def _as_windows_path(s):
+    # type: (str) -> str
     """Returns the input path as a Windows path (replaces all of "/" with "\")."""
     return s.replace("/", "\\")
 
 def _unchanged_path(s):
+    # type: (str) -> str
     """Returns the input string (path) unchanged."""
     return s
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32021): Annotate the inputs
+# of both action helpers natively when Bazel can express depset[File].
 def _create_cmd_action(
-        ctx,
-        outputs,
-        command,
-        inputs = None,
-        env = None,
-        progress_message = None,
-        mnemonic = None,
+        ctx,  # type: ctx
+        outputs,  # type: Sequence[File]
+        command,  # type: str
+        inputs = None,  # type: Sequence[File] | depset[File] | None
+        env = None,  # type: Mapping[str, str] | None
+        progress_message = None,  # type: str | None
+        mnemonic = None,  # type: str | None
+        # type: Sequence[object] | None
         manifests_from_tools = None):
+    # type: (...) -> None
     """Create one action using cmd.exe."""
     ctx.actions.run(
         inputs = inputs or [],
@@ -107,14 +116,16 @@ def _create_cmd_action(
     )
 
 def _create_bash_action(
-        ctx,
-        outputs,
-        command,
-        inputs = None,
-        env = None,
-        progress_message = None,
-        mnemonic = None,
+        ctx,  # type: ctx
+        outputs,  # type: Sequence[File]
+        command,  # type: str
+        inputs = None,  # type: Sequence[File] | depset[File] | None
+        env = None,  # type: Mapping[str, str] | None
+        progress_message = None,  # type: str | None
+        mnemonic = None,  # type: str | None
+        # type: Sequence[object] | None
         manifests_from_tools = None):
+    # type: (...) -> None
     """Create one action using Bash."""
     ctx.actions.run_shell(
         inputs = inputs or [],

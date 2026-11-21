@@ -46,7 +46,11 @@ COPY_EXECUTION_REQUIREMENTS = {
 
 OsInfo = provider(
     doc = "Information about the target platform's OS.",
-    fields = ["is_windows"],
+    fields = {
+        # TODO(https://github.com/bazelbuild/bazel/issues/32207): Declare this field type
+        # natively once Bazel supports typed provider fields.
+        "is_windows": "Whether the target platform is Windows.",  # type: bool
+    },
 )
 
 is_windows = rule(

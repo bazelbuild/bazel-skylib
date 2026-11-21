@@ -17,6 +17,7 @@
 _NO_GLOB_MATCHES = "{glob} failed to match any files in {dir}"
 
 def transitive_entries(directory):
+    # type: (_DirectoryContent) -> list[File | _DirectoryContent]
     """Returns the files and directories contained within a directory transitively.
 
     Args:
@@ -25,6 +26,7 @@ def transitive_entries(directory):
     Returns:
         List[Either[DirectoryInfo, File]] The entries contained within.
     """
+
     entries = [directory]
     stack = [directory]
     for _ in range(99999999):
@@ -39,6 +41,7 @@ def transitive_entries(directory):
     fail("Should never get to here")
 
 def directory_glob_chunk(directory, chunk):
+    # type: (_DirectoryContent, str) -> Sequence[File | _DirectoryContent]
     """Given a directory and a chunk of a glob, returns possible candidates.
 
     Args:
@@ -72,6 +75,7 @@ def directory_glob_chunk(directory, chunk):
     return entries
 
 def directory_single_glob(directory, glob):
+    # type: (_DirectoryContent, str) -> list[File]
     """Calculates all files that are matched by a glob on a directory.
 
     Args:
@@ -85,10 +89,11 @@ def directory_single_glob(directory, glob):
     # Treat a glob as a nondeterministic finite state automata. We can be in
     # multiple places at the one time.
     candidate_dirs = [directory]
-    candidate_files = []
+
+    candidate_files = {}
     for chunk in glob.split("/"):
         next_candidate_dirs = {}
-        candidate_files = {}
+        candidate_files.clear()
         for candidate in candidate_dirs:
             for e in directory_glob_chunk(candidate, chunk):
                 if type(e) == "File":
@@ -99,7 +104,15 @@ def directory_single_glob(directory, glob):
 
     return list(candidate_files)
 
-def glob(directory, include, exclude = [], allow_empty = False):
+# TODO(https://github.com/bazelbuild/bazel/issues/32021): Use a native return
+# annotation when Bazel can express depset[File].
+def glob(
+        directory,  # type: _DirectoryContent
+        include,  # type: Sequence[str]
+        exclude = [],  # type: Sequence[str]
+        # type: bool
+        allow_empty = False):
+    # type: (...) -> depset[File]
     """native.glob, but for DirectoryInfo.
 
     Args:

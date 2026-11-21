@@ -28,10 +28,13 @@ load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def stardoc_with_diff_test(
-        name,
-        bzl_library_target,
+        name,  # type: str
+        bzl_library_target,  # type: str
+        # type: str
         out_label):
+    # type: (...) -> None
     """Creates a stardoc target coupled with a `diff_test` for a given `bzl_library`.
 
     This is helpful for minimizing boilerplate in repos with lots of stardoc targets.
@@ -43,7 +46,6 @@ def stardoc_with_diff_test(
     """
     out_file = out_label.replace("//", "").replace(":", "/")
 
-    # Generate MD from .bzl
     stardoc(
         name = name,
         out = out_file.replace(".md", "-docgen.md"),
@@ -63,8 +65,10 @@ def stardoc_with_diff_test(
     )
 
 def update_docs(
-        name = "update",
+        name = "update",  # type: str
+        # type: str
         docs_folder = "docs"):
+    # type: (...) -> None
     """Creates a `sh_binary` target which copies over generated doc files to the local source tree.
 
     This is to be used in tandem with `stardoc_with_diff_test()` to produce a convenient workflow
@@ -91,9 +95,12 @@ def update_docs(
     data = []
     for r in native.existing_rules().values():
         if r["kind"] == "stardoc_markdown_renderer":
-            doc_gen = r["out"]
-            if doc_gen.startswith(":"):
-                doc_gen = doc_gen[1:]
+            # docs/BUILD uses Stardoc's renderer, whose attr.output Bazel
+            # reflects as a label string. Another package can define a rule
+            # with the same kind name and a different "out" attribute.
+            # type: str
+            out = r["out"]  # ty: ignore[non-static-type, unsound-assignment]
+            doc_gen = out.removeprefix(":")
             doc_dest = doc_gen.replace("-docgen.md", ".md")
             data.append(doc_gen)
             content.append("cp -fv bazel-bin/{0}/{1} {2}".format(docs_folder, doc_gen, doc_dest))

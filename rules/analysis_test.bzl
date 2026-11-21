@@ -14,9 +14,11 @@
 
 """A test verifying other targets can be successfully analyzed as part of a `bazel test`"""
 
-def _analysis_test_impl(ctx):
+# TODO(https://github.com/bazelbuild/bazel/issues/32086): Use a native return
+# annotation once supported Bazel versions recognize AnalysisTestResultInfo.
+def _analysis_test_impl(_ctx):
+    # type: (...) -> list[AnalysisTestResultInfo]
     """Implementation function for analysis_test. """
-    _ignore = [ctx]  # @unused
     return [AnalysisTestResultInfo(
         success = True,
         message = "All targets succeeded analysis",

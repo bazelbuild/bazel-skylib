@@ -17,7 +17,9 @@
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def bazel_skylib_gazelle_plugin_setup(go_version = "1.20.5", register_go_toolchains = True):
+    # type: (str, bool) -> None
     """Set up the dependencies needed by the Gazelle plugin.
 
     Args:

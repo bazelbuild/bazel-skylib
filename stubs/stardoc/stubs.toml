@@ -1,0 +1,9 @@
+format-version = 1
+
+[source]
+repository = "@io_bazel_stardoc"
+module = "stardoc"
+versions = ["0.8.0"]
+
+[files]
+"stardoc/stardoc.bzl" = "stardoc.bzli"

@@ -20,7 +20,9 @@ cmd.exe (on Windows).
 
 load(":copy_common.bzl", "COPY_EXECUTION_REQUIREMENTS", "OsInfo")
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _copy_cmd(ctx, src, dst):
+    # type: (ctx, File, File) -> None
     # Most Windows binaries built with MSVC use a certain argument quoting
     # scheme. Bazel uses that scheme too to quote arguments. However,
     # cmd.exe uses different semantics, so Bazel's quoting is wrong here.
@@ -65,6 +67,7 @@ if not exist \"{src}\\\" (
     )
 
 def _copy_bash(ctx, src, dst):
+    # type: (ctx, File, File) -> None
     cmd = """\
 if [ ! -d \"$1\" ]; then
     echo \"Error: $1 is not a directory\"
@@ -87,7 +90,13 @@ rm -rf \"$2\" && cp -fR \"$1/\" \"$2\"
         execution_requirements = COPY_EXECUTION_REQUIREMENTS,
     )
 
-def copy_directory_action(ctx, src, dst, is_windows = False):
+def copy_directory_action(
+        ctx,  # type: ctx
+        src,  # type: File
+        dst,  # type: File
+        # type: bool
+        is_windows = False):
+    # type: (...) -> None
     """Helper function that creates an action to copy a directory from src to dst.
 
     This helper is used by copy_directory. It is exposed as a public API so it can be used within
@@ -107,6 +116,7 @@ def copy_directory_action(ctx, src, dst, is_windows = False):
         _copy_bash(ctx, src, dst)
 
 def _copy_directory_impl(ctx):
+    # type: (...) -> list[DefaultInfo]
     dst = ctx.actions.declare_directory(ctx.attr.out)
     copy_directory_action(ctx, ctx.file.src, dst, ctx.attr._exec_is_windows[OsInfo].is_windows)
 
@@ -132,7 +142,15 @@ _copy_directory = rule(
     },
 )
 
-def copy_directory(name, src, out, **kwargs):
+# TODO(https://github.com/bazelbuild/bazel/issues/32343): Express the forwarded rule
+# attributes in a native function annotation once Bazel supports them.
+def copy_directory(
+        name,  # type: str
+        src,  # type: str | Label | select[str | Label]
+        out,  # type: str | select[str]
+        # type: Unpack[CommonRuleAttrs]
+        **kwargs):
+    # type: (...) -> None
     """Copies a directory to another location.
 
     This rule uses a Bash command on Linux/macOS/non-Windows, and a cmd.exe command on Windows (no Bash is required).

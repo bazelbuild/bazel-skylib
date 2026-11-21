@@ -1,0 +1,23 @@
+# Copyright 2023 The Bazel Authors. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# TODO(https://github.com/bazelbuild/bazel/issues/32370): Drop this stub when
+# rules_testing can declare the membership operation matching.contains() needs.
+class _Contains[T](Protocol):
+    @type_check_only
+    def __contains__(self, item: T, /) -> bool: ...
+
+type Matcher[T] = struct[{"desc": str, "match": Callable[[T], bool]}, ...]
+
+def _match_contains[T](contained: T) -> Matcher[_Contains[T]]: ...

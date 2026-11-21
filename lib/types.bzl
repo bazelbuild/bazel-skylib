@@ -23,12 +23,18 @@ _an_int_type = type(1)
 _a_depset_type = type(depset())
 _a_struct_type = type(struct())
 
+# TODO: Use native annotations when Skylib requires Bazel 8.8 or newer.
 def _a_function():
+    # type: () -> None
     pass
 
 _a_function_type = type(_a_function)
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32379): Annotate these
+# predicates natively when they can narrow the caller's argument without
+# discarding known container element types.
 def _is_list(v):
+    # type: (object) -> TypeIs[Top[list[Unknown]]]
     """Returns True if v is an instance of a list.
 
     Args:
@@ -40,6 +46,7 @@ def _is_list(v):
     return type(v) == _a_list_type
 
 def _is_string(v):
+    # type: (object) -> TypeIs[str]
     """Returns True if v is an instance of a string.
 
     Args:
@@ -51,6 +58,7 @@ def _is_string(v):
     return type(v) == _a_string_type
 
 def _is_bool(v):
+    # type: (object) -> TypeIs[bool]
     """Returns True if v is an instance of a bool.
 
     Args:
@@ -62,6 +70,7 @@ def _is_bool(v):
     return type(v) == _a_bool_type
 
 def _is_none(v):
+    # type: (object) -> TypeIs[None]
     """Returns True if v has the type of None.
 
     Args:
@@ -73,6 +82,7 @@ def _is_none(v):
     return type(v) == type(None)
 
 def _is_int(v):
+    # type: (object) -> TypeIs[int]
     """Returns True if v is an instance of a signed integer.
 
     Args:
@@ -84,6 +94,7 @@ def _is_int(v):
     return type(v) == _an_int_type
 
 def _is_tuple(v):
+    # type: (object) -> TypeIs[tuple[object, ...]]
     """Returns True if v is an instance of a tuple.
 
     Args:
@@ -95,6 +106,7 @@ def _is_tuple(v):
     return type(v) == _a_tuple_type
 
 def _is_dict(v):
+    # type: (object) -> TypeIs[Top[dict[Unknown, Unknown]]]
     """Returns True if v is an instance of a dict.
 
     Args:
@@ -106,6 +118,7 @@ def _is_dict(v):
     return type(v) == _a_dict_type
 
 def _is_function(v):
+    # type: (object) -> TypeIs[function]
     """Returns True if v is an instance of a function.
 
     Args:
@@ -116,7 +129,10 @@ def _is_function(v):
     """
     return type(v) == _a_function_type
 
+# TODO(https://github.com/bazelbuild/bazel/issues/32021): A native narrowing
+# predicate for depsets also needs to name the element type.
 def _is_depset(v):
+    # type: (object) -> TypeIs[depset[object]]
     """Returns True if v is an instance of a `depset`.
 
     Args:
@@ -128,6 +144,7 @@ def _is_depset(v):
     return type(v) == _a_depset_type
 
 def _is_set(v):
+    # type: (object) -> TypeIs[struct[{'_values': Top[dict[Unknown, Unknown]]}, ...]]
     """Returns True if v is a set created by sets.make().
 
     Args:
